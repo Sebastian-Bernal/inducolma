@@ -34,10 +34,6 @@
        
     </div>
    @yield('scr') 
-   <script>
-        $(document).ready( function () {
-            $('#listaMaquinas').DataTable();
-        } );
-    </script>
+   
 </body>
 </html>

@@ -61,7 +61,10 @@
                         <tr>
                             <td>1</td>
                             <td>Maquina 1</td>
-                            
+                            <td>
+                                <a href="#" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
+                                <a href="#" class="btn btn-danger"><i class="fa fa-times"></a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -73,8 +76,8 @@
 @endsection
 
 @section('scripts')
-
+<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
  
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.11.4/datatables.min.js"></script>
-    
+
 @endsection
