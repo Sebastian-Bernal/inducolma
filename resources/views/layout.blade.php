@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    @yield('css')
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <script src="{{ mix('js/app.js') }}" defer=""></script>
     <title>@yield('title')</title>
@@ -33,6 +33,11 @@
         
        
     </div>
-    
+   @yield('scr') 
+   <script>
+        $(document).ready( function () {
+            $('#listaMaquinas').DataTable();
+        } );
+    </script>
 </body>
 </html>

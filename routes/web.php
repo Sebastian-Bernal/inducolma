@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/','home');
 
-Route::view('maquinas','modulos.maquinas')->name('maquinas');
+Route::view('maquinas','modulos.maquinas')->name('maquinas')->middleware('auth');
 
 Auth::routes();
 
