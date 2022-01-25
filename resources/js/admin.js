@@ -1,1 +1,0 @@
-alert('hola desde un archvo externo');
