@@ -10,7 +10,13 @@
     <title>@yield('title')</title>
     
     <style>
-        
+        .h-screen{
+            height: 100vh;
+        }
+
+        .h-content{
+            height: calc(100vh - 100px);
+        }
     </style>
 </head>
 <body>
@@ -33,7 +39,7 @@
         
        
     </div>
-   @yield('scr') 
+   @yield('js') 
    
 </body>
 </html>

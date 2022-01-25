@@ -1,18 +1,15 @@
 @extends('layout')
 
 @section('css')
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css"/> 
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.11.4/datatables.min.css"/>
-  
-
-    
 @endsection
 
 @section('title', 'Crear Maquina | inducolma')
     
 
 @section('content')
-    <div class="div container">        
+    <div class="div container h-content">        
         <div class="row">            
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 <h1 class="display-5" >Crear Maquina</h1>
@@ -43,41 +40,43 @@
                         </div>
                         </div>
                     </div>   
-                </form>
-                            
-                
-                <!-- Tabla -->
-
-                <table id="listaMaquinas" class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Maquina</th>                            
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Maquina 1</td>
-                            <td>
-                                <a href="#" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
-                                <a href="#" class="btn btn-danger"><i class="fa fa-times"></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                
+                </form>               
             </div>
+            <!-- Tabla -->
+
+            <table id="listaMaquinas" class="table table-bordered table-striped dt-responsive">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Maquina</th>                            
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Maquina 1</td>
+                        <td>
+                            <a href="#" class="btn btn-warning">Editar</a>
+                            <a href="#" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
 
-@section('scripts')
-<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.11.4/datatables.min.js"></script>
+@section('js')
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 
+
+<script>
+ $(document).ready(function() {
+    $('#listaMaquinas').DataTable();
+} );   
+</script>
 @endsection
