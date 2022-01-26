@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Maquina;
 use App\Http\Requests\StoreMaquinaRequest;
 use App\Http\Requests\UpdateMaquinaRequest;
+use GuzzleHttp\Middleware;
 
 class MaquinaController extends Controller
 {
@@ -15,7 +16,9 @@ class MaquinaController extends Controller
      */
     public function index()
     {
-        //
+        $maquinas = Maquina::latest()->get();
+
+        return view('modulos.maquinas', compact('maquinas'));
     }
 
     /**
@@ -36,7 +39,11 @@ class MaquinaController extends Controller
      */
     public function store(StoreMaquinaRequest $request)
     {
-        //
+        //dd($request->maquina);
+        Maquina::create(
+            ['maquina' => $request->maquina]
+        );
+        return back();
     }
 
     /**
@@ -58,7 +65,11 @@ class MaquinaController extends Controller
      */
     public function edit(Maquina $maquina)
     {
-        //
+        $maquina = Maquina::findOrFail($maquina->id);
+        return view('modulos.edit-maquinas',[
+            'maquina'   => $maquina,
+                      
+        ]);
     }
 
     /**
@@ -70,7 +81,11 @@ class MaquinaController extends Controller
      */
     public function update(UpdateMaquinaRequest $request, Maquina $maquina)
     {
-        //
+        
+        //dd($request->maquina);
+        $maquina = Maquina::findOrFail($maquina->id);
+        $maquina->update($request->all());
+        return redirect()->route('maquinas.index');
     }
 
     /**
@@ -81,6 +96,7 @@ class MaquinaController extends Controller
      */
     public function destroy(Maquina $maquina)
     {
-        //
+        $maquina->delete();
+        return back();
     }
 }

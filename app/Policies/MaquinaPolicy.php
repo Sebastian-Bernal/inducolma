@@ -53,7 +53,7 @@ class MaquinaPolicy
      */
     public function update(User $user, Maquina $maquina)
     {
-        //
+        return true;
     }
 
     /**

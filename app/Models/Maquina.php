@@ -9,6 +9,7 @@ class Maquina extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['maquina'];
     public function costos_operacion()
     {
         return $this->hasMany(CostosOperacion::class);

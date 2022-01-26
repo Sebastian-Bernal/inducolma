@@ -13,7 +13,7 @@ class UpdateMaquinaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class UpdateMaquinaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'maquina' => [
+                'required',
+                'unique:maquinas,maquina',
+                'max:50',
+                'min:5'
+            ]
+
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'maquina.required' => 'El campo :attribute es obligatorio',
+            'maquina.unique' => 'El nombre de :attribute ya existe',
+            'maquina.max' => 'El nombre de :attribute debe tener un máximo de 50 caracteres',
+            'maquina.min' => 'El nombre de :attribute debe tener un mínimo de 5 caracteres'
         ];
     }
 }

@@ -25,11 +25,13 @@
         {{-- <!-- Bienvenido {{$nombre ?? "invitado"}} con blade--> --}}
         <header>
             @include('partials.nav')
+            @yield('submenu')
             @include('partials.status')
         </header>
         
         <main class="py-3">
             @yield('content')
+            @yield('submenu')
         </main>
 
         <footer class="bg-white text-center text-black-50 py-3 shadow">

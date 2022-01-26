@@ -7,30 +7,63 @@
 
 @section('title', 'Crear Maquina | inducolma')
     
+@section('submenu')
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Costos</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mt-3">                
+                <a href="{{ route('maquinas.index') }}" class="btn btn-light ">Maquinas</a>
+            </div>
+            <div class="mt-3">
+                <a href="#" class="btn btn-light">Operaciones</a>
+            </div>
+            <div class="mt-3">
+                <a href="#" class="btn btn-light ">Descripciones</a>
+            </div>
+           
+            
 
+
+
+        </div>
+  </div>
+@endsection
 @section('content')
     <div class="div container h-content">        
         <div class="row">            
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
+                
+               
                 <h1 class="display-5" >Crear Maquina</h1>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaMaquina">
                     Crear maquina
                 </button>
-                
-                <!-- Modal -->
-                <form action="">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach ($errors->all() as $error)
+                            - {{ $error }} <br>
+                        @endforeach
+                    </div>
+                    
+                @endif
+                <!-- Modal Crea maquina-->
+                <form action="{{ route('maquinas.store') }}" method="POST">
+                    @csrf
                     <div class="modal fade" id="creaMaquina" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Crea Maquina</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="input-group mb-3">                               
-                                    <input type="text" class="form-control" placeholder="Nombre maquina" name="maquina" id="maquina" >
+                                    <input type="text" class="form-control" placeholder="Nombre maquina" name="maquina" id="maquina" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -54,14 +87,29 @@
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Maquina 1</td>
-                        <td>
-                            <a href="#" class="btn btn-warning">Editar</a>
-                            <a href="#" class="btn btn-danger">Eliminar</a>
-                        </td>
-                    </tr>
+                    @foreach ($maquinas as $maquina)
+                        <tr>
+                            <td>{{ $maquina->id }}</td>
+                            <td>{{ $maquina->maquina }}</td>
+                            <td>
+                                <div class="d-flex align-items-center ">
+                                    <form action="{{ route('maquinas.destroy', $maquina) }}" method="POST">
+                                        @method('DELETE')
+                                        @csrf
+
+                                        <input 
+                                            type="submit" 
+                                            value="Elminar" 
+                                            class="btn btn-sm btn-danger "
+                                            onclick="return confirm('¿desea eliminar la maquina: {{ $maquina->maquina }}?')">
+                                    </form>
+
+                                    <a href="{{ route('maquinas.edit', $maquina) }}" class="btn btn-sm btn-warning"> Editar</a>
+                                </div>
+                            </td>
+                        </tr> 
+                    @endforeach
+                    
                 </tbody>
             </table>
         </div>

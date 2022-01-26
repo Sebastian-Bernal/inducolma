@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MaquinaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/','home');
 
-Route::view('maquinas','modulos.maquinas')->name('maquinas')->middleware('auth');
+Route::view('costos-maquina','modulos.maquinas')->name('maquinas')->middleware('auth');
+
+Route::get('/costos-maquina', [MaquinaController::class, 'index'])->name('maquinas.index')->middleware('auth');
+Route::post('/costos-maquina', [MaquinaController::class,'store'] )->name('maquinas.store')->middleware('auth');
+Route::delete('/costos-maquina/{maquina}', [MaquinaController::class,'destroy'])->name('maquinas.destroy')->middleware('auth');
+Route::get('/costos-maquina/{maquina}/edit', [MaquinaController::class,'edit'])->name('maquinas.edit')->middleware('auth');
+Route::patch('/costos-maquina/{maquina}', [MaquinaController::class,'update'])->name('maquinas.update')->middleware('auth');
+
+
 
 Auth::routes();
 

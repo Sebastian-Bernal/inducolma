@@ -1,5 +1,12 @@
 <nav class="navbar navbar-light navbar-expand-lg bg-white shadow-sm"> 
     <div class="container">
+        @guest
+            @else
+            <button class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        @endguest
+        
         <a class="navbar-brand" href="{{ route('home') }}">
             {{ config('app.name') }}
         </a>
@@ -9,9 +16,13 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end  " id="navbarSupportedContent">            
             <ul class="nav nav-pills ">
-                <li class="nav-item">
-                    <a class="nav-link {{ setActive('maquinas') }}" href="{{ route('maquinas') }}">{{ __('Maquinas') }}</a>
-                </li>
+                @guest
+                    @else
+                    <li class="nav-item">
+                        <a class="nav-link {{ setActive('maquinas') }}" href="{{ route('maquinas.index') }}">{{ __('Costos') }}</a>
+                    </li>
+                @endguest
+                
                 {{-- <li class="nav-item">
                     <a class="nav-link {{ setActive('about') }}" href="{{ route('about') }}">{{ __('About') }}</a>
                 </li>
