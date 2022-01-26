@@ -16,11 +16,11 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
                
-                <h1 class="display-5" >Crear Maquina</h1>
+                <h1 class="display-5" >Crear Operaci&oacute;n</h1>
                 <hr>
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaMaquina">
-                    Crear maquina
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaOperacion">
+                    Crear Operaci&oacute;n
                 </button>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -31,23 +31,23 @@
                     
                 @endif
                 <!-- Modal Crea maquina-->
-                <form action="{{ route('maquinas.store') }}" method="POST">
+                <form action="{{ route('operaciones.store') }}" method="POST">
                     @csrf
-                    <div class="modal fade" id="creaMaquina" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="creaOperacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Crea Maquina</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Crea Operaci&oacute;n</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="input-group mb-3">                               
-                                    <input type="text" class="form-control" placeholder="Nombre maquina" name="maquina" id="maquina" required>
+                                    <input type="text" class="form-control" placeholder="Nombre operacion" name="operacion" id="operacion" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Guardar maquina</button>
+                            <button type="submit" class="btn btn-primary">Guardar Operaci&oacute;n</button>
                             </div>
                         </div>
                         </div>
@@ -60,19 +60,19 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Maquina</th>                            
+                        <th>Operaci&oacute;n</th>                            
                         <th>Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($maquinas as $maquina)
+                    @foreach ($operaciones as $operacion)
                         <tr>
-                            <td>{{ $maquina->id }}</td>
-                            <td>{{ $maquina->maquina }}</td>
+                            <td>{{ $operacion->id }}</td>
+                            <td>{{ $operacion->operacion }}</td>
                             <td>
                                 <div class="d-flex align-items-center ">
-                                    <form action="{{ route('maquinas.destroy', $maquina) }}" method="POST">
+                                    <form action="{{ route('operaciones.destroy', $operacion) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
 
@@ -80,10 +80,10 @@
                                             type="submit" 
                                             value="Elminar" 
                                             class="btn btn-sm btn-danger "
-                                            onclick="return confirm('¿desea eliminar la maquina: {{ $maquina->maquina }}?')">
+                                            onclick="return confirm('¿desea eliminar la maquina: {{ $operacion->operacion }}?')">
                                     </form>
 
-                                    <a href="{{ route('maquinas.edit', $maquina) }}" class="btn btn-sm btn-warning"> Editar</a>
+                                    <a href="{{ route('operaciones.edit', $operacion) }}" class="btn btn-sm btn-warning"> Editar</a>
                                 </div>
                             </td>
                         </tr> 

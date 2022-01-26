@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DescripcionController;
 use App\Http\Controllers\MaquinaController;
+use App\Http\Controllers\OperacionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +27,18 @@ Route::delete('/costos-maquina/{maquina}', [MaquinaController::class,'destroy'])
 Route::get('/costos-maquina/{maquina}/edit', [MaquinaController::class,'edit'])->name('maquinas.edit')->middleware('auth');
 Route::patch('/costos-maquina/{maquina}', [MaquinaController::class,'update'])->name('maquinas.update')->middleware('auth');
 
+Route::get('/costos-operacion', [OperacionController::class, 'index'])->name('operaciones.index')->middleware('auth');
+Route::post('/costos-operacion', [OperacionController::class,'store'] )->name('operaciones.store')->middleware('auth');
+Route::delete('/costos-operacion/{operacion}', [OperacionController::class,'destroy'])->name('operaciones.destroy')->middleware('auth');
+Route::get('/costos-operacion/{operacion}/edit', [OperacionController::class,'edit'])->name('operaciones.edit')->middleware('auth');
+Route::patch('/costos-operacion/{operacion}', [OperacionController::class,'update'])->name('operaciones.update')->middleware('auth');
 
+
+Route::get('/costos-descripcion', [DescripcionController::class, 'index'])->name('descripciones.index')->middleware('auth');
+Route::post('/costos-descripcion', [DescripcionController::class,'store'] )->name('descripciones.store')->middleware('auth');
+Route::delete('/costos-descripcion/{descripcion}', [DescripcionController::class,'destroy'])->name('descripciones.destroy')->middleware('auth');
+Route::get('/costos-descripcion/{descripcion}/edit', [DescripcionController::class,'edit'])->name('descripciones.edit')->middleware('auth');
+Route::patch('/costos-descripcion/{descripcion}', [DescripcionController::class,'update'])->name('descripciones.update')->middleware('auth');
 
 Auth::routes();
 

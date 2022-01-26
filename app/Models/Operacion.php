@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Operacion extends Model
 {
+    protected $table = 'operaciones';
     use HasFactory;
 
     public function descripciones()

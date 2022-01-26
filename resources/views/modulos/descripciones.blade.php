@@ -5,7 +5,7 @@
 
 @endsection
 
-@section('title', ' Maquinas | inducolma')
+@section('title', ' Descripciones | inducolma')
 
 @section('submenu')
     @include('modulos.sidebars.costos-side')
@@ -16,11 +16,11 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
                
-                <h1 class="display-5" >Crear Maquina</h1>
+                <h1 class="display-5" >Crear desripci&oacute;n</h1>
                 <hr>
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaMaquina">
-                    Crear maquina
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaDescripcion">
+                    Crear desripci&oacute;n
                 </button>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -31,23 +31,30 @@
                     
                 @endif
                 <!-- Modal Crea maquina-->
-                <form action="{{ route('maquinas.store') }}" method="POST">
+                <form action="{{ route('descripciones.store') }}" method="POST">
                     @csrf
-                    <div class="modal fade" id="creaMaquina" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="creaDescripcion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Crea Maquina</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Crea desripci&oacute;n</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="input-group mb-3">                               
-                                    <input type="text" class="form-control" placeholder="Nombre maquina" name="maquina" id="maquina" required>
+                                    <input type="text" class="form-control" placeholder="Nombre descripcion" name="descripcion" id="descripcion" required>
+                                </div>
+                                <div class="input-group mb-3">                               
+                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
+                                        @foreach ($operaciones as $operacion)
+                                            <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Guardar maquina</button>
+                            <button type="submit" class="btn btn-primary">Guardar desripci&oacute;n</button>
                             </div>
                         </div>
                         </div>
@@ -60,19 +67,21 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Maquina</th>                            
+                        <th>desripci&oacute;n</th>
+                        <th>Operaci&oacute;n</th>                            
                         <th>Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($maquinas as $maquina)
+                    @foreach ($descripciones as $descripcion)
                         <tr>
-                            <td>{{ $maquina->id }}</td>
-                            <td>{{ $maquina->maquina }}</td>
+                            <td>{{ $descripcion->id }}</td>
+                            <td>{{ $descripcion->descripcion }}</td>
+                            <td>{{ $descripcion->operacion->operacion }}</td>
                             <td>
                                 <div class="d-flex align-items-center ">
-                                    <form action="{{ route('maquinas.destroy', $maquina) }}" method="POST">
+                                    <form action="{{ route('descripciones.destroy', $descripcion) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
 
@@ -80,10 +89,10 @@
                                             type="submit" 
                                             value="Elminar" 
                                             class="btn btn-sm btn-danger "
-                                            onclick="return confirm('¿desea eliminar la maquina: {{ $maquina->maquina }}?')">
+                                            onclick="return confirm('¿desea eliminar la descripcion: {{ $descripcion->descripcion }}?')">
                                     </form>
 
-                                    <a href="{{ route('maquinas.edit', $maquina) }}" class="btn btn-sm btn-warning"> Editar</a>
+                                    <a href="{{ route('descripciones.edit', $descripcion) }}" class="btn btn-sm btn-warning"> Editar</a>
                                 </div>
                             </td>
                         </tr> 

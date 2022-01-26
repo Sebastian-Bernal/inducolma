@@ -15,7 +15,9 @@ class OperacionController extends Controller
      */
     public function index()
     {
-        //
+        return view('modulos.operaciones', [
+            'operaciones' => Operacion::all()
+        ]);
     }
 
     /**
@@ -36,7 +38,10 @@ class OperacionController extends Controller
      */
     public function store(StoreOperacionRequest $request)
     {
-        //
+        $operacion = new Operacion();
+        $operacion->operacion = $request->operacion;
+        $operacion->save();
+        return redirect()->route('operaciones.index');
     }
 
     /**
@@ -58,7 +63,12 @@ class OperacionController extends Controller
      */
     public function edit(Operacion $operacion)
     {
-        //
+        
+        $operacion = Operacion::findOrFail($operacion->id);
+        return view('modulos.operaciones-edit',[
+            'operacion'   => $operacion,
+                      
+        ]);
     }
 
     /**
@@ -70,7 +80,10 @@ class OperacionController extends Controller
      */
     public function update(UpdateOperacionRequest $request, Operacion $operacion)
     {
-        //
+        $operacion = Operacion::findOrFail($operacion->id);
+        $operacion->operacion = $request->operacion;
+        $operacion->save();
+        return redirect()->route('operaciones.index');
     }
 
     /**
@@ -81,6 +94,7 @@ class OperacionController extends Controller
      */
     public function destroy(Operacion $operacion)
     {
-        //
+        $operacion->delete();
+        return redirect()->route('operaciones.index');
     }
 }

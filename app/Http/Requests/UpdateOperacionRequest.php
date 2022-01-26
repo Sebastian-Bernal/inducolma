@@ -13,7 +13,7 @@ class UpdateOperacionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class UpdateOperacionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'operacion' => [
+                'required',
+                'unique:operaciones,operacion',
+                'max:50',
+                'min:5'
+            ]
+
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'operacion.required' => 'El campo :attribute es obligatorio',
+            'operacion.unique' => 'El nombre de :attribute ya existe',
+            'operacion.max' => 'El nombre de :attribute debe tener un máximo de 50 caracteres',
+            'operacion.min' => 'El nombre de :attribute debe tener un mínimo de 5 caracteres'
         ];
     }
 }

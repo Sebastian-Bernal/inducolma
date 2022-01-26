@@ -13,7 +13,7 @@ class StoreDescripcionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,27 @@ class StoreDescripcionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'descripcion' => [
+                'required',
+                'unique:descripciones,descripcion',
+                'max:50',
+                'min:5'
+            ],
+            'idOperacion' => [
+                'required',                
+            ]
+
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'descripcion.required' => 'El campo :attribute es obligatorio',
+            'descripcion.unique' => 'El nombre de :attribute ya existe',
+            'descripcion.max' => 'El nombre de :attribute debe tener un máximo de 50 caracteres',
+            'descripcion.min' => 'El nombre de :attribute debe tener un mínimo de 5 caracteres',
+            'idOperacion.required' => 'El campo :attribute es obligatorio',
         ];
     }
 }

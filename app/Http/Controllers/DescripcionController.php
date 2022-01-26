@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Descripcion;
 use App\Http\Requests\StoreDescripcionRequest;
 use App\Http\Requests\UpdateDescripcionRequest;
+use App\Models\Operacion;
 
 class DescripcionController extends Controller
 {
@@ -15,7 +16,9 @@ class DescripcionController extends Controller
      */
     public function index()
     {
-        //
+        $descripciones = Descripcion::all();
+        $operaciones = Operacion::all();
+        return view('modulos.descripciones', compact(['descripciones','operaciones']));
     }
 
     /**
@@ -36,7 +39,11 @@ class DescripcionController extends Controller
      */
     public function store(StoreDescripcionRequest $request)
     {
-        //
+        $descripcion = new Descripcion();
+        $descripcion->descripcion = $request->descripcion;
+        $descripcion->operacion_id = $request->idOperacion;
+        $descripcion->save();
+        return redirect()->route('descripciones.index');
     }
 
     /**
@@ -58,7 +65,13 @@ class DescripcionController extends Controller
      */
     public function edit(Descripcion $descripcion)
     {
-        //
+        $descripcion = Descripcion::findOrFail($descripcion->id);
+        $operaciones = Operacion::all();
+        return view('modulos.descripciones-edit',[
+            'descripcion'   => $descripcion,
+            'operaciones'    => $operaciones
+                      
+        ]);
     }
 
     /**
@@ -70,7 +83,11 @@ class DescripcionController extends Controller
      */
     public function update(UpdateDescripcionRequest $request, Descripcion $descripcion)
     {
-        //
+        $descripcion = Descripcion::findOrFail($descripcion->id);
+        $descripcion->descripcion = $request->descripcion;
+        $descripcion->operacion_id = $request->idOperacion;
+        $descripcion->save();
+        return redirect()->route('descripciones.index');
     }
 
     /**
@@ -81,6 +98,8 @@ class DescripcionController extends Controller
      */
     public function destroy(Descripcion $descripcion)
     {
-        //
+        $descripcion = Descripcion::findOrFail($descripcion->id);
+        $descripcion->delete();
+        return redirect()->route('descripciones.index');
     }
 }
