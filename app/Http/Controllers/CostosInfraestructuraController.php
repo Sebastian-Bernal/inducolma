@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CostosInfraestructura;
 use App\Http\Requests\StoreCostosInfraestructuraRequest;
 use App\Http\Requests\UpdateCostosInfraestructuraRequest;
+use App\Models\Maquina;
 
 class CostosInfraestructuraController extends Controller
 {
@@ -15,7 +16,9 @@ class CostosInfraestructuraController extends Controller
      */
     public function index()
     {
-        //
+        $costosIinfraestructura = CostosInfraestructura::all();
+        $maquinas = Maquina::all();
+        return view('modulos.costos-infraestructura', compact('costosIinfraestructura', 'maquinas'));
     }
 
     /**
@@ -36,7 +39,18 @@ class CostosInfraestructuraController extends Controller
      */
     public function store(StoreCostosInfraestructuraRequest $request)
     {
-        //
+        $costosInfraestructura = new CostosInfraestructura();
+        $costosInfraestructura->valor_operativo = $request->valorOperativo;
+        $costosInfraestructura->tipo_material = $request->tipoMaterial;
+        $costosInfraestructura->tipo_madera = $request->tipoMadera;
+        $costosInfraestructura->proceso_madera = $request->procesoMadera;
+        $costosInfraestructura->promedio_piezas = $request->promedioPiezas;
+        $costosInfraestructura->minimo_piezas = $request->minimoPiezas;
+        $costosInfraestructura->maximo_piezas = $request->maximoPiezas;
+        $costosInfraestructura->maquina_id = $request->idMaquina;
+        $costosInfraestructura->save();
+        
+        return back()->with('status', 'Costo de Infraestructura creado con éxito');
     }
 
     /**
@@ -58,7 +72,9 @@ class CostosInfraestructuraController extends Controller
      */
     public function edit(CostosInfraestructura $costosInfraestructura)
     {
-        //
+       
+        $maquinas = Maquina::all();
+        return view('modulos.costos-infraestructura-edit', compact('costosInfraestructura', 'maquinas'));
     }
 
     /**
@@ -70,7 +86,17 @@ class CostosInfraestructuraController extends Controller
      */
     public function update(UpdateCostosInfraestructuraRequest $request, CostosInfraestructura $costosInfraestructura)
     {
-        //
+        $costosInfraestructura->valor_operativo = $request->valorOperativo;
+        $costosInfraestructura->tipo_material = $request->tipoMaterial;
+        $costosInfraestructura->tipo_madera = $request->tipoMadera;
+        $costosInfraestructura->proceso_madera = $request->procesoMadera;
+        $costosInfraestructura->promedio_piezas = $request->promedioPiezas;
+        $costosInfraestructura->minimo_piezas = $request->minimoPiezas;
+        $costosInfraestructura->maximo_piezas = $request->maximoPiezas;
+        $costosInfraestructura->maquina_id = $request->idMaquina;
+        $costosInfraestructura->save();
+        
+        return redirect()->route('costos-de-infraestructura.index')->with('status', 'Costo de Infraestructura actualizado con éxito');
     }
 
     /**
@@ -81,6 +107,7 @@ class CostosInfraestructuraController extends Controller
      */
     public function destroy(CostosInfraestructura $costosInfraestructura)
     {
-        //
+        $costosInfraestructura->delete();
+        return back()->with('status', 'Costo de Infraestructura eliminado con éxito');
     }
 }

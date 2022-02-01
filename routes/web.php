@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CostosInfraestructuraController;
 use App\Http\Controllers\CostosOperacionController;
 use App\Http\Controllers\DescripcionController;
 use App\Http\Controllers\MaquinaController;
@@ -46,6 +47,11 @@ Route::patch('/costos-descripcion/{descripcion}', [DescripcionController::class,
 Route::resource('costos-de-operacion', CostosOperacionController::class)
             ->parameters(['costos-de-operacion' => 'costos-operacion'])
             ->names('costos-de-operacion')
+            ->middleware('auth');
+
+Route::resource('costos-de-infraestructura', CostosInfraestructuraController::class)
+            ->parameters(['costos-de-infraestructura' => 'costos-infraestructura'])
+            ->names('costos-de-infraestructura')
             ->middleware('auth');
 Auth::routes();
 
