@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\CostosOperacionController;
 use App\Http\Controllers\DescripcionController;
 use App\Http\Controllers\MaquinaController;
 use App\Http\Controllers\OperacionController;
+use App\Models\CostosOperacion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +42,11 @@ Route::delete('/costos-descripcion/{descripcion}', [DescripcionController::class
 Route::get('/costos-descripcion/{descripcion}/edit', [DescripcionController::class,'edit'])->name('descripciones.edit')->middleware('auth');
 Route::patch('/costos-descripcion/{descripcion}', [DescripcionController::class,'update'])->name('descripciones.update')->middleware('auth');
 
+
+Route::resource('costos-de-operacion', CostosOperacionController::class)
+            ->parameters(['costos-de-operacion' => 'costos-operacion'])
+            ->names('costos-de-operacion')
+            ->middleware('auth');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\CostosOperacion;
 use App\Http\Requests\StoreCostosOperacionRequest;
 use App\Http\Requests\UpdateCostosOperacionRequest;
+use App\Models\Descripcion;
+use App\Models\Maquina;
 
 class CostosOperacionController extends Controller
 {
@@ -15,7 +17,10 @@ class CostosOperacionController extends Controller
      */
     public function index()
     {
-        //
+        $costosOperacion = CostosOperacion::all();
+        $maquinas = Maquina::all();
+        $descripciones = Descripcion::all();
+        return view('modulos.costos-operacion', compact('costosOperacion', 'maquinas', 'descripciones'));
     }
 
     /**
@@ -36,7 +41,15 @@ class CostosOperacionController extends Controller
      */
     public function store(StoreCostosOperacionRequest $request)
     {
-        //
+        $costosOperacion = new CostosOperacion();
+        $costosOperacion->cantidad = $request->cantidad;
+        $costosOperacion->valor_mes = $request->valorMes;
+        $costosOperacion->valor_dia = $request->valorDia;
+        $costosOperacion->costo_kwh = $request->costokwh;
+        $costosOperacion->maquina_id = $request->idMaquina;
+        $costosOperacion->descripcion_id = $request->idDescripcion;
+        $costosOperacion->save();
+        return redirect()->route('costos-de-operacion.index')->with('status', 'Costo de operación creado con éxito');
     }
 
     /**
@@ -58,7 +71,9 @@ class CostosOperacionController extends Controller
      */
     public function edit(CostosOperacion $costosOperacion)
     {
-        //
+        $maquinas = Maquina::all();
+        $descripciones = Descripcion::all();
+        return view('modulos.costos-operacion-edit', compact('costosOperacion', 'maquinas', 'descripciones'));
     }
 
     /**
@@ -70,7 +85,15 @@ class CostosOperacionController extends Controller
      */
     public function update(UpdateCostosOperacionRequest $request, CostosOperacion $costosOperacion)
     {
-        //
+        $costosOperacion = CostosOperacion::findOrFail($costosOperacion->id);
+        $costosOperacion->cantidad = $request->cantidad;
+        $costosOperacion->valor_mes = $request->valorMes;
+        $costosOperacion->valor_dia = $request->valorDia;
+        $costosOperacion->costo_kwh = $request->costokwh;
+        $costosOperacion->maquina_id = $request->idMaquina;
+        $costosOperacion->descripcion_id = $request->idDescripcion;
+        $costosOperacion->save();
+        return redirect()->route('costos-de-operacion.index')->with('status', 'Costo de operación actualizado con éxito');
     }
 
     /**
@@ -81,6 +104,8 @@ class CostosOperacionController extends Controller
      */
     public function destroy(CostosOperacion $costosOperacion)
     {
-        //
+        $costosOperacion = CostosOperacion::findOrFail($costosOperacion->id);
+        $costosOperacion->delete();
+        return redirect()->route('costos-de-operacion.index')->with('status', 'Costo de operación eliminado con éxito');
     }
 }

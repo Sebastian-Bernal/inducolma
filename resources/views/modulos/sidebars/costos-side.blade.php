@@ -14,5 +14,11 @@
             <div class="mt-3">
                 <a href="{{ route('descripciones.index') }}" class="btn btn-light ">Descripciones</a>
             </div>
+            <div class="mt-3">
+                <a href="{{ route('costos-de-operacion.index') }}" class="btn btn-light ">Costos operaci&oacute;n</a>
+            </div>
+            <div class="mt-3">
+                <a href="#" class="btn btn-light ">Costos infraestructura</a>
+            </div>
         </div>
   </div>
