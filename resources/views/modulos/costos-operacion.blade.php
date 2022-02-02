@@ -67,10 +67,19 @@
                                     </select>
                                 </div>
                                 <div class="input-group mb-3">                               
-                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idDescripcion" id="idDescripcion">
-                                        @foreach ($descripciones as $descripcion)
-                                            <option value="{{ $descripcion->id }}">{{ $descripcion->descripcion }}</option>
+                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
+                                        
+                                        @foreach ($operaciones as $operacion)
+                                            <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>
                                         @endforeach 
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">                               
+                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idDescripcion" id="idDescripcion">
+                                        {{-- <option value="{{ $costosOperacion->descripcion_id }}" selected>{{ $costosOperacion->descripcion->descripcion }}</option> --}}
+                                        {{-- @foreach ($descripciones as $descripcion)
+                                            <option value="{{ $descripcion->id }}">{{ $descripcion->descripcion }}</option>
+                                        @endforeach  --}}
                                     </select>
                                 </div>
                             </div>
@@ -143,8 +152,24 @@
 
 
 <script>
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')     
+    }
+ }); 
  $(document).ready(function() {
     $('#listaMaquinas').DataTable();
-} );   
+} ); 
+
+$('#idOperacion').change(function () {
+    $.ajax({
+        url:'descripciones',
+        data:{'idOperacion': document.getElementById('idOperacion').value},
+        type:'get',
+        success: function (response) {
+                alert(response);
+        } 
+    });
+});
 </script>
 @endsection

@@ -53,6 +53,12 @@ Route::resource('costos-de-infraestructura', CostosInfraestructuraController::cl
             ->parameters(['costos-de-infraestructura' => 'costos-infraestructura'])
             ->names('costos-de-infraestructura')
             ->middleware('auth');
+
+Route::get('descripciones/{operacion}', [CostosOperacionController::class, 'descripciones'])
+        ->name('descripciones')
+        ->middleware('auth');
+
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

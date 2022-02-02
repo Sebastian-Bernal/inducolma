@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Request;
 use App\Models\CostosOperacion;
 use App\Http\Requests\StoreCostosOperacionRequest;
 use App\Http\Requests\UpdateCostosOperacionRequest;
 use App\Models\Descripcion;
 use App\Models\Maquina;
+use App\Models\Operacion;
 
 class CostosOperacionController extends Controller
 {
@@ -20,7 +22,8 @@ class CostosOperacionController extends Controller
         $costosOperacion = CostosOperacion::all();
         $maquinas = Maquina::all();
         $descripciones = Descripcion::all();
-        return view('modulos.costos-operacion', compact('costosOperacion', 'maquinas', 'descripciones'));
+        $operaciones = Operacion::all();
+        return view('modulos.costos-operacion', compact('costosOperacion', 'maquinas', 'descripciones', 'operaciones'));
     }
 
     /**
@@ -73,7 +76,8 @@ class CostosOperacionController extends Controller
     {
         $maquinas = Maquina::all();
         $descripciones = Descripcion::all();
-        return view('modulos.costos-operacion-edit', compact('costosOperacion', 'maquinas', 'descripciones'));
+        $operaciones = Operacion::all();
+        return view('modulos.costos-operacion-edit', compact('costosOperacion', 'maquinas', 'descripciones', 'operaciones'));
     }
 
     /**
@@ -108,4 +112,11 @@ class CostosOperacionController extends Controller
         $costosOperacion->delete();
         return redirect()->route('costos-de-operacion.index')->with('status', 'Costo de operación eliminado con éxito');
     }
+
+    public function descripciones(Request $request)
+    {
+        $operaciones = Descripcion::where('operacion_id', $request->idOperacion)->get();
+        return response()->json($operaciones);
+    }
+    
 }
