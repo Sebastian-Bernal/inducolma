@@ -181,7 +181,7 @@ $('#idOperacion').change(function () {
         },
         type:'post',
         success: function (descripciones) {
-            console.log(descripciones.length);
+            
 
             if (descripciones.length > 0 ) {
                 $('#spiner').empty();

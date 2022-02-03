@@ -53,6 +53,7 @@
                         @endforeach 
                     </select>
                 </div>
+                <div  id="spiner"></div>
                 <div class="input-group mb-3">  
                     <span class="input-group-text">Descripci&oacute;n</span>                              
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idDescripcion" id="idDescripcion">
@@ -81,6 +82,12 @@
        
     $('#idOperacion').change(function () {
         $('#idDescripcion').empty();
+        $('#spiner').append(
+            '<div class="spinner-border spinner-border-sm text-primary" id="spiner" role="status">'+
+                '<span class="visually-hidden">Loading...</span>'+
+            '</div>'
+                
+        );
         $.ajax({
             url:'/descripciones',
             data:{
@@ -91,6 +98,7 @@
             success: function (descripciones) {
                 
                 if (descripciones.length > 0 ) {
+                    $('#spiner').empty();
                     $.each(descripciones, function (i, desc) {
                     $('#idDescripcion').append($('<option>', { 
                         value: desc.id,
@@ -99,6 +107,7 @@
     
                 });
                 } else {
+                    $('#spiner').empty();
                     alert('Este proceso no tiene descripciones, por favor cree las desripciones');
                 }
                 
