@@ -16,7 +16,7 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
                
-                <h1 class="display-5" >Crear desripci&oacute;n</h1>
+                <h1 class="display-6" >Crear desripci&oacute;n</h1>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaDescripcion">
@@ -41,10 +41,12 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="input-group mb-3">                               
+                                <div class="input-group mb-3"> 
+                                    <span class="input-group-text">Descripci&oacute;n:</span>                                   
                                     <input type="text" class="form-control" placeholder="Nombre descripcion" name="descripcion" id="descripcion" required>
                                 </div>
-                                <div class="input-group mb-3">                               
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Operaci&oacute;n:</span>                               
                                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
                                         @foreach ($operaciones as $operacion)
                                             <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>
@@ -63,7 +65,7 @@
             </div>
             <!-- Tabla -->
 
-            <table id="listaMaquinas" class="table table-bordered table-striped dt-responsive">
+            <table id="listaDescripciones" class="table table-bordered table-striped dt-responsive">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -112,7 +114,7 @@
 
 <script>
  $(document).ready(function() {
-    $('#listaMaquinas').DataTable();
+    $('#listaDescripciones').DataTable();
 } );   
 </script>
 @endsection

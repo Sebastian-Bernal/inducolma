@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Request;
+//use App\Http\Request;
+use Illuminate\Http\Request;
 use App\Models\CostosOperacion;
 use App\Http\Requests\StoreCostosOperacionRequest;
 use App\Http\Requests\UpdateCostosOperacionRequest;

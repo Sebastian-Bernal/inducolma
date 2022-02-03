@@ -5,7 +5,7 @@
 
 @endsection
 
-@section('title', ' Maquinas | inducolma')
+@section('title', ' Operaciones | inducolma')
 
 @section('submenu')
     @include('modulos.sidebars.costos-side')
@@ -16,7 +16,7 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
                
-                <h1 class="display-5" >Crear Operaci&oacute;n</h1>
+                <h1 class="display-6" >Crear Operaci&oacute;n</h1>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaOperacion">
@@ -41,8 +41,9 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="input-group mb-3">                               
-                                    <input type="text" class="form-control" placeholder="Nombre operacion" name="operacion" id="operacion" required>
+                                <div class="input-group mb-3">  
+                                    <span class="input-group-text">Operaci&oacute;n:</span>                              
+                                    <input type="text" class="form-control" placeholder="Nombre operaci&oacute;n" name="operacion" id="operacion" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -56,7 +57,7 @@
             </div>
             <!-- Tabla -->
 
-            <table id="listaMaquinas" class="table table-bordered table-striped dt-responsive">
+            <table id="listaOperaciones" class="table table-bordered table-striped dt-responsive">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -103,7 +104,7 @@
 
 <script>
  $(document).ready(function() {
-    $('#listaMaquinas').DataTable();
+    $('#listaOperaciones').DataTable();
 } );   
 </script>
 @endsection

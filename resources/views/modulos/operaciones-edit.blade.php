@@ -1,13 +1,13 @@
 @extends('layout')
 
-@section('title', 'Editar operaci&oacute;n | Inducolma')
-
+@section('title', 'Editar operación | Inducolma')
+@section('submenu')
+    @include('modulos.sidebars.costos-side')
+@endsection
 @section('content')
 <form action="{{ route('operaciones.update', $operacion->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
-    @method('PATCH')
-
-        
+    @method('PATCH')        
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +15,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="input-group mb-3">                               
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Operaci&oacute;n:</span>                                
                     <input type="text" class="form-control" placeholder="Nombre operacion" name="operacion" id="operacion" required value="{{ $operacion->operacion }}">
                 </div>
             </div>

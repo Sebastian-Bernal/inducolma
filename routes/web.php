@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/','home');
+Route::view('/','home')->name('home');
 
 Route::view('costos-maquina','modulos.maquinas')->name('maquinas')->middleware('auth');
 
@@ -54,9 +54,8 @@ Route::resource('costos-de-infraestructura', CostosInfraestructuraController::cl
             ->names('costos-de-infraestructura')
             ->middleware('auth');
 
-Route::get('descripciones/{operacion}', [CostosOperacionController::class, 'descripciones'])
-        ->name('descripciones')
-        ->middleware('auth');
+Route::post('descripciones', [CostosOperacionController::class, 'descripciones'])
+        ->name('descripciones');
 
 
 Auth::routes();

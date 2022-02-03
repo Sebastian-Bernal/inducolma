@@ -16,7 +16,7 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
                
-                <h1 class="display-5" >Crear costo de operaci&oacute;n</h1>
+                <h1 class="display-6" >Crear costo de operaci&oacute;n</h1>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaDescripcion">
@@ -59,27 +59,30 @@
                                     <input type="number" class="form-control" placeholder="costo kw/h" step="0.01" name="costokwh" id="costokwh" required>
                                 </div>
                                 
-                                <div class="input-group mb-3">                               
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Maquina:</span>                                
                                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idMaquina" id="idMaquina">
                                         @foreach ($maquinas as $maquina)
                                             <option value="{{ $maquina->id }}">{{ $maquina->maquina }}</option>
                                         @endforeach 
                                     </select>
                                 </div>
-                                <div class="input-group mb-3">                               
+                                <div class="input-group mb-3"> 
+                                    <span class="input-group-text">Proceso:</span>                               
                                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
-                                        
+                                        <option selected>Seleccione...</option>
                                         @foreach ($operaciones as $operacion)
                                             <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>
                                         @endforeach 
                                     </select>
                                 </div>
-                                <div class="input-group mb-3">                               
+
+                                <div  id="spiner"></div>
+
+                                <div class="input-group mb-3" id="spiner">  
+                                    <span class="input-group-text">Descripci&oacute;n</span>                              
                                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idDescripcion" id="idDescripcion">
-                                        {{-- <option value="{{ $costosOperacion->descripcion_id }}" selected>{{ $costosOperacion->descripcion->descripcion }}</option> --}}
-                                        {{-- @foreach ($descripciones as $descripcion)
-                                            <option value="{{ $descripcion->id }}">{{ $descripcion->descripcion }}</option>
-                                        @endforeach  --}}
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -143,6 +146,7 @@
             </table>
         </div>
     </div>
+    
 @endsection
 
 @section('js')
@@ -162,12 +166,39 @@ $.ajaxSetup({
 } ); 
 
 $('#idOperacion').change(function () {
+    $('#idDescripcion').empty();
+    $('#spiner').append(
+        '<div class="spinner-border spinner-border-sm text-primary" id="spiner" role="status">'+
+            '<span class="visually-hidden">Loading...</span>'+
+       '</div>'
+        
+    );
     $.ajax({
-        url:'descripciones',
-        data:{'idOperacion': document.getElementById('idOperacion').value},
-        type:'get',
-        success: function (response) {
-                alert(response);
+        url:'/descripciones',
+        data:{
+            idOperacion: document.getElementById('idOperacion').value,
+            _token: $('input[name="_token"]').val()
+        },
+        type:'post',
+        success: function (descripciones) {
+            console.log(descripciones.length);
+
+            if (descripciones.length > 0 ) {
+                $('#spiner').empty();
+                $.each(descripciones, function (i, desc) {
+                $('#idDescripcion').append($('<option>', { 
+                    value: desc.id,
+                    text : desc.descripcion 
+                }));
+
+            });
+            } else {
+                $('#spiner').empty();
+                alert('Este proceso no tiene descripciones, por favor cree las desripciones');
+            }
+            
+
+
         } 
     });
 });

@@ -19,9 +19,10 @@
         }
     </style>
 </head>
-<body>
+<body  >
 
-    <div id="app" class="d-flex flex-column h-screen justify-content-between ">
+    <div id="app" class="d-flex flex-column h-screen justify-content-between  ">
+        
         {{-- <!-- Bienvenido {{$nombre ?? "invitado"}} con blade--> --}}
         <header>
             @include('partials.nav')
@@ -29,13 +30,14 @@
             @include('partials.status')
         </header>
         
-        <main class="py-3">
+        <main class="py-3  ">
+            
             @yield('content')
             @yield('submenu')
         </main>
 
         <footer class="bg-white text-center text-black-50 py-3 shadow">
-            {{ config('app.name') }} | Copyright @ {{ date('Y') }}
+            Inducolma | Copyright @ {{ date('Y') }}
         </footer>
         
         

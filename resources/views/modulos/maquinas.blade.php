@@ -16,7 +16,7 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
                
-                <h1 class="display-5" >Crear Maquina</h1>
+                <h4 class="display-6" >Crear Maquina</h4>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaMaquina">
@@ -37,11 +37,12 @@
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Crea Maquina</h5>
+                            <h4 class="modal-title" id="exampleModalLabel">Crea Maquina</h4>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="input-group mb-3">                               
+                                <div class="input-group mb-3"> 
+                                    <span class="input-group-text">Maquina:</span>                               
                                     <input type="text" class="form-control" placeholder="Nombre maquina" name="maquina" id="maquina" required>
                                 </div>
                             </div>

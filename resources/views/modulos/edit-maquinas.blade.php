@@ -1,7 +1,9 @@
 @extends('layout')
 
 @section('title', 'Editar maquina | Inducolma')
-
+@section('submenu')
+    @include('modulos.sidebars.costos-side')
+@endsection
 @section('content')
 <form action="{{ route('maquinas.update', $maquina->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
@@ -11,11 +13,12 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Editar Maquina</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h4 class="modal-title" id="exampleModalLabel">Editar Maquina</h4>
+            
             </div>
             <div class="modal-body">
-                <div class="input-group mb-3">                               
+                <div class="input-group mb-3"> 
+                    <span class="input-group-text">Maquina:</span>                               
                     <input type="text" class="form-control" placeholder="Nombre maquina" name="maquina" id="maquina" required value="{{ $maquina->maquina }}">
                 </div>
             </div>

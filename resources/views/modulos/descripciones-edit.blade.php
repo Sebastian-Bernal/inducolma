@@ -1,7 +1,9 @@
 @extends('layout')
 
-@section('title', 'Editar operaci&oacute;n | Inducolma')
-
+@section('title', 'Editar descripción | Inducolma')
+@section('submenu')
+    @include('modulos.sidebars.costos-side')
+@endsection
 @section('content')
 <form action="{{ route('descripciones.update', $descripcion->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
@@ -11,14 +13,16 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Editar Operaci&oacute;n</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Editar descripción</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="input-group mb-3">                               
+                <div class="input-group mb-3"> 
+                    <span class="input-group-text">Descripci&oacute;n:</span>                               
                     <input type="text" class="form-control" placeholder="Nombre descripcion" name="descripcion" id="descripcion" required value="{{ $descripcion->descripcion }}">
                 </div>
-                <div class="input-group mb-3">                               
+                <div class="input-group mb-3"> 
+                    <span class="input-group-text">Operaci&oacute;n:</span>                               
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
                         @foreach ($operaciones as $operacion)
                             <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>

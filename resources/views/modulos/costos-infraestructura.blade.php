@@ -5,18 +5,18 @@
 
 @endsection
 
-@section('title', ' Costos operacion | inducolma')
+@section('title', ' Costos de infraestructura | inducolma')
 
 @section('submenu')
     @include('modulos.sidebars.costos-side')
 @endsection
 @section('content')
-    <div class="div container h-content">        
+    <div class="div container h-content ">        
         <div class="row">            
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
                
-                <h1 class="display-5" >Crear costo de costo de infraestructura</h1>
+                <h1 class="display-6" >Crear costo de costo de infraestructura</h1>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaCostoInfraestructura">
@@ -159,7 +159,5 @@
 } );   
 </script>
 
-<script>
-    alert('hola desde costos de infraestructura')
-</script>
+
 @endsection

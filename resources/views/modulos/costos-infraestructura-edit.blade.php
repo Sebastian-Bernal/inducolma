@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Editar infraestructura | Inducolma')
+@section('title', 'Editar costo de  infraestructura | Inducolma')
 
 @section('content')
 <form action="{{ route('costos-de-infraestructura.update', $costosInfraestructura->id) }}" method="POST" >
