@@ -18,7 +18,7 @@ class DescripcionController extends Controller
     {
         $descripciones = Descripcion::all();
         $operaciones = Operacion::all();
-        return view('modulos.descripciones', compact(['descripciones','operaciones']));
+        return view('modulos.administrativo.descripciones', compact(['descripciones','operaciones']));
     }
 
     /**

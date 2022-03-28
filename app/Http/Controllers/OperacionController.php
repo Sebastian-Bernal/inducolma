@@ -15,7 +15,7 @@ class OperacionController extends Controller
      */
     public function index()
     {
-        return view('modulos.operaciones', [
+        return view('modulos.administrativo.operaciones', [
             'operaciones' => Operacion::all()
         ]);
     }
@@ -65,7 +65,7 @@ class OperacionController extends Controller
     {
         
         $operacion = Operacion::findOrFail($operacion->id);
-        return view('modulos.operaciones-edit',[
+        return view('modulos.administrativo.operaciones-edit',[
             'operacion'   => $operacion,
                       
         ]);

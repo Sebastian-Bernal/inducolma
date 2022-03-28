@@ -18,7 +18,7 @@ class MaquinaController extends Controller
     {
         $maquinas = Maquina::latest()->get();
 
-        return view('modulos.maquinas', compact('maquinas'));
+        return view('modulos.administrativo.maquinas', compact('maquinas'));
     }
 
     /**
@@ -66,7 +66,7 @@ class MaquinaController extends Controller
     public function edit(Maquina $maquina)
     {
         $maquina = Maquina::findOrFail($maquina->id);
-        return view('modulos.edit-maquinas',[
+        return view('modulos.administrativo.edit-maquinas',[
             'maquina'   => $maquina,
                       
         ]);

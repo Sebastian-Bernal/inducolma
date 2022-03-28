@@ -5,6 +5,7 @@
             <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
                 <span class="navbar-toggler-icon " ></span>
             </button>
+            
         @endguest
         
         <a class="navbar-brand" href="{{ route('home') }}">
@@ -14,6 +15,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
         </button>
+
 
         
         <a class="navbar-brand" href="{{ route('home') }}">

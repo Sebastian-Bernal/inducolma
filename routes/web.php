@@ -5,7 +5,7 @@ use App\Http\Controllers\CostosOperacionController;
 use App\Http\Controllers\DescripcionController;
 use App\Http\Controllers\MaquinaController;
 use App\Http\Controllers\OperacionController;
-use App\Models\CostosOperacion;
+use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/','home')->name('home');
+Route::view('/','home')->name('inicio');
 
 Route::view('costos-maquina','modulos.maquinas')->name('maquinas')->middleware('auth');
 
@@ -57,7 +57,13 @@ Route::resource('costos-de-infraestructura', CostosInfraestructuraController::cl
 Route::post('descripciones', [CostosOperacionController::class, 'descripciones'])
         ->name('descripciones');
 
+Route::resource('usuarios', UsuarioController::class)
+            ->parameters(['usuarios' => 'usuario'])
+            ->names('usuarios')
+            ->middleware('auth');
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+

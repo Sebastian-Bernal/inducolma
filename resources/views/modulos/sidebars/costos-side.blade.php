@@ -5,22 +5,38 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <div >
-                <div class="mt-3">                
-                    <a href="{{ route('maquinas.index') }}" class="btn btn-primary ">Maquinas</a>
-                </div>
-                <div class="mt-3">
-                    <a href="{{ route('operaciones.index') }}" class="btn btn-primary">Operaciones</a>
-                </div>
-                <div class="mt-3">
-                    <a href="{{ route('descripciones.index') }}" class="btn btn-primary ">Descripciones</a>
-                </div>
-                <div class="mt-3">
-                    <a href="{{ route('costos-de-operacion.index') }}" class="btn btn-primary ">Costos operaci&oacute;n</a>
-                </div>
-                <div class="mt-3">
-                    <a href="{{ route('costos-de-infraestructura.index') }}" class="btn btn-primary ">Costos infraestructura</a>
+
+            <p>
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseCostos" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Costos
+                </a>                
+            </p>
+            <div class="collapse" id="collapseCostos">
+                <div class="card card-body">
+                    <div class="mt-3">                
+                        <a href="{{ route('maquinas.index') }}" class="btn btn-primary ">Maquinas</a>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('operaciones.index') }}" class="btn btn-primary">Operaciones</a>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('descripciones.index') }}" class="btn btn-primary ">Descripciones</a>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('costos-de-operacion.index') }}" class="btn btn-primary ">Costos operaci&oacute;n</a>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('costos-de-infraestructura.index') }}" class="btn btn-primary ">Costos infraestructura</a>
+                    </div>
                 </div>
             </div>
+            <p>
+                <a class="btn btn-primary" href="{{ route('usuarios.index') }}">
+                    Usuarios
+                </a>
+            </p>
+            
+            
+           
         </div>
   </div>

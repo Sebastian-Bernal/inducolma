@@ -18,7 +18,7 @@ class CostosInfraestructuraController extends Controller
     {
         $costosIinfraestructura = CostosInfraestructura::all();
         $maquinas = Maquina::all();
-        return view('modulos.costos-infraestructura', compact('costosIinfraestructura', 'maquinas'));
+        return view('modulos.administrativo.costos-infraestructura', compact('costosIinfraestructura', 'maquinas'));
     }
 
     /**
@@ -74,7 +74,7 @@ class CostosInfraestructuraController extends Controller
     {
        
         $maquinas = Maquina::all();
-        return view('modulos.costos-infraestructura-edit', compact('costosInfraestructura', 'maquinas'));
+        return view('modulos.administrativo.costos-infraestructura-edit', compact('costosInfraestructura', 'maquinas'));
     }
 
     /**

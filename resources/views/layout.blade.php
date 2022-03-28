@@ -7,6 +7,23 @@
     @yield('css')
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <script src="{{ mix('js/app.js') }}" defer=""></script>
+    <!-- LIBRERIAS -->
+
+    <!-- jquery -->
+    <script src="/js/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="/DataTables/datatables.min.css"/> 
+    <script src="/DataTables/datatables.min.js"></script>
+    
+    <!-- select2 -->
+    <link rel="stylesheet" href="/select2/dist/css/select2.min.css">
+    <script src="/select2/dist/js/select2.js" defer=""></script>
+    
+    <!-- sweetalert -->
+    <script src="/sweetalert/sweetalert2.all.min.js"></script>
+
+    
     <title>@yield('title')</title>
     
     <style>
