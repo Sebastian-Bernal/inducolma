@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Madera;
+use App\Http\Requests\StoreMaderaRequest;
+use App\Http\Requests\UpdateMaderaRequest;
 use Illuminate\Http\Request;
 
 class MaderaController extends Controller
@@ -14,7 +16,8 @@ class MaderaController extends Controller
      */
     public function index()
     {
-        //
+        $maderas = Madera::all();
+        return view('modulos.administrativo.maderas.index', compact('maderas'));
     }
 
     /**
@@ -30,12 +33,14 @@ class MaderaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreMaderaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreMaderaRequest $request)
     {
-        //
+        
+        $madera = Madera::create($request->all());
+        return redirect()->route('maderas.index')->with('status', 'Madera creada con éxito');
     }
 
     /**
@@ -46,7 +51,7 @@ class MaderaController extends Controller
      */
     public function show(Madera $madera)
     {
-        //
+        return view('modulos.administrativo.maderas.show', compact('madera'));
     }
 
     /**
@@ -63,13 +68,19 @@ class MaderaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdateMaderaRequest  $request
      * @param  \App\Models\Madera  $madera
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Madera $madera)
     {
-        //
+        //return request()->all();
+        
+        $madera->nombre = $request->nombre;
+        $madera->nombre_cientifico = $request->nombre_cientifico;
+        $madera->densidad = $request->densidad;
+        $madera->save();
+        return redirect()->route('maderas.index')->with('status', 'Madera actualizada con éxito');
     }
 
     /**
@@ -80,6 +91,7 @@ class MaderaController extends Controller
      */
     public function destroy(Madera $madera)
     {
-        //
+        $madera->delete();
+        return response()->json(['success'=>'Madera eliminada correctamente']);
     }
 }

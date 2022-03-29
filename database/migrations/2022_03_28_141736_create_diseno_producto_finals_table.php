@@ -13,7 +13,7 @@ class CreateDisenoProductoFinalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('diseno_producto_finals', function (Blueprint $table) {
+        Schema::create('diseno_producto_finales', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
             $table->string('tipo_madera');

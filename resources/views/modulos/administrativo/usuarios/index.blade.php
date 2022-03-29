@@ -67,7 +67,7 @@
                                 </div>
         
                                 <div class="row mb-3">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('E-Mail Address') }}</label>
+                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}</label>
         
                                     <div class="col-md-6">
                                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -83,10 +83,11 @@
                                 <div class="row mb-3">
                                     <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
                                     <div class="col-md-6">
-                                        <select class="form-select" name="rolUsuario" >
-                                            <option selected>Seleccione...</option>
-                                            <option value="1">Auxiliar administrativo</option>
-                                            <option value="2">Operario</option>                                            
+                                        <select class="form-select" name="rolUsuario" required >
+                                            @foreach ($roles as $rol)
+                                                <option value="{{ $rol->nivel }}">{{ $rol->nombre }}</option>
+                                            @endforeach                     
+                                                                                       
                                         </select>  
                                     </div>                                                                  
                                     
@@ -109,8 +110,9 @@
         <table id="listaUsuarios" class="table table-bordered table-striped dt-responsive">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nombres</th>                    
+                    <th>Identificacion</th>
+                    <th>Nombres</th>   
+                              
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -118,24 +120,19 @@
             <tbody>
                 @foreach ($usuarios as $usuario)
                     <tr>
-                        <td>{{ $usuario->id }}</td>
-                        <td>{{ $usuario->name }}</td>
-                        
+                        <td>{{ $usuario->identificacion }}</td>
+                        <td>{{ $usuario->name }}</td>                      
                         
                         <td>
                             <div class="d-flex align-items-center ">
-                                <form action="{{ route('costos-de-infraestructura.destroy', $usuario) }}" method="POST">
-                                    @method('DELETE')
-                                    @csrf
-
-                                    <input 
-                                        type="submit" 
-                                        value="Elminar" 
-                                        class="btn btn-sm btn-danger "
-                                        onclick="return confirm('¿desea eliminar el costo de infraestructura?')">
-                                </form>
-
-                                <a href="{{ route('costos-de-infraestructura.edit', $usuario) }}" class="btn btn-sm btn-warning"> Editar</a>
+                                
+                                <button class="btn btn-sm btn-danger" onclick="eliminarUsuario({{ $usuario->id }})">
+                                    <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
+                                </button>
+                                <a href="{{ route('usuarios.show',$usuario) }}" class="btn btn-sm btn-warning">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                </a>
+                               
                             </div>
                         </td>
                     </tr> 
@@ -149,14 +146,5 @@
 @endsection
 
 @section('js')
-<script>
- $(document).ready(function() {
-    $('#listaUsuarios').DataTable({
-        "language": {
-                "url": "/DataTables/Spanish.json"
-                },
-        "responsive": true
-    });
-} );   
-</script>
+<script src="/js/modulos/usuarios.js"></script>
 @endsection

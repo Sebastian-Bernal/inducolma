@@ -20,7 +20,7 @@ class CreateDisenoItemsTable extends Migration
             $table->timestamps();
 
             //relaciones con tabla disenos, items
-            $table->foreign('diseno_id')->references('id')->on('disenos_productos_finales');
+            $table->foreign('diseno_id')->references('id')->on('diseno_producto_finales');
             $table->foreign('item_id')->references('id')->on('items');
         });
     }

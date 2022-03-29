@@ -10,11 +10,11 @@
         <div class="col-12 col-sm-10 col-lg-6 mx-auto">
             
            
-            <h1 class="display-6" >Usuarios</h1>
+            <h1 class="display-6" >Proveedores</h1>
             <hr>
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#creaUsuario">
-                Crear usuario
+                Crear proveedor
             </button>
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -25,13 +25,13 @@
                 
             @endif
             <!-- Modal Crea maquina-->
-            <form action="{{ route('usuarios.store') }}" method="POST">
+            <form action="{{ route('proveedores.store') }}" method="POST">
                 @csrf
                 <div class="modal fade" id="creaUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Crea Usuario</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Crea Proveedor</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -39,12 +39,12 @@
                             <div class="card-body">                                                
                                                    
                                 <div class="row mb-3">
-                                    <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Identificacion') }}</label>
+                                    <label for="identificacion" class="col-md-4 col-form-label text-md-end">{{ __('Identificacion') }}</label>
         
                                     <div class="col-md-6">
-                                        <input id="identificacionUsuario" type="text" class="form-control @error('identificacionUsuario') is-invalid @enderror" name="identificacionUsuario" value="{{ old('identificacionUsuario') }}" required autocomplete="identificacionUsuario" autofocus>
+                                        <input id="identificacion" type="text" class="form-control @error('identificacion') is-invalid @enderror" name="identificacion" value="{{ old('identificacion') }}" required autocomplete="identificacion" autofocus>
         
-                                        @error('name')
+                                        @error('identificacion')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -53,12 +53,12 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                                    <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
         
                                     <div class="col-md-6">
-                                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                        <input id="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror text-uppercase" name="nombre" value="{{ old('name') }}" required autocomplete="nombre" autofocus>
         
-                                        @error('name')
+                                        @error('nombre')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -67,7 +67,35 @@
                                 </div>
         
                                 <div class="row mb-3">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('E-Mail Address') }}</label>
+                                    <label for="direccion" class="col-md-4 col-form-label text-md-end">{{ __('Address') }}</label>
+        
+                                    <div class="col-md-6">
+                                        <input id="direccion" type="text" class="form-control @error('direccion') is-invalid @enderror text-uppercase" name="direccion" value="{{ old('direccion') }}" required autocomplete="direccion">
+        
+                                        @error('direccion')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div> 
+
+                                <div class="row mb-3">
+                                    <label for="telefono" class="col-md-4 col-form-label text-md-end">{{ __('Telefono ') }}</label>
+        
+                                    <div class="col-md-6">
+                                        <input id="telefono" type="number" class="form-control @error('telefono') is-invalid @enderror" name="telefono" value="{{ old('telefono') }}" required autocomplete="telefono">
+        
+                                        @error('telefono')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div> 
+                                
+                                <div class="row mb-3">
+                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}</label>
         
                                     <div class="col-md-6">
                                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -80,13 +108,19 @@
                                     </div>
                                 </div> 
 
+                                
                                 <div class="row mb-3">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
+                                    <label for="razonSocial" class="col-md-4 col-form-label text-md-end">{{ __('Razon social') }}</label>
                                     <div class="col-md-6">
-                                        <select class="form-select" name="rolUsuario" >
+                                        <select class="form-select" name="razonSocial" >
                                             <option selected>Seleccione...</option>
-                                            <option value="1">Auxiliar administrativo</option>
-                                            <option value="2">Operario</option>                                            
+                                            <option value="Sociedades Limitadas - LTDA">Sociedades Limitadas - LTDA</option>
+                                            <option value="Sociedades Anónimas – S.A">Sociedades Anónimas – S.A</option>   
+                                            <option value="Sociedad en Comandita – & Cía.">Sociedad en Comandita – & Cía.</option>   
+                                            <option value="Sociedad en Comandita Simple – S. en C.">Sociedad en Comandita Simple – S. en C.</option>
+                                            <option value="Sociedad en Comandita por Acciones – S.C.A.">Sociedad en Comandita por Acciones – S.C.A.</option>  
+                                            <option value="Sociedad por Acciones Simplificada – S.A.S.">Sociedad por Acciones Simplificada – S.A.S.</option> 
+                                            <option value="Sociedad Colectiva">Sociedad Colectiva</option>                                   
                                         </select>  
                                     </div>                                                                  
                                     
@@ -97,7 +131,7 @@
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar usuario</button>
+                        <button type="submit" class="btn btn-primary">Guardar proveedor</button>
                         </div>
                     </div>
                     </div>
@@ -110,32 +144,36 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nombres</th>                    
+                    <th>Nombres</th> 
+                    <th>Direccion</th>
+                    <th>Telefono</th>
+                    <th>Email</th>
+                    <th>Razon Social</th>
+                    <th>Calificacion</th>                   
                     <th>Acciones</th>
                 </tr>
             </thead>
 
             <tbody>
-                @foreach ($usuarios as $usuario)
+                @foreach ($proveedores as $proveedor)
                     <tr>
-                        <td>{{ $usuario->id }}</td>
-                        <td>{{ $usuario->name }}</td>
-                        
-                        
+                        <td>{{ $proveedor->identificacion }}</td>
+                        <td>{{ $proveedor->nombre }}</td>
+                        <td>{{ $proveedor->direccion }}</td>
+                        <td>{{ $proveedor->telefono }}</td>
+                        <td>{{ $proveedor->email }}</td>
+                        <td>{{ $proveedor->razon_social }}</td>
+                        <td>{{ $proveedor->calificacion }}</td>
                         <td>
                             <div class="d-flex align-items-center ">
-                                <form action="{{ route('costos-de-infraestructura.destroy', $usuario) }}" method="POST">
-                                    @method('DELETE')
-                                    @csrf
-
-                                    <input 
-                                        type="submit" 
-                                        value="Elminar" 
-                                        class="btn btn-sm btn-danger "
-                                        onclick="return confirm('¿desea eliminar el costo de infraestructura?')">
-                                </form>
-
-                                <a href="{{ route('costos-de-infraestructura.edit', $usuario) }}" class="btn btn-sm btn-warning"> Editar</a>
+                                
+                                <button class="btn btn-sm btn-danger" onclick="eliminarUsuario({{ $proveedor }})">
+                                    <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
+                                </button>
+                                <a href="{{ route('proveedores.show',$proveedor) }}" class="btn btn-sm btn-warning">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                </a>
+                               
                             </div>
                         </td>
                     </tr> 
@@ -149,14 +187,5 @@
 @endsection
 
 @section('js')
-<script>
- $(document).ready(function() {
-    $('#listaUsuarios').DataTable({
-        "language": {
-                "url": "/DataTables/Spanish.json"
-                },
-        "responsive": true
-    });
-} );   
-</script>
+<script src="/js/modulos/proveedores.js"></script>
 @endsection

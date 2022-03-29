@@ -32,7 +32,7 @@ class CreateCubicajesTable extends Migration
 
             //relaciones con tabla entradas_maderas y usuarios
             $table->unsignedBigInteger('entrada_madera_id');
-            $table->foreign('entrada_madera_id')->references('id')->on('entradas_maderas');
+            $table->foreign('entrada_madera_id')->references('id')->on('entrada_maderas');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
         });

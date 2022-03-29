@@ -31,7 +31,7 @@ class CreateCalificacionMaderasTable extends Migration
 
             //relaciones con tabla entradas_maderas
             $table->unsignedBigInteger('entrada_madera_id');
-            $table->foreign('entrada_madera_id')->references('id')->on('entradas_maderas');
+            $table->foreign('entrada_madera_id')->references('id')->on('entrada_maderas');
         });
     }
 

@@ -5,7 +5,10 @@ use App\Http\Controllers\CostosOperacionController;
 use App\Http\Controllers\DescripcionController;
 use App\Http\Controllers\MaquinaController;
 use App\Http\Controllers\OperacionController;
+use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\MaderaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +64,23 @@ Route::resource('usuarios', UsuarioController::class)
             ->parameters(['usuarios' => 'usuario'])
             ->names('usuarios')
             ->middleware('auth');
+
+Route::resource('proveedores', ProveedorController::class)
+            ->parameters(['proveedores' => 'proveedor'])
+            ->names('proveedores')
+            ->middleware('auth');
+
+Route::resource('roles',RolController::class)
+            ->parameters(['roles' => 'rol'])
+            ->names('roles')
+            ->middleware('auth');
+
+
+Route::resource('maderas', MaderaController::class)
+            ->parameters(['maderas' => 'madera'])
+            ->names('maderas')
+            ->middleware('auth');
+
 
 Auth::routes();
 

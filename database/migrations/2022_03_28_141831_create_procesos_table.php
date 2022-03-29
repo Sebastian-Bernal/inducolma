@@ -36,6 +36,12 @@ class CreateProcesosTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            // Relaciones con tabla items, ordenes de produccion, items y maquinas
+            $table->foreign('items_id')->references('id')->on('items');
+            $table->foreign('orden_produccion_id')->references('id')->on('ordenes_produccion');
+            $table->foreign('maquinas_id')->references('id')->on('maquinas');
+
         });
     }
 

@@ -1,7 +1,7 @@
 
     <div class="offcanvas offcanvas-start box-shadow-lg" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
         <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Costos</h5>
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel"></h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
@@ -30,13 +30,31 @@
                     </div>
                 </div>
             </div>
+            @can('admin')
+                <p>
+                    <a class="btn btn-primary" href="{{ route('usuarios.index') }}">
+                        Usuarios
+                    </a>
+                </p>
+            @endcan
+            
             <p>
-                <a class="btn btn-primary" href="{{ route('usuarios.index') }}">
-                    Usuarios
+                <a class="btn btn-primary" href="{{ route('proveedores.index') }}">
+                    Proveedores
+                </a>
+            </p>
+
+            <p>
+                <a class="btn btn-primary" href="{{ route('maderas.index') }}">
+                    Maderas
                 </a>
             </p>
             
-            
+            <p>
+                <a class="btn btn-primary" href="{{ route('roles.index') }}">
+                    Roles
+                </a>
+            </p>
            
         </div>
   </div>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Role;
+use App\Models\Rol;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUsuariosRequest;
 
@@ -16,8 +16,10 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $usuarios = User::all();
-        $roles = Role::all();
+        $this->authorize('admin');
+        $usuarios = User::all()->except(1);
+        $roles = Rol::all();
+        
         return view('modulos.administrativo.usuarios.index', compact('usuarios', 'roles'));
     }
 
@@ -39,11 +41,12 @@ class UsuarioController extends Controller
      */
     public function store(StoreUsuariosRequest  $request)
     {
-        return $request->all();
+        //return $request->all();
         $usuario = new User();
-        $usuario->id = $request->identificacionUsuario;
+        $usuario->identificacion = $request->identificacionUsuario;
         $usuario->name = $request->name;
         $usuario->email = $request->email;
+        $usuario->rol = $request->rolUsuario;
         $usuario->password = bcrypt('123456789');
         $usuario->save();
         return redirect()->route('usuarios.index');
@@ -55,9 +58,11 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $usuario)
     {
-        //
+        
+        
+        return view('modulos.administrativo.usuarios.show', compact('usuario'));
     }
 
     /**
@@ -68,7 +73,8 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        //
+        $usuario = User::fidOrFail($id);
+        return response()->json($usuario);
     }
 
     /**
@@ -80,7 +86,12 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $usuario = User::findOrFail($id);
+        $usuario->name = $request->name;
+        $usuario->email = $request->email;
+        $usuario->rol = $request->rolUsuario;
+        $usuario->save();
+        return redirect()->route('usuarios.index');
     }
 
     /**
@@ -91,6 +102,10 @@ class UsuarioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //return $id;
+        $usuario = User::findOrFail($id);
+        $usuario->delete();
+        return response()->json(['success'=>'Usuario eliminado correctamente']);
+        //return redirect()->route('usuarios.index');
     }
 }

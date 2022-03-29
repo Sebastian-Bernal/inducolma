@@ -13,7 +13,7 @@ class CreateTransformacionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transformacions', function (Blueprint $table) {
+        Schema::create('transformaciones', function (Blueprint $table) {
             $table->id();
             $table->decimal('ancho');
             $table->decimal('largo');

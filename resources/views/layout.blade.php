@@ -23,7 +23,10 @@
     <!-- sweetalert -->
     <script src="/sweetalert/sweetalert2.all.min.js"></script>
 
-    
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <script src="/fontawesome/js/all.js"></script>
+
     <title>@yield('title')</title>
     
     <style>

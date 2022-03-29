@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class StoreUsuariosRequest extends FormRequest
 {
@@ -14,6 +15,9 @@ class StoreUsuariosRequest extends FormRequest
     public function authorize()
     {
         return true;
+        
+       
+
     }
 
     /**
@@ -24,15 +28,25 @@ class StoreUsuariosRequest extends FormRequest
     public function rules()
     {
         return [
-            'identificacionUsuario' => 'required|unique:users,id',
+            'identificacionUsuario' => 'required|unique:users,identificacion',
             'name' => 'required',
             'email' => 'required|unique:users,email',
             
         ];
+
         
     }
 
-    
+    public function messages()
+    {
+        return [
+            'identificacionUsuario.required' => 'El campo identificación es obligatorio',
+            'identificacionUsuario.unique' => 'El campo identificación ya existe',
+            'name.required' => 'El campo nombre es obligatorio',
+            'email.required' => 'El campo email es obligatorio',
+            'email.unique' => 'El campo email ya existe',
+        ];
+    }
 
     
 }

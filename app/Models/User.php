@@ -42,4 +42,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Obtiene el nombre del rol haciendo join con la tabla roles.
+     */
+    // public function nombreRol()
+    // {
+    //     return $this->hasOne(Rol::class, 'nombre');
+    // }
+
+    
 }

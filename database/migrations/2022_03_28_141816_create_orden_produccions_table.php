@@ -25,7 +25,7 @@ class CreateOrdenProduccionsTable extends Migration
             // Relaciones con tabla pedidos, diseños de producto final y usuarios
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('pedido_id')->references('id')->on('pedidos');
-            $table->foreign('diseno_producto_final_id')->references('id')->on('disenos_productos_finales');
+            $table->foreign('diseno_producto_final_id')->references('id')->on('diseno_producto_finales');
         });
     }
 
