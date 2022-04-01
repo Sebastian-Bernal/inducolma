@@ -15,6 +15,7 @@ class RolController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $roles = Rol::all();
         return view('modulos.administrativo.roles.index', compact('roles'));
     }
@@ -37,6 +38,7 @@ class RolController extends Controller
      */
     public function store(StoreRolRequest $request)
     {
+        $this->authorize('admin');
         $rol = Rol::create($request->validated());
         return redirect()->route('roles.index')->with('success', 'Rol creado correctamente');
     }

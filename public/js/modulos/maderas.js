@@ -11,6 +11,7 @@ $(document).ready(function() {
 // funcion para eliminar un proveedor
 function eliminarMadera(madera) {
         
+    
         Swal.fire({
         title: `¿Está seguro de eliminar la madera ${madera.nombre}, ${madera.nombre_cientifico}?`,       
         icon: 'warning',

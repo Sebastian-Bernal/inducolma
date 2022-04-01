@@ -5,7 +5,7 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-
+            @can('admin')
             <p>
                 <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseCostos" role="button" aria-expanded="false" aria-controls="collapseExample">
                     Costos
@@ -30,13 +30,13 @@
                     </div>
                 </div>
             </div>
-            @can('admin')
+            
                 <p>
                     <a class="btn btn-primary" href="{{ route('usuarios.index') }}">
                         Usuarios
                     </a>
                 </p>
-            @endcan
+            
             
             <p>
                 <a class="btn btn-primary" href="{{ route('proveedores.index') }}">
@@ -55,6 +55,6 @@
                     Roles
                 </a>
             </p>
-           
+            @endcan
         </div>
   </div>

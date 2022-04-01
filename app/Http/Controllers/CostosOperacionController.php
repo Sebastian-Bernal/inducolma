@@ -20,6 +20,7 @@ class CostosOperacionController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $costosOperacion = CostosOperacion::all();
         $maquinas = Maquina::all();
         $descripciones = Descripcion::all();
@@ -45,6 +46,7 @@ class CostosOperacionController extends Controller
      */
     public function store(StoreCostosOperacionRequest $request)
     {
+        $this->authorize('admin');
         $costosOperacion = new CostosOperacion();
         $costosOperacion->cantidad = $request->cantidad;
         $costosOperacion->valor_mes = $request->valorMes;
@@ -75,6 +77,7 @@ class CostosOperacionController extends Controller
      */
     public function edit(CostosOperacion $costosOperacion)
     {
+        $this->authorize('admin');
         $maquinas = Maquina::all();
         $descripciones = Descripcion::all();
         $operaciones = Operacion::all();
@@ -90,6 +93,7 @@ class CostosOperacionController extends Controller
      */
     public function update(UpdateCostosOperacionRequest $request, CostosOperacion $costosOperacion)
     {
+        $this->authorize('admin');
         $costosOperacion = CostosOperacion::findOrFail($costosOperacion->id);
         $costosOperacion->cantidad = $request->cantidad;
         $costosOperacion->valor_mes = $request->valorMes;
@@ -109,6 +113,7 @@ class CostosOperacionController extends Controller
      */
     public function destroy(CostosOperacion $costosOperacion)
     {
+        $this->authorize('admin');
         $costosOperacion = CostosOperacion::findOrFail($costosOperacion->id);
         $costosOperacion->delete();
         return redirect()->route('costos-de-operacion.index')->with('status', 'Costo de operación eliminado con éxito');
@@ -116,6 +121,7 @@ class CostosOperacionController extends Controller
 
     public function descripciones(Request $request)
     {
+        $this->authorize('admin');
         $operaciones = Descripcion::where('operacion_id', $request->idOperacion)->get();
         return response()->json($operaciones);
     }

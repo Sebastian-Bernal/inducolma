@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\EntradaMadera;
+use App\Models\Madera;
+use App\Models\Proveedor;
+use App\Http\Requests\StoreEntraMaderaRequest;
 use Illuminate\Http\Request;
+use App\Repositories\RegistroEntradaMadera;
 
 class EntradaMaderaController extends Controller
 {
@@ -12,9 +16,20 @@ class EntradaMaderaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $registroEntradaMadera;
+    
+    public function __construct(RegistroEntradaMadera $registroEntradaMadera)
+    {
+        $this->registroEntradaMadera = $registroEntradaMadera;
+        
+    }
+
     public function index()
     {
-        //
+        $entradas = EntradaMadera::all();
+        $proveedores = Proveedor::select('id', 'nombre')->get();
+        $maderas = Madera::select('id', 'nombre')->get();
+        return view('modulos.administrativo.entradas-madera.index', compact('entradas', 'proveedores', 'maderas'));
     }
 
     /**
@@ -24,7 +39,8 @@ class EntradaMaderaController extends Controller
      */
     public function create()
     {
-        //
+      //
+        
     }
 
     /**
@@ -35,7 +51,10 @@ class EntradaMaderaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       // return $request->all();
+
+        return $this->registroEntradaMadera->guardar($request);
+        
     }
 
     /**

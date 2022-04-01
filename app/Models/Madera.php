@@ -25,4 +25,14 @@ class Madera extends Model
     {
         $this->attributes['nombre_cientifico'] = strtoupper($value);
     }
+
+    /**
+     * relacion de la madera con las entradas de madera
+     */
+
+    public function entradas()
+    {
+        return $this->hasOne(EntradaMadera::class);
+    }
+
 }

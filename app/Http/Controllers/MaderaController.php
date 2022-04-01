@@ -16,6 +16,7 @@ class MaderaController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $maderas = Madera::all();
         return view('modulos.administrativo.maderas.index', compact('maderas'));
     }
@@ -38,7 +39,7 @@ class MaderaController extends Controller
      */
     public function store(StoreMaderaRequest $request)
     {
-        
+        $this->authorize('admin');
         $madera = Madera::create($request->all());
         return redirect()->route('maderas.index')->with('status', 'Madera creada con éxito');
     }
@@ -51,6 +52,7 @@ class MaderaController extends Controller
      */
     public function show(Madera $madera)
     {
+        $this->authorize('admin');
         return view('modulos.administrativo.maderas.show', compact('madera'));
     }
 
@@ -75,7 +77,7 @@ class MaderaController extends Controller
     public function update(Request $request, Madera $madera)
     {
         //return request()->all();
-        
+        $this->authorize('admin');
         $madera->nombre = $request->nombre;
         $madera->nombre_cientifico = $request->nombre_cientifico;
         $madera->densidad = $request->densidad;
@@ -91,6 +93,7 @@ class MaderaController extends Controller
      */
     public function destroy(Madera $madera)
     {
+        $this->authorize('admin');
         $madera->delete();
         return response()->json(['success'=>'Madera eliminada correctamente']);
     }

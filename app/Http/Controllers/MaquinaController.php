@@ -16,6 +16,7 @@ class MaquinaController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $maquinas = Maquina::latest()->get();
 
         return view('modulos.administrativo.maquinas', compact('maquinas'));
@@ -40,6 +41,7 @@ class MaquinaController extends Controller
     public function store(StoreMaquinaRequest $request)
     {
         //dd($request->maquina);
+        $this->authorize('admin');
         Maquina::create(
             ['maquina' => $request->maquina]
         );
@@ -65,6 +67,7 @@ class MaquinaController extends Controller
      */
     public function edit(Maquina $maquina)
     {
+        $this->authorize('admin');
         $maquina = Maquina::findOrFail($maquina->id);
         return view('modulos.administrativo.edit-maquinas',[
             'maquina'   => $maquina,
@@ -81,7 +84,7 @@ class MaquinaController extends Controller
      */
     public function update(UpdateMaquinaRequest $request, Maquina $maquina)
     {
-        
+        $this->authorize('admin');
         //dd($request->maquina);
         $maquina = Maquina::findOrFail($maquina->id);
         $maquina->update($request->all());
@@ -96,6 +99,7 @@ class MaquinaController extends Controller
      */
     public function destroy(Maquina $maquina)
     {
+        $this->authorize('admin');
         $maquina->delete();
         return back();
     }

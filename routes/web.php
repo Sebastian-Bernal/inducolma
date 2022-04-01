@@ -9,6 +9,7 @@ use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\MaderaController;
+use App\Http\Controllers\EntradaMaderaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +82,10 @@ Route::resource('maderas', MaderaController::class)
             ->names('maderas')
             ->middleware('auth');
 
+Route::resource('entradas-maderas', EntradaMaderaController::class)
+            ->parameters(['entradas-maderas' => 'entrada'])
+            ->names('entradas-maderas')
+            ->middleware('auth');
 
 Auth::routes();
 

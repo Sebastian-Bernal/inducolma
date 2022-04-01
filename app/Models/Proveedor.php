@@ -10,4 +10,9 @@ class Proveedor extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'proveedores';
+
+    //relacion proveedor hasMany EntradaMadera
+    public function entradasMadera(){
+        return $this->hasMany(EntradaMadera::class);
+    }
 }

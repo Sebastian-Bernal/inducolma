@@ -42,6 +42,7 @@ class UsuarioController extends Controller
     public function store(StoreUsuariosRequest  $request)
     {
         //return $request->all();
+        $this->authorize('admin');
         $usuario = new User();
         $usuario->identificacion = $request->identificacionUsuario;
         $usuario->name = $request->name;
@@ -60,9 +61,9 @@ class UsuarioController extends Controller
      */
     public function show(User $usuario)
     {
-        
-        
-        return view('modulos.administrativo.usuarios.show', compact('usuario'));
+        $this->authorize('admin');  
+        $roles = Rol::all();      
+        return view('modulos.administrativo.usuarios.show', compact('usuario', 'roles'));
     }
 
     /**
@@ -73,6 +74,7 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('admin');
         $usuario = User::fidOrFail($id);
         return response()->json($usuario);
     }
@@ -86,6 +88,7 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('admin');
         $usuario = User::findOrFail($id);
         $usuario->name = $request->name;
         $usuario->email = $request->email;
@@ -103,6 +106,7 @@ class UsuarioController extends Controller
     public function destroy($id)
     {
         //return $id;
+        $this->authorize('admin');
         $usuario = User::findOrFail($id);
         $usuario->delete();
         return response()->json(['success'=>'Usuario eliminado correctamente']);

@@ -27,9 +27,17 @@
             <ul class="nav nav-tabs font-color">
                 @guest
                     @else
+                    @can('admin')
                     <li class="nav-item">
                         <a class="nav-link link-light {{ setActive('maquinas.index') }}" href="{{ route('maquinas.index') }}">{{ __('Costos') }}</a>
                     </li>
+                    @endcan
+                    @can('entrada-maderas')
+                        <li class="nav-item">
+                            <a class="nav-link link-light {{ setActive('entradas-maderas.index') }}" href="{{ route('entradas-maderas.index') }}">{{ __('Entrada maderas') }}</a>
+                        </li> 
+                    @endcan
+                    
                 @endguest
                 
                 {{-- <li class="nav-item">

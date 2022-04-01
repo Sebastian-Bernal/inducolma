@@ -112,7 +112,7 @@
                 <tr>
                     <th>Identificacion</th>
                     <th>Nombres</th>   
-                              
+                     <th>{{ __('Email') }}</th>         
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -122,7 +122,7 @@
                     <tr>
                         <td>{{ $usuario->identificacion }}</td>
                         <td>{{ $usuario->name }}</td>                      
-                        
+                        <td>{{ $usuario->email }}</td>
                         <td>
                             <div class="d-flex align-items-center ">
                                 

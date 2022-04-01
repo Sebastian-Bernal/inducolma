@@ -15,6 +15,7 @@ class OperacionController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         return view('modulos.administrativo.operaciones', [
             'operaciones' => Operacion::all()
         ]);
@@ -38,6 +39,7 @@ class OperacionController extends Controller
      */
     public function store(StoreOperacionRequest $request)
     {
+        $this->authorize('admin');
         $operacion = new Operacion();
         $operacion->operacion = $request->operacion;
         $operacion->save();
@@ -63,7 +65,7 @@ class OperacionController extends Controller
      */
     public function edit(Operacion $operacion)
     {
-        
+        $this->authorize('admin');
         $operacion = Operacion::findOrFail($operacion->id);
         return view('modulos.administrativo.operaciones-edit',[
             'operacion'   => $operacion,
@@ -80,6 +82,7 @@ class OperacionController extends Controller
      */
     public function update(UpdateOperacionRequest $request, Operacion $operacion)
     {
+        $this->authorize('admin');
         $operacion = Operacion::findOrFail($operacion->id);
         $operacion->operacion = $request->operacion;
         $operacion->save();
@@ -94,6 +97,7 @@ class OperacionController extends Controller
      */
     public function destroy(Operacion $operacion)
     {
+        $this->authorize('admin');
         $operacion->delete();
         return redirect()->route('operaciones.index');
     }

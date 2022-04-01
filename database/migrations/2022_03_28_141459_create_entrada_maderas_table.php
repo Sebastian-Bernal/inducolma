@@ -15,8 +15,8 @@ class CreateEntradaMaderasTable extends Migration
     {
         Schema::create('entrada_maderas', function (Blueprint $table) {
             $table->id();
-            $table->date('mes');
-            $table->date('ano');
+            $table->string('mes');
+            $table->string('ano');
             $table->time('hora');
             $table->date('fecha');
             $table->string('acto_administrativo');
@@ -26,8 +26,8 @@ class CreateEntradaMaderasTable extends Migration
             $table->string('nombre_madera');
             $table->string('nombre_cientifico');
             $table->string('entidad_vigilante');           
-            $table->string('tipo_madera');
-            $table->string('vitacora');
+            //$table->string('tipo_madera');
+            //$table->string('vitacora');
             $table->string('condicion_madera');
             $table->decimal('m3_entrada');
             $table->string('estado');

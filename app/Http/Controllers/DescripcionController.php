@@ -16,6 +16,7 @@ class DescripcionController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $descripciones = Descripcion::all();
         $operaciones = Operacion::all();
         return view('modulos.administrativo.descripciones', compact(['descripciones','operaciones']));
@@ -39,6 +40,7 @@ class DescripcionController extends Controller
      */
     public function store(StoreDescripcionRequest $request)
     {
+        $this->authorize('admin');
         $descripcion = new Descripcion();
         $descripcion->descripcion = $request->descripcion;
         $descripcion->operacion_id = $request->idOperacion;
@@ -65,6 +67,7 @@ class DescripcionController extends Controller
      */
     public function edit(Descripcion $descripcion)
     {
+        $this->authorize('admin');
         $descripcion = Descripcion::findOrFail($descripcion->id);
         $operaciones = Operacion::all();
         return view('modulos.descripciones-edit',[
@@ -83,6 +86,7 @@ class DescripcionController extends Controller
      */
     public function update(UpdateDescripcionRequest $request, Descripcion $descripcion)
     {
+        $this->authorize('admin');
         $descripcion = Descripcion::findOrFail($descripcion->id);
         $descripcion->descripcion = $request->descripcion;
         $descripcion->operacion_id = $request->idOperacion;
@@ -98,6 +102,7 @@ class DescripcionController extends Controller
      */
     public function destroy(Descripcion $descripcion)
     {
+        $this->authorize('admin');
         $descripcion = Descripcion::findOrFail($descripcion->id);
         $descripcion->delete();
         return redirect()->route('descripciones.index');

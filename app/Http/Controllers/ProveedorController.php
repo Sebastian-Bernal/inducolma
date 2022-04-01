@@ -15,6 +15,7 @@ class ProveedorController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $proveedores = Proveedor::all();
         return view('modulos.administrativo.proveedores.index', compact('proveedores'));
     }
@@ -37,7 +38,9 @@ class ProveedorController extends Controller
      */
     public function store( ProveedorRequest $request)
     {
+        
         //return request()->all();
+        $this->authorize('admin');
         $proveedor = new Proveedor();
         $proveedor->identificacion = $request->identificacion;
         $proveedor->nombre = $request->nombre;
@@ -59,6 +62,7 @@ class ProveedorController extends Controller
      */
     public function show(Proveedor $proveedor)
     {
+        $this->authorize('admin');
         return view('modulos.administrativo.proveedores.show', compact('proveedor'));
     }
 
@@ -82,6 +86,7 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, Proveedor $proveedor)
     {
+        $this->authorize('admin');
         $proveedor->identificacion = $request->identificacion;
         $proveedor->nombre = $request->nombre;
         $proveedor->direccion = $request->direccion;
@@ -101,6 +106,7 @@ class ProveedorController extends Controller
      */
     public function destroy(Proveedor $proveedor)
     {
+        $this->authorize('admin');
         $proveedor->delete();
         return response()->json(['success' => 'Proveedor eliminado correctamente']);
     }

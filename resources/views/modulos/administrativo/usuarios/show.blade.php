@@ -80,9 +80,10 @@
                                     <label for="rol" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
                                     <div class="col-md-6">
                                         <select class="form-select" name="rolUsuario" required >
-                                            <option selected>Seleccione...</option>
-                                            <option value="1">Auxiliar administrativo</option>
-                                            <option value="2">Operario</option>                                            
+                                            @foreach ($roles as $rol)
+                                                <option value="{{ $rol->nivel }}">{{ $rol->nombre }}</option>
+                                            @endforeach                    
+                                                                                       
                                         </select>  
                                     </div>                                                                  
                                     

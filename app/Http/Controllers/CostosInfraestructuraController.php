@@ -16,6 +16,7 @@ class CostosInfraestructuraController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $costosIinfraestructura = CostosInfraestructura::all();
         $maquinas = Maquina::all();
         return view('modulos.administrativo.costos-infraestructura', compact('costosIinfraestructura', 'maquinas'));
@@ -39,6 +40,7 @@ class CostosInfraestructuraController extends Controller
      */
     public function store(StoreCostosInfraestructuraRequest $request)
     {
+        $this->authorize('admin');
         $costosInfraestructura = new CostosInfraestructura();
         $costosInfraestructura->valor_operativo = $request->valorOperativo;
         $costosInfraestructura->tipo_material = $request->tipoMaterial;
@@ -72,7 +74,7 @@ class CostosInfraestructuraController extends Controller
      */
     public function edit(CostosInfraestructura $costosInfraestructura)
     {
-       
+        $this->authorize('admin');
         $maquinas = Maquina::all();
         return view('modulos.administrativo.costos-infraestructura-edit', compact('costosInfraestructura', 'maquinas'));
     }
@@ -86,6 +88,7 @@ class CostosInfraestructuraController extends Controller
      */
     public function update(UpdateCostosInfraestructuraRequest $request, CostosInfraestructura $costosInfraestructura)
     {
+        $this->authorize('admin');
         $costosInfraestructura->valor_operativo = $request->valorOperativo;
         $costosInfraestructura->tipo_material = $request->tipoMaterial;
         $costosInfraestructura->tipo_madera = $request->tipoMadera;
@@ -107,6 +110,7 @@ class CostosInfraestructuraController extends Controller
      */
     public function destroy(CostosInfraestructura $costosInfraestructura)
     {
+        $this->authorize('admin');
         $costosInfraestructura->delete();
         return back()->with('status', 'Costo de Infraestructura eliminado con éxito');
     }

@@ -25,11 +25,17 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        //gate para la autorizacion de los roles, entrada para administrador
 
         Gate::define('admin', function ($user) {
             return $user->rol > 3;
         });
+
+        //Gate para usuario con rol entrada de maderas
+        Gate::define('entrada-maderas', function ($user) {
+            return $user->rol === 1;
+        });
+
     }
 
     
