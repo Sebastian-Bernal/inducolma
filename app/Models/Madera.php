@@ -27,12 +27,13 @@ class Madera extends Model
     }
 
     /**
-     * relacion de la madera con las entradas de madera
+     * relacion entradas_madera_maderas hasMany maderas
+     * 
      */
-
-    public function entradas()
+    public function entradas_madera_maderas()
     {
-        return $this->hasOne(EntradaMadera::class);
+       // return $this->belongsToMany(EntradasMaderaMaderas::class, 'madera_id');
     }
+    
 
 }

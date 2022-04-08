@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CostosInfraestructuraController;
 use App\Http\Controllers\CostosOperacionController;
+use App\Http\Controllers\CubicajeController;
 use App\Http\Controllers\DescripcionController;
 use App\Http\Controllers\MaquinaController;
 use App\Http\Controllers\OperacionController;
@@ -87,6 +88,17 @@ Route::resource('entradas-maderas', EntradaMaderaController::class)
             ->names('entradas-maderas')
             ->middleware('auth');
 
+Route::post('revisa-acto', [EntradaMaderaController::class, 'verificarRegistro'])
+        ->name('revisa-acto')
+        ->middleware('auth');
+Route::post('ultima-entrada', [EntradaMaderaController::class, 'ultimaEntrada'])
+        ->name('ultima-entrada')
+        ->middleware('auth');
+        
+Route::resource('cubicaje',CubicajeController::class)
+                ->parameters(['cubicaje'=> 'cubicaje'])
+                ->names('cubicaje')
+                ->middleware('auth');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

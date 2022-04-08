@@ -3,18 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cubicaje;
+use App\Models\EntradaMadera;
 use Illuminate\Http\Request;
+use App\Repositories\RegistroCubicajes;
 
 class CubicajeController extends Controller
 {
+
+    protected $registroCubicaje;
+    
+    public function __construct(RegistroCubicajes $registroCubicaje)
+    {
+        $this->registroCubicaje = $registroCubicaje;
+        
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+        $cubicajes = Cubicaje::all();
+        return view('modulos.operaciones.cubicaje.index', compact('cubicajes'));
     }
 
     /**
@@ -22,9 +34,18 @@ class CubicajeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+    
+        $entrada = EntradaMadera::find($request->entrada);
+        if($entrada == ''){            
+            return redirect()->route('cubicaje.index')->with('status', ' no se encontro ninguna entrada con ese id');
+        } else {
+           $entrada = EntradaMadera::find($request->entrada)->load('entradas_madera_maderas');
+            return view('modulos.operaciones.cubicaje.create', compact('entrada'));
+        }
+
+        //return $entrada;
     }
 
     /**
@@ -35,7 +56,8 @@ class CubicajeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datos =  $request->cubicajes;
+         return $this->registroCubicaje->guardar($datos);
     }
 
     /**

@@ -50,15 +50,15 @@
             @include('partials.status')
         </header>
         
-        <main class="py-3 ">
+        <main class="py-3  ">
             
             @yield('content')
             @yield('submenu')
         </main>
     </div>
-    {{-- <footer class="bg-white text-center text-black-50 py-3 shadow">
+    <footer class="bg-white text-center text-black-50 py-3 shadow">
         Inducolma | Copyright @ {{ date('Y') }}
-    </footer> --}}
+    </footer>
    @yield('js') 
    
 </body>

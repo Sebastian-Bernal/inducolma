@@ -8,15 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class EntradaMadera extends Model
 {
     use HasFactory;
+    protected $table = 'entrada_maderas';
 
     //relacion EntradaMadera hasOne Proveedor
     public function proveedor(){
         return $this->belongsTo(Proveedor::class);
     }
 
-    //relacion EntradaMadera hasOne Madera
-    public function madera(){
-        return $this->belongsTo(Madera::class);
+    //relacion EntradaMadera hasMany EntradasMaderaMaderas
+    public function maderas(){
+        return $this->belongsToMany(Madera::class, 'entradas_madera_maderas');
+    }
+
+    //relacion EntradaMadera hasMany EntradasMaderaMaderas
+    public function entradas_madera_maderas(){
+        return $this->hasMany(EntradasMaderaMaderas::class);
     }
 
     //funcion para setear el nombre del acto administrativo
@@ -53,4 +59,6 @@ class EntradaMadera extends Model
     public function setVitacoraAttribute($value){
         $this->attributes['vitacora'] = strtoupper($value);
     }
+
+
 }

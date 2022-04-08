@@ -36,6 +36,16 @@ class AuthServiceProvider extends ServiceProvider
             return $user->rol === 1;
         });
 
+        //Gate para usuario con rol entrada de maderas
+        Gate::define('ver-entrada', function ($user) {
+            return $user->rol === 1;
+        });
+
+        //Gate para usuario cubicaje
+        Gate::define('cubicaje',function($user){
+            return $user->rol === 2;
+        });
+
     }
 
     

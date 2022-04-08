@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.web')
 @section('title', ' Entradas entrada | Inducolma')
 
 @section('submenu')
@@ -13,7 +13,7 @@
             <h1 class="display-6" >Entrada de madera</h1>
             <hr>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#creaUsuario">
+            <button type="button" class="btn btn-primary mb-3" id="registrar" data-bs-toggle="modal" data-bs-target="#creaUsuario">
                 Registrar nueva entrada de madera
             </button>
             @if ($errors->any())
@@ -25,14 +25,14 @@
                 
             @endif
             <!-- Modal Crea maquina-->
-            <form>
+            <form id="formRegistro">
                 @csrf
                 <div class="modal fade" id="creaUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-fullscreen">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Registrar entrada</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
                             </div>
                             <div class="modal-body m-3">
                                 
@@ -118,7 +118,7 @@
                                         <div class="row mb-3">
                                             <label for="actoAdministrativo" class="col-md-3 col-form-label text-md-center px-0 pt-0 pb-7">{{ __('Acto administrativo') }}</label>
                                             <div class="col-md-8">
-                                                <input type="text" name="actoAdministrativo" id="actoAdministrativo" class="form-control @error('actoAdministrativo') is-invalid @enderror text-uppercase" required autocomplete="actoAdministrativo" autofocus> 
+                                                <input type="text" name="actoAdministrativo" id="actoAdministrativo" class="form-control @error('actoAdministrativo') is-invalid @enderror text-uppercase" required autocomplete="actoAdministrativo"> 
                                                 @error('actoAdministrativo')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -281,13 +281,17 @@
                                 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="borrarMaderas()" >Cancelar</button>
                                 <button type="button" class="btn btn-primary" onclick="validarCampos()">Guardar entrada</button>
                             </div>
                         </div>
                     </div>
                 </div>   
-            </form>               
+            </form>
+            <div class="justify-content-left"  >
+                <button class="btn btn-warning"  id="editarUltimo" onclick="editarUltimo()">Editar ultima entrada</button>               
+            </div>
+            
         </div>
         <!-- Tabla -->
 
@@ -303,10 +307,9 @@
                     <th>Salvoconducto remision</th>
                     <th>Titular salvoconducto</th>
                     <th>Procedencia de madera</th>
-                    {{-- <th>Nombre madera</th> --}}
-                    {{-- <th>Nombre cientifico</th>  --}}
                     <th>proveedor</th>                   
                     <th>Entidad vigilante</th>
+                    {{-- <th>Maderas</th> --}}
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -323,11 +326,21 @@
                         <td>{{ $entrada->salvoconducto_remision }}</td>
                         <td>{{ $entrada->titular_salvoconducto }}</td>
                         <td>{{ $entrada->procedencia_madera }}</td>
-                        {{-- <td>{{ $entrada->madera->nombre }}</td>
-                        <td>{{ $entrada->madera->nombre_cientifico }}</td>   --}}
                         <td>{{ $entrada->proveedor->nombre }}</td>
                         <td>{{ $entrada->entidad_vigilante }}</td>
-
+                        {{-- <td>
+                            @foreach ($entrada->entradas_madera_maderas as $entrada_madera)
+                                @foreach ($entrada->maderas as $madera)  
+                                    <ul>
+                                        <li>{{ $madera->nombre }}</li>
+                                        <li>{{ $madera->nombre_cientifico }}</li>
+                                        <li>{{ $entrada_madera->condicion_madera }}</li>
+                                        <li>{{ $entrada_madera->m3entrada }}</li>
+                                    </ul>
+                                    <hr>                              
+                                @endforeach                                   
+                            @endforeach
+                        </td> --}}
                         <td>
                             @can('update-delete-entrada')
                             <div class="d-flex align-items-center ">
@@ -340,6 +353,11 @@
                                     </a>
                                 
                                 </div>
+                            @endcan
+                            @can('ver-entrada')
+                                <a href="{{ route('entradas-maderas.show',$entrada->id) }}" class="btn btn-sm btn-warning">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
                             @endcan
                             
                         </td>
