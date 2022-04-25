@@ -92,7 +92,7 @@
                             
                         </div>
                         <div class="modal-footer">
-                        <a href="{{ route('usuarios.index') }}" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</a>
+                        <a href="{{ route('usuarios.index') }}" type="button" class="btn btn-secondary">Volver</a>
                         <button type="submit" class="btn btn-primary">Actualizar usuario</button>
                         </div>
                     </div>

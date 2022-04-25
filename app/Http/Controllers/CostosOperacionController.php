@@ -25,7 +25,7 @@ class CostosOperacionController extends Controller
         $maquinas = Maquina::all();
         $descripciones = Descripcion::all();
         $operaciones = Operacion::all();
-        return view('modulos.administrativo.costos-operacion', compact('costosOperacion', 'maquinas', 'descripciones', 'operaciones'));
+        return view('modulos.administrativo.costos.costos-operacion', compact('costosOperacion', 'maquinas', 'descripciones', 'operaciones'));
     }
 
     /**
@@ -81,7 +81,7 @@ class CostosOperacionController extends Controller
         $maquinas = Maquina::all();
         $descripciones = Descripcion::all();
         $operaciones = Operacion::all();
-        return view('modulos.administrativo.costos-operacion-edit', compact('costosOperacion', 'maquinas', 'descripciones', 'operaciones'));
+        return view('modulos.administrativo.costos.costos-operacion-edit', compact('costosOperacion', 'maquinas', 'descripciones', 'operaciones'));
     }
 
     /**

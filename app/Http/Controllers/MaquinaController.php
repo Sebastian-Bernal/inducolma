@@ -19,7 +19,7 @@ class MaquinaController extends Controller
         $this->authorize('admin');
         $maquinas = Maquina::latest()->get();
 
-        return view('modulos.administrativo.maquinas', compact('maquinas'));
+        return view('modulos.administrativo.costos.maquinas', compact('maquinas'));
     }
 
     /**
@@ -69,7 +69,7 @@ class MaquinaController extends Controller
     {
         $this->authorize('admin');
         $maquina = Maquina::findOrFail($maquina->id);
-        return view('modulos.administrativo.edit-maquinas',[
+        return view('modulos.administrativo.costos.edit-maquinas',[
             'maquina'   => $maquina,
                       
         ]);

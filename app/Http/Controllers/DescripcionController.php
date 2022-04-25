@@ -19,7 +19,7 @@ class DescripcionController extends Controller
         $this->authorize('admin');
         $descripciones = Descripcion::all();
         $operaciones = Operacion::all();
-        return view('modulos.administrativo.descripciones', compact(['descripciones','operaciones']));
+        return view('modulos.administrativo.costos.descripciones', compact(['descripciones','operaciones']));
     }
 
     /**
@@ -70,7 +70,7 @@ class DescripcionController extends Controller
         $this->authorize('admin');
         $descripcion = Descripcion::findOrFail($descripcion->id);
         $operaciones = Operacion::all();
-        return view('modulos.descripciones-edit',[
+        return view('modulos.administrativo.costos.descripciones-edit',[
             'descripcion'   => $descripcion,
             'operaciones'    => $operaciones
                       

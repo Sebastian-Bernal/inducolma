@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEventoRequest;
 use App\Models\Evento;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
 
 class EventoController extends Controller
 {
@@ -14,7 +16,8 @@ class EventoController extends Controller
      */
     public function index()
     {
-        //
+        $eventos = Evento::all();
+        return view('modulos.administrativo.eventos.index', compact('eventos'));
     }
 
     /**
@@ -33,9 +36,15 @@ class EventoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEventoRequest $request)
     {
-        //
+        $this->authorize('admin');
+        $evento = new Evento();
+        $evento->descripcion = $request->descripcion;
+        $evento->tipo_evento = $request->tipoEvento;
+        $evento->user_id = auth()->user()->id;
+        $evento->save();
+        return redirect()->route('eventos.index')->with('success', "El evento: $request->descripcion,  se ha creado correctamente");
     }
 
     /**
@@ -46,7 +55,7 @@ class EventoController extends Controller
      */
     public function show(Evento $evento)
     {
-        //
+        return view('modulos.administrativo.eventos.show', compact('evento'));
     }
 
     /**
@@ -80,6 +89,9 @@ class EventoController extends Controller
      */
     public function destroy(Evento $evento)
     {
-        //
+        $this->authorize('admin');
+        $evento->delete();
+        return response()->json(['success'=>'Evento eliminado correctamente']);
+
     }
 }

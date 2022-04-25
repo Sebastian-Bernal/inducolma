@@ -10,7 +10,9 @@ $(document).ready(function() {
                 "url": "/DataTables/Spanish.json"
                 },
         "responsive": true, 
-        "pageLength": 5
+        "pageLength": 5,
+        
+        "lengthChange": false
         
     });
     
@@ -51,7 +53,7 @@ function verificarInputs() {
         }       
     });
     if(valido) {
-        console.log("envia datos");
+       // console.log("envia datos");
         guardarPaqueta();
     }else{
         console.log("no envia datos");
@@ -168,8 +170,19 @@ function guardarPaqueta() {
     localStorage.setItem('cubicajes', JSON.stringify(cubicajes));
     //let cubicajesLocal = JSON.parse(localStorage.getItem('cubicajes'));
     listarPaquetas(cubicajes);
+    limpiarInputs();
 }
- 
+//funcion limpiarInputs, limpia los inputs
+function limpiarInputs() {
+    $('#largo').val('');
+    $('#alto').val('');
+    $('#ancho').val('');
+    $('#pulgadas_alto').val('0');
+    $('#pulgadas_ancho').val('0');
+    $('#largo').focus();
+}
+
+
 // funcion listarPaquetas, recibe un array de objetos y los muestra en la tabla
 function listarPaquetas(cubicajes) {
    $('#listarPaquetas').html('');
@@ -192,11 +205,12 @@ function listarPaquetas(cubicajes) {
         $('#listarPaquetas').append(fila);
         trid++;
     })
+    
 }
 
 // funcion eliminarMadera, recibe el id de la fila y el id de la madera, elimina la madera de la tabla y de la memoria localstorage
 function eliminarMadera(id,bloque) {
-    console.log('entro a eliminar madera'+id+paqueta);
+
     Swal.fire({
         title: '¿Está seguro que desea eliminar la paqueta?',
         text: "¡No podrá revertir esta acción!",
@@ -210,7 +224,6 @@ function eliminarMadera(id,bloque) {
         //$(`#${id}`).remove(); 
         if (result.isConfirmed) {    
             cubicajes = cubicajes.filter(cubicajes => cubicajes.bloque != bloque); 
-            console.log(cubicajes);        
             localStorage.setItem('cubicajes', JSON.stringify(cubicajes));
             listarPaquetas(cubicajes);
         }

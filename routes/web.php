@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CostosInfraestructuraController;
 use App\Http\Controllers\CostosOperacionController;
 use App\Http\Controllers\CubicajeController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\MaderaController;
 use App\Http\Controllers\EntradaMaderaController;
+use App\Http\Controllers\EstadoController;
+use App\Http\Controllers\EventoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -99,7 +102,34 @@ Route::resource('cubicaje',CubicajeController::class)
                 ->parameters(['cubicaje'=> 'cubicaje'])
                 ->names('cubicaje')
                 ->middleware('auth');
-Auth::routes();
+
+
+Route::resource('clientes',ClienteController::class)
+                ->parameters(['clientes'=> 'cliente'])
+                ->names('clientes')
+                ->middleware('auth');
+
+Route::resource('eventos',EventoController::class)
+                ->parameters(['eventos'=> 'evento'])
+                ->names('eventos')
+                ->middleware('auth');
+
+Route::resource('estados',EstadoController::class)
+                ->parameters(['estados'=> 'estado'])
+                ->names('estados')
+                ->middleware('auth');
+
+
+
+
+
+
+
+
+Auth::routes([
+            'register' => false,            
+
+        ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
