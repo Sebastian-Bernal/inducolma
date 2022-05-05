@@ -44,11 +44,24 @@
 
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Tipo de material</span>                               
-                                    <input type="text" class="form-control" placeholder="Tipo de material"  name="tipoMaterial" id="tipoMaterial" required>
+                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="tipoMaterial" id="tipoMaterial">
+                                        <option value="" selected>Seleccione...</option>
+                                        @foreach ($items as $item)
+                                            <option value="{{ $item->id }}"
+                                                >{{ $item->descripcion }}</option>
+                                        @endforeach 
+                                    </select>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Tipo madera:</span>                               
-                                    <input type="text" class="form-control" placeholder="tipo madera"  name="tipoMadera" id="tipoMadera" required>
+                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="tipoMadera" id="tipoMadera">
+                                        <option value="" selected>Seleccione una madera...</option>
+                                        @foreach ($maderas as $madera)
+                                            <option value="{{ $madera->id }}"
+                                                
+                                                >{{ $madera->nombre }}</option>
+                                        @endforeach 
+                                    </select>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Proceso madera:</span>                               
@@ -110,8 +123,8 @@
                         <tr>
                             <td>{{ $costoInfraestructura->id }}</td>
                             <td>{{ $costoInfraestructura->valor_operativo }}</td>
-                            <td>{{ $costoInfraestructura->tipo_material }}</td>
-                            <td>{{ $costoInfraestructura->tipo_madera }}</td>
+                            <td>{{ $costoInfraestructura->item->descripcion }}</td>
+                            <td>{{ $costoInfraestructura->madera->nombre }}</td>
                             <td>{{ $costoInfraestructura->proceso_madera }}</td>
                             <td>{{ $costoInfraestructura->promedio_piezas }}</td>
                             <td>{{ $costoInfraestructura->minimo_piezas }}</td>

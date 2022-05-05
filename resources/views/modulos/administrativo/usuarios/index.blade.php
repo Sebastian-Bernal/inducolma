@@ -85,7 +85,7 @@
                                     <div class="col-md-6">
                                         <select class="form-select" name="rolUsuario" required >
                                             @foreach ($roles as $rol)
-                                                <option value="{{ $rol->nivel }}">{{ $rol->nombre }}</option>
+                                                <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>
                                             @endforeach                     
                                                                                        
                                         </select>  
@@ -112,7 +112,8 @@
                 <tr>
                     <th>Identificacion</th>
                     <th>Nombres</th>   
-                     <th>{{ __('Email') }}</th>         
+                     <th>{{ __('Email') }}</th>   
+                     <th>Rol</th>      
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -123,6 +124,7 @@
                         <td>{{ $usuario->identificacion }}</td>
                         <td>{{ $usuario->name }}</td>                      
                         <td>{{ $usuario->email }}</td>
+                        <td>{{ $usuario->roll->nombre }}</td>
                         <td>
                             <div class="d-flex align-items-center ">
                                 

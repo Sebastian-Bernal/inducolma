@@ -14,10 +14,19 @@ use App\Http\Controllers\MaderaController;
 use App\Http\Controllers\EntradaMaderaController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\EventoController;
+use App\Http\Controllers\InsumosAlmacenController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\TipoEventoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
 /*
+use Illuminate\Support\Facades\DB;
+DB::listen(function($query){
+        var_dump($query->sql);
+    });
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -28,7 +37,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/','home')->name('inicio');
+Route::view('/','auth.login');
 
 Route::view('costos-maquina','modulos.maquinas')->name('maquinas')->middleware('auth');
 
@@ -94,10 +103,17 @@ Route::resource('entradas-maderas', EntradaMaderaController::class)
 Route::post('revisa-acto', [EntradaMaderaController::class, 'verificarRegistro'])
         ->name('revisa-acto')
         ->middleware('auth');
+
+
 Route::post('ultima-entrada', [EntradaMaderaController::class, 'ultimaEntrada'])
         ->name('ultima-entrada')
         ->middleware('auth');
         
+Route::post('elimina-madera', [EntradaMaderaController::class, 'eliminarMadera'])
+        ->name('elimina-madera')
+        ->middleware('auth');
+
+
 Route::resource('cubicaje',CubicajeController::class)
                 ->parameters(['cubicaje'=> 'cubicaje'])
                 ->names('cubicaje')
@@ -119,10 +135,25 @@ Route::resource('estados',EstadoController::class)
                 ->names('estados')
                 ->middleware('auth');
 
+Route::resource('insumos-almacen', InsumosAlmacenController::class)
+                ->parameters(['insumos-almacen'=> 'insumo_almacen'])
+                ->names('insumos-almacen')
+                ->middleware('auth');
 
+Route::resource('items', ItemController::class)
+                ->parameters(['items'=> 'item'])
+                ->names('items')
+                ->middleware('auth');
 
+Route::resource('pedidos', PedidoController::class)
+                ->parameters(['pedidos'=> 'pedido'])
+                ->names('pedidos')
+                ->middleware('auth');
 
-
+Route::resource('tipo-eventos', TipoEventoController::class)
+                ->parameters(['tipo-eventos'=> 'tipo_evento'])
+                ->names('tipo-eventos')
+                ->middleware('auth');
 
 
 

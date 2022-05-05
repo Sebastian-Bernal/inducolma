@@ -17,7 +17,7 @@ class UsuarioController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $usuarios = User::all()->except(1);
+        $usuarios = User::all('id', 'name', 'email', 'rol', 'identificacion')->load('roll')->except(1);
         $roles = Rol::all();
         
         return view('modulos.administrativo.usuarios.index', compact('usuarios', 'roles'));

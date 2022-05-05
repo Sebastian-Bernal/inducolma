@@ -42,7 +42,14 @@
                                         <label for="descripcion" class="col-md-4 col-form-label text-md-end">{{ __('Descripción') }}</label>
             
                                         <div class="col-md-6">
-                                            <input id="descripcion" type="text" class="form-control @error('descripcion') is-invalid @enderror" name="descripcion" value="{{ old('descripcion') }}" required autocomplete="descripcion" autofocus>
+                                            <input id="descripcion" 
+                                                type="text" 
+                                                class="form-control @error('descripcion') is-invalid @enderror text-uppercase" 
+                                                name="descripcion" 
+                                                value="{{ old('descripcion') }}" 
+                                                required autocomplete="descripcion" 
+                                                autofocus
+                                                onkeyup="mayusculas()">
             
                                             @error('descripcion')
                                                 <span class="invalid-feedback" role="alert">
@@ -56,7 +63,18 @@
                                         <label for="tipoEvento" class="col-md-4 col-form-label text-md-end">{{ __('Tipo Evento') }}</label>
             
                                         <div class="col-md-6">
-                                            <input id="tipoEvento" type="text" class="form-control @error('tipoEvento') is-invalid @enderror" name="tipoEvento" value="{{ old('tipoEvento') }}" required autocomplete="tipoEvento" autofocus>
+                                            <select id="tipoEvento" 
+                                                    
+                                                    class="form-control @error('tipoEvento') is-invalid @enderror" 
+                                                    name="tipoEvento" 
+                                                    required 
+                                                    autocomplete="tipoEvento" 
+                                                    autofocus>
+                                                <option value="" selected>Seleccione un tipo de evento</option>
+                                                    @foreach ($tipo_eventos as $tipo_evento)
+                                                        <option value="{{ $tipo_evento->id }}">{{ $tipo_evento->tipo_evento }}</option>
+                                                    @endforeach
+                                            </select>
                                             @error('tipoEvento')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -95,7 +113,7 @@
                         <tr>
                             <td>{{ $evento->id }}</td>
                             <td>{{ $evento->descripcion }}</td>                      
-                            <td>{{ $evento->tipo_evento }}</td>
+                            <td>{{ $evento->tipo_evento->tipo_evento }}</td>
                             
                             
                             <td>

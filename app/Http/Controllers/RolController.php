@@ -62,7 +62,8 @@ class RolController extends Controller
      */
     public function edit(Rol $rol)
     {
-        //
+        $this->authorize('admin');
+        return view('modulos.administrativo.roles.show', compact('rol'));
     }
 
     /**
@@ -74,7 +75,14 @@ class RolController extends Controller
      */
     public function update(UpdateRolRequest $request, Rol $rol)
     {
-        //
+       //return $request->all();
+        $this->authorize('admin');
+        
+        $rol->nombre = $request->nombre;
+        $rol->descripcion = $request->descripcion;
+        $rol->nivel = $request->nivel;
+        $rol->update();
+        return redirect()->route('roles.index')->with('status', 'Rol actualizado correctamente');
     }
 
     /**

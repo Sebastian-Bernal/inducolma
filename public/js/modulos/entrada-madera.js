@@ -1,6 +1,7 @@
 // variables globales
 var maderas = [];
 var solicitud = 0;
+var idartmadera = 0;
 // funciones cargan al cargar la pagina
 $(document).ready(function() {
     $('#listaEntradas').DataTable({
@@ -100,6 +101,7 @@ function validarCampos() {
 // funcion agrega fila, a al body  listaMaderas se le agrega una fila con los datos de los inputs y select
 function agregarMadera() {
 
+    let id_art = idartmadera++;
     let id = $('select[name="madera"] option:selected').val();
     let nombre = $('select[name="madera"] option:selected').text();
     let condicion = $('select[name="condicionMadera"] option:selected').val();
@@ -112,8 +114,16 @@ function agregarMadera() {
             confirmButtonColor: '#597504',
             confirmButtonText: 'OK'
         })
-    } else{
-        madera = Object.assign({}, {id, nombre, condicion, metrosCubicos});
+    } else if(metrosCubicos <= 1 || metrosCubicos > 1000) {
+        Swal.fire({
+            title: '¡ingrese una cantidad de m3 valido',
+            icon: 'warning',
+            confirmButtonColor: '#597504',
+            confirmButtonText: 'OK'
+        })
+    }
+     else{
+        madera = Object.assign({}, {id, nombre, condicion, metrosCubicos, id_art});
         maderas.unshift(madera);
         localStorage.setItem('maderas', JSON.stringify(maderas));
         let maderasLocal = JSON.parse(localStorage.getItem('maderas'));
@@ -124,15 +134,43 @@ function agregarMadera() {
 //funcion eliminarMadera, se encarga de eliminar una fila de la tabla listaMaderas
 function eliminarMadera(id, idMadera) {
     //console.log('eliminar madera'+id);
-
-    $(`#${id}`).remove();
-    if (maderas[0].entrada_id == null) {
-         maderas = maderas.filter(madera => madera.id != idMadera);
-    } else {
-        maderas = maderas.filter(madera => madera.entrada_id != idMadera);
-    }
-    localStorage.setItem('maderas', JSON.stringify(maderas));
+    Swal.fire({
+        title: '¿Está seguro de eliminar la madera?',
+        icon: 'warning',
+        showCancelButton: true, 
+        confirmButtonColor: '#597504',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, eliminarla!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(`#${id}`).remove();
+            if (maderas[0].entrada_id == null) {
+                maderas = maderas.filter(madera => madera.id_art != idMadera);
+            } else {
+                maderas = maderas.filter(madera => madera.entrada_id != idMadera);
+                eliminarMaderaBD(idMadera);
+            }
+            localStorage.setItem('maderas', JSON.stringify(maderas));
+                }
+    })
 }
+
+//funcion eliminarMaderaBD, se encarga de eliminar una fila de la tabla listaMaderas
+function eliminarMaderaBD(idMadera) {
+    $.ajax({
+        url: '/elimina-madera',
+        data: {
+            id: idMadera,
+            _token: $('input[name="_token"]').val()
+        },
+        type: 'post',       
+        success: function(data) {
+            console.log(data);
+        }
+    });
+}
+
 
 
 // funcion comprobarLocalStorage, se encarga de comprobar si hay datos en localStorage
@@ -154,7 +192,7 @@ function listarMaderas(maderas) {
     let id = 0;
     maderas.forEach(madera => {
         if (madera.entrada_id == null) {
-            id = madera.id;
+            id = madera.id_art;
         }else{
             id = madera.entrada_id;
         }
@@ -173,7 +211,7 @@ function listarMaderas(maderas) {
 
 // funcion guardarEntradaMadera, se encarga de guardar la entrada de madera en la base de datos
 function guardarEntradaMadera(datosEntrada) {
-    
+    idartmadera = 0;
     let registro = [];
     let maderas = JSON.parse(localStorage.getItem('maderas'));
     registro.push(datosEntrada);
@@ -296,6 +334,7 @@ function editarUltimo() {
 function borrarMaderas() {
     //console.log('borrar maderas');
     solicitud = 0;
+    idartmadera = 0;
     localStorage.removeItem('maderas');
     maderas = [];
     //limpiar el formulario

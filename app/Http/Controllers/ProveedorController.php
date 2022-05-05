@@ -43,11 +43,11 @@ class ProveedorController extends Controller
         $this->authorize('admin');
         $proveedor = new Proveedor();
         $proveedor->identificacion = $request->identificacion;
-        $proveedor->nombre = $request->nombre;
-        $proveedor->direccion = $request->direccion; 
+        $proveedor->nombre =   strtoupper($request->nombre);  ;
+        $proveedor->direccion = strtoupper($request->direccion); 
         $proveedor->telefono = $request->telefono;
         $proveedor->email = $request->email;
-        $proveedor->razon_social = $request->razonSocial;
+        $proveedor->razon_social = strtoupper($request->razon_social);
         $proveedor->user_id = auth()->user()->id;
         $proveedor->save();
         return redirect()->route('proveedores.index');
@@ -88,11 +88,11 @@ class ProveedorController extends Controller
     {
         $this->authorize('admin');
         $proveedor->identificacion = $request->identificacion;
-        $proveedor->nombre = $request->nombre;
-        $proveedor->direccion = $request->direccion;
+        $proveedor->nombre =   strtoupper($request->nombre);  ;
+        $proveedor->direccion = strtoupper($request->direccion); 
         $proveedor->telefono = $request->telefono;
         $proveedor->email = $request->email;
-        $proveedor->razon_social = $request->razonSocial;
+        $proveedor->razon_social = strtoupper($request->razon_social);
         $proveedor->user_id = auth()->user()->id;
         $proveedor->save();
         return redirect()->route('proveedores.index')->with('status', 'Proveedor actualizado con éxito');

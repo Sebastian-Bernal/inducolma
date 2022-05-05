@@ -10,6 +10,11 @@ $(document).ready(function() {
     
 });
 
+// funcion mayusculas descripcion 
+function mayusculas() {
+    var x = document.getElementById("descripcion");
+    x.value = x.value.toUpperCase();
+}
 
 // funcion para eliminar un usuario
 function eliminarEvento(evento) {

@@ -47,21 +47,30 @@
                                     <label for="tipo_evento" class="col-md-4 col-form-label text-md-end">{{ __('Tipo Evento') }}</label>
         
                                     <div class="col-md-6">
-                                        <input id="tipo_evento" type="text" class="form-control @error('tipo_evento') is-invalid @enderror" name="tipo_evento" value="{{ $evento->tipo_evento }}" required autocomplete="tipo_evento" autofocus >
-                                        @error('tipo_evento')
+                                        <select id="tipoEvento" 
+                                                
+                                                class="form-control @error('tipoEvento') is-invalid @enderror" 
+                                                name="tipoEvento" 
+                                                required 
+                                                autocomplete="tipoEvento" 
+                                                autofocus>
+                                           
+                                                @foreach ($tipo_eventos as $tipo_evento)
+                                                    <option value="{{ $tipo_evento->id }}"
+                                                        {{ $tipo_evento->id == $evento->tipo_evento_id ? 'selected' : '' }}
+                                                        >{{ $tipo_evento->tipo_evento }}</option>
+                                                @endforeach
+                                        </select>
+                                        @error('tipoEvento')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
                                     </div>
                                 </div>
-        
-                                
-                                
-                            
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                            <a href="{{ route('tipo-eventos.index') }}" class="btn btn-secondary">Volver</a>
                             <button type="submit" class="btn btn-primary">Actualizar evento</button>
                         </div>
                     </div> 

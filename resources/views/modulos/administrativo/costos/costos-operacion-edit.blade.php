@@ -14,7 +14,7 @@
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Editar costo de operaci&oacute;n</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <a href="{{ route('costos-de-operacion.index') }}" class="btn-close"></a>
             </div>
             <div class="modal-body">
                 <div class="input-group mb-3"> 
@@ -38,18 +38,20 @@
                 <div class="input-group mb-3"> 
                     <span class="input-group-text">Maquina:</span>                                
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idMaquina" id="idMaquina">
-                        <option value="{{ $costosOperacion->maquina_id }}" selected>{{ $costosOperacion->maquina->maquina }}</option>
                         @foreach ($maquinas as $maquina)
-                            <option value="{{ $maquina->id }}">{{ $maquina->maquina }}</option>
+                            <option value="{{ $maquina->id }}"
+                                {{ $costosOperacion->pluck('maquina_id')->contains($maquina->id) ? 'selected' : ''}}
+                                >{{ $maquina->maquina }}</option>
                         @endforeach 
                     </select>
                 </div>
                 <div class="input-group mb-3"> 
                     <span class="input-group-text">Proceso:</span>                               
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
-                        <option selected>Seleccione...</option>
                         @foreach ($operaciones as $operacion)
-                            <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>
+                            <option value="{{ $operacion->id }}"
+                                {{ $costosOperacion->descripcion->pluck('operacion_id')->contains($operacion->id) ? 'selected' : ''}}
+                                >{{ $operacion->operacion }}</option>
                         @endforeach 
                     </select>
                 </div>
@@ -57,7 +59,12 @@
                 <div class="input-group mb-3">  
                     <span class="input-group-text">Descripci&oacute;n</span>                              
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idDescripcion" id="idDescripcion">
-                        
+                        @foreach ($descripciones as $descripcion)
+                        <option value="{{ $descripcion->id }}" 
+                            {{ $costosOperacion->pluck('descripcion_id')->contains($descripcion->id) ? 'selected' : ''}}>
+                            {{ $descripcion->descripcion }}                                                
+                        </option> 
+                        @endforeach
                     </select>
                 </div>
             </div>

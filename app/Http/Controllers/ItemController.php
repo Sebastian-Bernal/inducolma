@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreItemsRequest;
 
 class ItemController extends Controller
 {
@@ -13,8 +14,9 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+        $items = Item::all();
+        return view('modulos.administrativo.items.index', compact('items')); 
     }
 
     /**
@@ -33,9 +35,25 @@ class ItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreItemsRequest $request)
     {
-        //
+        //return $request->all();
+        $this->authorize('admin');
+        $item = new Item();
+        $item->descripcion = $request->descripcion;
+        $item->alto = $request->alto;
+        $item->ancho = $request->ancho;
+        $item->largo = $request->largo;
+        $item->existencias = $request->existencias;
+        $item->tipo_madera = $request->tipo_madera;
+        $item->codigo_cg = $request->codigo_cg;
+        $item->preprocesado = $request->preprocesado;
+        $item->carretos = $request->carretos;
+        $item->user_id = auth()->user()->id;
+        $item->save();
+        return redirect()->route('items.index')->with('status', "Item: $request->descripcion  creado correctamente");
+
+        
     }
 
     /**
@@ -46,7 +64,7 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        //
+        return view('modulos.administrativo.items.show', compact('item'));
     }
 
     /**
@@ -69,7 +87,20 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        //
+       
+        $this->authorize('admin');
+        $item->descripcion = $request->descripcion;
+        $item->alto = $request->alto;
+        $item->ancho = $request->ancho;
+        $item->largo = $request->largo;
+        $item->existencias = $request->existencias;
+        $item->tipo_madera = $request->tipo_madera;
+        $item->codigo_cg = $request->codigo_cg;
+        $item->preprocesado = $request->preprocesado;
+        $item->carretos = $request->carretos;
+        $item->user_id = auth()->user()->id;
+        $item->save();
+        return redirect()->route('items.index')->with('status', "Item: $request->descripcion  actualizado correctamente");
     }
 
     /**
@@ -80,6 +111,13 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+      
+        $this->authorize('admin');
+        
+        if($item->delete()){
+            return response()->json(['success' => 'Item eliminado correctamente']);
+        } else {
+            return response()->json(['error' => 'Error al eliminar el item']);
+        }
     }
 }

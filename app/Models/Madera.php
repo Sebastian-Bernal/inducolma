@@ -34,6 +34,14 @@ class Madera extends Model
     {
        // return $this->belongsToMany(EntradasMaderaMaderas::class, 'madera_id');
     }
+
+    /**
+     * relacion maderas hasMany costos_infraestructura
+     */
+    public function costos_infraestructura()
+    {
+        return $this->hasMany(CostosInfraestructura::class, 'tipo_madera');
+    }
     
 
 }

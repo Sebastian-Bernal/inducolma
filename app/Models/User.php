@@ -50,6 +50,14 @@ class User extends Authenticatable
     // {
     //     return $this->hasOne(Rol::class, 'nombre');
     // }
-
+        
+    /**
+     * relacion users belongs to rol
+     
+     */
     
+    public function roll()
+    {
+        return $this->belongsTo(Rol::class, 'rol');
+    }
 }

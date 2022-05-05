@@ -9,12 +9,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Rol extends Model
 {
     use HasFactory, SoftDeletes;
-
+    protected $table = 'rols';
     protected $fillable = [
         'nombre',
         'descripcion',
         'nivel',
     ];
 
+    /**
+     * relacion roles con usuarios
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class, 'nivel');
+    }
     
 }

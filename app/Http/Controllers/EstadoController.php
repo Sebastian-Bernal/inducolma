@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Estado;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreEstadoRequest;
 
 class EstadoController extends Controller
 {
@@ -14,7 +15,8 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        //
+        $estados = Estado::all();
+        return view('modulos.administrativo.estados.index', compact('estados'));
     }
 
     /**
@@ -33,9 +35,14 @@ class EstadoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store( StoreEstadoRequest $request)
     {
-        //
+        return $request->all();
+        $estado = new Estado();
+        $estado->descripcion = strtoupper($request->descripcion);
+        $estado->user_id = auth()->user()->id;
+        $estado->save();
+        return redirect()->route('estados.index')->with('status', 'El estado fue creado con éxito.');
     }
 
     /**
@@ -46,7 +53,7 @@ class EstadoController extends Controller
      */
     public function show(Estado $estado)
     {
-        //
+        return view('modulos.administrativo.estados.show', compact('estado'));
     }
 
     /**
@@ -69,7 +76,10 @@ class EstadoController extends Controller
      */
     public function update(Request $request, Estado $estado)
     {
-        //
+        $estado->descripcion = strtoupper($request->descripcion);
+        $estado->user_id = auth()->user()->id;
+        $estado->update();
+        return redirect()->route('estados.index')->with('status', 'El estado fue actualizado con éxito.');
     }
 
     /**
@@ -80,6 +90,7 @@ class EstadoController extends Controller
      */
     public function destroy(Estado $estado)
     {
-        //
+        $estado->delete();
+        return response()->json(['success' => "El estado: {$estado->descripcion} fue eliminado con éxito."]);
     }
 }

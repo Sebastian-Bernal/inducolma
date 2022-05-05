@@ -13,9 +13,12 @@
             <h1 class="display-6" >Roles</h1>
             <hr>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#creaUsuario">
-                Crear rol
-            </button>
+            @can('root')
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#creaUsuario">
+                    Crear rol
+                </button>
+            @endcan
+            
             @if ($errors->any())
                 <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)
@@ -112,16 +115,18 @@
                         <th>{{ $rol->descripcion }}</th>
                         <th>{{ $rol->nivel }}</th>
                         <td>
-                            {{-- <div class="d-flex align-items-center ">
-                                
-                                <button class="btn btn-sm btn-danger" onclick="eliminarUsuario({{ $rol}})">
+                            <div class="d-flex align-items-center ">
+                                @can('root')
+                                <button class="btn btn-sm btn-danger" onclick="eliminarRol({{ $rol}})">
                                     <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
                                 </button>
-                                <a href="{{ route('usuarios.show',$rol) }}" class="btn btn-sm btn-warning">
+                                @endcan
+                               
+                                <a href="{{ route('roles.edit',$rol) }}" class="btn btn-sm btn-warning">
                                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                 </a>
                                
-                            </div> --}}
+                            </div>
                         </td>
                     </tr> 
                 @endforeach

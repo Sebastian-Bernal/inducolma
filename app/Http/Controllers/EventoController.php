@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEventoRequest;
 use App\Models\Evento;
+use App\Models\TipoEvento;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Return_;
 
@@ -17,7 +18,8 @@ class EventoController extends Controller
     public function index()
     {
         $eventos = Evento::all();
-        return view('modulos.administrativo.eventos.index', compact('eventos'));
+        $tipo_eventos = TipoEvento::all();
+        return view('modulos.administrativo.eventos.index', compact('eventos', 'tipo_eventos'));
     }
 
     /**
@@ -41,10 +43,10 @@ class EventoController extends Controller
         $this->authorize('admin');
         $evento = new Evento();
         $evento->descripcion = $request->descripcion;
-        $evento->tipo_evento = $request->tipoEvento;
+        $evento->tipo_evento_id = $request->tipoEvento;
         $evento->user_id = auth()->user()->id;
         $evento->save();
-        return redirect()->route('eventos.index')->with('success', "El evento: $request->descripcion,  se ha creado correctamente");
+        return redirect()->route('eventos.index')->with('status', "El evento: $request->descripcion,  se ha creado correctamente");
     }
 
     /**
@@ -55,7 +57,8 @@ class EventoController extends Controller
      */
     public function show(Evento $evento)
     {
-        return view('modulos.administrativo.eventos.show', compact('evento'));
+        $tipo_eventos = TipoEvento::all();
+        return view('modulos.administrativo.eventos.show', compact('evento', 'tipo_eventos'));
     }
 
     /**
@@ -78,7 +81,11 @@ class EventoController extends Controller
      */
     public function update(Request $request, Evento $evento)
     {
-        //
+        $evento->descripcion = $request->descripcion;
+        $evento->tipo_evento_id = $request->tipo_evento;
+        $evento->user_id = auth()->user()->id;
+        $evento->update();
+        return redirect()->route('eventos.index')->with('status', "El evento: $request->descripcion,  se ha actualizado correctamente");
     }
 
     /**
@@ -89,6 +96,7 @@ class EventoController extends Controller
      */
     public function destroy(Evento $evento)
     {
+        
         $this->authorize('admin');
         $evento->delete();
         return response()->json(['success'=>'Evento eliminado correctamente']);

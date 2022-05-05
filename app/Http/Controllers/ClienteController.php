@@ -41,9 +41,10 @@ class ClienteController extends Controller
         //return $request;
         $this->authorize('admin');
         $cliente = new Cliente();
-        $cliente->nit = $request->nit;
-        $cliente->nombre = $request->nombre;
-        $cliente->direccion = $request->direccion;
+        $cliente->nit =  $request->nit;
+        $cliente->nombre = strtoupper($request->nombre);
+        $cliente->razon_social = strtoupper($request->razon_social);
+        $cliente->direccion = strtoupper($request->direccion);
         $cliente->telefono = $request->telefono;
         $cliente->email = $request->email;
         $cliente->id_usuario = Auth::user()->id;
@@ -84,8 +85,9 @@ class ClienteController extends Controller
     {
         $this->authorize('admin');
         $cliente->nit = $request->nit;
-        $cliente->nombre = $request->nombre;
-        $cliente->direccion = $request->direccion;
+        $cliente->nombre = strtoupper($request->nombre);
+        $cliente->razon_social = strtoupper($request->razon_social);
+        $cliente->direccion = strtoupper($request->direccion);
         $cliente->telefono = $request->telefono;
         $cliente->email = $request->email;
         $cliente->id_usuario = Auth::user()->id;

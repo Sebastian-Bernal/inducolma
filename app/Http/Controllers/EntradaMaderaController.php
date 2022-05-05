@@ -6,6 +6,7 @@ use App\Models\EntradaMadera;
 use App\Models\Madera;
 use App\Models\Proveedor;
 use App\Http\Requests\StoreEntraMaderaRequest;
+use App\Models\EntradasMaderaMaderas;
 use Illuminate\Http\Request;
 use App\Repositories\RegistroEntradaMadera;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class EntradaMaderaController extends Controller
     {
         $entradas = EntradaMadera::whereBetween('created_at',
                             [date('Y-m-d', strtotime('-1 month')), date('Y-m-d', strtotime('+1 day'))])
+                            ->where('user_id', auth()->user()->id)
                             ->get();
         
         $proveedores = Proveedor::select('id', 'nombre')->get();
@@ -150,5 +152,13 @@ class EntradaMaderaController extends Controller
                     ->where('entrada_madera_id', $request->id)
                     ->get();
         return response()->json(compact('ultimaEntrada', 'maderas'));
+    }
+
+    // funcion para eliminar una madera de una entrada
+    public function eliminarMadera(Request $request)
+    {
+        $madera = EntradasMaderaMaderas::findOrFail($request->id);
+        $madera->delete();
+        return response()->json(['error' => false]);
     }
 }

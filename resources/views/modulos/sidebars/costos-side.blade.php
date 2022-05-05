@@ -92,6 +92,11 @@
                   <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <p>
+                        <a class="btn btn-primary" href="{{ route('tipo-eventos.index') }}">
+                            Tipo eventos
+                        </a>
+                      </p>
+                      <p>
                         <a class="btn btn-primary" href="{{ route('eventos.index') }}">
                             Eventos
                         </a>
@@ -106,15 +111,60 @@
                   </div>
                 </div>
 
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                      Insumos almacen, items, maderas
+                    </button>
+                  </h2>
+                  <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                      <p>
+                        <a class="btn btn-primary" href="{{ route('insumos-almacen.index') }}">
+                            Insumos almacen
+                        </a>
+                      </p>
+                      <p>
+                        <a class="btn btn-primary" href="{{ route('items.index') }}">
+                            Items
+                        </a>
+                      </p>
+                      <p>
+                        <a class="btn btn-primary" href="{{ route('maderas.index') }}">
+                            Maderas                        
+                        </a>
+                      </p>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingSix">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+                      Pedidos y diseños de items
+                    </button>
+                  </h2>
+                  <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                      <p>
+                        <a class="btn btn-primary" href="{{ route('pedidos.index') }}">
+                            Pedidos
+                        </a>
+                      </p>
+                      <p>
+                        <a class="btn btn-primary" href="#">
+                            Diseños de productos para clientes 
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 
 
               </div>    
-              
-              <p>
-                <a class="btn btn-primary" href="{{ route('maderas.index') }}">
-                    Maderas
-                </a>
-              </p>
+             
               
              
             @endcan

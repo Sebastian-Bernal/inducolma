@@ -79,7 +79,7 @@ class CostosOperacionController extends Controller
     {
         $this->authorize('admin');
         $maquinas = Maquina::all();
-        $descripciones = Descripcion::all();
+        $descripciones = Descripcion::where('operacion_id', $costosOperacion->descripcion->operacion->id)->get();
         $operaciones = Operacion::all();
         return view('modulos.administrativo.costos.costos-operacion-edit', compact('costosOperacion', 'maquinas', 'descripciones', 'operaciones'));
     }

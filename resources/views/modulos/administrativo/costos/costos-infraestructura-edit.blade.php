@@ -12,7 +12,7 @@
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Editar costo de infraestructura</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <a href="{{ route('costos-de-infraestructura.index') }}" class="btn-close" ></a>
             </div>
             <div class="modal-body">
                 <div class="input-group mb-3"> 
@@ -22,11 +22,25 @@
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">Tipo de material</span>                               
-                    <input type="text" class="form-control" placeholder="Tipo de material"  name="tipoMaterial" id="tipoMaterial" required value="{{ $costosInfraestructura->tipo_material }}">
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="tipoMaterial" id="tipoMaterial">
+                        
+                        @foreach ($items as $item)
+                            <option value="{{ $item->id }}"
+                                {{ $costosInfraestructura->tipo_material == $item->id ? 'selected' : '' }}
+                                >{{ $item->descripcion }}</option>
+                        @endforeach 
+                    </select>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Tipo madera:</span>                               
-                    <input type="text" class="form-control" placeholder="tipo madera"  name="tipoMadera" id="tipoMadera" required value="{{ $costosInfraestructura->tipo_madera }}">
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="tipoMadera" id="tipoMadera">
+                        
+                        @foreach ($maderas as $madera)
+                            <option value="{{ $madera->id }}"
+                                {{ $costosInfraestructura->tipo_madera == $madera->id ? 'selected' : '' }}
+                                >{{ $madera->nombre }}</option>
+                        @endforeach 
+                    </select>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Proceso madera:</span>                               
@@ -49,9 +63,11 @@
                 <div class="input-group mb-3">
                     <span class="input-group-text">Maquina:</span>                                 
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idMaquina" id="idMaquina">
-                        <option value="{{ $costosInfraestructura->maquina_id }}" selected>{{ $costosInfraestructura->maquina->maquina }}</option>
+                        
                         @foreach ($maquinas as $maquina)
-                            <option value="{{ $maquina->id }}">{{ $maquina->maquina }}</option>
+                            <option value="{{ $maquina->id }}"
+                                {{ $costosInfraestructura->id_maquina == $maquina->id ? 'selected' : '' }}
+                                >{{ $maquina->maquina }}</option>
                         @endforeach 
                     </select>
                 </div>
@@ -66,7 +82,7 @@
             
         @endif
             <div class="modal-footer">
-            <a href="{{ route('descripciones.index') }}" class="btn btn-secondary" >Volver</a>
+            <a href="{{ route('costos-de-infraestructura.index') }}" class="btn btn-secondary" >Volver</a>
             <button type="submit" class="btn btn-primary">Modificar costo de infraestructura</button>
             </div>
         </div>

@@ -10,4 +10,12 @@ class Evento extends Model
 {
     use HasFactory, SoftDeletes ;
     
+    /**
+     * relacion eventos belogs to tipo_eventos
+     */
+
+    public function tipo_evento()
+    {
+        return $this->belongsTo(TipoEvento::class);
+    }
 }

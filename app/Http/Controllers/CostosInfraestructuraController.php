@@ -6,6 +6,8 @@ use App\Models\CostosInfraestructura;
 use App\Http\Requests\StoreCostosInfraestructuraRequest;
 use App\Http\Requests\UpdateCostosInfraestructuraRequest;
 use App\Models\Maquina;
+use App\Models\Madera;
+use App\Models\Item;
 
 class CostosInfraestructuraController extends Controller
 {
@@ -19,7 +21,10 @@ class CostosInfraestructuraController extends Controller
         $this->authorize('admin');
         $costosIinfraestructura = CostosInfraestructura::all();
         $maquinas = Maquina::all();
-        return view('modulos.administrativo.costos.costos-infraestructura', compact('costosIinfraestructura', 'maquinas'));
+        $maderas = Madera::all();
+        $items = Item::all();
+        return view('modulos.administrativo.costos.costos-infraestructura', 
+                    compact('costosIinfraestructura', 'maquinas', 'maderas', 'items'));
     }
 
     /**
@@ -76,7 +81,10 @@ class CostosInfraestructuraController extends Controller
     {
         $this->authorize('admin');
         $maquinas = Maquina::all();
-        return view('modulos.administrativo.costos.costos-infraestructura-edit', compact('costosInfraestructura', 'maquinas'));
+        $items = Item::all();
+        $maderas = Madera::all();
+        return view('modulos.administrativo.costos.costos-infraestructura-edit',
+                     compact('costosInfraestructura', 'maquinas', 'items', 'maderas'));
     }
 
     /**

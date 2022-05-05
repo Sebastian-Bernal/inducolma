@@ -13,7 +13,7 @@ class UpdateRolRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class UpdateRolRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nombre' => 'required',
+            'descripcion' => 'required',
+            'nivel' => 'required|numeric',        
+        ];
+    }
+
+    public function messages()
+    {
+        return[
+            'nombre.required' =>'El campo nombre es obligatorio',
+            
+            'descripcion.required' => 'El campo descripcion es obligatorio',
+            'nivel.required' => 'El campo nivel es obligatorio',
+            'nivel.numeric' => 'El campo nivel debe ser un número',
         ];
     }
 }

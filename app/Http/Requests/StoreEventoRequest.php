@@ -24,7 +24,7 @@ class StoreEventoRequest extends FormRequest
     public function rules()
     {
         return [
-            'descripcion' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255|unique:eventos,descripcion',
             'tipoEvento' => 'required|string|max:255',
         ];
     }
@@ -35,6 +35,7 @@ class StoreEventoRequest extends FormRequest
             'descripcion.required' => 'La descripción es obligatoria',
             'descripcion.string' => 'La descripción debe ser un texto',
             'descripcion.max' => 'La descripción debe tener un máximo de 255 caracteres',
+            'descripcion.unique' => 'La descripción ya existe',
             'tipoEvento.required' => 'El tipo de evento es obligatorio',
             'tipoEvento.string' => 'El tipo de evento debe ser un texto',
             'tipoEvento.max' => 'El tipo de evento debe tener un máximo de 255 caracteres',

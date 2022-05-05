@@ -29,7 +29,7 @@ class ProveedorRequest extends FormRequest
             'direccion' => 'required',
             'telefono' => 'required',
             'email' => 'required|email',
-            'razonSocial' => 'required',
+            'razon_social' => 'required',
             
         ];
     }

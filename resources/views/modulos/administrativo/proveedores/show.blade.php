@@ -19,11 +19,16 @@
                     <div class="card-body">                                                
                                         
                         <div class="row mb-3">
-                            <label for="identificacion" class="col-md-4 col-form-label text-md-end">{{ __('Identificacion') }}</label>
-    
+                            <label for="identificacion" class="col-md-4 col-form-label text-md-end">{{ __('Nit o cedula') }}</label>
                             <div class="col-md-6">
-                                <input id="identificacion" type="text" class="form-control @error('identificacion') is-invalid @enderror" name="identificacion" value="{{ old('identificacion',$proveedor->identificacion) }}" required autocomplete="identificacion" autofocus>
-    
+                                <input  id="identificacion" 
+                                        type="text" 
+                                        class="form-control @error('identificacion') is-invalid @enderror" 
+                                        name="identificacion" value="{{ old('identificacion',$proveedor->identificacion) }}" 
+                                        required 
+                                        autocomplete="identificacion" 
+                                        autofocus>
+
                                 @error('identificacion')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -31,13 +36,21 @@
                                 @enderror
                             </div>
                         </div>
-    
+
+                        
                         <div class="row mb-3">
-                            <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
-    
+                            <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('Representante legal') }}</label>
+
                             <div class="col-md-6">
-                                <input id="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror text-uppercase" name="nombre" value="{{ old('name',$proveedor->nombre) }}" required autocomplete="nombre" autofocus>
-    
+                                <input  id="nombre" 
+                                        type="text" 
+                                        class="form-control @error('nombre') is-invalid @enderror text-uppercase" 
+                                        name="nombre" 
+                                        value="{{ old('name', $proveedor->nombre) }}" 
+                                        required 
+                                        autocomplete="nombre" 
+                                        autofocus>
+
                                 @error('nombre')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -45,13 +58,38 @@
                                 @enderror
                             </div>
                         </div>
-    
+
+                        <div class="row mb-3">
+                            <label for="razon_social" class="col-md-4 col-form-label text-md-end">{{ __('Razón social') }}</label>
+                            <div class="col-md-6">
+                                <input  id="razon_social" 
+                                        type="text" 
+                                        class="form-control @error('razon_social') is-invalid @enderror text-uppercase" 
+                                        name="razon_social" value="{{ old('razon_social', $proveedor->razon_social) }}" 
+                                        required 
+                                        autocomplete="razon_social" 
+                                        autofocus>
+
+                                @error('razon_social')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="row mb-3">
                             <label for="direccion" class="col-md-4 col-form-label text-md-end">{{ __('Address') }}</label>
-    
+
                             <div class="col-md-6">
-                                <input id="direccion" type="text" class="form-control @error('direccion') is-invalid @enderror text-uppercase" name="direccion" value="{{ old('direccion',$proveedor->direccion) }}" required autocomplete="direccion">
-    
+                                <input  id="direccion" 
+                                        type="text" 
+                                        class="form-control @error('direccion') is-invalid @enderror text-uppercase" 
+                                        name="direccion" 
+                                        value="{{ old('direccion', $proveedor->direccion) }}" 
+                                        required 
+                                        autocomplete="direccion">
+
                                 @error('direccion')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -59,13 +97,19 @@
                                 @enderror
                             </div>
                         </div> 
-    
+
                         <div class="row mb-3">
-                            <label for="telefono" class="col-md-4 col-form-label text-md-end">{{ __('Telefono ') }}</label>
-    
+                            <label for="telefono" class="col-md-4 col-form-label text-md-end">{{ __('Teléfono ') }}</label>
+
                             <div class="col-md-6">
-                                <input id="telefono" type="number" class="form-control @error('telefono') is-invalid @enderror" name="telefono" value="{{ old('telefono',$proveedor->telefono) }}" required autocomplete="telefono">
-    
+                                <input id="telefono" 
+                                        type="number" 
+                                        class="form-control @error('telefono') is-invalid @enderror" 
+                                        name="telefono" 
+                                        value="{{ old('telefono', $proveedor->telefono) }}" 
+                                        required 
+                                        autocomplete="telefono">
+
                                 @error('telefono')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -76,34 +120,22 @@
                         
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}</label>
-    
+
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email',$proveedor->email) }}" required autocomplete="email">
-    
+                                <input  id="email" 
+                                        type="email" 
+                                        class="form-control @error('email') is-invalid @enderror " 
+                                        name="email" 
+                                        value="{{ old('email', $proveedor->email) }}" 
+                                        required 
+                                        autocomplete="email">
+
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                        </div> 
-    
-                        
-                        <div class="row mb-3">
-                            <label for="razonSocial" class="col-md-4 col-form-label text-md-end">{{ __('Razon social') }}</label>
-                            <div class="col-md-6">
-                                <select class="form-select" name="razonSocial" >
-                                    <option value="{{ $proveedor->razon_social }}" selected>{{ $proveedor->razon_social }}</option>
-                                    <option value="Sociedades Limitadas - LTDA">Sociedades Limitadas - LTDA</option>
-                                    <option value="Sociedades Anónimas – S.A">Sociedades Anónimas – S.A</option>   
-                                    <option value="Sociedad en Comandita – & Cía.">Sociedad en Comandita – & Cía.</option>   
-                                    <option value="Sociedad en Comandita Simple – S. en C.">Sociedad en Comandita Simple – S. en C.</option>
-                                    <option value="Sociedad en Comandita por Acciones – S.C.A.">Sociedad en Comandita por Acciones – S.C.A.</option>  
-                                    <option value="Sociedad por Acciones Simplificada – S.A.S.">Sociedad por Acciones Simplificada – S.A.S.</option> 
-                                    <option value="Sociedad Colectiva">Sociedad Colectiva</option>                                   
-                                </select>  
-                            </div>                                                                  
-                            
                         </div>                
                 </div>
                         

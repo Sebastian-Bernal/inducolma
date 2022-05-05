@@ -23,6 +23,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $autorizado = auth()->user()->rol;
+        switch ($autorizado) {
+            case 1:
+                return redirect()->route('entradas-maderas.index');
+                break;
+            case 2:
+                return redirect()->route('cubicaje.index');
+                break;
+            default:
+                return view('home');
+                break;
+        }
+       
     }
 }

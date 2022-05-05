@@ -19,9 +19,28 @@ class CostosInfraestructura extends Model
             'maximo_piezas',
             'maquina_id',
             ];
+    /**
+     * relacion costos_infraestructura belongsTo Maquina
+     */
     public function maquina()
     {
         return $this->belongsTo(Maquina::class);
     }
     
+    /**
+     * relacion costos_infraestructura hasOne Item
+     */
+        
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'tipo_material');
+    }
+
+    /**
+     * relacion costos_infraestructura hasOne Madera
+     */
+    public function madera()
+    {
+        return $this->belongsTo(Madera::class, 'tipo_madera');
+    }
 }

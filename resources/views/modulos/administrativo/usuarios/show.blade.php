@@ -75,13 +75,16 @@
                                         @enderror
                                     </div>
                                 </div> 
-
                                 <div class="row mb-3">
                                     <label for="rol" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
                                     <div class="col-md-6">
                                         <select class="form-select" name="rolUsuario" required >
                                             @foreach ($roles as $rol)
-                                                <option value="{{ $rol->nivel }}">{{ $rol->nombre }}</option>
+                                                <option value="{{ $rol->nivel }}"
+                                                    @if ($rol->nivel == $usuario->rol)
+                                                        {{ 'selected' }}
+                                                    @endif   
+                                                >{{ $rol->nombre }}</option>
                                             @endforeach                    
                                                                                        
                                         </select>  

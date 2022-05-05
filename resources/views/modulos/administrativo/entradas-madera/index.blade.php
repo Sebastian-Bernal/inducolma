@@ -44,7 +44,7 @@
                                             <div class="col-md-8">
                                                 <select name="mes" id="mes" class="form-control @error('mes') is-invalid @enderror" required autocomplete="mes" autofocus>
                                                     <option value="" selected>Seleccione..</option>
-                                                    <option value="Enero">Enero</option>
+                                                    <option value="Enero" >Enero</option>
                                                     <option value="Febrero">Febrero</option>
                                                     <option value="Marzo">Marzo</option>
                                                     <option value="Abril">Abril</option>
@@ -73,7 +73,7 @@
                                                 <select name="ano" id="ano" class="form-control @error('ano') is-invalid @enderror" required autocomplete="ano" autofocus>
                                                 {{ $ano = date('Y') }}
                                                     @while ($ano >= 1990)
-                                                        <option value="{{ $ano }}">{{ $ano }}</option>
+                                                        <option value="{{ $ano }}" >{{ $ano }}</option>
                                                         {{ $ano = $ano - 1 }}                                                    
                                                     @endwhile
                                                 </select>
@@ -90,7 +90,14 @@
                                         <div class="row mb-3">
                                             <label for="hora" class="col-md-3 col-form-label text-md-end px-0 pt-7 pb-7">{{ __('Hora') }}</label>
                                             <div class="col-md-8">
-                                                <input type="time" name="hora" id="hora" class="form-control @error('hora') is-invalid @enderror" required autocomplete="hora" autofocus> 
+                                                <input type="time" 
+                                                        name="hora" 
+                                                        id="hora" 
+                                                        class="form-control @error('hora') is-invalid @enderror" 
+                                                        required 
+                                                        autocomplete="hora" 
+                                                        autofocus
+                                                        value="{{ date('H:i:s') }}"> 
                                                 @error('hora')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -231,8 +238,9 @@
                                             <div class="col-md-8">
                                                 <select name="condicionMadera" id="condicionMadera" class="form-control @error('condicionMadera') is-invalid @enderror" required autocomplete="condicionMadera" autofocus>
                                                     <option value="" selected>Seleccione..</option>
-                                                    <option value="Bloque">Bloque</option>
-                                                    <option value="otro">otro</option>
+                                                    <option value="BLOQUE">BLOQUE</option>
+                                                    <option value="TROZA">TROZA</option>
+                                                    <option value="DIMENCIONADA">DIMENCIONADA</option>
                                                 </select>
                                                 @error('condicionMadera')
                                                     <span class="invalid-feedback" role="alert">
@@ -247,7 +255,16 @@
                                         <div class="row mb-3">
                                             <label for="m3entrada" class="col-md-3 col-form-label text-md-center px-0 pt-0 pb-7">{{ __('Metros cubicos de entrada') }}</label>
                                             <div class="col-md-8">
-                                                <input type="number" name="m3entrada" step="0.1" id="m3entrada" class="form-control @error('m3entrada') is-invalid @enderror" required autocomplete="m3entrada" autofocus> 
+                                                <input type="number" 
+                                                        name="m3entrada" 
+                                                        step="0.1"
+                                                        min="1" 
+                                                        max="1000"
+                                                        id="m3entrada" 
+                                                        class="form-control @error('m3entrada') is-invalid @enderror" 
+                                                        required 
+                                                        autocomplete="m3entrada" 
+                                                        autofocus> 
                                                 @error('m3entrada')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>

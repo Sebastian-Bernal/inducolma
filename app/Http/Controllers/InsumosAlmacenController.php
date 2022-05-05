@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\InsumosAlmacen;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreInsumosRequest;
+use App\Http\Requests\UpdateInsumosRequest;
 
 class InsumosAlmacenController extends Controller
 {
@@ -14,7 +16,8 @@ class InsumosAlmacenController extends Controller
      */
     public function index()
     {
-        //
+        $insumos = InsumosAlmacen::all();
+        return view('modulos.administrativo.insumos-almacen.index', compact('insumos'));
     }
 
     /**
@@ -33,9 +36,17 @@ class InsumosAlmacenController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store( StoreInsumosRequest $request)
     {
-        //
+        $this->authorize('admin');
+        $insumo = new InsumosAlmacen();
+        $insumo->descripcion = $request->descripcion;
+        $insumo->cantidad = $request->cantidad;
+        $insumo->precio_unitario = $request->precio_unitario;
+        $insumo->estado = 0;
+        $insumo->user_id = auth()->user()->id;
+        $insumo->save();
+        return redirect()->route('insumos-almacen.index')->with('status', "El insumo: $request->descripcion,  se ha creado correctamente");
     }
 
     /**
@@ -44,9 +55,9 @@ class InsumosAlmacenController extends Controller
      * @param  \App\Models\InsumosAlmacen  $insumosAlmacen
      * @return \Illuminate\Http\Response
      */
-    public function show(InsumosAlmacen $insumosAlmacen)
+    public function show(InsumosAlmacen $insumo_almacen)
     {
-        //
+        return view('modulos.administrativo.insumos-almacen.show', compact('insumo_almacen'));
     }
 
     /**
@@ -67,9 +78,16 @@ class InsumosAlmacenController extends Controller
      * @param  \App\Models\InsumosAlmacen  $insumosAlmacen
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, InsumosAlmacen $insumosAlmacen)
+    public function update(UpdateInsumosRequest $request, InsumosAlmacen $insumo_almacen)
     {
-        //
+        $this->authorize('admin');
+        $insumo_almacen->descripcion = $request->descripcion;
+        $insumo_almacen->cantidad = $request->cantidad;
+        $insumo_almacen->precio_unitario = $request->precio_unitario;
+        $insumo_almacen->estado = 0;
+        $insumo_almacen->user_id = auth()->user()->id;
+        $insumo_almacen->save();
+        return redirect()->route('insumos-almacen.index')->with('status', "El insumo: $request->descripcion,  se ha actualizado correctamente");
     }
 
     /**
@@ -78,8 +96,10 @@ class InsumosAlmacenController extends Controller
      * @param  \App\Models\InsumosAlmacen  $insumosAlmacen
      * @return \Illuminate\Http\Response
      */
-    public function destroy(InsumosAlmacen $insumosAlmacen)
+    public function destroy(InsumosAlmacen $insumo_almacen)
     {
-        //
+        $this->authorize('admin');
+        $insumo_almacen->delete();
+        return response()->json(['success' => 'Insumo eliminado correctamente']);
     }
 }

@@ -12,7 +12,7 @@
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Editar Operaci&oacute;n</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <a href="{{ route('operaciones.index') }}" class="btn-close"></a>
             </div>
             <div class="modal-body">
                 <div class="input-group mb-3">

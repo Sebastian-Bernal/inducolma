@@ -50,7 +50,7 @@
             @include('partials.status')
         </header>
         
-        <main class="py-3  ">
+        <main class="py-3 h-content ">
             
             @yield('content')
             @yield('submenu')

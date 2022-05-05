@@ -7,6 +7,7 @@
 
 @section('content')
     <div class="text-center">
+       
         <img src="{{ asset('img/logo.png') }}" alt="Logo" class="img-fluid">
     </div>
 @endsection
