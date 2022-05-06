@@ -232,6 +232,20 @@ function eliminarMadera(id,bloque) {
 
 // funcion terminarPaqueta, envia los datos de la variable cubicaje a la funcion guardarPaqueta
 function terminarPaqueta() {
+    if (cubicajes.length > 0) {
+        guardarPaquetaBD();
+    } else {
+        swal.fire({
+            title: '¡La paqueta tiene 0 bloques agregados no se puede terminar!',
+            icon: 'warning',
+            confirmButtonColor: '#597504',
+            confirmButtonText: 'OK'
+        })
+    }
+}
+
+// funcion guardarPaquetaBD, guarda los datos en la base de datos
+function guardarPaquetaBD() {
     Swal.fire({
         title: '¿Está seguro que desea terminar la paqueta?',
         text: "¡No podrá revertir esta acción!",

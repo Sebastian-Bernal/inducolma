@@ -25,7 +25,8 @@
                                 <a style="color: white" class="nav-link link-light  {{ setActive('maquinas.index') }}" href="{{ route('maquinas.index') }}">{{ __('Costos') }}</a>
                             </li>
                         @endcan
-                        @can('entrada-maderas')
+                     
+                        {{-- @can('entrada-maderas')
                             <li class="nav-item">
                                 <a  style="color: white" class="nav-link link-light {{ setActive('entradas-maderas.index') }}" href="{{ route('entradas-maderas.index') }}">{{ __('Entrada maderas') }}</a>
                             </li> 
@@ -34,7 +35,7 @@
                             <li class="nav-item">
                                 <a  style="color: white" class="nav-link link-light {{ setActive('cubicaje.index') }}" href="{{ route('cubicaje.index') }}">{{ __('Cubicaje') }}</a>
                             </li> 
-                        @endcan
+                        @endcan --}}
                         <li class="nav-item dropdown">
                     
                             <a style="color: white" class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

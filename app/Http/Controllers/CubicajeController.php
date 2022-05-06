@@ -25,7 +25,9 @@ class CubicajeController extends Controller
      */
     public function index()
     {   
-        $cubicajes = Cubicaje::all();
+        $cubicajes = Cubicaje::where('created_at', '=', date('Y-m-d'))
+        ->where('user_id', auth()->user()->id)
+        ->get();
         return view('modulos.operaciones.cubicaje.index', compact('cubicajes'));
     }
 
