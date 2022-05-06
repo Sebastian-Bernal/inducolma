@@ -48,7 +48,7 @@ class UsuarioController extends Controller
         $usuario->name = $request->name;
         $usuario->email = $request->email;
         $usuario->rol = $request->rolUsuario;
-        $usuario->password = bcrypt('123456789');
+        $usuario->password = bcrypt($request->identificacionUsuario);
         $usuario->save();
         return redirect()->route('usuarios.index');
     }
