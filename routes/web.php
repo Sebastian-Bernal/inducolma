@@ -18,6 +18,7 @@ use App\Http\Controllers\InsumosAlmacenController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\TipoEventoController;
+use App\Http\Controllers\RecepcionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -155,6 +156,20 @@ Route::resource('tipo-eventos', TipoEventoController::class)
                 ->names('tipo-eventos')
                 ->middleware('auth');
 
+Route::resource('recepcion', RecepcionController::class)
+                ->parameters(['recepcion'=> 'recepcion'])
+                ->names('recepcion')
+                ->middleware('auth');
+
+Route::post('recepcion-usuraio', [RecepcionController::class, 'consultaUsuario'])
+        ->name('recepcion-usuraio')
+        ->middleware('auth');
+
+Route::controller(RecepcionController::class)->group(function () {
+       // Route::post('recepcion-usuario','consultaUsuario')->name('recepcion-usuario')->middleware('auth');
+        Route::get('recepcion-reporte','reporteRecepcion')->name('recepcion-reporte')->middleware('auth');
+        Route::post('recepcion-consulta','reporteRecepcion')->name('recepcion-consulta')->middleware('auth');
+});
 
 
 Auth::routes([

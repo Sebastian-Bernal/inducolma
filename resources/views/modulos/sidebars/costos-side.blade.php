@@ -170,13 +170,18 @@
         
         @can('entrada-maderas')
           <p>
-            <a class="btn btn-primary" href="#">
+            <a class="btn btn-primary" href="{{ route('recepcion.index') }}">
                 Recepci&oacute;n de personal
             </a>
           </p>
           <p>
             <a class="btn btn-primary" href="{{ route('entradas-maderas.index') }}">
                 Entrada de madera
+            </a>
+          </p>
+          <p>
+            <a class="btn btn-primary" href="{{ route('recepcion-reporte') }}">
+                Reporte ingreso de personas a las instalaciones
             </a>
           </p>
         @endcan
