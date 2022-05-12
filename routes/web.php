@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalificacionMaderaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CostosInfraestructuraController;
 use App\Http\Controllers\CostosOperacionController;
@@ -171,6 +172,10 @@ Route::controller(RecepcionController::class)->group(function () {
         Route::post('recepcion-consulta','reporteRecepcion')->name('recepcion-consulta')->middleware('auth');
 });
 
+Route::resource('calificaciones', CalificacionMaderaController::class)
+                ->parameters(['calificaciones'=> 'calificacion'])
+                ->names('calificaciones')
+                ->middleware('auth');
 
 Auth::routes([
             'register' => false,            

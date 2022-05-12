@@ -36,7 +36,13 @@
                             </div>
                             <div class="modal-body ">                               
                                 <div class=" ">
-                                    <input type="entrada" name="entrada" id="entrada" class="form-control @error('entrada') is-invalid @enderror" required autocomplete="entrada" autofocus> 
+                                    <input type="entrada"
+                                     name="entrada" 
+                                     id="entrada" 
+                                     class="form-control @error('entrada') is-invalid @enderror" 
+                                     required 
+                                     autocomplete="entrada" 
+                                     autofocus> 
                                     @error('entrada')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -62,6 +68,7 @@
             <thead>
                 <tr>
                     <th>Id</th>
+                    <th>Numero de entrada</th>
                     <th>Paqueta</th>   
                     <th>BLoque</th>
                     <th>Largo</th>         
@@ -78,6 +85,7 @@
                 @foreach ($cubicajes as $cubicaje)
                     <tr>
                         <td>{{ $cubicaje->id }}</td>
+                        <td>{{ $cubicaje->entrada_madera_id }}</td>
                         <td>{{ $cubicaje->paqueta }}</td>
                         <td>{{ $cubicaje->bloque }}</td>                      
                         <td>{{ $cubicaje->largo }}</td>

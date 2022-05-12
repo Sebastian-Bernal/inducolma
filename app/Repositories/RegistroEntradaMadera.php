@@ -61,7 +61,8 @@ class RegistroEntradaMadera
         $entrada->salvoconducto_remision = $entradaMadera->entrada[0]['salvoconducto'];
         $entrada->titular_salvoconducto = $entradaMadera->entrada[0]['titularSalvoconducto']; 
         $entrada->procedencia_madera = $entradaMadera->entrada[0]['procedencia']; 
-        $entrada->entidad_vigilante = $entradaMadera->entrada[0]['entidadVigilante'];      
+        $entrada->entidad_vigilante = $entradaMadera->entrada[0]['entidadVigilante'];  
+        $entrada->estado = 'PENDIENTE';    
         $entrada->proveedor_id = $entradaMadera->entrada[0]['proveedor'];
         $entrada->user_id = auth()->user()->id;
         //$entrada->madera_id = $entradaMadera->entrada[0]['id'];

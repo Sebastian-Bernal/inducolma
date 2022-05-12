@@ -17,14 +17,32 @@
             <div class="card card-body">
                 <div class="card number-center border-success mb-3 ">
                     <div class="card-header">
-                        <h4 class="  ">{{ 'ID de entrada: '. $entrada->id }}</h4>
+                        <h4 class="  ">{{ 'Numero de entrada: '. $entrada->id }}</h4>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ $entrada->acto_administrativo.' --- '. $entrada->proveedor->nombre }}</h5>
-                        @foreach ($entrada->entradas_madera_maderas as $madera)
-                            <p class="card-number">{!! 'nombre: <b>'.$madera->madera->nombre.',</b> condición: <b>'.$madera->condicion_madera.',</b> metros cubicos: <b>'. $madera->m3entrada.'</b>' !!}</p>
-                        @endforeach
-                        <a href="{{ route('cubicaje.index') }}" class="btn btn-secondary">volver</a>
+                        <h6 class="card-title">{{ 'Acto administrativo: '. $entrada->acto_administrativo }}</h6>
+                        <h6 class="card-title">{{ 'Proveedor: '. $entrada->proveedor->nombre }}</h6>
+                        <hr>
+                        <span>Lista de maderas en el viaje:</span>
+                        <table class="table table-bordered table-striped dt-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Nombre madera</th>
+                                    <th>Condici&oacute;n</th>
+                                    <th>Metros cubicos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($entrada->entradas_madera_maderas as $madera)
+                                    <tr>
+                                        <td>{{ $madera->madera->nombre }}</td>
+                                        <td>{{ $madera->condicion_madera }}</td>
+                                        <td>{{ $madera->m3entrada }}</td>
+                                    </tr>
+                                @endforeach
+                        </table>
+                       
+                        <a href="{{ route('cubicaje.index') }}" class="btn btn-secondary">volver al inicio</a>
                     </div>
                     <div class="card-footer number-muted">
                         {{ $entrada->created_at->diffForHumans() }}
@@ -87,6 +105,8 @@
                         <th>Largo</th>
                         <th>Alto</th>         
                         <th>Ancho</th>
+                        <th>Pulgadas menos alto</th>
+                        <th>Pulgadas menos ancho</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -102,10 +122,178 @@
     <div class="d-grid gap-2 mt-3">
         <button class="btn btn-primary" type="button" id="terminarPaqueta" onclick="terminarPaqueta()" >Terminar Paqueta</button>
     </div>
+
+    <!--- Boton trigger modal calificacion madera -->
+   
+    <button type="button" 
+            class="btn btn-primary" 
+            data-bs-toggle="modal" 
+            data-bs-target="#modalCalifica"
+            hidden
+            id="calificarMadera"
+            >
+      
+    </button>
+    
+    <!-- Modal calificacion paqueta -->
+    <div class="modal fade " id="modalCalifica" tabindex="-1" aria-labelledby="modalCalificaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalCalificaLabel">Calificar paqueta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCalificacion">
+                    <h5>1. LONGITUD DE LA MADERA</h5>
+                    <div class="row g-2 mb-4">
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="longitudMadera"
+                                    name="longitudMadera"
+                                    onchange="sumarPuntos()">
+                            <option selected value="0">Seleccione...</option>
+                            <option value="25">5 centimetros mayor a la solicitada</option>
+                            <option value="19">3 centimetros mayor a la solicitada</option>
+                            <option value="12">igual a la solicitada</option>
+                            <option value="5">menor a la solicitada</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+
+                    <h5>2. APARIENCIA FISICA</h5>
+                    <div class="row g-2 mb-4">
+                        <label for="cantonera" class="form-label">Existencia de cantonera</label>
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="cantonera"
+                                    name="cantonera"
+                                    onchange="sumarPuntos()">
+                                <option selected value="0">Seleccione...</option>
+                                <option value="6.25">0%</option>
+                                <option value="5">5%</option>
+                                <option value="3.75">10%</option>
+                                <option value="2.5">20%</option>
+                                <option value="1.25">mayor a 20%</option>
+                            </select>
+                        </div>
+                        <label for="hongos" class="form-label">Presencia de hogos</label>
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="hongos"
+                                    name="hongos"
+                                    onchange="sumarPuntos()">
+                                    <option selected value="0">Seleccione...</option>
+                                    <option value="6.25">0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="3.75">10%</option>
+                                    <option value="2.5">20%</option>
+                                    <option value="1.25">mayor a 20%</option>
+                            </select>
+                        </div>
+                        <label for="rajadura" class="form-label">Presencia de rajaduras</label>
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="rajadura"
+                                    name="rajadura"
+                                    onchange="sumarPuntos()">
+                                    <option selected value="0">Seleccione...</option>
+                                    <option value="6.25">0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="3.75">10%</option>
+                                    <option value="2.5">20%</option>
+                                    <option value="1.25">mayor a 20%</option>
+                            </select>
+                        </div>
+                        <label for="bichos" class="form-label">Perforaci&oacute;n por bichos</label>
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="bichos"
+                                    name="bichos"
+                                    onchange="sumarPuntos()">
+                                    <option selected value="0">Seleccione...</option>
+                                    <option value="6.25">0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="3.75">10%</option>
+                                    <option value="2.5">20%</option>
+                                    <option value="1.25">mayor a 20%</option>
+                            </select>
+                        </div>
+                    </div>
+                        
+                    <h5>3. ORGANIZACI&Oacute;N DE LA MADERA</h5>
+                    <div class="row g-2 mb-4">
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="organizacion"
+                                    name="organizacion"
+                                    onchange="sumarPuntos()">
+                                <option selected value="0">Seleccione...</option>
+                                <option value="25">Excelente</option>
+                                <option value="19">Bueno</option>
+                                <option value="12">Aceptable</option>
+                                <option value="5">Deficiente</option>
+                            </select>
+                        </div>
+                                                
+                    </div>
+
+                    <h5>4. &Aacute;REA TRANSVERSAL</h5>
+                    <div class="row g-2 mb-4">
+                        <label for="bichos" class="form-label">Bloques que salen del rango maximo y minimo establecido</label>
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="rangoMaxMin"
+                                    name="rangoMaxMin"
+                                    onchange="sumarPuntos()">
+                                <option selected value="0">Seleccione...</option>
+                                <option value="12.5">0%</option>
+                                <option value="10">5%</option>
+                                <option value="7.5">10%</option>
+                                <option value="5">20%</option>
+                                <option value="2.5">mayor a 20%</option>
+                            </select>
+                        </div>
+
+                        <label for="bichos" class="form-label">Bloques con &aacute;reas no convencionales</label>
+                        <div class="col-auto">
+                            <select class="form-select" 
+                                    id="areas"
+                                    name="areas"
+                                    onchange="sumarPuntos()">
+                                <option selected value="0">Seleccione...</option>
+                                <option value="12.5">0%</option>
+                                <option value="10">5%</option>
+                                <option value="7.5">10%</option>
+                                <option value="5">20%</option>
+                                <option value="2.5">mayor a 20%</option>
+                            </select>
+                        </div>
+                                                
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">CALIFICACI&Oacute;N TOTAL</span>
+                        <input type="text" class="form-control" readonly id="puntos" name= "puntos">
+                    </div>
+                </form>
+                  
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Guardar calificaci&oacute;n</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
 </div>
 
 @endsection
 
 @section('js')
 <script src="/js/modulos/cubicaje.js"></script>
+<script src="/js/modulos/calificacion.js"></script>
 @endsection

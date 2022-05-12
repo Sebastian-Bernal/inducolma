@@ -25,9 +25,10 @@ class CubicajeController extends Controller
      */
     public function index()
     {   
-        $cubicajes = Cubicaje::where('created_at', '=', date('Y-m-d'))
-        ->where('user_id', auth()->user()->id)
-        ->get();
+        $this->authorize('cubicaje');
+        $cubicajes = Cubicaje::where('created_at', '>=', date('Y-m-d'))
+                                ->where('user_id', auth()->user()->id)
+                                ->get();
         return view('modulos.operaciones.cubicaje.index', compact('cubicajes'));
     }
 
@@ -39,15 +40,19 @@ class CubicajeController extends Controller
     public function create(Request $request)
     {
     
-        $entrada = EntradaMadera::find($request->entrada);
-        if($entrada == ''){            
-            return redirect()->route('cubicaje.index')->with('status', ' no se encontro ninguna entrada con ese id');
+        $this->authorize('cubicaje');
+        $entrada = EntradaMadera::where('id', (integer)$request->entrada)
+                                ->where('estado', 'PENDIENTE')
+                             ->get();
+        //return $entrada;
+        if(count($entrada)==0){            
+            return redirect()->route('cubicaje.index')->with('status', 'No se encontró ninguna entrada pendiente con ese número');
         } else {
            $entrada = EntradaMadera::find($request->entrada)->load('entradas_madera_maderas');
             return view('modulos.operaciones.cubicaje.create', compact('entrada'));
         }
 
-        //return $entrada;
+        
     }
 
     /**
@@ -58,6 +63,7 @@ class CubicajeController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('cubicaje');
         $datos =  $request->cubicajes;
          return $this->registroCubicaje->guardar($datos);
     }

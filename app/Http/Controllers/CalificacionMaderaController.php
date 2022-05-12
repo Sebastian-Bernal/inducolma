@@ -35,7 +35,36 @@ class CalificacionMaderaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //return $request->all();
+        $calificacion = new CalificacionMadera();
+        $calificacion->longitud_madera = $request->longitud_madera;
+        $calificacion->cantonera = $request->cantonera;
+        $calificacion->hongos = $request->hongos;
+        $calificacion->rajadura = $request->rajadura;
+        $calificacion->bichos = $request->bichos;
+        $calificacion->organizacion = $request->organizacion;
+        $calificacion->areas_transversal_max_min = $request->areas_transversal_max_min;
+        $calificacion->areas_no_conveniente = $request->areas_no_convenientes;
+        $calificacion->total = $request->total;
+        $calificacion->entrada_madera_id = $request->entrada_madera_id;
+        $calificacion->paqueta = $request->paqueta;        
+        $calificacion->user_id = auth()->user()->id;
+       
+        
+        if ( $request->total > 60  && $request->hongos > 1.25 && $request->rajadura > 1.25 ) {
+            $calificacion->aprobado = true;        
+        } else {
+            $calificacion->aprobado = false;
+        }
+       
+        if ( $calificacion->save()) {
+           return response()->json(['success' => true, 'message' => 'Calificación guardada correctamente']);
+        } else {
+              return response()->json(['success' => false, 'message' => 'Error al guardar la calificación']);
+        }
+        
+        
+
     }
 
     /**

@@ -200,6 +200,8 @@ function listarPaquetas(cubicajes) {
                         <td>${cubicaje.largo}</td>
                         <td>${cubicaje.alto}</td>
                         <td>${cubicaje.ancho}</td>
+                        <td>${cubicaje.pulgadasAlto}</td>
+                        <td>${cubicaje.pulgadasAncho}</td>
                         <td><button type="button" class="btn btn-danger" onclick="eliminarMadera(${trid},${cubicaje.bloque})"><i class="fas fa-trash-alt"></i></button></td>
                     </tr>`;
         $('#listarPaquetas').append(fila);
@@ -233,7 +235,21 @@ function eliminarMadera(id,bloque) {
 // funcion terminarPaqueta, envia los datos de la variable cubicaje a la funcion guardarPaqueta
 function terminarPaqueta() {
     if (cubicajes.length > 0) {
-        guardarPaquetaBD();
+        //guardarPaquetaBD();
+        Swal.fire({
+            title: '¿Está seguro que desea terminar la paqueta?',
+            text: "¡No podrá revertir esta acción!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#597504',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '¡Si, terminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#calificarMadera').click();
+            }
+        })
     } else {
         swal.fire({
             title: '¡La paqueta tiene 0 bloques agregados no se puede terminar!',
@@ -246,51 +262,39 @@ function terminarPaqueta() {
 
 // funcion guardarPaquetaBD, guarda los datos en la base de datos
 function guardarPaquetaBD() {
-    Swal.fire({
-        title: '¿Está seguro que desea terminar la paqueta?',
-        text: "¡No podrá revertir esta acción!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: '¡Si, terminar!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: '/cubicaje',
-                data: {
-                    cubicajes: cubicajes,
-                    _token: $('input[name="_token"]').val()
-                },
-                type: 'post', 
-                success: function(guardado) {
-                    if(guardado.error == false) {
-                        Swal.fire({
-                            title: guardado.message,
-                            icon: 'success',
-                            confirmButtonColor: '#597504',
-                            confirmButtonText: 'OK'
-                        })
-                        .then(() => {
-                            cubicajes = [];
-                            numBloque = 0;
-                            localStorage.removeItem('cubicajes');                            
-                            window.location.href = '/cubicaje';
-                            //$('#editarUltimo').show();
-                            //localStorage.setItem('ultimo', guardado.id);
-                            
-                        })
-                    } else {
-                        Swal.fire({
-                            title: guardado.message,
-                            icon: 'error',
-                            confirmButtonColor: '#597504',
-                            confirmButtonText: 'OK'
-                        })
-                    }
-                }
-            })
+        
+    $.ajax({
+        url: '/cubicaje',
+        data: {
+            cubicajes: cubicajes,
+            _token: $('input[name="_token"]').val()
+        },
+        type: 'post', 
+        success: function(guardado) {
+            if(guardado.error == false) {
+                Swal.fire({
+                    title: guardado.message,
+                    icon: 'success',
+                    confirmButtonColor: '#597504',
+                    confirmButtonText: 'OK'
+                })
+                .then(() => {
+                    cubicajes = [];
+                    numBloque = 0;
+                    localStorage.removeItem('cubicajes');                            
+                    window.location.href = '/cubicaje';
+                   
+                })
+            } else {
+                Swal.fire({
+                    title: guardado.message,
+                    icon: 'error',
+                    confirmButtonColor: '#597504',
+                    confirmButtonText: 'OK'
+                })
+            }
         }
     })
+       
 }
+
