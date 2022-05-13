@@ -1,7 +1,25 @@
 /**
  * variables globales
  */
+
 var enviar = false; //variable para validar el formulario
+$(document).ready(function() {
+    
+    
+    $('#listaCalificaciones').DataTable({
+        "language": {
+                "url": "/DataTables/Spanish.json"
+                },
+        "responsive": true, 
+        "pageLength": 5,
+        
+        "lengthChange": false
+        
+    });
+    
+});
+
+
 /*
  * funcion que suma los puntos de la calificacion
  */
@@ -57,12 +75,13 @@ function validarFormulario() {
          }
      })
     if(enviar) {
-        sumarPuntos();
+        if (window.location.pathname = '/calificaciones') {
+            $('#formCalificacion').submit();
+        } else{
+            sumarPuntos();
+        }
+        
     }
-
-    
-
-
 }
 
 /**
@@ -110,3 +129,4 @@ function guardarCalificacion(longitud,cantonera,hongos,rajadura,bichos,organizac
         }
     })
 }
+

@@ -14,7 +14,10 @@ class CalificacionMaderaController extends Controller
      */
     public function index()
     {
-        //
+        $calificaciones = CalificacionMadera::where('created_at', '>=', date('Y-m-d'))
+                                                ->where('user_id', auth()->user()->id)
+                                                ->get();
+        return view('modulos.operaciones.calificaciones.index', compact('calificaciones'));
     }
 
     /**
@@ -46,6 +49,7 @@ class CalificacionMaderaController extends Controller
         $calificacion->areas_transversal_max_min = $request->areas_transversal_max_min;
         $calificacion->areas_no_conveniente = $request->areas_no_convenientes;
         $calificacion->total = $request->total;
+        $calificacion->updated_at = null;
         $calificacion->entrada_madera_id = $request->entrada_madera_id;
         $calificacion->paqueta = $request->paqueta;        
         $calificacion->user_id = auth()->user()->id;
@@ -84,9 +88,9 @@ class CalificacionMaderaController extends Controller
      * @param  \App\Models\CalificacionMadera  $calificacionMadera
      * @return \Illuminate\Http\Response
      */
-    public function edit(CalificacionMadera $calificacionMadera)
+    public function edit(CalificacionMadera $calificacion)
     {
-        //
+        return view('modulos.operaciones.calificaciones.edit', compact('calificacion'));
     }
 
     /**
@@ -96,9 +100,28 @@ class CalificacionMaderaController extends Controller
      * @param  \App\Models\CalificacionMadera  $calificacionMadera
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CalificacionMadera $calificacionMadera)
+    public function update(Request $request, CalificacionMadera $calificacion)
     {
-        //
+        $calificacion->longitud_madera = $request->longitudMadera;
+        $calificacion->cantonera = $request->cantonera;
+        $calificacion->hongos = $request->hongos;
+        $calificacion->rajadura = $request->rajadura;
+        $calificacion->bichos = $request->bichos;
+        $calificacion->organizacion = $request->organizacion;
+        $calificacion->areas_transversal_max_min = $request->rangoMaxMin;
+        $calificacion->areas_no_conveniente = $request->areas;
+        $calificacion->total = $request->puntos;
+        $calificacion->user_id = auth()->user()->id;
+
+        if ( $request->puntos > 60  && $request->hongos > 1.25 && $request->rajadura > 1.25 ) {
+            $calificacion->aprobado = true;        
+        } else {
+            $calificacion->aprobado = false;
+        }
+        $calificacion->update();
+
+        return redirect()->route('calificaciones.index')->with('status',
+                             "Calificación de la entrada: $calificacion->entrada_madera_id, paqueta: $calificacion->paqueta actualizada correctamente");
     }
 
     /**

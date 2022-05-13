@@ -44,7 +44,7 @@ class PedidoController extends Controller
         $pedido->cantidad = $request->cantidad;
         $pedido->fecha_solicitud = date('Y-m-d');
         $pedido->fecha_entrega = $request->fecha_entrega;
-        $pedido->estado = 'Pendiente';
+        $pedido->estado = 'PENDIENTE';
         $pedido->user_id = auth()->user()->id;
         $pedido->cliente_id = $request->cliente;
         $pedido->save();
@@ -72,7 +72,8 @@ class PedidoController extends Controller
      */
     public function edit(Pedido $pedido)
     {
-        //
+        $clientes = Cliente::select('id', 'nombre')->get();
+        return view('modulos.administrativo.pedidos.show', compact('pedido', 'clientes'));
     }
 
     /**
@@ -82,9 +83,16 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pedido $pedido)
+    public function update(StorePedidoRequest $request, Pedido $pedido)
     {
-        //
+        $pedido->descripcion = $request->descripcion;
+        $pedido->cantidad = $request->cantidad;
+        $pedido->fecha_entrega = $request->fecha_entrega;
+        $pedido->estado = 'PENDIENTE';
+        $pedido->user_id = auth()->user()->id;
+        $pedido->cliente_id = $request->cliente;
+        $pedido->update();
+        return redirect()->route('pedidos.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente->nombre} ha sido actualizado");
     }
 
     /**

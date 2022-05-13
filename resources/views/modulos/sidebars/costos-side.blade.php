@@ -190,7 +190,9 @@
         <p>
           <a href="{{ route('cubicaje.index') }}" class="btn btn-primary">{{ __('Cubicaje') }}</a>
         </p>
-            
+        <p>
+          <a href="{{ route('calificaciones.index') }}" class="btn btn-primary">{{ __('Calificaciones') }}</a>
+        </p>
         </li> 
         @endcan
 

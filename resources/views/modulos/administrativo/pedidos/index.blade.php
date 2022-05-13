@@ -80,7 +80,7 @@
                                             <input id="fecha_entrega" 
                                                     type="date" 
                                                     class="form-control @error('fecha_entrega') is-invalid @enderror text-uppercase"
-                                                    min="{{ date('Y-m-d') }}" 
+                                                    min="{{ date('Y-m-j', strtotime('10 weekdays')) }}" 
                                                     name="fecha_entrega" value="{{ old('fecha_entrega') }}" 
                                                     required autocomplete="fecha_entrega" autofocus
                                                     onkeyup="mayusculas()">
@@ -167,7 +167,7 @@
                                     <button class="btn btn-sm btn-danger" onclick="eliminarItem({{ $pedido }})">
                                         <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
                                     </button>
-                                    <a href="{{ route('pedidos.show',$pedido) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('pedidos.edit',$pedido) }}" class="btn btn-sm btn-warning">
                                         <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                     </a>
                                 
