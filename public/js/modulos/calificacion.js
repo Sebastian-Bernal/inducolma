@@ -56,6 +56,7 @@ function sumarPuntos() {
  */
 
 function validarFormulario() {
+    console.log("validarFormulario");
     var select = $('#formCalificacion').find('select');
     $.each(select, function (index, value) {
         /// console.log(value);
@@ -75,8 +76,9 @@ function validarFormulario() {
          }
      })
     if(enviar) {
-        if (window.location.pathname = '/calificaciones') {
+        if (window.location.pathname == '/calificaciones') {
             $('#formCalificacion').submit();
+
         } else{
             sumarPuntos();
         }
