@@ -7,9 +7,18 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreRecepcionRequest;
 use App\Http\Requests\UpdateRecepcionRequest;
+use App\Repositories\RegistroUsuarios;
 
 class RecepcionController extends Controller
 {
+
+    protected $registroUsuarios;
+    
+    public function __construct(RegistroUsuarios $registroUsuarios)
+    {
+        $this->registroUsuarios = $registroUsuarios;
+        
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +28,7 @@ class RecepcionController extends Controller
     {
         $recepciones = Recepcion::where('created_at', '=', now())
                                 ->orWhere('deleted_at','=', null) ->get();
-        return view('modulos.operaciones.recepcion.index', compact('recepciones'));
+        return view('modulos.operaciones.recepcion.ingreso', compact('recepciones'));
     }
 
     /**
@@ -40,15 +49,12 @@ class RecepcionController extends Controller
      */
     public function store(StoreRecepcionRequest $request)
     {
+        //return $request->all();
         $this->authorize('entrada-maderas');
-        $recepcion = new Recepcion();
-        $recepcion->cc = $request->cc;
-        $recepcion->nombre_completo = strtoupper($request->primer_apellido . ' ' . $request->segundo_apellido . ' ' . $request->primer_nombre . ' ' . $request->segundo_nombre) ;
-        $recepcion->visitante = $request->visitante;
-        $recepcion->updated_at = null;
-        $recepcion->user_id = auth()->user()->id;
-        $recepcion->save();
-        return redirect()->route('recepcion.index')->with('status', 'Ingreso de personal o visitante, registrado correctamente');
+
+        return $this->registroUsuarios->ingresoVisitante($request);
+
+        
     }
 
     /**
@@ -135,5 +141,29 @@ class RecepcionController extends Controller
         return view('modulos.operaciones.recepcion.reporte', compact('recepciones'));
     }
     
+    /**
+     * Crea un nuevo ingreso de empleados
+     * 
+     * @param  \App\Http\Requests\StoreRecepcionRequest  $request
+     * @return \Illuminate\Http\Response
+     */
     
+    public function recepcionEmpleado(Request $request){
+        
+        $this->authorize('entrada-maderas');
+        return  $this->registroUsuarios->ingresoEmpleado($request);
+    }
+
+    /**
+     * Crea nuevo registro de ingreso de contratista
+     * 
+     * @param  \App\Http\Requests\StoreRecepcionRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function recepcionContratista(Request $request){
+        
+        $this->authorize('entrada-maderas');
+        return  $this->registroUsuarios->ingresoContratista($request);
+    }
 }

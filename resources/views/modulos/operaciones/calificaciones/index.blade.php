@@ -40,9 +40,9 @@
                         <td>{{ $calificacion->total }}</td>
                         <td>
                             @if ($calificacion->aprobado == true)
-                               {{' APROBADO'}}
+                                {!! '<span class="badge bg-success">APROBADA</span>'  !!} 
                             @else
-                                {{ 'NO APROBADO' }}
+                                {!! '<span class="badge bg-danger">NO APROBADA</span>'  !!} 
                             @endif
                         </td>
                        

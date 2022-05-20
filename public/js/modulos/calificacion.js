@@ -43,7 +43,7 @@ function sumarPuntos() {
              parseFloat(rango)+
              parseFloat(area);
     document.getElementById("puntos").value = puntos;
-
+    estado();
     if(enviar) {
         guardarCalificacion(longitud,cantonera,hongos,rajadura,bichos,organizacion,rango,area,puntos);
     }
@@ -76,7 +76,7 @@ function validarFormulario() {
          }
      })
     if(enviar) {
-        if (window.location.pathname == '/calificaciones') {
+        if (window.location.pathname.includes('/calificaciones/')) {
             $('#formCalificacion').submit();
 
         } else{
@@ -130,5 +130,29 @@ function guardarCalificacion(longitud,cantonera,hongos,rajadura,bichos,organizac
             }
         }
     })
+}
+
+// funcion estado(), alerta de calificacion total si hongos, rajadura, bichos  es = 1.25 input puntos se muestra en rojo 
+function estado() {
+    var hongos = document.getElementById("hongos").value;
+    var rajadura = document.getElementById("rajadura").value;
+    var bichos = document.getElementById("bichos").value;
+    var puntos = document.getElementById("puntos").value; 
+   
+    if( puntos == "" || parseFloat(puntos) < 60 || rajadura == '1.25' || bichos == '1.25') {
+        $('#estado').empty();
+        $('#estado').html(
+                `<div class="alert alert-danger" role="alert"><strong>!NO APROBADA!</strong> Rajaduras o Bichos
+                superan el minimo permitido para aprobar la paqueta, o calificacion menor a 60 puntos </div>`
+            );
+    } else {
+        $('#estado').empty();
+        $('#estado').html(
+                '<div class="alert alert-success" role="alert">'+
+                    '<strong>¡APROBADA!</strong>'+
+                '</div>'
+                );
+    }
+    
 }
 

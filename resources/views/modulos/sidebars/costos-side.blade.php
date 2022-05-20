@@ -40,7 +40,7 @@
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-headingTwo">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                  Usuarios y roles
+                  Usuarios - roles - contratistas
                 </button>
               </h2>
               <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
@@ -55,6 +55,11 @@
                         Roles
                     </a>
                   </p>
+                  <p>
+                    <a class="btn btn-primary" href="{{ route('contratistas.index') }}">
+                        Contratistas
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -62,7 +67,7 @@
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-headingThree">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                  Proveedores y clientes
+                  Proveedores, cliente
                 </button>
               </h2>
               <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">

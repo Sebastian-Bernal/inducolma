@@ -43,7 +43,7 @@ function verificarInputs() {
                 confirmButtonColor: '#597504',
                 confirmButtonText: 'OK'
             });
-            //valido = false;
+            valido = false;
         } else {
             if(validaLargo() == false && validaAncho() == false && validaAlto() == false && validaPulgadasAlto() == false && validaPulgadasAncho() == false) {
                 valido = true;
@@ -53,10 +53,10 @@ function verificarInputs() {
         }       
     });
     if(valido) {
-       // console.log("envia datos");
-        guardarPaqueta();
+        console.log("envia datos");
+       guardarPaqueta();
     }else{
-        console.log("no envia datos");
+       console.log("no envia datos");
        // verificarInputs();
     }
 
@@ -247,6 +247,7 @@ function terminarPaqueta() {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
+                estado();
                 $('#calificarMadera').click();
             }
         })

@@ -20,6 +20,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\TipoEventoController;
 use App\Http\Controllers\RecepcionController;
+use App\Http\Controllers\ContratistaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -170,12 +171,20 @@ Route::controller(RecepcionController::class)->group(function () {
        // Route::post('recepcion-usuario','consultaUsuario')->name('recepcion-usuario')->middleware('auth');
         Route::get('recepcion-reporte','reporteRecepcion')->name('recepcion-reporte')->middleware('auth');
         Route::post('recepcion-consulta','reporteRecepcion')->name('recepcion-consulta')->middleware('auth');
+        Route::post('recepcion-empleado','recepcionEmpleado')->name('recepcion-empleado')->middleware('auth');
+        Route::post('recepcion-contratista','recepcionContratista')->name('recepcion-contratista')->middleware('auth');
 });
 
 Route::resource('calificaciones', CalificacionMaderaController::class)
                 ->parameters(['calificaciones'=> 'calificacion'])
                 ->names('calificaciones')
                 ->middleware('auth');
+
+Route::resource('contratistas', ContratistaController::class)
+                ->parameters(['contratistas'=> 'contratista'])
+                ->names('contratistas')
+                ->middleware('auth');
+
 
 Auth::routes([
             'register' => false,            

@@ -29,8 +29,12 @@ class StoreUsuariosRequest extends FormRequest
     {
         return [
             'identificacionUsuario' => 'required|unique:users,identificacion',
-            'name' => 'required',
-            'email' => 'required|unique:users,email',
+            'primer_nombre' => 'required|string|max:255',
+            'segundo_nombre' => 'string|max:255',
+            'primer_apellido' => 'required|string|max:255',
+            'segundo_apellido' => 'string|max:255',
+            'email' => 'required|email|unique:users,email',
+           
             
         ];
 
@@ -40,11 +44,20 @@ class StoreUsuariosRequest extends FormRequest
     public function messages()
     {
         return [
-            'identificacionUsuario.required' => 'El campo identificación es obligatorio',
-            'identificacionUsuario.unique' => 'El campo identificación ya existe',
-            'name.required' => 'El campo nombre es obligatorio',
-            'email.required' => 'El campo email es obligatorio',
-            'email.unique' => 'El campo email ya existe',
+            'identificacionUsuario.required' => 'identificación es obligatorio',
+            'identificacionUsuario.unique' => 'identificación ya existe',
+            'primer_nombre.required' => 'primer nombre es obligatorio',
+            'primer_nombe.string' => 'primer nombre debe ser una cadena de texto',
+            'primer_nombre.max' => 'primer nombre debe tener máximo 255 caracteres',
+            'segundo_nombre.string' => 'segundo nombre debe ser una cadena de texto',
+            'segundo_nombre.max' => 'segundo nombre debe tener máximo 255 caracteres',
+            'primer_apellido.required' => 'primer apellido es obligatorio',
+            'primer_apellido.string' => 'primer apellido debe ser una cadena de texto',
+            'primer_apellido.max' => 'primer apellido debe tener máximo 255 caracteres',
+            'segundo_apellido.string' => 'segundo apellido debe ser una cadena de texto',
+            'segundo_apellido.max' => 'segundo apellido debe tener máximo 255 caracteres',
+            'email.required' => 'email es obligatorio',
+            'email.unique' => 'email ya existe',
         ];
     }
 

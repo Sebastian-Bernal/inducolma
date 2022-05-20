@@ -11,6 +11,7 @@
                 
             
                 <h1 class="display-6" >Recepci&oacute;n</h1>
+                <a href="{{ route('recepcion.index') }}" class="btn btn-secondary">Volver a ingreso de usuarios</a>
                 <hr>
                 <!-- Button trigger modal -->
                 

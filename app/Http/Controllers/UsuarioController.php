@@ -45,7 +45,11 @@ class UsuarioController extends Controller
         $this->authorize('admin');
         $usuario = new User();
         $usuario->identificacion = $request->identificacionUsuario;
-        $usuario->name = $request->name;
+        $usuario->name =  strtoupper($request->primer_nombre) . ' ' . strtoupper($request->primer_apellido);
+        $usuario->primer_nombre = strtoupper($request->primer_nombre);
+        $usuario->segundo_nombre = strtoupper($request->segundo_nombre);
+        $usuario->primer_apellido = strtoupper($request->primer_apellido);
+        $usuario->segundo_apellido = strtoupper($request->segundo_apellido);
         $usuario->email = $request->email;
         $usuario->rol = $request->rolUsuario;
         $usuario->password = bcrypt($request->identificacionUsuario);
@@ -90,7 +94,11 @@ class UsuarioController extends Controller
     {
         $this->authorize('admin');
         $usuario = User::findOrFail($id);
-        $usuario->name = $request->name;
+        $usuario->name =  strtoupper($request->primer_nombre) . ' ' . strtoupper($request->primer_apellido);
+        $usuario->primer_nombre = strtoupper($request->primer_nombre);
+        $usuario->segundo_nombre = strtoupper($request->segundo_nombre);
+        $usuario->primer_apellido = strtoupper($request->primer_apellido);
+        $usuario->segundo_apellido = strtoupper($request->segundo_apellido);
         $usuario->email = $request->email;
         $usuario->rol = $request->rolUsuario;
         $usuario->save();

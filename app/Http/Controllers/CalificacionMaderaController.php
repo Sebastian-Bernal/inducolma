@@ -55,7 +55,7 @@ class CalificacionMaderaController extends Controller
         $calificacion->user_id = auth()->user()->id;
        
         
-        if ( $request->total > 60  && $request->hongos > 1.25 && $request->rajadura > 1.25 ) {
+        if ( $request->total > 60   && $request->rajadura > 1.25 && $request->bichos > 1.25 ) {
             $calificacion->aprobado = true;        
         } else {
             $calificacion->aprobado = false;
@@ -113,7 +113,7 @@ class CalificacionMaderaController extends Controller
         $calificacion->total = $request->puntos;
         $calificacion->user_id = auth()->user()->id;
 
-        if ( $request->puntos > 60  && $request->hongos > 1.25 && $request->rajadura > 1.25 ) {
+        if ( $request->puntos > 60   && $request->rajadura > 1.25 && $request->bichos > 1.25 ) {
             $calificacion->aprobado = true;        
         } else {
             $calificacion->aprobado = false;
@@ -121,7 +121,7 @@ class CalificacionMaderaController extends Controller
         $calificacion->update();
 
         return redirect()->route('calificaciones.index')->with('status',
-                             "Calificación de la entrada: $calificacion->entrada_madera_id, paqueta: $calificacion->paqueta actualizada correctamente");
+                             " Se modifico la calificación de la entrada: $calificacion->entrada_madera_id, paqueta: $calificacion->paqueta");
     }
 
     /**

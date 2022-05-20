@@ -29,7 +29,7 @@ class StoreRecepcionRequest extends FormRequest
             
             'primer_nombre' => 'required|string|max:50',
             
-            'visitante' => 'required|boolean',
+            //'visitante' => 'required|boolean',
         ];
     }
 
@@ -53,7 +53,7 @@ class StoreRecepcionRequest extends FormRequest
             'primer_nombre.string' => 'Primer Nombre debe ser una cadena de caracteres',
             'primer_nombre.max' => 'Primer Nombre debe tener máximo 50 caracteres',
            
-            'visitante.required' => 'Visitante? es obligatorio',
+            //'visitante.required' => 'Visitante? es obligatorio',
             'visitante.boolean' => 'Visitante debe ser un Si o un No',
         ];
     }

@@ -277,6 +277,9 @@
                         <span class="input-group-text" id="basic-addon1">CALIFICACI&Oacute;N TOTAL</span>
                         <input type="text" class="form-control" readonly id="puntos" name= "puntos">
                     </div>
+                    <div id="estado">
+                        
+                    </div>
                 </form>
                   
             </div>
@@ -284,7 +287,9 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="validarFormulario()">Guardar calificaci&oacute;n</button>
+                
             </div>
+            
         </div>
         </div>
     </div>

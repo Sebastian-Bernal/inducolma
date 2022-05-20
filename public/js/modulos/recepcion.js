@@ -59,35 +59,55 @@ function eliminarRecepcion(recepcion) {
 
 // funcion consultaUsuario, para verificar si el usuario existe en la base de datos, si existe, se permite el registro 
 // como visitante o como usuario registrado, si no existe se permite registrar como visitante
-function consultaUsuario() {
+function ingersoVisitante() {
    
     var usuario = $('#cc').val();
-    $.ajax({
-        url: `/recepcion-usuraio`,
+    var primer_nombre = $('#primer_nombre').val();
+    var primer_apellido = $('#primer_apellido').val();
+    if (usuario == '' || primer_nombre == '' || primer_apellido == '') {
+        Swal.fire({
+            title: '¡Error!',
+            text: 'Debe ingresar los campos numero de cédula, primer nombre y primer apellido',
+            icon: 'error',
+            confirmButtonColor: '#597504',
+            confirmButtonText: 'OK'
+        })
+    } else {
+        $.ajax({
+        url: `/recepcion`,
         type: "post",
         dataType: "JSON",
         data: {
-            usuario: usuario,
+            cc: usuario,
+            primer_nombre: primer_nombre,
+            primer_apellido: primer_apellido,
             _token: $('input[name="_token"]').val()
         },
         success: function (e) {
-            if (e.success == false) {
-               $('#formRecepcion').submit();
-            } else {
-                if($('#visitante').val() == '0'){
+                if (e.error == false) {
+                    limpiarForm();
                     Swal.fire({
-                        title: '¡La persona no hace parte de los empleados, debe registrarla como visitante !',
-                        icon: 'warning',
+                        position: 'top-end',
+                        title: e.title,
+                        text: e.message,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                } else {
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: 'Algo salió mal, no se pudo hacer el registro',
+                        icon: 'error',
                         confirmButtonColor: '#597504',
                         confirmButtonText: 'OK'
                     })
-                }
-                else{
-                    $('#formRecepcion').submit();
-                }
+                } 
+                
             } 
-        } 
-    })
+        })
+    }
+    
 
 }
 
@@ -119,13 +139,13 @@ function horaSalida(recepcion) {
                 success: function (e) {
                     if (e.error == false) {
                         Swal.fire({
-                            title: '¡Salida registrada!',
-                            text: e.success,
+                            position: 'top-end',
+                            title: e.title,
+                            text: e.message,
                             icon: 'success',
-                            confirmButtonColor: '#597504',
-                            confirmButtonText: 'OK'
+                            showConfirmButton: false,
+                            timer: 3000
                         })
-                        location.reload();
                     } else {
                         Swal.fire({
                             title: '¡Error!',
@@ -153,10 +173,130 @@ function limpiarForm() {
 }
 
 /**
- * funcion focusCc, selecciona el input cc
+ * Funcion cedula extrae la cedula de ua cadena de 
  */
-function focusCc() {
-    //console.log('focus');
-  document.getElementById('cc').focus();
+ function cedula(){
+    //validar el keypress
+    var key = window.event.keyCode;    
+    if (key == 13 || key ==9){
+        var cedula = $('#cc_empleado').val();
+        var cedula = cedula.substring(0,10);
+        $('#cc_empleado').val(cedula);
+        
+        guardarIngresoEmpleado(cedula);
+        
+    }
     
+ }
+//  $('#cc_empleado').blur(function(){
+    
+//     var cedula = $('#cc_empleado').val();
+//     if (cedula != '') {
+//         var cedula = cedula.substring(0,10);
+//         $('#cc_empleado').val(cedula);
+//         guardarIngresoEmpleado(cedula);
+//         $(this).focus();
+//     }else{
+//         $('#cc_empleado').focus();
+//     }
+// })
+
+/** 
+  * Funcion guardarIngresoEmpleado, guarda el ingreso de un empleado
+*/
+
+function guardarIngresoEmpleado(cedula){
+    $('#cc_empleado').val('');
+    $.ajax({
+        url: `/recepcion-empleado`,
+        type: "post",
+        dataType: "JSON",
+        data: {
+            cedula: cedula,
+            _token: $('input[name="_token"]').val()
+        },
+        success: function (e) {
+            if (e.error == false) {
+                $('#cc_empleado').focus();
+                
+                Swal.fire({
+                    position: 'top-end',
+                    title: e.title,
+                    text: e.message,
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+                
+            } else {
+                $('#cc_empleado').focus();
+                $('#cc_empleado').val('');
+                Swal.fire({
+                    title: '¡Error!',
+                    text: e.message,
+                    icon: 'error',
+                    confirmButtonColor: '#597504',
+                    confirmButtonText: 'OK'
+                })
+            } 
+        }
+    })
+}
+
+/** 
+  * Funcion guardarIngresoContratista, guarda el ingreso de un contratista
+*/
+/**
+ * Funcion cedula extrae la cedula de ua cadena de 
+ */
+ function cedulaContratista(){
+    //validar el keypress
+    var key = window.event.keyCode;    
+    if (key == 13 || key ==9){
+        var cedula = $('#cc_contratista').val();
+        var cedula = cedula.substring(0,10);
+        $('#cc_contratista').val(cedula);
+
+        guardarIngresoContratista(cedula);
+        
+    }
+    
+ }
+
+function guardarIngresoContratista(cedula){
+    $('#cc_contratista').val('');
+    $.ajax({
+        url: `/recepcion-contratista`,
+        type: "post",
+        dataType: "JSON",
+        data: {
+            cedula: cedula,
+            _token: $('input[name="_token"]').val()
+        },
+        success: function (e) {
+            if (e.error == false) {
+                $('#cc_contratista').focus();
+                
+                Swal.fire({
+                    position: 'top-end',
+                    title: '¡Ingreso registrado!',
+                    text: e.message,
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+                
+            } else {
+                $('#cc_contratista').focus();
+                $('#cc_contratista').val('');
+                Swal.fire({
+                    title: '¡Error!',
+                    text: e.message,
+                    icon: 'error',
+                    confirmButtonColor: '#597504',
+                    confirmButtonText: 'OK'
+                })
+            } 
+        }
+    })
 }
