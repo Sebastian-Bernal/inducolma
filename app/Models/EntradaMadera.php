@@ -60,5 +60,11 @@ class EntradaMadera extends Model
         $this->attributes['vitacora'] = strtoupper($value);
     }
 
+    /**
+     * relacion entrada madera hasMany CalificacionMadera
+     */
+    public function calificacionesMadera(){
+        return $this->hasMany(CalificacionMadera::class);
+    }
 
 }

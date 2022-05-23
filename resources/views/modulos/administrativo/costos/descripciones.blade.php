@@ -43,7 +43,12 @@
                             <div class="modal-body">
                                 <div class="input-group mb-3"> 
                                     <span class="input-group-text">Descripci&oacute;n:</span>                                   
-                                    <input type="text" class="form-control" placeholder="Nombre descripcion" name="descripcion" id="descripcion" required>
+                                    <input type="text" 
+                                            class="form-control text-uppercase" 
+                                            placeholder="Nombre descripcion" 
+                                            name="descripcion" 
+                                            id="descripcion" 
+                                            required>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Operaci&oacute;n:</span>                               

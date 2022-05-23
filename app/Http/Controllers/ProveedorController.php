@@ -50,7 +50,7 @@ class ProveedorController extends Controller
         $proveedor->razon_social = strtoupper($request->razon_social);
         $proveedor->user_id = auth()->user()->id;
         $proveedor->save();
-        return redirect()->route('proveedores.index');
+        return redirect()->route('proveedores.index')->with('status', "Proveedor $proveedor->nombre creado correctamente");
      
     }
 
@@ -95,7 +95,7 @@ class ProveedorController extends Controller
         $proveedor->razon_social = strtoupper($request->razon_social);
         $proveedor->user_id = auth()->user()->id;
         $proveedor->save();
-        return redirect()->route('proveedores.index')->with('status', 'Proveedor actualizado con éxito');
+        return redirect()->route('proveedores.index')->with('status', "Datos del proveedor $proveedor->nombre actualizados correctamente");
     }
 
     /**

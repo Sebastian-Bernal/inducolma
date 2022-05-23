@@ -19,13 +19,19 @@
             <div class="modal-body">
                 <div class="input-group mb-3"> 
                     <span class="input-group-text">Descripci&oacute;n:</span>                               
-                    <input type="text" class="form-control" placeholder="Nombre descripcion" name="descripcion" id="descripcion" required value="{{ $descripcion->descripcion }}">
+                    <input type="text" 
+                            class="form-control text-uppercase" 
+                            placeholder="Nombre descripcion" 
+                            name="descripcion" 
+                            id="descripcion" 
+                            required 
+                            value="{{ $descripcion->descripcion }}">
                 </div>
                 <div class="input-group mb-3"> 
                     <span class="input-group-text">Operaci&oacute;n:</span>                               
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
                         @foreach ($operaciones as $operacion)
-                            <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>
+                            <option value="{{ $operacion->id }}" {{ $operacion->id == $descripcion->operacion_id ? 'selected' : '' }}>{{ $operacion->operacion }}</option>
                         @endforeach
                     </select>
                 </div>

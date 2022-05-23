@@ -42,7 +42,7 @@ class DescripcionController extends Controller
     {
         $this->authorize('admin');
         $descripcion = new Descripcion();
-        $descripcion->descripcion = $request->descripcion;
+        $descripcion->descripcion = strtoupper($request->descripcion);
         $descripcion->operacion_id = $request->idOperacion;
         $descripcion->save();
         return redirect()->route('descripciones.index');
@@ -88,7 +88,7 @@ class DescripcionController extends Controller
     {
         $this->authorize('admin');
         $descripcion = Descripcion::findOrFail($descripcion->id);
-        $descripcion->descripcion = $request->descripcion;
+        $descripcion->descripcion = strtoupper($request->descripcion);
         $descripcion->operacion_id = $request->idOperacion;
         $descripcion->save();
         return redirect()->route('descripciones.index');

@@ -43,7 +43,7 @@ class MaquinaController extends Controller
         //dd($request->maquina);
         $this->authorize('admin');
         Maquina::create(
-            ['maquina' => $request->maquina]
+            ['maquina' => strtoupper($request->maquina)]
         );
         return back();
     }
@@ -87,7 +87,8 @@ class MaquinaController extends Controller
         $this->authorize('admin');
         //dd($request->maquina);
         $maquina = Maquina::findOrFail($maquina->id);
-        $maquina->update($request->all());
+        $maquina->maquina = strtoupper($request->maquina);
+        $maquina->save();
         return redirect()->route('maquinas.index');
     }
 

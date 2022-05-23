@@ -17,6 +17,7 @@ $(document).ready(function() {
         
     });
     
+    
 });
 
 
@@ -118,6 +119,14 @@ function guardarCalificacion(longitud,cantonera,hongos,rajadura,bichos,organizac
         success: function(guardado) {
            // console.log(guardado);
             if(guardado.success == true) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: 'Calificacion guardada',
+                    text: guardado.message,
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
                 guardarPaquetaBD();
                 
             } else {
@@ -131,6 +140,7 @@ function guardarCalificacion(longitud,cantonera,hongos,rajadura,bichos,organizac
         }
     })
 }
+
 
 // funcion estado(), alerta de calificacion total si hongos, rajadura, bichos  es = 1.25 input puntos se muestra en rojo 
 function estado() {

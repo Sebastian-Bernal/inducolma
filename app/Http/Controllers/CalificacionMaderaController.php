@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CalificacionMadera;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
 class CalificacionMaderaController extends Controller
@@ -60,9 +61,16 @@ class CalificacionMaderaController extends Controller
         } else {
             $calificacion->aprobado = false;
         }
-       
+            
         if ( $calificacion->save()) {
-           return response()->json(['success' => true, 'message' => 'Calificación guardada correctamente']);
+            $calificacion_proveedor = Proveedor::find($calificacion->entradaMadera->proveedor->id);
+                if ($calificacion_proveedor->calificacion == 0.00) {
+                    $calificacion_proveedor->calificacion = $calificacion->total;
+                } else {
+                    $calificacion_proveedor->calificacion = ($calificacion_proveedor->calificacion + $calificacion->total) / 2;
+                }
+            $calificacion_proveedor->save();
+            return response()->json(['success' => true, 'message' => 'Calificación guardada correctamente']);
         } else {
               return response()->json(['success' => false, 'message' => 'Error al guardar la calificación']);
         }

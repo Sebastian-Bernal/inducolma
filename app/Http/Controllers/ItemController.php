@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Madera;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreItemsRequest;
 
@@ -16,7 +17,8 @@ class ItemController extends Controller
     public function index()
     {   
         $items = Item::all();
-        return view('modulos.administrativo.items.index', compact('items')); 
+        $maderas = Madera::all();
+        return view('modulos.administrativo.items.index', compact('items', 'maderas'));
     }
 
     /**
@@ -45,7 +47,7 @@ class ItemController extends Controller
         $item->ancho = $request->ancho;
         $item->largo = $request->largo;
         $item->existencias = $request->existencias;
-        $item->tipo_madera = $request->tipo_madera;
+        $item->madera_id = $request->tipo_madera;
         $item->codigo_cg = $request->codigo_cg;
         $item->preprocesado = $request->preprocesado;
         $item->carretos = $request->carretos;
@@ -64,7 +66,8 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        return view('modulos.administrativo.items.show', compact('item'));
+        $maderas = Madera::all();
+        return view('modulos.administrativo.items.show', compact('item', 'maderas'));
     }
 
     /**
@@ -94,7 +97,7 @@ class ItemController extends Controller
         $item->ancho = $request->ancho;
         $item->largo = $request->largo;
         $item->existencias = $request->existencias;
-        $item->tipo_madera = $request->tipo_madera;
+        $item->madera_id = $request->tipo_madera;
         $item->codigo_cg = $request->codigo_cg;
         $item->preprocesado = $request->preprocesado;
         $item->carretos = $request->carretos;

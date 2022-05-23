@@ -18,4 +18,12 @@ class Item extends Model
     {
         return $this->hasMany(CostosInfraestructura::class,'id');
     }
+
+    /**
+     * relacion items belongsTo madera
+     */
+    public function madera()
+    {
+        return $this->belongsTo(Madera::class, 'madera_id');
+    }
 }

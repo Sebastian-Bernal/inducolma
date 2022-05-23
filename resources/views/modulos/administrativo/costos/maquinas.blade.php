@@ -43,7 +43,12 @@
                             <div class="modal-body">
                                 <div class="input-group mb-3"> 
                                     <span class="input-group-text">Maquina:</span>                               
-                                    <input type="text" class="form-control" placeholder="Nombre maquina" name="maquina" id="maquina" required>
+                                    <input type="text" 
+                                        class="form-control text-uppercase" 
+                                        placeholder="Nombre maquina" 
+                                        name="maquina" 
+                                        id="maquina" 
+                                        required>
                                 </div>
                             </div>
                             <div class="modal-footer">

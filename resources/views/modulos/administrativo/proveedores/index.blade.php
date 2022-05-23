@@ -86,7 +86,7 @@
                                                 type="text" 
                                                 class="form-control @error('razon_social') is-invalid @enderror text-uppercase" 
                                                 name="razon_social" value="{{ old('razon_social') }}" 
-                                                required 
+                                                 
                                                 autocomplete="razon_social" 
                                                 autofocus>
         

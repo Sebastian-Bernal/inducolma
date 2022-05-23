@@ -43,7 +43,7 @@
                                 </div>
 
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text">Tipo de material</span>                               
+                                    <span class="input-group-text">Item</span>                               
                                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="tipoMaterial" id="tipoMaterial">
                                         <option value="" selected>Seleccione...</option>
                                         @foreach ($items as $item)

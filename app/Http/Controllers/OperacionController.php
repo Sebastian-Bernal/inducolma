@@ -41,7 +41,7 @@ class OperacionController extends Controller
     {
         $this->authorize('admin');
         $operacion = new Operacion();
-        $operacion->operacion = $request->operacion;
+        $operacion->operacion = strtoupper($request->operacion);
         $operacion->save();
         return redirect()->route('operaciones.index');
     }
@@ -84,7 +84,7 @@ class OperacionController extends Controller
     {
         $this->authorize('admin');
         $operacion = Operacion::findOrFail($operacion->id);
-        $operacion->operacion = $request->operacion;
+        $operacion->operacion = strtoupper($request->operacion);
         $operacion->save();
         return redirect()->route('operaciones.index');
     }

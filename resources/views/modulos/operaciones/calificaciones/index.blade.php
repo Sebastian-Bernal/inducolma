@@ -25,6 +25,7 @@
                     <th>Paqueta</th> 
                     <th>Total calificaci&oacute;n</th>
                     <th>Estado</th>
+                    <th>Proveedor</th>
                     <th>Acciones</th>
                     
                 </tr>
@@ -45,7 +46,7 @@
                                 {!! '<span class="badge bg-danger">NO APROBADA</span>'  !!} 
                             @endif
                         </td>
-                       
+                        <td>{{ $calificacion->entradaMadera->proveedor->nombre }}</td>
                         <td>
                            
                             <div class="d-flex align-items-center ">

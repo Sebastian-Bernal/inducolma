@@ -50,7 +50,7 @@
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
                         @foreach ($operaciones as $operacion)
                             <option value="{{ $operacion->id }}"
-                                {{ $costosOperacion->descripcion->pluck('operacion_id')->contains($operacion->id) ? 'selected' : ''}}
+                                {{ $operacion->id == $costosOperacion->descripcion->operacion->id ? 'selected' : ''}}
                                 >{{ $operacion->operacion }}</option>
                         @endforeach 
                     </select>

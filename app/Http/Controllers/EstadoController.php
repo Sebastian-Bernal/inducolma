@@ -37,7 +37,7 @@ class EstadoController extends Controller
      */
     public function store( StoreEstadoRequest $request)
     {
-        return $request->all();
+        //return $request->all();
         $estado = new Estado();
         $estado->descripcion = strtoupper($request->descripcion);
         $estado->user_id = auth()->user()->id;

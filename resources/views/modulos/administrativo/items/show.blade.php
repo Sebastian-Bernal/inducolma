@@ -108,35 +108,22 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
-                                        <label for="existencias" class="col-md-4 col-form-label text-md-end">{{ __('Existencias') }}</label>
-                                        <div class="col-md-6">
-                                            <input id="existencias" 
-                                                    type="number" 
-                                                    class="form-control @error('existencias') is-invalid @enderror text-uppercase"
-                                                      
-                                                    name="existencias" value="{{ old('existencias',$item->existencias) }}" 
-                                                    required autocomplete="existencias" autofocus
-                                                    onkeyup="mayusculas()">
-            
-                                            @error('existencias')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
+                                   
                                     <div class="row mb-3">
                                         <label for="tipo_madera" class="col-md-4 col-form-label text-md-end">{{ __('Tipo de Madera') }}</label>
                                         <div class="col-md-6">
-                                            <input id="tipo_madera" 
-                                                    type="text" 
+                                            <select id="tipo_madera" 
                                                     class="form-control @error('tipo_madera') is-invalid @enderror text-uppercase"
-                                                      
-                                                    name="tipo_madera" value="{{ old('tipo_madera', $item->tipo_madera) }}" 
-                                                    required autocomplete="tipo_madera" autofocus
-                                                    onkeyup="mayusculas()">
+                                                    name="tipo_madera" value="{{ old('tipo_madera') }}" 
+                                                    required 
+                                                    autofocus
+                                                    >
+                                                <option value="" selected>Seleccione...</option>
+                                                @foreach ($maderas as $tipo_madera)
+                                                    <option value="{{ $tipo_madera->id }}" 
+                                                        {{ $tipo_madera->id == $item->madera->id ? 'selected' : '' }}>{{ $tipo_madera->nombre }}</option>
+                                                @endforeach
+                                            </select>
             
                                             @error('tipo_madera')
                                                 <span class="invalid-feedback" role="alert">
@@ -152,7 +139,6 @@
                                             <input id="codigo_cg" 
                                                     type="number" 
                                                     class="form-control @error('codigo_cg') is-invalid @enderror text-uppercase"
-                                                      
                                                     name="codigo_cg" value="{{ old('codigo_cg', $item->codigo_cg) }}" 
                                                     required autocomplete="codigo_cg" autofocus
                                                     onkeyup="mayusculas()">
@@ -165,45 +151,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
-                                        <label for="preprocesado" class="col-md-4 col-form-label text-md-end">{{ __('Preprocesado') }}</label>
-                                        <div class="col-md-6">
-                                            <select id="preprocesado"                                                      
-                                                    class="form-control @error('preprocesado') is-invalid @enderror"                                                    
-                                                    name="preprocesado" 
-                                                    required 
-                                                    >
-                                                <option value="" selected>Seleccione una opción</option>
-                                                <option value="1" >SI</option>
-                                                <option value="0">NO</option>
-                                            </select>
-            
-                                            @error('preprocesado')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="carretos" class="col-md-4 col-form-label text-md-end">{{ __('Carretos') }}</label>
-                                        <div class="col-md-6">
-                                            <input id="carretos" 
-                                                    type="number" 
-                                                    class="form-control @error('carretos') is-invalid @enderror text-uppercase"
-                                                      
-                                                    name="carretos" value="{{ old('carretos',$item->carretos) }}" 
-                                                    required autocomplete="carretos" autofocus
-                                                    onkeyup="mayusculas()">
-            
-                                            @error('carretos')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                    
 
 
                             </div>

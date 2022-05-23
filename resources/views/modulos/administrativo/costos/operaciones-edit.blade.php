@@ -17,7 +17,13 @@
             <div class="modal-body">
                 <div class="input-group mb-3">
                     <span class="input-group-text">Operaci&oacute;n:</span>                                
-                    <input type="text" class="form-control" placeholder="Nombre operacion" name="operacion" id="operacion" required value="{{ $operacion->operacion }}">
+                    <input type="text" 
+                    class="form-control text-uppercase" 
+                    placeholder="Nombre operacion"
+                    name="operacion" 
+                    id="operacion" 
+                    required 
+                    value="{{ $operacion->operacion }}">
                 </div>
             </div>
             @if ($errors->any())

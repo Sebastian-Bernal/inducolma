@@ -29,7 +29,7 @@ class ProveedorRequest extends FormRequest
             'direccion' => 'required',
             'telefono' => 'required',
             'email' => 'required|email',
-            'razon_social' => 'required',
+            //'razon_social' => 'required',
             
         ];
     }
@@ -43,7 +43,7 @@ class ProveedorRequest extends FormRequest
             'direccion.required' => 'El campo dirección es obligatorio',
             'telefono.required' => 'El campo teléfono es obligatorio',
             'email.required' => 'El campo email es obligatorio',
-            'razon_social.required' => 'El campo razón social es obligatorio',
+            //'razon_social.required' => 'El campo razón social es obligatorio',
         ];
     }
 }

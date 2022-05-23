@@ -114,7 +114,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
+                                    {{-- <div class="row mb-3">
                                         <label for="existencias" class="col-md-4 col-form-label text-md-end">{{ __('Existencias') }}</label>
                                         <div class="col-md-6">
                                             <input id="existencias" 
@@ -131,18 +131,22 @@
                                                 </span>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="row mb-3">
                                         <label for="tipo_madera" class="col-md-4 col-form-label text-md-end">{{ __('Tipo de Madera') }}</label>
                                         <div class="col-md-6">
-                                            <input id="tipo_madera" 
-                                                    type="text" 
+                                            <select id="tipo_madera" 
                                                     class="form-control @error('tipo_madera') is-invalid @enderror text-uppercase"
-                                                      
                                                     name="tipo_madera" value="{{ old('tipo_madera') }}" 
-                                                    required autocomplete="tipo_madera" autofocus
-                                                    onkeyup="mayusculas()">
+                                                    required 
+                                                    autofocus
+                                                    >
+                                                <option value="" selected>Seleccione...</option>
+                                                @foreach ($maderas as $tipo_madera)
+                                                    <option value="{{ $tipo_madera->id }}">{{ $tipo_madera->nombre }}</option>
+                                                @endforeach
+                                            </select>
             
                                             @error('tipo_madera')
                                                 <span class="invalid-feedback" role="alert">
@@ -171,7 +175,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
+                                    {{-- <div class="row mb-3">
                                         <label for="preprocesado" class="col-md-4 col-form-label text-md-end">{{ __('Preprocesado') }}</label>
                                         <div class="col-md-6">
                                             <select id="preprocesado" 
@@ -210,7 +214,7 @@
                                                 </span>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
 
                             </div>
@@ -236,8 +240,8 @@
                         <th>Alto</th>
                         <th>Largo</th>
                         <th>Ancho</th>
-                        <th>Existencias</th>
                         <th>Tipo de Madera</th>
+                        <th>Existencias</th>
                         <th>Preprocesado</th>
                         <th>Carretos</th>
                         <th>Acciones</th>
@@ -251,16 +255,10 @@
                             <td>{{ $item->codigo_cg }}</td>
                             <td>{{ $item->alto }}</td> 
                             <td>{{ $item->largo }}</td> 
-                            <td>{{ $item->ancho }}</td>    
-                            <td>{{ $item->existencias }}</td>
-                            <td>{{ $item->tipo_madera }}</td>                            
-                            <td>@if ($item->preprocesado == true)
-                                    {{ 'SI' }}
-                                @else
-                                    {{ 'NO' }}
-                                @endif
-                                
-                            </td> 
+                            <td>{{ $item->ancho }}</td>  
+                            <td>{{ $item->madera->nombre}}</td>  
+                            <td>{{ $item->existencias }}</td>                                                        
+                            <td>{{ $item->preprocesado }}</td>                               
                             <td>{{ $item->carretos }}</td>                   
                             
                             
