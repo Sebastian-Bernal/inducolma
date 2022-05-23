@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.web')
 @section('title', ' Usuarios | inducolma')
 
 @section('submenu')

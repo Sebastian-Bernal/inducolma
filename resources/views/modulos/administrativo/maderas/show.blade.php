@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.web')
 @section('title', ' Maderas | Inducolma')
 
 @section('submenu')
