@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.web')
 @section('title', ' Usuarios | inducolma')
 
 @section('submenu')
@@ -81,7 +81,7 @@
                                                 class="form-control @error('segundo_nombre') is-invalid @enderror text-uppercase" 
                                                 name="segundo_nombre" 
                                                 value="{{ old('segundo_nombre') }}" 
-                                                required 
+                                                 
                                                 autocomplete="segundo_nombre" 
                                                 autofocus>
                                         @error('segundo_nombre')
@@ -120,7 +120,7 @@
                                                 class="form-control @error('segundo_apellido') is-invalid @enderror text-uppercase" 
                                                 name="segundo_apellido" 
                                                 value="{{ old('segundo_apellido') }}" 
-                                                required 
+                                                 
                                                 autocomplete="segundo_apellido">
                                         @error('segundo_apellido')
                                             <span class="invalid-feedback" role="alert">

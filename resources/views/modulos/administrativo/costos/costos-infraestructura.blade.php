@@ -63,10 +63,10 @@
                                         @endforeach 
                                     </select>
                                 </div>
-                                <div class="input-group mb-3">
+                                {{-- <div class="input-group mb-3">
                                     <span class="input-group-text">Proceso madera:</span>                               
                                     <input type="text" class="form-control" placeholder="Proceso madera"  name="procesoMadera" id="procesoMadera" required>
-                                </div>
+                                </div> --}}
                                 
                                 <div class="input-group mb-3"> 
                                     <span class="input-group-text">Promedio piezas:</span>                            
@@ -109,7 +109,6 @@
                         <th>Valor operativo</th>
                         <th>Tipo de material</th>                            
                         <th>Tipo de madera</th>
-                        <th>Proceso de madera</th>
                         <th>Promedio de piezas</th>
                         <th>Minimo de piezas</th>
                         <th>Maximo de piezas</th>
@@ -125,7 +124,6 @@
                             <td>{{ $costoInfraestructura->valor_operativo }}</td>
                             <td>{{ $costoInfraestructura->item->descripcion }}</td>
                             <td>{{ $costoInfraestructura->madera->nombre }}</td>
-                            <td>{{ $costoInfraestructura->proceso_madera }}</td>
                             <td>{{ $costoInfraestructura->promedio_piezas }}</td>
                             <td>{{ $costoInfraestructura->minimo_piezas }}</td>
                             <td>{{ $costoInfraestructura->maximo_piezas }}</td>

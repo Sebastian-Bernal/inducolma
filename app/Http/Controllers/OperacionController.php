@@ -43,7 +43,7 @@ class OperacionController extends Controller
         $operacion = new Operacion();
         $operacion->operacion = strtoupper($request->operacion);
         $operacion->save();
-        return redirect()->route('operaciones.index');
+        return redirect()->route('operaciones.index')->with('status', 'Operación creada con éxito');
     }
 
     /**
@@ -86,7 +86,7 @@ class OperacionController extends Controller
         $operacion = Operacion::findOrFail($operacion->id);
         $operacion->operacion = strtoupper($request->operacion);
         $operacion->save();
-        return redirect()->route('operaciones.index');
+        return redirect()->route('operaciones.index')->with('status',  "Operación $operacion->operacion actualizada con éxito");
     }
 
     /**

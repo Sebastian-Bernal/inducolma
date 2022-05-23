@@ -61,5 +61,30 @@
     </footer> --}}
    @yield('js') 
    
+   <script>
+       function verificarLocalStorage() {
+        document.getElementById('logout-form').submit();
+        //    if (localStorage.length == 0) {
+           
+        //    } else{
+        //         Swal.fire({
+        //             title: '¿Está seguro de cerrar sesión?',
+        //             text: "¡Tiene datos en memoria que no se han guardado, No podrá revertir esta acción!",
+        //             icon: 'warning',
+        //             showCancelButton: true,
+        //             confirmButtonColor: '#597504',
+        //             cancelButtonColor: '#d33',
+        //             confirmButtonText: '¡Si, salir!',
+        //             cancelButtonText: 'Cancelar'
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 localStorage.clear();
+        //                 document.getElementById('logout-form').submit();
+        //             }
+        //         })
+        //    }
+        
+       }
+   </script>
 </body>
 </html>

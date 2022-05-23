@@ -45,7 +45,7 @@ class MaquinaController extends Controller
         Maquina::create(
             ['maquina' => strtoupper($request->maquina)]
         );
-        return back();
+        return back()->with('status', 'Maquina creada con éxito');
     }
 
     /**
@@ -89,7 +89,7 @@ class MaquinaController extends Controller
         $maquina = Maquina::findOrFail($maquina->id);
         $maquina->maquina = strtoupper($request->maquina);
         $maquina->save();
-        return redirect()->route('maquinas.index');
+        return redirect()->route('maquinas.index')->with('status', "Maquina $maquina->maquina actualizada con éxito");
     }
 
     /**

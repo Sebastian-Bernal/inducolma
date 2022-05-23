@@ -45,7 +45,7 @@ class DescripcionController extends Controller
         $descripcion->descripcion = strtoupper($request->descripcion);
         $descripcion->operacion_id = $request->idOperacion;
         $descripcion->save();
-        return redirect()->route('descripciones.index');
+        return redirect()->route('descripciones.index')->with('status', 'Descripción creada con éxito');
     }
 
     /**
@@ -91,7 +91,7 @@ class DescripcionController extends Controller
         $descripcion->descripcion = strtoupper($request->descripcion);
         $descripcion->operacion_id = $request->idOperacion;
         $descripcion->save();
-        return redirect()->route('descripciones.index');
+        return redirect()->route('descripciones.index')->with('status',"La descripción $descripcion->descripcion ha sido actualizada");
     }
 
     /**

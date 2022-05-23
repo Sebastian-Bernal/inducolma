@@ -54,7 +54,7 @@ class UsuarioController extends Controller
         $usuario->rol = $request->rolUsuario;
         $usuario->password = bcrypt($request->identificacionUsuario);
         $usuario->save();
-        return redirect()->route('usuarios.index');
+        return redirect()->route('usuarios.index')->with('status', "Usuario $usuario->name creado correctamente");
     }
 
     /**
@@ -102,7 +102,7 @@ class UsuarioController extends Controller
         $usuario->email = $request->email;
         $usuario->rol = $request->rolUsuario;
         $usuario->save();
-        return redirect()->route('usuarios.index');
+        return redirect()->route('usuarios.index')->with('status', "Usuario $usuario->name actualizado correctamente");
     }
 
     /**

@@ -44,8 +44,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             
                             <li class="nav nav-pills">
-                                <a class="nav-link link-light"  href="#" onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
+                                <a class="nav-link link-light"  href="#" onclick="verificarLocalStorage();">
                                     Cerrar sesion
                                 </a>
                             </li>

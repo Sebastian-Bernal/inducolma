@@ -102,7 +102,8 @@ class CostosOperacionController extends Controller
         $costosOperacion->maquina_id = $request->idMaquina;
         $costosOperacion->descripcion_id = $request->idDescripcion;
         $costosOperacion->save();
-        return redirect()->route('costos-de-operacion.index')->with('status', 'Costo de operación actualizado con éxito');
+        return redirect()->route('costos-de-operacion.index')->with('status', 
+                "Costo de operación $costosOperacion->id de la maquina {$costosOperacion->maquina->maquina} actualizado con éxito");
     }
 
     /**

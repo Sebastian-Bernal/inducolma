@@ -53,7 +53,7 @@ function verificarInputs() {
         }       
     });
     if(valido) {
-        console.log("envia datos");
+        //console.log("envia datos");
        guardarPaqueta();
     }else{
        console.log("no envia datos");
@@ -164,8 +164,9 @@ function guardarPaqueta() {
     let pulgadasAlto = $('#pulgadas_alto').val();
     let pulgadasAncho = $('#pulgadas_ancho').val();
     let entrada_id = $('#entradaId').val();
+    let user_id = $('#userId').val();
 
-    registroPaqueta = Object.assign({}, {paqueta, bloque, largo, alto, ancho, pulgadasAlto, pulgadasAncho, entrada_id});
+    registroPaqueta = Object.assign({}, {paqueta, bloque, largo, alto, ancho, pulgadasAlto, pulgadasAncho, entrada_id, user_id});
     cubicajes.unshift(registroPaqueta);
     localStorage.setItem('cubicajes', JSON.stringify(cubicajes));
     //let cubicajesLocal = JSON.parse(localStorage.getItem('cubicajes'));

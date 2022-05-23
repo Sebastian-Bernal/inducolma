@@ -22,7 +22,7 @@ class RegistroCubicajes
             $registro->pulgadas_cuadradas_x3_metros = ($cubicaje['largo']/300)* (((integer)($cubicaje['alto']/2.54)) * ((integer)($cubicaje['ancho']/2.54)));
             $registro->bloque = $cubicaje['bloque'];
             $registro->entrada_madera_id = $cubicaje['entrada_id'];
-            $registro->user_id = auth()->user()->id;
+            $registro->user_id = $cubicaje['user_id'];
             $registro->save();
             $guardados++;
         }      

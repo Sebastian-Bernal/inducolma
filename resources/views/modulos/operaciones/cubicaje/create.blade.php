@@ -6,7 +6,8 @@
 @endsection
 @section('content') 
 <div class="div container h-content ">
-    <input type="hidden" id="entradaId" value="{{ $entrada->id }}">        
+    <input type="hidden" id="entradaId" value="{{ $entrada->id }}"> 
+    <input type="hidden" id="userId" value="{{ Auth::user()->id }}">       
     <div class="row"> 
         <div class="col-8 mb-3">
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetallesMadera" aria-expanded="false" aria-controls="collapseDetallesMadera">
