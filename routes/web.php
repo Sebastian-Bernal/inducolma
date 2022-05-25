@@ -21,6 +21,7 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\TipoEventoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\ContratistaController;
+use App\Http\Controllers\DisenoProductoFinalController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -186,6 +187,17 @@ Route::resource('contratistas', ContratistaController::class)
                 ->middleware('auth');
 
 
+Route::controller(PedidoController::class)->group(function () {
+        Route::get('pedidos-cliente/{cliente}','consultaPedidoCliente')
+                ->name('pedidos-cliente')
+                ->middleware('auth');
+});
+
+Route::resource('disenos',DisenoProductoFinalController::class)
+                ->parameters(['diseños'=> 'diseño'])
+                ->names('disenos')
+                ->middleware('auth');
+                
 Auth::routes([
             'register' => false,            
 

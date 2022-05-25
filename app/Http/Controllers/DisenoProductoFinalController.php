@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\DisenoProductoFinal;
+use App\Models\Madera;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class DisenoProductoFinalController extends Controller
@@ -14,7 +16,10 @@ class DisenoProductoFinalController extends Controller
      */
     public function index()
     {
-        //
+        $disenos = DisenoProductoFinal::all();
+        $maderas = Madera::all();
+        $clientes = Cliente::orderBy('nit')->get();
+        return view('modulos.administrativo.disenos.index', compact('disenos', 'maderas', 'clientes'));
     }
 
     /**

@@ -1,16 +1,22 @@
 $(document).ready(function() {
 
-    $('#listaclientes').DataTable({
+    $('#listadisenos').DataTable({
         "language": {
                 "url": "/DataTables/Spanish.json"
                 },
         "responsive": true
     });
-    $('#listaPedidos').DataTable({
-        "language": {
-                "url": "/DataTables/Spanish.json"
-                },
-        "responsive": true
+    $('#cliente_id').select2({
+        width: 'resolve',
+        placeholder: 'Seleccione un cliente ...',
+        dropdownParent: $("#creadiseno"),
+        //theme: "bootstrap-5",
+    });
+    
+    $('#madera_id').select2({
+        width: 'resolve',
+        placeholder: 'Seleccione una madera...',
+        dropdownParent: $("#creadiseno")
     });
     
 });

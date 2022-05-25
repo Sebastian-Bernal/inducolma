@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreClienteRequest;
 use App\Models\Cliente;
+use App\Models\Pedido;
+use App\Models\DisenoProductoFinal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,7 +62,15 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        return view('modulos.administrativo.clientes.show', compact('cliente'));
+       
+        $pedidos = Pedido::where('cliente_id', $cliente->id)
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get();
+        $productos = DisenoProductoFinal::where('cliente_id', $cliente->id)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+        return view('modulos.administrativo.clientes.show', compact('cliente', 'pedidos', 'productos'));
     }
 
     /**
@@ -71,7 +81,7 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-        
+        return view('modulos.administrativo.clientes.edit', compact('cliente'));
     }
 
     /**

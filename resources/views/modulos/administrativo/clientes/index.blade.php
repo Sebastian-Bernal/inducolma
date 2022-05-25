@@ -200,10 +200,17 @@
                             <td>
                                 <div class="d-flex align-items-center ">
                                     
+                                    <a  href="{{ route('clientes.show',$cliente->id) }}" 
+                                                class="btn btn-primary btn-sm m-1" 
+                                                data-bs-toggle="tooltip" 
+                                                data-bs-placement="top" title="Ver cliente">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    
                                     <button class="btn btn-sm btn-danger" onclick="eliminarCliente({{ $cliente }})">
                                         <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
                                     </button>
-                                    <a href="{{ route('clientes.show',$cliente) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('clientes.edit',$cliente) }}" class="btn btn-sm btn-warning">
                                         <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                     </a>
                                 

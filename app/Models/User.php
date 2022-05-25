@@ -60,4 +60,13 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Rol::class, 'rol');
     }
+
+    /**
+     * 
+     * relacion users hasMany diseno_producto_finales
+     */
+    public function diseño_producto_finales()
+    {
+        return $this->hasMany(DiseñoProductoFinal::class, 'user_id');
+    }
 }

@@ -157,7 +157,7 @@
                     </a>
                   </p>
                   <p>
-                    <a class="btn btn-primary" href="#">
+                    <a class="btn btn-primary" href="{{ route('disenos.index') }}">
                         Diseños de productos para clientes 
                     </a>
                   </p>

@@ -52,4 +52,12 @@ class Madera extends Model
         return $this->hasMany(Item::class, 'tipo_madera');
     }
 
+    /**
+     * relacion maderas belongsTo diseño_producto_finales
+     */
+    public function diseño_producto_finales()
+    {
+        return $this->belongsTo(DiseñoProductoFinal::class, 'madera_id');
+    }
+
 }
