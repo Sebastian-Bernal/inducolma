@@ -134,6 +134,11 @@
                     </a>
                   </p>
                   <p>
+                    <a class="btn btn-primary" href="{{ route('tipos-maderas.index') }}">
+                      Tipos de madera                      
+                    </a>
+                  </p>
+                  <p>
                     <a class="btn btn-primary" href="{{ route('maderas.index') }}">
                         Maderas                        
                     </a>

@@ -67,10 +67,9 @@ class ClienteController extends Controller
                                 ->orderBy('created_at', 'desc')
                                 ->take(5)
                                 ->get();
-        $productos = DisenoProductoFinal::where('cliente_id', $cliente->id)
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-        return view('modulos.administrativo.clientes.show', compact('cliente', 'pedidos', 'productos'));
+        
+        return view('modulos.administrativo.clientes.show', compact('cliente', 'pedidos'));
+       
     }
 
     /**

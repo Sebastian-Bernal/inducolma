@@ -84,39 +84,11 @@
                                             @enderror
                                         </div>
                                     </div>
-
-                                    <div class="row mb-3">
-                                        <label for="cliente_id" class="col-md-4 col-form-label text-md-end">{{ __('Cliente') }}</label>
-            
-                                        <div class="col-md-6">
-                                            <select  id="cliente_id" 
-                                                    type="text" 
-                                                    
-                                                    class="form-control @error('cliente_id') is-invalid @enderror text-uppercase" 
-                                                    name="cliente_id" 
-                                                    value="{{ old('cliente_id') }}" 
-                                                    required 
-                                                    autocomplete="cliente_id" 
-                                                    autofocus>
-                                                <option value="" selected>Seleccione...</option>
-                                                @foreach ($clientes as $cliente)
-                                                    <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('cliente_id')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
                             </div>
-                                    
-                                
                             </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Guardar diseno</button>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar diseno</button>
                             </div>
                         </div>
                         </div>
@@ -138,21 +110,21 @@
                 <tbody>
                     @foreach ($disenos as $diseno)
                         <tr>
-                            <td>{{ $diseno->descricion }}</td>
-                            <td>{{ $diseno->madera->madera_id }}</td>
+                            <td>{{ $diseno->descripcion }}</td>
+                            <td>{{ $diseno->madera->nombre }}</td>
                             {{-- <td>{{ $diseno->user->name }}</td>    --}}
                             
                             <td>
                                 <div class="d-flex align-items-center ">
                                     
-                                    <a  href="{{ route('disenos.show',$diseno->id) }}" 
+                                    <a  href="{{ route('disenos.show',$diseno) }}" 
                                                 class="btn btn-primary btn-sm m-1" 
                                                 data-bs-toggle="tooltip" 
                                                 data-bs-placement="top" title="Ver diseno">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
                                     
-                                    <button class="btn btn-sm btn-danger" onclick="eliminarCliente({{ $diseno }})">
+                                    <button class="btn btn-sm btn-danger" onclick="eliminarDiseno({{ $diseno }})">
                                         <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
                                     </button>
                                     <a href="{{ route('disenos.edit',$diseno) }}" class="btn btn-sm btn-warning">

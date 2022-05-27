@@ -19,6 +19,7 @@
     <!-- select2 -->
     <link rel="stylesheet" href="/select2/dist/css/select2.min.css">
     <script src="/select2/dist/js/select2.js" defer=""></script>
+    <link rel="stylesheet" href="/select2/theme/select2-bootstrap-5-theme.min.css" />
     
     <!-- sweetalert -->
     <script src="/sweetalert/sweetalert2.all.min.js"></script>

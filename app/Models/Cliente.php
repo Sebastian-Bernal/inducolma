@@ -17,5 +17,12 @@ class Cliente extends Model
         return $this->hasMany(Pedido::class,'cliente_id');
     }
 
-    
+    /**
+     * relacion  cliente con diseño_producto_finales
+     *
+     */
+    public function disenos()
+    {
+        return $this->belongsToMany(DisenoProductoFinal::class,'diseno_cliente');
+    }
 }

@@ -60,4 +60,11 @@ class Madera extends Model
         return $this->belongsTo(DiseñoProductoFinal::class, 'madera_id');
     }
 
+    /**
+     * relacion maderas belongsTo tipo_maderas
+     */
+    public function tipo_maderas()
+    {
+        return $this->belongsTo(TipoMadera::class);
+    }
 }

@@ -19,6 +19,7 @@
                 @endif
                
                 <div class="card">
+                    {{ $cliente->disenos }}
                     <h5 class="card-header">{{ $cliente->nombre }}</h5>
                     <div class="card-body">
                         <p class=" justify ">
@@ -80,12 +81,12 @@
                                         <select name="producto_id" 
                                                 id="producto_id" 
                                                 class="form-control">
-                                            @foreach ($productos as $producto)
-                                                <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                                            @foreach ($cliente->disenos as $producto)
+                                                <option value="{{ $producto->id }}">{{ $producto->descricion }}</option>
                                             @endforeach
                                         </select>
-                                        <a href="{{ route('disenos.index') }}" class="btn btn-primary mx-1" title="Crear nuevo diseño">
-                                            <i class="fa-solid fa-pen-ruler"></i>
+                                        <a href="{{ route('disenos.index') }}" class="btn btn-primary mx-1" title="Asignar nuevo diseño">
+                                            <i class="fa-solid fa-square-plus"></i>
                                         </a>
                                     </div>
                                 </div>

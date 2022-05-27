@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DisenoProductoFinal extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = 'diseno_producto_finales';
 
 
@@ -26,6 +27,32 @@ class DisenoProductoFinal extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * relacion diseño_producto_finales belongsToMany clientes
+     */
+    public function clientes()
+    {
+        return $this->belongsToMany(Cliente::class,'diseno_cliente');
+    }
+
+    /**
+     * relacion diseno_producto_finales belongsToMany diseño_items
+     */
+
+    public function items()
+    {
+        return $this->belongsToMany(Item::class,'diseno_items');
+    }
+
+    /**
+     * relacaion diseño_producto_finales belongsToMany diseño_insumos
+     */
+
+    public function insumos()
+    {
+        return $this->belongsToMany(InsumosAlmacen::class,'diseno_insumos', 'diseno_producto_final_id', 'insumo_almacen_id');
     }
 }
 
