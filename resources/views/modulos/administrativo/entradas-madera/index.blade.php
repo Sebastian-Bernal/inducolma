@@ -220,7 +220,7 @@
                                                 <select name="madera" id="madera" class="form-control @error('madera') is-invalid @enderror"  autocomplete="madera" required autofocus>
                                                     <option value="" selected>Seleccione...</option>
                                                     @foreach ($maderas as $madera)
-                                                    <option value="{{ $madera->id }}">{{ $madera->nombre }}</option>                                                  
+                                                    <option value="{{ $madera->id }}">{{ $madera->nombre_cientifico }}</option>                                                  
                                                 @endforeach
                                                 </select>
                                                 @error('madera')

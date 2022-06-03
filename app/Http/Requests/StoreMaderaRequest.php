@@ -24,7 +24,7 @@ class StoreMaderaRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre' => 'required|unique:maderas,nombre',
+            'tipo_madera_id' => 'required|integer',
             'nombre_cientifico' => 'required',
             'densidad' => 'required',          
         
@@ -34,8 +34,8 @@ class StoreMaderaRequest extends FormRequest
     public function messages()
     {
         return [
-            'nombre.required' => 'El campo nombre es obligatorio',
-            'nombre.unique' => 'El nombre ya existe',
+            'nombre.required' => 'El tipo de madera es obligatorio',
+            'nombre.integer' => 'El debe seleccionar un tipo de madera correcto',
             'nombre_cientifico.required' => 'El campo nombre cientifico es obligatorio',
             'densidad.required' => 'El campo densidad es obligatorio',
         ];

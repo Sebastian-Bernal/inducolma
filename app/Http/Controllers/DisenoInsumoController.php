@@ -35,7 +35,17 @@ class DisenoInsumoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //return $request->all();
+        $diseno_insumo = new DisenoInsumo();
+        $diseno_insumo->diseno_producto_final_id = $request->insumo['diseno_id'];
+        $diseno_insumo->insumo_almacen_id = $request->insumo['insumo_id'];
+        $diseno_insumo->cantidad = $request->insumo['cantidad'];
+        
+        if ($diseno_insumo->save()) {
+            return response()->json(['success' => true, 'message' => 'Insumo agregado con éxito', 'insumobd' => $diseno_insumo]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Error al agregar el Insumo']);
+        }
     }
 
     /**
@@ -80,6 +90,10 @@ class DisenoInsumoController extends Controller
      */
     public function destroy(DisenoInsumo $disenoInsumo)
     {
-        //
+        if ($disenoInsumo->delete()) {
+            return response()->json(['success' => true, 'message' => 'Item eliminado con éxito']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el item']);
+        }
     }
 }

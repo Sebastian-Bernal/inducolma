@@ -13,7 +13,7 @@ class UpdateTipoMaderaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class UpdateTipoMaderaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'descripcion' => 'required|string|max:255|unique:tipo_maderas,descripcion,',
+
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     * 
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'descripcion.required' => 'El campo descripción es obligatorio.',
+            'descripcion.string' => 'El campo descripción debe ser un texto.',
+            'descripcion.max' => 'El campo descripción debe tener máximo 255 caracteres.',
+            'descripcion.unique' => 'El tipo de madera ya se encuentra registrado.',
         ];
     }
 }

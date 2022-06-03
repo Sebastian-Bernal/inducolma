@@ -24,12 +24,23 @@
                             <div class="card-body">                                                
                                                    
                                 <div class="row mb-3">
-                                    <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                                    <label for="tipo_madera_id" class="col-md-4 col-form-label text-md-end">{{ __('Tipo madera') }}</label>
         
                                     <div class="col-md-6">
-                                        <input id="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror text-uppercase" name="nombre" value="{{ old('nombre',$madera->nombre) }}" required autocomplete="nombre" autofocus>
+                                        <select id="tipo_madera_id" 
+                                                class="form-control @error('tipo_madera_id') is-invalid @enderror text-uppercase" 
+                                                name="tipo_madera_id" 
+                                                value="{{ old('tipo_madera_id') }}" 
+                                                required 
+                                                autocomplete="tipo_madera_id" 
+                                                autofocus>
+                                            <option value="">Seleccione...</option>
+                                            @foreach ($tipos_maderas as $tipo)
+                                                <option value="{{ $tipo->id }}" {{ $tipo->id == $madera->tipo_madera->id ? 'selected' : '' }}>{{ $tipo->descripcion }}</option>
+                                            @endforeach
+                                        </select>
         
-                                        @error('nombre')
+                                        @error('tipo_madera_id')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>

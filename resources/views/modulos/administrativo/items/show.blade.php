@@ -119,9 +119,9 @@
                                                     autofocus
                                                     >
                                                 <option value="" selected>Seleccione...</option>
-                                                @foreach ($maderas as $tipo_madera)
+                                                @foreach ($tipos_maderas as $tipo_madera)
                                                     <option value="{{ $tipo_madera->id }}" 
-                                                        {{ $tipo_madera->id == $item->madera->id ? 'selected' : '' }}>{{ $tipo_madera->nombre }}</option>
+                                                        {{ $tipo_madera->id == $item->tipo_madera->id ? 'selected' : '' }}>{{ $tipo_madera->descripcion }}</option>
                                                 @endforeach
                                             </select>
             

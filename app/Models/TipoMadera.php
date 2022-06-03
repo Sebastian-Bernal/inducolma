@@ -18,4 +18,22 @@ class TipoMadera extends Model
     {
         return $this->hasMany(Madera::class);
     }
+
+    /**
+     * Relacion tipo_maderas hasMany items
+     */
+
+    public function items()
+    {
+        return $this->hasMany(Item::class,'madera_id');
+    }
+
+    /**
+     * Relacion tipo_maderas hasMany diseno_producto_finales
+     */
+
+    public function disenos()
+    {
+        return $this->hasMany(DisenoProductoFinal::class);
+    }
 }

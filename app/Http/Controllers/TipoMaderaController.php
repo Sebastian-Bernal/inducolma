@@ -63,7 +63,7 @@ class TipoMaderaController extends Controller
      */
     public function edit(TipoMadera $tipoMadera)
     {
-        //
+        return view('modulos.administrativo.tipo_madera.edit', compact('tipoMadera'));
     }
 
     /**
@@ -73,9 +73,12 @@ class TipoMaderaController extends Controller
      * @param  \App\Models\TipoMadera  $tipoMadera
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTipoMaderaRequest $request, TipoMadera $tipoMadera)
+    public function update(StoreTipoMaderaRequest $request, TipoMadera $tipoMadera)
     {
-        //
+        $tipoMadera->descripcion = strtoupper($request->descripcion);
+        $tipoMadera->user_id = auth()->user()->id;
+        $tipoMadera->save();
+        return redirect()->route('tipos-maderas.index')->with('status', "El tipo de madera $tipoMadera->descripcion ha sido actualizado correctamente");
     }
 
     /**
@@ -86,6 +89,9 @@ class TipoMaderaController extends Controller
      */
     public function destroy(TipoMadera $tipoMadera)
     {
-        //
+        //$tipoMadera->maderas()->delete();
+        //$tipoMadera->items()->delete();
+        $tipoMadera->delete();
+        return response()->json(['success' => 'Tipo de madera eliminado correctamente']);
     }
 }

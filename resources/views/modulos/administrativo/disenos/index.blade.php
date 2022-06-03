@@ -24,7 +24,7 @@
                     </div>
                     
                 @endif
-                <!-- Modal Crea maquina-->
+                <!-- Modal Crea diseño-->
                 <form action="{{ route('disenos.store') }}" method="POST">
                     @csrf
                     <div class="modal fade" id="creadiseno" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -73,8 +73,8 @@
                                                     autocomplete="madera_id" 
                                                     autofocus>
                                                 <option value="" selected>Seleccione...</option>
-                                                @foreach ($maderas as $madera)
-                                                    <option value="{{ $madera->id }}">{{ $madera->nombre }}</option>
+                                                @foreach ($tipos_maderas as $tipo_madera)
+                                                    <option value="{{ $tipo_madera->id }}">{{ $tipo_madera->descripcion }}</option>
                                                 @endforeach
                                             </select>
                                             @error('madera_id')
@@ -111,7 +111,7 @@
                     @foreach ($disenos as $diseno)
                         <tr>
                             <td>{{ $diseno->descripcion }}</td>
-                            <td>{{ $diseno->madera->nombre }}</td>
+                            <td>{{ $diseno->tipo_madera->descripcion }}</td>
                             {{-- <td>{{ $diseno->user->name }}</td>    --}}
                             
                             <td>
@@ -120,8 +120,8 @@
                                     <a  href="{{ route('disenos.show',$diseno) }}" 
                                                 class="btn btn-primary btn-sm m-1" 
                                                 data-bs-toggle="tooltip" 
-                                                data-bs-placement="top" title="Ver diseno">
-                                        <i class="fa-solid fa-eye"></i>
+                                                data-bs-placement="top" title="Diseñar">
+                                        <i class="fa-solid fa-compass-drafting"></i>
                                     </a>
                                     
                                     <button class="btn btn-sm btn-danger" onclick="eliminarDiseno({{ $diseno }})">

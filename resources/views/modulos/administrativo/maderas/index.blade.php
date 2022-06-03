@@ -39,12 +39,23 @@
                             <div class="card-body">                                                
                                                    
                                 <div class="row mb-3">
-                                    <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                                    <label for="tipo_madera_id" class="col-md-4 col-form-label text-md-end">{{ __('Tipo madera') }}</label>
         
                                     <div class="col-md-6">
-                                        <input id="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror text-uppercase" name="nombre" value="{{ old('nombre') }}" required autocomplete="nombre" autofocus>
+                                        <select id="tipo_madera_id" 
+                                                class="form-control @error('tipo_madera_id') is-invalid @enderror text-uppercase" 
+                                                name="tipo_madera_id" 
+                                                value="{{ old('tipo_madera_id') }}" 
+                                                required 
+                                                autocomplete="tipo_madera_id" 
+                                                autofocus>
+                                            <option value="">Seleccione...</option>
+                                            @foreach ($tipos_maderas as $tipo)
+                                                <option value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
+                                            @endforeach
+                                        </select>
         
-                                        @error('nombre')
+                                        @error('tipo_madera_id')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -75,7 +86,6 @@
                                             <option value="BAJA DENSIDAD">BAJA DENSIDAD</option>
                                         </select>  
                                     </div>                                                                  
-                                    
                                 </div>                
                         </div>
                                 
@@ -96,18 +106,18 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Nombre madera</th>   
+                    <th>Tipo de madera</th>   
                     <th>Nombre cientifico</th>
                     <th>Densidad</th>         
                     <th>Acciones</th>
                 </tr>
             </thead>
-
+        
             <tbody>
                 @foreach ($maderas as $madera)
                     <tr>
                         <td>{{ $madera->id }}</td>
-                        <td>{{ $madera->nombre }}</td>                      
+                        <td>{{ $madera->tipo_madera->descripcion }}</td>                      
                         <td>{{ $madera->nombre_cientifico }}</td>
                         <td>{{ $madera->densidad }}</td>
                         <td>
@@ -127,7 +137,10 @@
                 
             </tbody>
         </table>
+        
     </div>
+    <hr>
+    <a href="{{ route('tipos-maderas.index') }}"  class="btn btn-outline-success btn-sm">Tipo madera</a>
 </div>
 
 @endsection

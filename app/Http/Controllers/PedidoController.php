@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Pedido;
+use App\Models\DisenoProductoFinal;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePedidoRequest;
 
@@ -18,6 +19,7 @@ class PedidoController extends Controller
     {
         $pedidos = Pedido::with('cliente')->get();
         $clientes = Cliente::select('id', 'nombre')->get();
+        
         return view('modulos.administrativo.pedidos.index', compact('pedidos', 'clientes'));
     }
 
@@ -104,5 +106,31 @@ class PedidoController extends Controller
     public function destroy(Pedido $pedido)
     {
         //
+    }
+
+    /**
+     * funcion itemsCliente, busca los diseno_producto_final de un cliente
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function itemsCliente(Request $request)
+    {
+
+        $disenos = Cliente::find($request->id)->disenos()->get(['diseno_producto_final_id as id','descripcion']);
+        return response()->json($disenos);
+    }
+
+    /**
+     * funcion disenoBuscar, busca los diseno_producto_finales por coincidencia de descripcion
+     * @param  string  $descripcion
+     * @return \Illuminate\Http\Response
+     */
+    public function disenoBuscar(Request $request)
+    {
+        //return $request->all();
+        $disenos = DisenoProductoFinal::where('descripcion', 'like', '%'.strtoupper($request->descripcion).'%')
+                                    ->get(['id','descripcion as text']);
+        $disenos->toJson();
+        return response()->json($disenos);
     }
 }

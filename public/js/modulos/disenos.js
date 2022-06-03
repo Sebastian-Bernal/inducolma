@@ -14,6 +14,13 @@ $(document).ready(function() {
         theme: "bootstrap-5",
     });
 
+    $('#madera_id_edit').select2({
+        width: 'resolve',
+        placeholder: 'Seleccione...',      
+        theme: "bootstrap-5",
+    });
+
+
     $('#cliente_id').select2({
         width: 'resolve',
         placeholder: 'Seleccione...',
@@ -66,27 +73,57 @@ function eliminarDiseno(diseno) {
 }
 
 // funcion para validar datos de un diseno 
-function validarDatosDiseno(diseno, items, insumos) {
-    if (items.length == 0 || insumos.length == 0) {
+function validarDatosDiseno(diseno) {
+    let cliente = $('#cliente_id').val();
+    if (cliente =='') {
         Swal.fire({
             title: 'Error!',
-            text: 'Debe agregar al menos un item y un insumo, edite el diseño del producto',
+            text: 'Debe seleccionar un cliente',
             icon: 'error',
             confirmButtonColor: '#597504',
             confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.isConfirmed) {
-               //location = `/disenos/${diseno.id}/edit`;
-            }
         })
-    } else {
-        asignarDiseno(diseno);
-    }
+        } else {
+            buscarItemsInsumos(diseno);
+        }
+
+   
 }
 
-
-
-
+// funcion buscar items e insumos 
+function buscarItemsInsumos(diseno) {
+    $('#spAsignar').html(
+        `<div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>`
+    );
+    $.ajax({
+        url: `/disenos-items-insumos`,
+        type: "post",
+        dataType: "JSON",
+        data: {
+            _token: $('input[name="_token"]').val(),
+            diseno_id: diseno.id
+        },
+        success: function (e) {
+            if(e.error == true){
+                $('#spAsignar').empty();
+                Swal.fire({
+                    title: '¡Error al asignar diseño!',
+                    text: e.message,
+                    icon: 'error',
+                    confirmButtonColor: '#597504',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                $('#spAsignar').empty();
+                asignarDiseno(diseno);
+            }
+            
+            
+        },
+    })
+}
 
 // funcion para asignar un diseño a un cliente
 function asignarDiseno(diseno) {

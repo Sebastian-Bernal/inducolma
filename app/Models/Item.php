@@ -22,8 +22,18 @@ class Item extends Model
     /**
      * relacion items belongsTo madera
      */
-    public function madera()
+    // public function madera()
+    // {
+    //     return $this->belongsTo(Madera::class, 'madera_id');
+    // }
+
+    /**
+     * relacion items belongsTo tipos_maderas
+     */
+
+    public function tipo_madera()
     {
-        return $this->belongsTo(Madera::class, 'madera_id');
+        return $this->belongsTo(TipoMadera::class, 'madera_id')->withTrashed();
     }
+     
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Madera;
+use App\Models\TipoMadera;
 use App\Http\Requests\StoreMaderaRequest;
 use App\Http\Requests\UpdateMaderaRequest;
 use Illuminate\Http\Request;
@@ -17,8 +18,9 @@ class MaderaController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $maderas = Madera::all();
-        return view('modulos.administrativo.maderas.index', compact('maderas'));
+        $maderas = Madera::with('tipo_madera')->get();
+        $tipos_maderas = TipoMadera::all();
+        return view('modulos.administrativo.maderas.index', compact('maderas', 'tipos_maderas'));
     }
 
     /**
@@ -39,8 +41,14 @@ class MaderaController extends Controller
      */
     public function store(StoreMaderaRequest $request)
     {
+        //return request()->all();
+
         $this->authorize('admin');
-        $madera = Madera::create($request->all());
+        $madera = new Madera();
+        $madera->tipo_madera_id = $request->tipo_madera_id;
+        $madera->nombre_cientifico = strtoupper($request->nombre_cientifico);
+        $madera->densidad = $request->densidad;
+        $madera->save();
         return redirect()->route('maderas.index')->with('status', 'Madera creada con éxito');
     }
 
@@ -53,7 +61,8 @@ class MaderaController extends Controller
     public function show(Madera $madera)
     {
         $this->authorize('admin');
-        return view('modulos.administrativo.maderas.show', compact('madera'));
+        $tipos_maderas = TipoMadera::all();
+        return view('modulos.administrativo.maderas.show', compact('madera', 'tipos_maderas'));
     }
 
     /**

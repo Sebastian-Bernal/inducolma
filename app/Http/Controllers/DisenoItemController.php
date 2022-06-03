@@ -35,7 +35,17 @@ class DisenoItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //return $request->item['diseno_id'];
+        $diseno_item = new DisenoItem();
+        $diseno_item->diseno_producto_final_id = $request->item['diseno_id'];
+        $diseno_item->item_id = $request->item['item_id'];
+        $diseno_item->cantidad = $request->item['cantidad'];
+        
+        if ($diseno_item->save()) {
+            return response()->json(['success' => true, 'message' => 'Item agregado con éxito', 'itembd' => $diseno_item]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Error al agregar el item']);
+        }
     }
 
     /**
@@ -80,6 +90,11 @@ class DisenoItemController extends Controller
      */
     public function destroy(DisenoItem $disenoItem)
     {
-        //
+        if ($disenoItem->delete()) {
+            return response()->json(['success' => true, 'message' => 'Item eliminado con éxito']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el item']);
+        }
+
     }
 }

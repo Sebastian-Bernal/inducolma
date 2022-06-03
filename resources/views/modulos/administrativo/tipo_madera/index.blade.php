@@ -99,6 +99,8 @@
             </tbody>
         </table>
     </div>
+    <hr>
+    <a href="{{ route('maderas.index') }}"  class="btn btn-outline-success btn-sm">Maderas</a>
 </div>
 
 @endsection

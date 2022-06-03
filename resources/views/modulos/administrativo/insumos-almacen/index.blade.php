@@ -16,6 +16,7 @@
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#creacliente">
                     Crear insumo
                 </button>
+                <a href="{{ route('disenos.index') }}" class="btn btn-outline-primary mb-3">Ir a diseños</a>
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)

@@ -54,5 +54,14 @@ class DisenoProductoFinal extends Model
     {
         return $this->belongsToMany(InsumosAlmacen::class,'diseno_insumos', 'diseno_producto_final_id', 'insumo_almacen_id');
     }
+
+    /**
+     * relacion diseño_producto_finales belongsTo tipo_madera
+     */
+
+    public function tipo_madera()
+    {
+        return $this->belongsTo(TipoMadera::class);
+    }
 }
 

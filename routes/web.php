@@ -23,6 +23,8 @@ use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\ContratistaController;
 use App\Http\Controllers\DisenoProductoFinalController;
 use App\Http\Controllers\TipoMaderaController;
+use App\Http\Controllers\DisenoItemController;
+use App\Http\Controllers\DisenoInsumoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -155,6 +157,10 @@ Route::resource('pedidos', PedidoController::class)
                 ->names('pedidos')
                 ->middleware('auth');
 
+Route::controller(PedidoController::class)->group(function () {
+        Route::get('items-cliente','itemsCliente')->name('items-cliente')->middleware('auth');
+        Route::post('disenos-buscar','disenoBuscar')->name('diseno-buscar')->middleware('auth');       
+});
 Route::resource('tipo-eventos', TipoEventoController::class)
                 ->parameters(['tipo-eventos'=> 'tipo_evento'])
                 ->names('tipo-eventos')
@@ -209,6 +215,25 @@ Route::resource('tipos-maderas', TipoMaderaController::class)
                 ->parameters(['tipos-maderas'=> 'tipo_madera'])
                 ->names('tipos-maderas')
                 ->middleware('auth');
+
+Route::resource('diseno-items', DisenoItemController::class)
+                ->parameters(['diseno-items'=> 'disenoItem'])
+                ->names('diseno-items')
+                ->middleware('auth');
+
+Route::resource('diseno-insumos', DisenoInsumoController::class)
+                ->parameters(['diseno-insumos'=> 'disenoInsumo'])
+                ->names('diseno-insumos')
+                ->middleware('auth');
+
+Route::controller(DisenoProductoFinalController::class)->group(function () {
+                Route::post('disenos-items-insumos','consultarItemsInsumos')
+                ->name('diseno-items-cliente')
+                ->middleware('auth');
+});
+
+
+
 
 
 Auth::routes([

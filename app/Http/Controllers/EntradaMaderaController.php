@@ -34,7 +34,7 @@ class EntradaMaderaController extends Controller
                             ->get();
         
         $proveedores = Proveedor::select('id', 'nombre')->get();
-        $maderas = Madera::select('id', 'nombre')->get();
+        $maderas = Madera::select('id', 'nombre_cientifico')->get();
         return view('modulos.administrativo.entradas-madera.index', compact('entradas', 'proveedores', 'maderas'));
     }
 

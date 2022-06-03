@@ -63,8 +63,8 @@ class Madera extends Model
     /**
      * relacion maderas belongsTo tipo_maderas
      */
-    public function tipo_maderas()
+    public function tipo_madera()
     {
-        return $this->belongsTo(TipoMadera::class);
+        return $this->belongsTo(TipoMadera::class,);
     }
 }

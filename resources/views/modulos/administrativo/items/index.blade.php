@@ -10,12 +10,13 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
                 
             
-                <h1 class="display-6" >Items almacen</h1>
+                <h1 class="display-6" >Items</h1>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#creaitem">
                     Crear item
                 </button>
+                <a href="{{ route('disenos.index') }}" class="btn btn-outline-primary mb-3">Ir a diseños</a>
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)
@@ -143,8 +144,8 @@
                                                     autofocus
                                                     >
                                                 <option value="" selected>Seleccione...</option>
-                                                @foreach ($maderas as $tipo_madera)
-                                                    <option value="{{ $tipo_madera->id }}">{{ $tipo_madera->nombre }}</option>
+                                                @foreach ($tipos_maderas as $tipo_madera)
+                                                    <option value="{{ $tipo_madera->id }}">{{ $tipo_madera->descripcion }}</option>
                                                 @endforeach
                                             </select>
             
@@ -247,7 +248,7 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-
+                
                 <tbody>
                     @foreach ($items as $item)
                         <tr>
@@ -256,7 +257,7 @@
                             <td>{{ $item->alto }}</td> 
                             <td>{{ $item->largo }}</td> 
                             <td>{{ $item->ancho }}</td>  
-                            <td>{{ $item->madera->nombre}}</td>  
+                            <td>{{ $item->tipo_madera->descripcion}}</td>  
                             <td>{{ $item->existencias }}</td>                                                        
                             <td>{{ $item->preprocesado }}</td>                               
                             <td>{{ $item->carretos }}</td>                   

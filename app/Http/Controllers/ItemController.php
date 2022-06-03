@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
-use App\Models\Madera;
+use App\Models\TipoMadera;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreItemsRequest;
 
@@ -17,8 +17,8 @@ class ItemController extends Controller
     public function index()
     {   
         $items = Item::all();
-        $maderas = Madera::all();
-        return view('modulos.administrativo.items.index', compact('items', 'maderas'));
+        $tipos_maderas = TipoMadera::withTrashed()->get(['id','descripcion']);
+        return view('modulos.administrativo.items.index', compact('items', 'tipos_maderas'));
     }
 
     /**
@@ -66,8 +66,8 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        $maderas = Madera::all();
-        return view('modulos.administrativo.items.show', compact('item', 'maderas'));
+        $tipos_maderas = TipoMadera::withTrashed()->get(['id','descripcion']);
+        return view('modulos.administrativo.items.show', compact('item', 'tipos_maderas'));
     }
 
     /**
