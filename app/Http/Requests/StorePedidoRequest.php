@@ -24,7 +24,7 @@ class StorePedidoRequest extends FormRequest
     public function rules()
     {
         return [
-            'descripcion' => 'required',
+            'items' => 'required',
             'cantidad' => 'required||numeric|min:1',
             'fecha_entrega' => 'required|date|after:today',
             'cliente' => 'required',
@@ -35,7 +35,7 @@ class StorePedidoRequest extends FormRequest
 
     public function messages(){
         return [
-            'descripcion.required' => 'La descripcion es requerida',
+            'items.required' => 'EL producto es requerida',
             'cantidad.required' => 'La cantidad es requerida',
             'cantidad.numeric' => 'La cantidad debe ser un numero',
             'cantidad.min' => 'La cantidad debe ser mayor a 0',

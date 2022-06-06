@@ -63,10 +63,18 @@ class ClienteController extends Controller
     public function show(Cliente $cliente)
     {
        
-        $pedidos = Pedido::where('cliente_id', $cliente->id)
-                                ->orderBy('created_at', 'desc')
+        $pedidos = Pedido::join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
+                                ->where('cliente_id', $cliente->id)
+                                ->orderBy('pedidos.created_at', 'desc')
                                 ->take(5)
-                                ->get();
+                                ->get([
+                                    'pedidos.id',
+                                    'pedidos.cantidad',
+                                    'pedidos.created_at',
+                                    'pedidos.fecha_entrega',
+                                    'pedidos.estado',
+                                    'diseno_producto_finales.descripcion',
+                                ]);
         
         return view('modulos.administrativo.clientes.show', compact('cliente', 'pedidos'));
        

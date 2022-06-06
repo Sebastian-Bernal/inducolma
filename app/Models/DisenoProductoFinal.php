@@ -63,5 +63,14 @@ class DisenoProductoFinal extends Model
     {
         return $this->belongsTo(TipoMadera::class);
     }
+    /**
+     * relacion diseño_producto_finales hasMany pedidos
+     */
+
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class,'foreign_key','diseno_producto_final_id');
+    }
+    
 }
 

@@ -17,7 +17,17 @@ class PedidoController extends Controller
      */
     public function index()
     {
-        $pedidos = Pedido::with('cliente')->get();
+        $pedidos = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
+                         ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
+                        ->get([ 
+                                'pedidos.id',
+                                'pedidos.cantidad',
+                                'pedidos.created_at',
+                                'pedidos.fecha_entrega',
+                                'pedidos.estado',
+                                'clientes.nombre',
+                                'diseno_producto_finales.descripcion',
+                            ]);
         $clientes = Cliente::select('id', 'nombre')->get();
         
         return view('modulos.administrativo.pedidos.index', compact('pedidos', 'clientes'));
@@ -42,7 +52,7 @@ class PedidoController extends Controller
     public function store( StorePedidoRequest $request)
     {
         $pedido = new Pedido();
-        $pedido->descripcion = $request->descripcion;
+        $pedido->diseno_producto_final_id = $request->items;
         $pedido->cantidad = $request->cantidad;
         $pedido->fecha_solicitud = date('Y-m-d');
         $pedido->fecha_entrega = $request->fecha_entrega;
@@ -50,7 +60,7 @@ class PedidoController extends Controller
         $pedido->user_id = auth()->user()->id;
         $pedido->cliente_id = $request->cliente;
         $pedido->save();
-        return redirect()->route('pedidos.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente->nombre} ha sido creado");
+        return redirect()->route('pedidos.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente_id} ha sido creado");
         
         
     }
@@ -75,7 +85,8 @@ class PedidoController extends Controller
     public function edit(Pedido $pedido)
     {
         $clientes = Cliente::select('id', 'nombre')->get();
-        return view('modulos.administrativo.pedidos.show', compact('pedido', 'clientes'));
+        $disenos_cliente = Cliente::find($pedido->cliente_id)->disenos()->get(['diseno_producto_final_id as id','descripcion']);
+        return view('modulos.administrativo.pedidos.show', compact('pedido', 'clientes', 'disenos_cliente'));
     }
 
     /**
@@ -87,14 +98,15 @@ class PedidoController extends Controller
      */
     public function update(StorePedidoRequest $request, Pedido $pedido)
     {
-        $pedido->descripcion = $request->descripcion;
+        $pedido->diseno_producto_final_id = $request->items;
         $pedido->cantidad = $request->cantidad;
+        $pedido->fecha_solicitud = date('Y-m-d');
         $pedido->fecha_entrega = $request->fecha_entrega;
         $pedido->estado = 'PENDIENTE';
         $pedido->user_id = auth()->user()->id;
         $pedido->cliente_id = $request->cliente;
         $pedido->update();
-        return redirect()->route('pedidos.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente->nombre} ha sido actualizado");
+        return redirect()->route('pedidos.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente_id} ha sido actualizado");
     }
 
     /**
@@ -105,7 +117,8 @@ class PedidoController extends Controller
      */
     public function destroy(Pedido $pedido)
     {
-        //
+        $pedido->delete();
+        return response()->json(['success' => 'Pedido eliminado correctamente']);
     }
 
     /**
