@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrdenProduccion;
+use App\Models\Pedido;
 use Illuminate\Http\Request;
 
 class OrdenProduccionController extends Controller
@@ -14,7 +15,21 @@ class OrdenProduccionController extends Controller
      */
     public function index()
     {
-        //
+        $pedidos = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
+                            ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
+                            ->orderBy('pedidos.fecha_entrega','asc')
+                            ->get([ 
+                                    'pedidos.id',
+                                    'pedidos.cantidad',
+                                    'pedidos.created_at',
+                                    'pedidos.fecha_entrega',
+                                    'pedidos.estado',
+                                    'clientes.nombre',
+                                    'diseno_producto_finales.descripcion',                                    
+                                ]);
+
+        //$pedidos = Pedido::all();
+        return view('modulos.administrativo.programacion.index', compact('pedidos'));
     }
 
     /**

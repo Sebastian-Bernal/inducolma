@@ -25,6 +25,7 @@ use App\Http\Controllers\DisenoProductoFinalController;
 use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
 use App\Http\Controllers\DisenoInsumoController;
+use App\Http\Controllers\OrdenProduccionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -233,6 +234,10 @@ Route::controller(DisenoProductoFinalController::class)->group(function () {
 });
 
 
+Route::resource('programaciones', OrdenProduccionController::class)
+                ->parameters(['programaciones'=> 'ordenProduccion'])
+                ->names('programaciones')
+                ->middleware('auth');
 
 
 
