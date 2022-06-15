@@ -238,7 +238,15 @@ Route::resource('programaciones', OrdenProduccionController::class)
                 ->parameters(['programaciones'=> 'ordenProduccion'])
                 ->names('programaciones')
                 ->middleware('auth');
-
+                
+Route::controller(OrdenProduccionController::class)->group(function () {
+        Route::post('programaciones-contruccion','maderasOptimas')
+                ->name('contruccion')
+                ->middleware('auth');
+        Route::post('orden-items-inventario','crearOrdenItemsInventario')
+                ->name('orden-items-inventario')
+                ->middleware('auth');
+});
 
 
 Auth::routes([

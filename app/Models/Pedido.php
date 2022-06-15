@@ -43,5 +43,56 @@ class Pedido extends Model
         }
         return $dias -1;        
     }
+
+    // obtener el atributo cantidad_total de items para el pedido 
+    public function getItemsPedidoAttribute()
+    {
+        $existencias = OrdenProduccion::join('items','items.id','=','ordenes_produccion.item_id')
+                                        ->where('pedido_id',$this->id)
+                                        ->get(['cantidad', 'item_id']);        
+
+        $pedido = Pedido::where('id',$this->id)->get(['id','diseno_producto_final_id','cantidad']);
+        $pedido = $pedido[0];                               
+        $items = DisenoItem::join('items','items.id','=','diseno_items.item_id')
+                                    ->where('diseno_producto_final_id', $pedido->diseno_producto_final_id)
+                                    ->get([
+                                        'diseno_items.id',
+                                        'items.descripcion',
+                                        'diseno_items.cantidad',
+                                        'items.existencias',
+                                        'items.id as item_id',
+                                        ]);
+        $items_pedido = collect();
+        
+        foreach ($items as $item) {
+           
+            $existencia = $existencias->firstWhere('item_id',$item->item_id);
+            if (empty($existencia)) {
+                $items_pedido->push((object)[
+                    'id' => $item->id,
+                    'descripcion' => $item->descripcion,
+                    'cantidad' => $item->cantidad,
+                    'existencias' => $item->existencias,
+                    'total' => $item->cantidad * $pedido->cantidad,
+                    'item_id' => $item->item_id,
+                    
+                ]);
+            } else {
+                $items_pedido->push((object)[
+                    'id' => $item->id,
+                    'descripcion' => $item->descripcion,
+                    'cantidad' => $item->cantidad,
+                    'existencias' => $item->existencias,
+                    'total' => $item->cantidad * $pedido->cantidad - $existencia->cantidad,
+                    'item_id' => $item->item_id,
+                    
+                ]);
+            }
+           
+        }
+       
+       return (object)$items_pedido;
+       
+    }
     
 }

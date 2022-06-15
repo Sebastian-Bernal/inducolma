@@ -179,7 +179,7 @@
                 @forelse ($pedidos as $pedido)
                     
                     <div class="col">
-                        <div class="card">
+                        <div class="card ">
                         <div class="card-header {{ $pedido->dias < 5 ? 'bg-danger' : 'bg-warning ' }}"><strong>Pedido #{{ $pedido->id }}</strong> </div>
                         <div class="card-body " >
                             <h5 class="card-title">{{ $pedido->nombre }}</h5>
@@ -189,7 +189,10 @@
                                 Fecha de entrega: {{ $pedido->fecha_entrega }} <br>
                                 <h5 class="{{ $pedido->dias < 5 ? 'text-danger' : 'text-warning' }} mt-0">Dias restantes para la entrega: {{ $pedido->dias }}</h5>
                             </p>
-                            <a href="{{ route('programaciones.show') }}" class="btn btn-outline-primary btn-sm">Programar</a>
+                            
+
+                            <a href="{{ route('programaciones.show',$pedido->id) }}" class="btn btn-primary btn-sm">Programar</a>
+                            
                         </div>
                         <div class="card-footer text-warning ">
                             <small class="text-muted">{{ $pedido->created_at->diffForHumans() }}</small>
