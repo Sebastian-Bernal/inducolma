@@ -7,10 +7,19 @@ use App\Models\OrdenProduccion;
 use App\Models\Pedido;
 use App\Models\Item;
 use App\Models\DisenoItem;
+use App\Repositories\MaderasOptimas;
 use Illuminate\Http\Request;
 
 class OrdenProduccionController extends Controller
 {
+
+    protected $maderas;
+    
+    public function __construct( MaderasOptimas $maderas)
+    {
+        $this->maderas = $maderas;
+        
+    }
     /**
      * Display a listing of the resource.
      *
@@ -44,16 +53,10 @@ class OrdenProduccionController extends Controller
     public function create(Pedido $ordenProduccion )
     {
         return $ordenProduccion;
-        // $pedido = Pedido::find($request->id)->select('id',
-        //                                             'diseno_producto_final_id',
-        //                                     )->first();
-        //return $pedido;
+        
         return $diseno_items = DisenoItem::join('items','items.id','=','diseno_items.item_id')
                             ->where('diseno_producto_final_id', 6)
                             ->get(['diseno_items.id','items.descripcion','diseno_items.cantidad']);
-                                        
-
-        
     }
 
     /**
@@ -83,22 +86,7 @@ class OrdenProduccionController extends Controller
      */
     public function show(Pedido $ordenProduccion)
     {
-        
-        $pedido = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
-                            ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
-                            ->where('pedidos.id', $ordenProduccion->id)
-                            ->orderBy('pedidos.fecha_entrega','asc')
-                            ->get([ 
-                                    'pedidos.id',
-                                    'pedidos.cantidad',
-                                    'pedidos.created_at',
-                                    'pedidos.fecha_entrega',
-                                    'pedidos.estado',
-                                    'clientes.nombre',
-                                    'diseno_producto_finales.descripcion',  
-                                    'diseno_producto_finales.id as diseno_id',                                  
-                                ]);
-        $pedido = $pedido[0];
+        $pedido =  $ordenProduccion->datos();
         
         return view('modulos.administrativo.programacion.show', compact('pedido'));
 
@@ -146,7 +134,11 @@ class OrdenProduccionController extends Controller
 
      public function maderasOptimas(Request $request)
      {
-       return $request->all();
+        $pedido = Pedido::find($request->id_pedido)->datos();
+        $item = Item::find($request->id_item);
+        return $optimas =  $this->maderas->Optimas($request);
+        
+        //return view('modulos.administrativo.programacion.create', compact('pedido', 'item'));
      }
 
      /**
@@ -172,10 +164,4 @@ class OrdenProduccionController extends Controller
         $item->save();
         return response()->json(['success'=>'Orden de Producción creada con éxito.']);
      }
-
-
-
-
-
-
 }

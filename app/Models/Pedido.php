@@ -94,5 +94,28 @@ class Pedido extends Model
        return (object)$items_pedido;
        
     }
+
+    // retornar los datos del pedido con cliente y el diseño final 
+
+    public function datos()
+    {
+        $pedido = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
+                            ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
+                            ->where('pedidos.id', $this->id)
+                            ->orderBy('pedidos.fecha_entrega','asc')
+                            ->get([ 
+                                    'pedidos.id',
+                                    'pedidos.cantidad',
+                                    'pedidos.created_at',
+                                    'pedidos.fecha_entrega',
+                                    'pedidos.estado',
+                                    'clientes.nombre',
+                                    'diseno_producto_finales.descripcion',  
+                                    'diseno_producto_finales.id as diseno_id',                                  
+                                ]);
+        $pedido = $pedido[0];
+
+        return $pedido;
+    }
     
 }

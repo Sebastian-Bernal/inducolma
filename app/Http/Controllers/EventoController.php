@@ -102,4 +102,5 @@ class EventoController extends Controller
         return response()->json(['success'=>'Evento eliminado correctamente']);
 
     }
+
 }

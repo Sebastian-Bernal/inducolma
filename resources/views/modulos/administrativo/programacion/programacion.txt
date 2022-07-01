@@ -1,0 +1,51 @@
+despues de dar click a construir
+debe redireccionar a una nueva vista trayendo consigo los valores de la orden de pedido y del item a producir
+buscar en items el items_id
+si: existen > 0
+    preguntar si se desea usar la cantidad existente
+        si: tomar el valor necesarrio de items a producir y restar la cantidad de existencia
+            si: resultado es <= 0 termina ciclo
+            entonces: toma el valor restanto por producir y continua ciclo
+            buscar en sobrantes largo=largo_item, ancho > (ancho_item + 0.5), alto > (alto_item + 0.5), tipo_mad===id_madera = busqueda[]
+            si: busqueda[] es diferente null;
+                calcular para cada resultado
+                sobrante_apto[]
+                cantidad_items = 0
+                desperdicio = 0
+                cantidad_items= (entero(ancho/ancho_item)) + (entero(alto/alto_item))
+                porc_uso = ((cantidad_items*alto_item*ancho_item*largo_item)/ancho*alto*largo)*100
+                desperdicio = 100-porc_uso
+                push a sobrante_apto[ancho,alto,largo,cantidad_items,desperdicio]
+                retornar sobrante_apto[]
+            si no: mensaje de no se encontrro sobrante apto
+                      sale del ciclo
+        si no: sale del ciclo
+ si no: sale del ciclo
+ si: sobrante_apto[] <> null
+     listar agrupando por desperdicio igual con opcion de seleccionar cuales van a ser usados y cuales no
+     los seleccionados actualizarr estado a 2 en tabla sobrantes
+     restar cantidad_items a cantidad_necesaria
+     retornar cantidad_necesaria
+ si no: termina ciclo   
+ si: cantidad_necesaria > 0
+     buscar en cubicajes largo=>largo_item, ancho > (ancho_item + 0.5), alto > (alto_item + 0.5), tipo_mad===id_madera = busqueda_cubica[]
+     si: busqueda_cubica <> null
+        
+        
+        cantidad_largo=entero(largo_bloque/largo_item)
+        restante_largo=largo_bloque - (largo_item * cantidad_largo)
+        si: restante_largo > 15
+            sobrante_largo=restante_largo
+        si no:
+            desperdicio_largo=restante_largo
+
+        agregar a resultado{puntas{}} = largo_item, ancho_item, alto_item, cantidad_largo, paqueta, bloque, viaje
+                si: sobrante_largo > 0
+                  resultado{sobrante[]} = sobrante_largo, ancho_item, alto_item, paqueta, bloque, viaje
+                si: desperdicio_largo > 0  
+                  resultado{desperdicio[]} = desperdicio_largo, ancho_item, alto_item, paqueta, bloque, viaje       
+        retorna resultado{}
+        
+
+        si no: mensaje "no se encuentra la madera necesaria para esta operacion" 
+     si no: mensaje "no se encuentra la madera necesaria para esta operacion" 
