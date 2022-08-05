@@ -87,8 +87,8 @@ class MaderaController extends Controller
     {
         //return request()->all();
         $this->authorize('admin');
-        $madera->nombre = $request->nombre;
-        $madera->nombre_cientifico = $request->nombre_cientifico;
+        $madera->tipo_madera_id = $request->tipo_madera_id;
+        $madera->nombre_cientifico = strtoupper($request->nombre_cientifico);
         $madera->densidad = $request->densidad;
         $madera->save();
         return redirect()->route('maderas.index')->with('status', 'Madera actualizada con éxito');

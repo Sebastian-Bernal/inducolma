@@ -7,6 +7,8 @@ use App\Models\Pedido;
 use App\Models\DisenoProductoFinal;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePedidoRequest;
+use Illuminate\Support\Facades\Request as FacadesRequest;
+use Illuminate\Support\Facades\Route;
 
 class PedidoController extends Controller
 {
@@ -51,6 +53,7 @@ class PedidoController extends Controller
      */
     public function store( StorePedidoRequest $request)
     {
+        
         $pedido = new Pedido();
         $pedido->diseno_producto_final_id = $request->items;
         $pedido->cantidad = $request->cantidad;
@@ -59,8 +62,17 @@ class PedidoController extends Controller
         $pedido->estado = 'PENDIENTE';
         $pedido->user_id = auth()->user()->id;
         $pedido->cliente_id = $request->cliente;
-        $pedido->save();
-        return redirect()->route('pedidos.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente_id} ha sido creado");
+        //$pedido->save();
+
+        //obtener la url anterior 
+
+
+        if (Route::current()->getName() == 'pedidos.store') {
+            return redirect()->route('pedidos.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente->nombre} ha sido creado");
+        } else{
+            return redirect()->route('programaciones.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente->nombre} ha sido editado");
+        }
+       
         
         
     }

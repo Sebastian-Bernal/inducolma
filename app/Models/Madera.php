@@ -33,6 +33,7 @@ class Madera extends Model
     public function entradas_madera_maderas()
     {
        // return $this->belongsToMany(EntradasMaderaMaderas::class, 'madera_id');
+        return $this->hasMany(EntradasMaderaMaderas::class);
     }
 
     /**
@@ -63,7 +64,7 @@ class Madera extends Model
     /**
      * relacion maderas belongsTo tipo_maderas
      */
-    public function tipo_madera()
+   public function tipo_madera()
     {
         return $this->belongsTo(TipoMadera::class,);
     }

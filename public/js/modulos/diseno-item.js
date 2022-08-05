@@ -34,13 +34,18 @@ function comprobarLocalStorage() {
  */
 function verificarItems(diseno) {
     var campos = $('#formAgregarItem').find('input');
+    var cantidad = $('#cantidad').val();
     var select = $('#formAgregarItem').find('select');
     var valido = true;
-    $.each(campos, function(index, value) {
-        if(value.value == '' || value.value <= '0' || value.value >50) {
+   /* $.each(campos, function(index, value) {
+        console.log(value.id);
+        if(value.value == '' || (value.value <= 0 || value.value >=50)) {
             valido = false;
         }
-    });
+    });*/
+    if(cantidad <= 0 || cantidad >=50) {
+        valido = false;
+    }
     $.each(select, function(index, value) {
         if(value.value == '' ) {
             valido = false;

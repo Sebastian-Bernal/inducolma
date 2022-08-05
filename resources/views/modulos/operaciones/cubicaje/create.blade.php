@@ -34,9 +34,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($entrada->entradas_madera_maderas as $madera)
+                                @foreach ($entrada->maderas as $madera)
                                     <tr>
-                                        <td>{{ $madera->madera->nombre }}</td>
+                                        <td>{{ $madera->madera->nombre_cientifico }}</td>
                                         <td>{{ $madera->condicion_madera }}</td>
                                         <td>{{ $madera->m3entrada }}</td>
                                     </tr>

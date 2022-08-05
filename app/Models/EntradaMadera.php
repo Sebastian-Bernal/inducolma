@@ -10,14 +10,17 @@ class EntradaMadera extends Model
     use HasFactory;
     protected $table = 'entrada_maderas';
 
-    //relacion EntradaMadera hasOne Proveedor
+    //relacion EntradaMadera belongsTo Proveedor
     public function proveedor(){
-        return $this->belongsTo(Proveedor::class);
+        // cargar los proveedores eliminados
+        return $this->belongsTo(Proveedor::class, 'proveedor_id', 'id')->withTrashed();
+        //return $this->belongsTo(Proveedor::class, 'proveedor_id');
     }
 
     //relacion EntradaMadera hasMany EntradasMaderaMaderas
     public function maderas(){
-        return $this->belongsToMany(Madera::class, 'entradas_madera_maderas');
+       // return $this->belongsToMany(Madera::class, 'entradas_madera_maderas');
+        return $this->hasMany(EntradasMaderaMaderas::class);
     }
 
     //relacion EntradaMadera hasMany EntradasMaderaMaderas

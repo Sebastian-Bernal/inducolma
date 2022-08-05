@@ -175,12 +175,12 @@ function guardarPaqueta() {
 }
 //funcion limpiarInputs, limpia los inputs
 function limpiarInputs() {
-    $('#largo').val('');
+   // $('#largo').val('');
     $('#alto').val('');
     $('#ancho').val('');
     $('#pulgadas_alto').val('0');
     $('#pulgadas_ancho').val('0');
-    $('#largo').focus();
+    $('#alto').focus();
 }
 
 
@@ -213,7 +213,7 @@ function listarPaquetas(cubicajes) {
 
 // funcion eliminarMadera, recibe el id de la fila y el id de la madera, elimina la madera de la tabla y de la memoria localstorage
 function eliminarMadera(id,bloque) {
-
+    numBloque--;
     Swal.fire({
         title: '¿Está seguro que desea eliminar la paqueta?',
         text: "¡No podrá revertir esta acción!",

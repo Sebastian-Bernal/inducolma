@@ -240,11 +240,14 @@ Route::resource('programaciones', OrdenProduccionController::class)
                 ->middleware('auth');
                 
 Route::controller(OrdenProduccionController::class)->group(function () {
-        Route::post('programaciones-contruccion','maderasOptimas')
+        Route::post('programaciones-construccion','maderasOptimas')
                 ->name('contruccion')
                 ->middleware('auth');
         Route::post('orden-items-inventario','crearOrdenItemsInventario')
                 ->name('orden-items-inventario')
+                ->middleware('auth');
+        Route::post('paqueta','verPaqueta')
+                ->name('paqueta')
                 ->middleware('auth');
 });
 

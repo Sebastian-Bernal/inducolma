@@ -30,7 +30,7 @@ class EntradaMaderaController extends Controller
     {
         $entradas = EntradaMadera::whereBetween('created_at',
                             [date('Y-m-d', strtotime('-1 month')), date('Y-m-d', strtotime('+1 day'))])
-                            ->where('user_id', auth()->user()->id)
+                            ->where('user_id', auth()->user()->id)                            
                             ->get();
         
         $proveedores = Proveedor::select('id', 'nombre')->get();

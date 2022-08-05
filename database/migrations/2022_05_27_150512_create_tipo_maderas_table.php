@@ -22,6 +22,7 @@ class CreateTipoMaderasTable extends Migration
 
             //Relaciones
             $table->foreign('user_id')->references('id')->on('users');
+
         });
     }
 

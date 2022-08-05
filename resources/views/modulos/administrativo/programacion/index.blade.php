@@ -38,7 +38,7 @@
                     
                 @endif
                
-                <!-- Modal asignar producto a cliente-->
+                <!-- Modal ordenes de produccion-->
                 <form id="formAsignar" >
                     <div class="modal fade" id="creadiseno" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-fullscreen">
@@ -50,8 +50,30 @@
                             <div class="modal-body">
                                 
                                 <div class="card-body">                                                
-                                    <table class="table">
-                                        
+                                    <table class="table table-striped table-bordered table-hover text-center">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Pedido</th>
+                                                <th scope="col">Producto</th>
+                                                <th scope="col">Item</th>
+                                                <th scope="col">Cantidad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($ordenes as $orden)
+                                                <tr>
+                                                    <th scope="row">{{ $orden->id }}</th>
+                                                    <td>{{ $orden->pedido_id }}</td>
+                                                    <td>{{ $orden->estado }}</td>
+                                                    <td>{{ $orden->item_id }}</td>
+                                                    <td>{{ $orden->cantidad }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="5">No hay ordenes en producción</td>
+                                                </tr>
+                                            @endforelse
                                     </table>
                                 </div>
                                 
@@ -70,7 +92,7 @@
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Crea pedido</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Crear pedido</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -84,9 +106,9 @@
                                                         class="form-control @error('cliente') is-invalid @enderror"                                                    
                                                         name="cliente" 
                                                         required 
-                                                        onchange="cargarProductos();"
+                                                        onchange=""
                                                         >
-                                                    <option value="">Seleccione un cliente</option>
+                                                    <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
                                                   
                                                 </select>
                 
@@ -99,16 +121,23 @@
                                         </div>                                             
                                                 
                                         <div class="row mb-3">
-                                            <label for="items" class="col-md-4 col-form-label text-md-end">{{ __('Producto') }}</label>
+                                            <label for="items" class="col-md-4 col-form-label text-md-end">{{ __('items') }}</label>
                                             <div class="col-md-6">
                                                 <div class="d-flex justifu-content-between">
                                                     <select id="items" 
                                                         class="form-control @error('items') is-invalid @enderror text-uppercase"
                                                         name="items" value="{{ old('items') }}" 
                                                         required autocomplete="items" autofocus
-                                                        onkeyup="mayusculas()">
+                                                        >
+                                                        @forelse ($disenos as $diseno)
+                                                            <option value="{{ $diseno->id }}">{{ $diseno->descripcion }}</option>
+                                                        
+                                                        @empty
+                                                            <option value="">No hay diseños</option>
+                                                        @endforelse
                                                     </select>
-                                                    <div class="d-flex justify-content-center" id="spProducto">
+                                                    
+                                                    <div class="d-flex justify-content-center" id="spitems">
                                                     </div>
                                                 </div>
                                                 @error('items')
@@ -129,7 +158,7 @@
                                                         name="cantidad" value="{{ old('cantidad') }}" 
                                                         required autocomplete="cantidad" autofocus
                                                         min="0"
-                                                        max="1000">
+                                                        max="10000">
                 
                                                 @error('cantidad')
                                                     <span class="invalid-feedback" role="alert">
@@ -148,7 +177,7 @@
                                                         min="{{ date('Y-m-j', strtotime('10 weekdays')) }}" 
                                                         name="fecha_entrega" value="{{ old('fecha_entrega') }}" 
                                                         required autocomplete="fecha_entrega" autofocus
-                                                        onkeyup="mayusculas()">
+                                                        >
                 
                                                 @error('fecha_entrega')
                                                     <span class="invalid-feedback" role="alert">
@@ -210,5 +239,5 @@
 @endsection
 
 @section('js')
-{{-- <script src="/js/modulos/pedidos.js"></script> --}}
+<script src="/js/modulos/optimas.js"></script>
 @endsection

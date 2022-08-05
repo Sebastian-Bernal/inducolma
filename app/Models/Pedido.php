@@ -13,7 +13,7 @@ class Pedido extends Model
     //relacion de pedido pertenece a un cliente
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class,'id');
+        return $this->belongsTo(Cliente::class);
     }
 
     //relacion de pedido pertenece a un diseño

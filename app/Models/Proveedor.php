@@ -13,6 +13,6 @@ class Proveedor extends Model
 
     //relacion proveedor hasMany EntradaMadera
     public function entradasMadera(){
-        return $this->hasMany(EntradaMadera::class);
+        return $this->hasMany(EntradaMadera::class, 'proveedor_id', 'id');
     }
 }

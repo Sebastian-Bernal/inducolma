@@ -15,6 +15,13 @@ class RegistroCubicajes
             $registro = new Cubicaje();
             $registro->paqueta = $cubicaje['paqueta'];
             $registro->largo = $cubicaje['largo'];
+            if ($cubicaje['alto'] > $cubicaje['ancho']) {
+                $registro->alto = $cubicaje['ancho'];
+                $registro->ancho = $cubicaje['alto'];
+            } else {
+                $registro->alto = $cubicaje['alto'];
+                $registro->ancho = $cubicaje['ancho'];
+            }
             $registro->ancho = $cubicaje['ancho'];
             $registro->alto = $cubicaje['alto'];
             $registro->cm3 = $cubicaje['largo']*$cubicaje['ancho']*$cubicaje['alto'];

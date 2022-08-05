@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cubicaje;
 use App\Models\DisenoProductoFinal;
 use App\Models\OrdenProduccion;
 use App\Models\Pedido;
 use App\Models\Item;
+use App\Models\Cliente;
 use App\Models\DisenoItem;
 use App\Repositories\MaderasOptimas;
 use Illuminate\Http\Request;
@@ -40,9 +42,10 @@ class OrdenProduccionController extends Controller
                                     'diseno_producto_finales.descripcion',  
                                     'diseno_producto_finales.id as diseno_id',                                  
                                 ]);
-
-        //$pedidos = Pedido::all();
-        return view('modulos.administrativo.programacion.index', compact('pedidos'));
+        $ordenes = OrdenProduccion::where('estado','!=','FINALIZADA')->get();
+        $cliente = Cliente::where('nombre','like','%INDUCOLMA%')->first();
+        $disenos = DisenoProductoFinal::get(['id','descripcion']);
+        return view('modulos.administrativo.programacion.index', compact('pedidos','ordenes','cliente','disenos'));
     }
 
     /**
@@ -134,11 +137,23 @@ class OrdenProduccionController extends Controller
 
      public function maderasOptimas(Request $request)
      {
-        $pedido = Pedido::find($request->id_pedido)->datos();
+        $pedido = Pedido::find($request->id_pedido);
         $item = Item::find($request->id_item);
-        return $optimas =  $this->maderas->Optimas($request);
+        $optimas =  $this->maderas->Optimas($request);
         
-        //return view('modulos.administrativo.programacion.create', compact('pedido', 'item'));
+        //return $optimas ;
+        if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
+            if (count($optimas['maderas_usar'])>0 || count($optimas['sobrantes_usar'])>0) {
+                return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas','pedido'));
+            } else {
+                $status= 'no hay maderas disponibles...';
+                return redirect()->back()->with('status', $status);
+            }
+        }else{
+            $status= 'no hay maderas disponibles...';
+            return redirect()->back()->with('status', $status);
+        }
+        
      }
 
      /**
@@ -164,4 +179,19 @@ class OrdenProduccionController extends Controller
         $item->save();
         return response()->json(['success'=>'Orden de Producción creada con éxito.']);
      }
+
+     /**
+      * verPaqueta() - funcion que devuelve los detalles de la paqueta en json  
+      * @param  \Illuminate\Http\Request  $request
+      * @return \Illuminate\Http\Response json
+      */
+
+        public function verPaqueta(Request $request)
+        {
+            $paqueta = Cubicaje::where('entrada_madera_id', $request->entrada_madera_id)
+                                ->where('paqueta', $request->paqueta)
+                                ->orderBy('pulgadas_cuadradas', 'desc')
+                                ->get(['pulgadas_cuadradas', 'bloque']);
+            return response()->json($paqueta);
+        }
 }
