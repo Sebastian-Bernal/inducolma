@@ -62,7 +62,7 @@ class PedidoController extends Controller
         $pedido->estado = 'PENDIENTE';
         $pedido->user_id = auth()->user()->id;
         $pedido->cliente_id = $request->cliente;
-        //$pedido->save();
+        $pedido->save();
 
         //obtener la url anterior 
 
