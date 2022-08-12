@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
@@ -16,11 +16,11 @@ class MaderasOptimas {
 
     public function Optimas($request)
     {
-        
+
         $existencias_produccion = OrdenProduccion::join('items','items.id','=','ordenes_produccion.item_id')
                                         ->where('pedido_id',(int)$request->id_pedido)
                                         ->where('item_id',(int)$request->id_item)
-                                        ->get(['cantidad', 'item_id']); 
+                                        ->get(['cantidad', 'item_id']);
 
         $pedido = Pedido::select('cantidad','id','diseno_producto_final_id')->find($request->id_pedido);
 
@@ -28,14 +28,14 @@ class MaderasOptimas {
                                     ->where('diseno_producto_final_id',$pedido->diseno_producto_final_id)
                                     ->where('item_id',$request->id_item)
                                     ->first(['cantidad','descripcion','existencias','largo','ancho','alto','item_id','madera_id']);
-                                  
+
         $sobrantes = $this->Sobrantes($item_diseno);
         $maderas = $this->Maderas($item_diseno);
-        
+
        if ($maderas->count() == 0 && $sobrantes->count() == 0) {
             return ['status' => 'No hay maderas disponibles.'];
        } else{
-            
+
              return [
                 'maderas_usar' => $maderas_usar = $this->corteInicial($maderas, $item_diseno),
                 'sobrantes_usar' => $sobrantes_usar = $this->sobrantesUsar($sobrantes, $item_diseno),
@@ -48,7 +48,7 @@ class MaderasOptimas {
     // Funcion SObrantes(), retorna una coleccion de items que se pueden producir
     // con los sobrantes que cumplen con largo = $item_diseno->largo, ancho > ($item_diseno->ancho + 0.5), alto > ($item_diseno->alto +0.5)
     // y madera = $item_diseno->madera_id
-    // que no esten en uso. 
+    // que no esten en uso.
 
     public function Sobrantes($item_diseno)
     {
@@ -65,7 +65,7 @@ class MaderasOptimas {
      * Funcion Maderas(), retorna una coleccion de maderas de la tabla cubicajes que cumplen con las siguientes condiciones:
      * largo = $item_diseno->largo, ancho > ($item_diseno->ancho + 0.5), alto > ($item_diseno->alto +0.5)
      * y madera = $item_diseno->madera_id
-     * calificacion eprovado  = true hacer join 
+     * calificacion eprovado  = true hacer join
      */
 
     public function Maderas($item_diseno)
@@ -93,14 +93,14 @@ class MaderasOptimas {
     }
 
     /**
-     * funcion sobrantesUsar(), agrega a cada elemto de la coleccion $maderas 
+     * funcion sobrantesUsar(), agrega a cada elemto de la coleccion $maderas
      * cantidad_items, porcentaje_uso, desperdicio
      */
 
     public function sobrantesUsar($sobrantes, $item_diseno)
     {
         $sobrantes_usar = [];
-        
+
         foreach ($sobrantes as $sobrante) {
             $sobrante->cantidad_items = (int)(($sobrante->ancho/$item_diseno->ancho + $sobrante->alto/$item_diseno->alto ));//* $sobrante->cantidad
             $sobrante->porcentaje_uso = (int)(($sobrante->cantidad_items * $item_diseno->alto * $item_diseno->ancho * $item_diseno->largo)/($sobrante->alto*$sobrante->largo*$sobrante->ancho)*100) ;
@@ -117,7 +117,7 @@ class MaderasOptimas {
 
     public function corteInicial($maderas, $item_diseno ){
         $corteInicial = [];
-        
+
         foreach ($maderas as $madera) {
             $madera->cantidad_largo = (int)($madera->largo/$item_diseno->largo);
 
@@ -128,7 +128,7 @@ class MaderasOptimas {
             } else {
                 $sobrante_largo = 0;
                 $desperdicio_largo = $restante_largo;
-            }   
+            }
 
             if ($sobrante_largo > 0) {
                 $madera->sobrante_largo = $sobrante_largo;
@@ -142,10 +142,10 @@ class MaderasOptimas {
             } else {
                 $madera->sobrante_largo = 0;
             }
-            
+
             $corteInicial[] = $madera;
         }
-                      
+
         return $this->corteIntermedio($corteInicial, $item_diseno);
     }
 
@@ -155,7 +155,7 @@ class MaderasOptimas {
             $nuevo_corte = (object)[];
             $corte->cantidad_ancho = (int)$corte->ancho/$item_diseno->ancho * $corte->cantidad_largo;
             $restante_ancho = $corte->ancho - ($item_diseno->ancho * $corte->cantidad_ancho);
-           
+
             if ($restante_ancho >= 15 && $restante_ancho <= 16) {
                 $corte->sobrante_ancho = $restante_ancho;
             }else{
@@ -166,7 +166,7 @@ class MaderasOptimas {
                     $nuevo_corte->entrada_madera_id = $corte->entrada_madera_id;
                     $nuevo_corte->largo = $item_diseno->largo;
                     $nuevo_corte->ancho = $item_diseno->ancho;
-                    $nuevo_corte->alto = $restante_ancho;                   
+                    $nuevo_corte->alto = $restante_ancho;
                     $nuevo_corte->cantidad_ancho_sobrante = (int)($corte->alto/$item_diseno->ancho)* $corte->cantidad_largo;
 
                     $restante_ancho_sobrante = $corte->alto -($item_diseno->ancho * $nuevo_corte->cantidad_ancho_sobrante);
@@ -207,18 +207,18 @@ class MaderasOptimas {
                  }
              }
 
-             // retornar 
-            
-             
+             // retornar
+
+
              $indice = 0;
              $items = 0;
              $cm3 = 0;
              $cm3_total = 0;
-             
-             for ($i=0; $i < count($corteInicial)-1 ; $i++) { 
-                
+
+             for ($i=0; $i < count($corteInicial)-1 ; $i++) {
+
                 if (isset($corteInicial[$i+1])) {
-                    
+
                     if ($corteInicial[$i+1]->entrada_madera_id == $corteInicial[$i]->entrada_madera_id
                         && $corteInicial[$i+1]->paqueta == $corteInicial[$i]->paqueta) {
 
@@ -245,7 +245,7 @@ class MaderasOptimas {
 
                         $cm3_items = $item_diseno->alto * $item_diseno->ancho * $item_diseno->largo * $corteInicial[$i]->cantidad_items;
                         $cm3_total += $cm3_items + $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_alto;
-                        
+
 
                         $maderas_disponibles[$indice]['entrada_madera_id'] = $corteInicial[$i]->entrada_madera_id;
                         $maderas_disponibles[$indice]['paqueta'] = $corteInicial[$i]->paqueta;
@@ -254,19 +254,19 @@ class MaderasOptimas {
                         $maderas_disponibles[$indice]['cm3'] = $cm3;
                         $maderas_disponibles[$indice]['cm3_total'] = $cm3_total;
                         $maderas_disponibles[$indice]['veces_largo'] = $corteInicial[$i]->largo/$item_diseno->largo;
-                        
-                        
+
+
                     } else{
                         $items = 0;
-                        $indice++;                        
+                        $indice++;
                     }
                 }
-                
+
              }
 
              //$maderas_disponibles;
              for($i=0; $i < count($maderas_disponibles); $i++){
-                              
+
                 $maderas_disponibles[$i]['porcentaje_uso'] = (int)($maderas_disponibles[$i]['cm3_total']/$maderas_disponibles[$i]['cm3']*100);
                 $maderas_disponibles[$i]['margen_error'] = (100 - $maderas_disponibles[$i]['calificacion'])/2;
                 switch ($maderas_disponibles[$i]['veces_largo']) {
@@ -278,36 +278,25 @@ class MaderasOptimas {
                         break;
                     case 3:
                         $maderas_disponibles[$i]['color'] = 'bg-secondary';
-                        break;                    
+                        break;
                     default:
                         $maderas_disponibles[$i]['color'] = 'bg-danger ';
                         break;
                 }
-                
+
              }
 
             // ordenar por porcentaje de uso
-            
+
             usort($maderas_disponibles, function($a, $b) {
                 if ($a['porcentaje_uso'] == $b['porcentaje_uso']) return 0;
                 return ($b['porcentaje_uso'] <=> $a['porcentaje_uso']) ;
             });
             return $maderas_disponibles;
-             
+
          } else{
             return $mensaje = 'No se puede realizar el corte';
          }
-        
+
     }
-
-    /**
-     * al usar la madera se usa la mitad de la paqueta se cambia el estado a usado a la mitad de la paqueta
-     * registrada en cubicajes.
-     * 
-     * 
-     * blue home 3009125090 cra 1b 33a-42
-     * colombina 
-     * sobre 27
-     */
-
 }
