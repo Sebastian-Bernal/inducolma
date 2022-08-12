@@ -279,9 +279,10 @@ class MaderasOptimas {
 
              }
 
-             if ($paqueta == '1') {
-                return $maderas_disponibles;
+             if ($paqueta == 1) {
+                return $corteInicial;
              }
+
              for($i=0; $i < count($maderas_disponibles); $i++){
 
                 $maderas_disponibles[$i]['porcentaje_uso'] = (int)($maderas_disponibles[$i]['cm3_total']/$maderas_disponibles[$i]['cm3']*100);
@@ -344,9 +345,9 @@ class MaderasOptimas {
      */
 
     public function cubicaje($request){
-        $pedido = $this->datosPedido($request->id_pedido);
+        $pedido = $this->datosPedido((int)$request->id_pedido);
         $item_diseno = $this->datosItemDiseno($pedido, $request);
-        $maderas = $this->datosCubicaje($pedido, $request);
+        $maderas = $this->datosCubicaje($request);
 
         $cubicajes = $this->corteInicial($maderas,$item_diseno, 1);
         $count = round(count($cubicajes)/2,0,PHP_ROUND_HALF_UP);
@@ -366,8 +367,8 @@ class MaderasOptimas {
         $maderas = Cubicaje::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id','=','cubicajes.entrada_madera_id')
                             ->join('maderas','maderas.id','=','entradas_madera_maderas.madera_id')
                             ->join('calificacion_maderas','calificacion_maderas.entrada_madera_id','=','entradas_madera_maderas.entrada_madera_id')
-                            ->where('paqueta',(int)$request->paqueta)
-                            ->where('entrada_madera_id',(int)$request->entrada_madera_id)
+                            ->where('cubicajes.paqueta',(int)$request->paqueta)
+                            ->where('cubicajes.entrada_madera_id',(int)$request->entrada_madera_id)
                             ->where('estado','DISPONIBLE')
                             ->where('calificacion_maderas.aprobado','=','true')
                             ->get(['cubicajes.id',
