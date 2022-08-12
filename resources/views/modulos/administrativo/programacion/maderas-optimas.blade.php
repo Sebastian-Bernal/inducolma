@@ -55,7 +55,7 @@
 
                         <div class="col">
                             <div class="card ">
-                            <div class="card-header {{ $optima['color'] }}"><strong>Viaje #{{ $optima['entrada_madera_id'] }}</strong> </div>
+                            <div class="card-header {{ $optima['color'] }}" style="color: white; text-shadow: 2px 2px 4px black" ><strong>Viaje {{ '# '.$optima['entrada_madera_id'] }}</strong> </div>
                             <div class="card-body " >
                                 <h5 class="card-title">Paqueta: {{ $optima['paqueta'] }}</h5>
                                 <p class="card-text mb-1">
@@ -64,7 +64,8 @@
                                     <strong>Margen de error: </strong>{{ $optima['margen_error'] }}% <br>
                                     <strong>Veces largo: </strong>{{ $optima['veces_largo'] }} <br>
                                 </p>
-                                <a href="#" class="btn btn-primary btn-sm">Seleccionar</a>
+
+                                <button class="btn btn-primary btn-sm" onClick="cantidadUso({{ $optima['entrada_madera_id'].','. $optima['paqueta'].','. $optimas['item']->cantidad.','. $optima['cantidad_items'].','. $optima['margen_error'] }})">Seleccionar</button>
                                 <button class="btn btn-outline-secondary btn-sm" onclick="verPaqueta({{ $optima['entrada_madera_id'] .','. $optima['paqueta'] }})">ver paqueta</button>
                             </div>
                             <div class="card-footer text-warning ">
@@ -85,4 +86,5 @@
 
 @section('js')
 <script src="/js/modulos/optimas.js"></script>
+<script src="/js/modulos/cantidadUsar.js"></script>
 @endsection
