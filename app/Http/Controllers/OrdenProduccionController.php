@@ -138,13 +138,13 @@ class OrdenProduccionController extends Controller
      public function maderasOptimas(Request $request)
      {
         $pedido = Pedido::find($request->id_pedido);
-        $item = Item::find($request->id_item);
+        $item = $request->id_item;
         $optimas =  $this->maderas->Optimas($request);
 
         //return $optimas ;
         if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
             if (count($optimas['maderas_usar'])>0 || count($optimas['sobrantes_usar'])>0) {
-                return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas','pedido'));
+                return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas','pedido','item'));
             } else {
                 $status= 'no hay maderas disponibles...';
                 return redirect()->back()->with('status', $status);
