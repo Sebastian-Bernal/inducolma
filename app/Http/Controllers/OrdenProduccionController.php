@@ -16,11 +16,11 @@ class OrdenProduccionController extends Controller
 {
 
     protected $maderas;
-    
+
     public function __construct( MaderasOptimas $maderas)
     {
         $this->maderas = $maderas;
-        
+
     }
     /**
      * Display a listing of the resource.
@@ -32,15 +32,15 @@ class OrdenProduccionController extends Controller
         $pedidos = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
                             ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
                             ->orderBy('pedidos.fecha_entrega','asc')
-                            ->get([ 
+                            ->get([
                                     'pedidos.id',
                                     'pedidos.cantidad',
                                     'pedidos.created_at',
                                     'pedidos.fecha_entrega',
                                     'pedidos.estado',
                                     'clientes.nombre',
-                                    'diseno_producto_finales.descripcion',  
-                                    'diseno_producto_finales.id as diseno_id',                                  
+                                    'diseno_producto_finales.descripcion',
+                                    'diseno_producto_finales.id as diseno_id',
                                 ]);
         $ordenes = OrdenProduccion::where('estado','!=','FINALIZADA')->get();
         $cliente = Cliente::where('nombre','like','%INDUCOLMA%')->first();
@@ -56,7 +56,7 @@ class OrdenProduccionController extends Controller
     public function create(Pedido $ordenProduccion )
     {
         return $ordenProduccion;
-        
+
         return $diseno_items = DisenoItem::join('items','items.id','=','diseno_items.item_id')
                             ->where('diseno_producto_final_id', 6)
                             ->get(['diseno_items.id','items.descripcion','diseno_items.cantidad']);
@@ -90,7 +90,7 @@ class OrdenProduccionController extends Controller
     public function show(Pedido $ordenProduccion)
     {
         $pedido =  $ordenProduccion->datos();
-        
+
         return view('modulos.administrativo.programacion.show', compact('pedido'));
 
     }
@@ -140,7 +140,7 @@ class OrdenProduccionController extends Controller
         $pedido = Pedido::find($request->id_pedido);
         $item = Item::find($request->id_item);
         $optimas =  $this->maderas->Optimas($request);
-        
+
         //return $optimas ;
         if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
             if (count($optimas['maderas_usar'])>0 || count($optimas['sobrantes_usar'])>0) {
@@ -153,7 +153,7 @@ class OrdenProduccionController extends Controller
             $status= 'no hay maderas disponibles...';
             return redirect()->back()->with('status', $status);
         }
-        
+
      }
 
      /**
@@ -173,7 +173,7 @@ class OrdenProduccionController extends Controller
         $ordenProduccion->user_id = auth()->user()->id;
         $ordenProduccion->estado = $request->estado;
         $ordenProduccion->save();
-        // actualizar existencias de items 
+        // actualizar existencias de items
         $item = Item::find($request->item_id);
         $item->existencias = $item->existencias - (int)$request->cantidad;
         $item->save();
@@ -181,7 +181,7 @@ class OrdenProduccionController extends Controller
      }
 
      /**
-      * verPaqueta() - funcion que devuelve los detalles de la paqueta en json  
+      * verPaqueta() - funcion que devuelve los detalles de la paqueta en json
       * @param  \Illuminate\Http\Request  $request
       * @return \Illuminate\Http\Response json
       */
@@ -194,4 +194,17 @@ class OrdenProduccionController extends Controller
                                 ->get(['pulgadas_cuadradas', 'bloque']);
             return response()->json($paqueta);
         }
+
+    /**
+     * funcion dividirPaqueta() - funcion que divide la paqueta en dos partes, retorna dos arrays
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response json
+     */
+
+    public function dividirPaqueta(Request $request)
+    {
+        $this->authorize('admin');
+        $cubicaje = $this->maderas->cubicaje($request);
+        return $cubicaje;
+    }
 }

@@ -17,12 +17,9 @@ class MaderasOptimas {
     public function Optimas($request)
     {
 
-        $pedido = Pedido::select('cantidad','id','diseno_producto_final_id')->find($request->id_pedido);
+        $pedido = $this->datosPedido($request);
 
-        $item_diseno = DisenoItem::join('items','items.id','=','diseno_items.item_id')
-                                    ->where('diseno_producto_final_id',$pedido->diseno_producto_final_id)
-                                    ->where('item_id',$request->id_item)
-                                    ->first(['cantidad','descripcion','existencias','largo','ancho','alto','item_id','madera_id']);
+        $item_diseno = $this->datosItemDiseno($pedido,$request);
 
         $sobrantes = $this->Sobrantes($item_diseno);
         $maderas = $this->Maderas($item_diseno);
@@ -33,12 +30,34 @@ class MaderasOptimas {
        } else{
 
              return [
-                'maderas_usar' => $maderas_usar = $this->corteInicial($maderas, $item_diseno),
-                'sobrantes_usar' => $sobrantes_usar = $this->sobrantesUsar($sobrantes, $item_diseno),
+                'maderas_usar' => $this->corteInicial($maderas, $item_diseno, 0),
+                'sobrantes_usar' => $this->sobrantesUsar($sobrantes, $item_diseno),
                 'item' => $item_diseno,
                 'producir' => $producir,
              ];
        }
+    }
+    /**
+     * funcion datosPedido(), retorna la consulta de los datos del pedido
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     *
+     */
+
+    public function datosPedido($request){
+        return Pedido::select('cantidad','id','diseno_producto_final_id')->find($request->id_pedido);
+    }
+    /**
+     * funcion datosItemDiseno(), retorna la consulta de los datos del item del diseno
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function datosItemDiseno($pedido,$request){
+        return DisenoItem::join('items','items.id','=','diseno_items.item_id')
+                    ->where('diseno_producto_final_id',$pedido->diseno_producto_final_id)
+                    ->where('item_id',$request->id_item)
+                    ->first(['cantidad','descripcion','existencias','largo','ancho','alto','item_id','madera_id']);
     }
 
     // Funcion SObrantes(), retorna una coleccion de items que se pueden producir
@@ -111,7 +130,7 @@ class MaderasOptimas {
      * cantidad_items, porcentaje_uso, desperdicio
      */
 
-    public function corteInicial($maderas, $item_diseno ){
+    public function corteInicial($maderas, $item_diseno, $paqueta ){
         $corteInicial = [];
 
         foreach ($maderas as $madera) {
@@ -142,10 +161,10 @@ class MaderasOptimas {
             $corteInicial[] = $madera;
         }
 
-        return $this->corteIntermedio($corteInicial, $item_diseno);
+        return $this->corteIntermedio($corteInicial, $item_diseno, $paqueta);
     }
 
-    public function corteIntermedio($corteInicial, $item_diseno)
+    public function corteIntermedio($corteInicial, $item_diseno, $paqueta)
     {
         foreach ($corteInicial as $corte){
             $nuevo_corte = (object)[];
@@ -182,10 +201,10 @@ class MaderasOptimas {
             }
         }
 
-       return $this->corteFinal($corteInicial, $item_diseno);
+       return $this->corteFinal($corteInicial, $item_diseno, $paqueta);
     }
 
-    public function corteFinal($corteInicial, $item_diseno)
+    public function corteFinal($corteInicial, $item_diseno, $paqueta)
     {
          // suma todos los cantidad_ancho de los elementos de la coleccion $corteInicial
          $cantidad_ancho = 0;
@@ -260,7 +279,9 @@ class MaderasOptimas {
 
              }
 
-             //$maderas_disponibles;
+             if ($paqueta == '1') {
+                return $maderas_disponibles;
+             }
              for($i=0; $i < count($maderas_disponibles); $i++){
 
                 $maderas_disponibles[$i]['porcentaje_uso'] = (int)($maderas_disponibles[$i]['cm3_total']/$maderas_disponibles[$i]['cm3']*100);
@@ -312,5 +333,54 @@ class MaderasOptimas {
             return $item_diseno->cantidad * $pedido->cantidad - $existencias_produccion->sum('cantidad');
         }
 
+    }
+
+    /**
+     * funcion cubicaje(), retorna array deivido en 2 partes, con la informacion del bloque
+     * y la cantidad_items que se puede cortar.
+     * @param  [type] $request [description]
+     * @return [type]   json       [description]
+     *
+     */
+
+    public function cubicaje($request){
+        $pedido = $this->datosPedido($request->id_pedido);
+        $item_diseno = $this->datosItemDiseno($pedido, $request);
+        $maderas = $this->datosCubicaje($pedido, $request);
+
+        $cubicajes = $this->corteInicial($maderas,$item_diseno, 1);
+        $count = round(count($cubicajes)/2,0,PHP_ROUND_HALF_UP);
+        $cubicajes = array_chunk($cubicajes, $count);
+        return response()->json(['cubicajes' => $cubicajes]);
+
+    }
+    /**
+     * funcion datosCubicaje(), retorna una connsulta del modelo Cubicaje
+     * @param  [type] $pedido  [description]
+     * @param  [type] $request [description]
+     * @return [type]  Collection  [description]
+     *
+     */
+    public function datosCubicaje($request)
+    {
+        $maderas = Cubicaje::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id','=','cubicajes.entrada_madera_id')
+                            ->join('maderas','maderas.id','=','entradas_madera_maderas.madera_id')
+                            ->join('calificacion_maderas','calificacion_maderas.entrada_madera_id','=','entradas_madera_maderas.entrada_madera_id')
+                            ->where('paqueta','>=',$request->paqueta)
+                            ->where('entrada_madera_id','>',$request->entrada_madera_id)
+                            ->where('estado','DISPONIBLE')
+                            ->where('calificacion_maderas.aprobado','=','true')
+                            ->get(['cubicajes.id',
+                                    'cubicajes.bloque',
+                                    'cubicajes.paqueta',
+                                    'cubicajes.entrada_madera_id',
+                                    'cubicajes.largo',
+                                    'cubicajes.ancho',
+                                    'cubicajes.alto',
+                                    'cubicajes.pulgadas_cuadradas',
+                                    'cubicajes.cm3',
+                                    'calificacion_maderas.total',
+                                ]);
+        return $maderas;
     }
 }

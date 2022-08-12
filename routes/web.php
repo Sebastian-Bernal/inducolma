@@ -116,7 +116,7 @@ Route::post('revisa-acto', [EntradaMaderaController::class, 'verificarRegistro']
 Route::post('ultima-entrada', [EntradaMaderaController::class, 'ultimaEntrada'])
         ->name('ultima-entrada')
         ->middleware('auth');
-        
+
 Route::post('elimina-madera', [EntradaMaderaController::class, 'eliminarMadera'])
         ->name('elimina-madera')
         ->middleware('auth');
@@ -160,7 +160,7 @@ Route::resource('pedidos', PedidoController::class)
 
 Route::controller(PedidoController::class)->group(function () {
         Route::get('items-cliente','itemsCliente')->name('items-cliente')->middleware('auth');
-        Route::post('disenos-buscar','disenoBuscar')->name('diseno-buscar')->middleware('auth');       
+        Route::post('disenos-buscar','disenoBuscar')->name('diseno-buscar')->middleware('auth');
 });
 Route::resource('tipo-eventos', TipoEventoController::class)
                 ->parameters(['tipo-eventos'=> 'tipo_evento'])
@@ -238,7 +238,7 @@ Route::resource('programaciones', OrdenProduccionController::class)
                 ->parameters(['programaciones'=> 'ordenProduccion'])
                 ->names('programaciones')
                 ->middleware('auth');
-                
+
 Route::controller(OrdenProduccionController::class)->group(function () {
         Route::post('programaciones-construccion','maderasOptimas')
                 ->name('contruccion')
@@ -249,11 +249,14 @@ Route::controller(OrdenProduccionController::class)->group(function () {
         Route::post('paqueta','verPaqueta')
                 ->name('paqueta')
                 ->middleware('auth');
+        Route::post('dividir-paqueta','dividirPaqueta')
+                ->name('dividir-paqueta')
+                ->middleware('auth');
 });
 
 
 Auth::routes([
-            'register' => false,            
+            'register' => false,
 
         ]);
 
