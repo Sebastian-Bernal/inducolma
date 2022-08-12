@@ -17,11 +17,6 @@ class MaderasOptimas {
     public function Optimas($request)
     {
 
-        $existencias_produccion = OrdenProduccion::join('items','items.id','=','ordenes_produccion.item_id')
-                                        ->where('pedido_id',(int)$request->id_pedido)
-                                        ->where('item_id',(int)$request->id_item)
-                                        ->get(['cantidad', 'item_id']);
-
         $pedido = Pedido::select('cantidad','id','diseno_producto_final_id')->find($request->id_pedido);
 
         $item_diseno = DisenoItem::join('items','items.id','=','diseno_items.item_id')
@@ -31,6 +26,7 @@ class MaderasOptimas {
 
         $sobrantes = $this->Sobrantes($item_diseno);
         $maderas = $this->Maderas($item_diseno);
+        $producir = $this->producir($request,$item_diseno,$pedido);
 
        if ($maderas->count() == 0 && $sobrantes->count() == 0) {
             return ['status' => 'No hay maderas disponibles.'];
@@ -40,7 +36,7 @@ class MaderasOptimas {
                 'maderas_usar' => $maderas_usar = $this->corteInicial($maderas, $item_diseno),
                 'sobrantes_usar' => $sobrantes_usar = $this->sobrantesUsar($sobrantes, $item_diseno),
                 'item' => $item_diseno,
-                //'status' => 'maderas disponibles',
+                'producir' => $producir,
              ];
        }
     }
@@ -297,6 +293,24 @@ class MaderasOptimas {
          } else{
             return $mensaje = 'No se puede realizar el corte';
          }
+
+    }
+
+    /**
+     * funcion producir(), retorna la cantidad del total a producir del item
+     */
+    public function producir($request, $item_diseno, $pedido )
+    {
+        $existencias_produccion = OrdenProduccion::join('items','items.id','=','ordenes_produccion.item_id')
+        ->where('pedido_id',(int)$request->id_pedido)
+        ->where('item_id',(int)$request->id_item)
+        ->get(['cantidad', 'item_id']);
+
+        if ($existencias_produccion->isEmpty()) {
+            return $item_diseno->cantidad * $pedido->cantidad;
+        } else{
+            return $item_diseno->cantidad * $pedido->cantidad - $existencias_produccion->sum('cantidad');
+        }
 
     }
 }
