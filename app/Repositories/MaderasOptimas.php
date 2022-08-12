@@ -45,7 +45,7 @@ class MaderasOptimas {
      */
 
     public function datosPedido($request){
-        return Pedido::select('cantidad','id','diseno_producto_final_id')->find($request->id_pedido);
+        return Pedido::select('cantidad','id','diseno_producto_final_id')->find((int)$request->id_pedido);
     }
     /**
      * funcion datosItemDiseno(), retorna la consulta de los datos del item del diseno
@@ -55,8 +55,8 @@ class MaderasOptimas {
 
     public function datosItemDiseno($pedido,$request){
         return DisenoItem::join('items','items.id','=','diseno_items.item_id')
-                    ->where('diseno_producto_final_id',$pedido->diseno_producto_final_id)
-                    ->where('item_id',$request->id_item)
+                    ->where('diseno_producto_final_id',(int)$pedido->diseno_producto_final_id)
+                    ->where('item_id',(int)$request->id_item)
                     ->first(['cantidad','descripcion','existencias','largo','ancho','alto','item_id','madera_id']);
     }
 
@@ -366,8 +366,8 @@ class MaderasOptimas {
         $maderas = Cubicaje::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id','=','cubicajes.entrada_madera_id')
                             ->join('maderas','maderas.id','=','entradas_madera_maderas.madera_id')
                             ->join('calificacion_maderas','calificacion_maderas.entrada_madera_id','=','entradas_madera_maderas.entrada_madera_id')
-                            ->where('paqueta','>=',$request->paqueta)
-                            ->where('entrada_madera_id','>',$request->entrada_madera_id)
+                            ->where('paqueta',(int)$request->paqueta)
+                            ->where('entrada_madera_id',(int)$request->entrada_madera_id)
                             ->where('estado','DISPONIBLE')
                             ->where('calificacion_maderas.aprobado','=','true')
                             ->get(['cubicajes.id',
