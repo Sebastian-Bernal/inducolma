@@ -345,7 +345,7 @@ class MaderasOptimas {
      */
 
     public function cubicaje($request){
-        $pedido = $this->datosPedido((int)$request->id_pedido);
+        $pedido = $this->datosPedido((int)$request);
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosCubicaje($request);
 
