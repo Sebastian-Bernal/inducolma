@@ -13,9 +13,10 @@ $(document).ready(function () {
   recibe de parametros entrada_madera_id, paqueta , cantidad y cantidad_items
 */
 
-function cantidadUso(id_entrada,paqueta,cantidad,cantidad_items,margen_error) {
+function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,item,pedido) {
+   
     mitad_can = (cantidad_items/2)/((margen_error/100)+1)
-    if(mitad_can>cantidad){
+    if(mitad_can>producir){
     Swal.fire({
         title: 'La cantidad a producir supera la cantidad necesaria. Desea usar toda la paqueta?',
         showDenyButton: true,
@@ -27,32 +28,72 @@ function cantidadUso(id_entrada,paqueta,cantidad,cantidad_items,margen_error) {
     }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-        Swal.fire('Paqueta guardada con exito', '', 'success')
+            Swal.fire({
+                title: 'Paqueta guardada con exito',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#597504',
+            })
         } else if (result.isDenied) {
             $.ajax({
-                url: `/paqueta`,
+                url: `/dividir-paqueta`,
                 type: "POST",
                 dataType: "JSON",
                 data: {
-                    entrada_madera_id: id_entrada,
-                    paqueta: paqueta,
+                    entrada_madera_id: parseInt(id_entrada),
+                    paqueta: parseInt(paqueta),
+                    id_pedido: parseInt(pedido['id']),
+                    id_item: parseInt(item),
                     _token: $('input[name="_token"]').val()
                 },
                 success: function (e) {
                     console.log(e)
-                    let lista =`<table class="table table-striped table-bordered table-hover"><thead><tr><th>Bloque</th><th>Pulgadas cuadradas</th><tr></thead><tbody>` ;
-                    e.forEach(element => {
+                    let total_items = 0
+                    let lista =`<div><div style="width: 45%; float: left; min-width: 320px; margin-left: 3%"><h2>Mitad No. 1</h2></br><table class="table table-striped table-bordered table-hover"><thead><tr><th>Bloque</th><th>Items por bloque</th><tr></thead><tbody>` ;
+                    e.cubicajes[0].forEach(element => {
+                        
+                        total_items += element.cantidad_items
                         lista = lista +'<tr>' +
                             '<td>' + element.bloque + '</td>' +
-                            '<td>' + element.pulgadas_cuadradas + '</td>' +
+                            '<td>' + element.cantidad_items + '</td>' +
+                        '</tr>'
+                    })
+                    lista = lista + '</tbody></table></br><p>Total: '+total_items+'</p></div>';
+                    let total_items2 = 0
+                    let lista2 =`<div style="width: 45%; float: left; min-width: 320px; margin-left: 3%"><h2>Mitad No. 2</h2></br><table class="table table-striped table-bordered table-hover"><thead><tr><th>Bloque</th><th>Items por bloque</th><tr></thead><tbody>` ;
+                    e.cubicajes[1].forEach(element => {
+                        total_items2 += element.cantidad_items
+                        lista2 = lista2 +'<tr>' +
+                            '<td>' + element.bloque + '</td>' +
+                            '<td>' + element.cantidad_items + '</td>' +
                         '</tr>'
                     });
+                    lista2 = lista2 + '</tbody></table></br><p>Total: '+total_items2+'</p></div></div>';
                     
                     Swal.fire({
-                        title: 'Datos de la paqueta',
-                        html: lista + '</tbody></table>',
+                        title: 'Paquetas divididas',
+                        html: lista+lista2,
+                        width: '80%',
                         confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'Usar mitad No. 1',
+                        denyButtonColor: '#ff7e00',
+                        denyButtonText: 'Usar mitad No. 2',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                    }).then((result) => {
+                        if(result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Mitad No. 1 de la paqueta guardada con exito',
+                                confirmButtonText: 'Aceptar',
+                                confirmButtonColor: '#597504',
+                            }) 
+                        }else if(result.isDenied) {
+                            Swal.fire({
+                                title: 'Mitad No. 2 de la paqueta guardada con exito',
+                                confirmButtonText: 'Aceptar',
+                                confirmButtonColor: '#597504',
+                            }) 
+                        }
+                        
                     });
                 },
             })    
