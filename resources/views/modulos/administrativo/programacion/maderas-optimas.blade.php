@@ -65,7 +65,7 @@
                                     <strong>Veces largo: </strong>{{ $optima['veces_largo'] }} <br>
                                 </p>
 
-                                <button class="btn btn-primary btn-sm" onClick="cantidadUso({{ $optima['entrada_madera_id'].','. $optima['paqueta'].','. $optimas['item']->cantidad.','. $optima['cantidad_items'].','. $optima['margen_error'] }})">Seleccionar</button>
+                                <button class="btn btn-primary btn-sm" onClick="cantidadUso({{ $optima['entrada_madera_id'].','. $optima['paqueta'].','. $optimas['producir'].','. $optima['cantidad_items'].','. $optima['margen_error'].','. $optimas['item']->item_id .','. $pedido }})">Seleccionar</button>
                                 <button class="btn btn-outline-secondary btn-sm" onclick="verPaqueta({{ $optima['entrada_madera_id'] .','. $optima['paqueta'] }})">ver paqueta</button>
                             </div>
                             <div class="card-footer text-warning ">

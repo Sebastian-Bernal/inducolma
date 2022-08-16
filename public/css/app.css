@@ -11310,3 +11310,9 @@ textarea.form-control-lg {
 .color-link {
   color: white;
 }
+
+.seleccionado:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  box-sizing: border-box;
+}
