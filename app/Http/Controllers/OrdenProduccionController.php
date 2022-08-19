@@ -204,7 +204,21 @@ class OrdenProduccionController extends Controller
     public function dividirPaqueta(Request $request)
     {
         $this->authorize('admin');
-        $cubicaje = $this->maderas->cubicaje($request);
+        $ver = 1;
+        $cubicaje = $this->maderas->cubicaje($request,$ver);
         return $cubicaje;
+    }
+
+
+    /**
+     * Selecciona el viaje y la paqueta.
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response json
+     */
+    public function seleccionarViajePaqueta(Request $request){
+        $this->authorize('admin');
+        $guardar = 2;
+        $cubicaje = $this->maderas->seleccionaPaqueta($request,$guardar);
+        return response()->json(['success'=>'Orden de Producción creada con éxito.']);
     }
 }

@@ -134,7 +134,7 @@ class MaderasOptimas {
      * cantidad_items, porcentaje_uso, desperdicio
      */
 
-    public function corteInicial($maderas, $item_diseno, $paqueta ){
+    public function corteInicial($maderas, $item_diseno, $accion ){
 
         $corteInicial = [];
         /*
@@ -168,12 +168,15 @@ class MaderasOptimas {
             $corteInicial[] = $madera;
         }
 
-        //guarda en bd los datos de corte inicial
+        if ($accion == 2) {
+            $this->guardarTransformacion($corteInicial);
+        }
 
-        return $this->corteIntermedio($corteInicial, $item_diseno, $paqueta);
+
+        return $this->corteIntermedio($corteInicial, $item_diseno, $accion);
     }
 
-    public function corteIntermedio($corteInicial, $item_diseno, $paqueta)
+    public function corteIntermedio($corteInicial, $item_diseno, $accion)
     {
 
 
@@ -198,6 +201,7 @@ class MaderasOptimas {
                     $nuevo_corte->alto = $restante_ancho;
                     $nuevo_corte->cm3 = $item_diseno->largo*$corte->alto*$restante_ancho;
                     $nuevo_corte->sobrante_largo = 0;
+                    $nuevo_corte->cantidad_largo = 0;
                     $nuevo_corte->cantidad_ancho = ((int)($corte->alto/($item_diseno->ancho + 0.5)))* $corte->cantidad_largo;
                     $nuevo_corte->total = $corte->total;
 
@@ -220,13 +224,15 @@ class MaderasOptimas {
             }
         }
 
-        // si guardar es true, guarda los cortes en la base de datos guarda bd corteiNICIAL
+        // si accion == 2, guarda la tradnsformacion
+        if ($accion == 2) {
+            $this->guardarTransformacion($corteInicial);
+        }
 
-
-       return $this->corteFinal($corteInicial, $item_diseno, $paqueta);
+       return $this->corteFinal($corteInicial, $item_diseno, $accion);
     }
 
-    public function corteFinal($corteInicial, $item_diseno, $paqueta)
+    public function corteFinal($corteInicial, $item_diseno, $accion)
     {
         //return $corteInicial;
          // suma todos los cantidad_ancho de los elementos de la coleccion $corteInicial
@@ -254,7 +260,10 @@ class MaderasOptimas {
                     $corte->desperdicio_item = $restante_item;
                  }
              }
-             // guardar en este punto
+             // si accion == 2, guarda la tradnsformacion
+                if ($accion == 2) {
+                    $this->guardarTransformacion($corteInicial);
+                }
 
              /* agrupa la coleccion por entrada_madera_id  y paqueta luego suma las cantidad_items
                 $corteInicial = Collection::make($corteInicial)->groupBy(['entrada_madera_id','paqueta']);
@@ -277,7 +286,7 @@ class MaderasOptimas {
 
             $maderas_disponibles = $resultado;
 
-             if ($paqueta == 1) {
+             if ($accion == 1) {
                 return $corteInicial;
              }
 
@@ -324,6 +333,7 @@ class MaderasOptimas {
 
     public function agrupar($corteInicial,$item_diseno)
     {
+
         $result = array();
         $cm3_total = 0;
         foreach($corteInicial as $t) {
@@ -344,6 +354,7 @@ class MaderasOptimas {
                         $cm3_sobrante_largo = 0;
                     }
                     if($t->sobrante_ancho > 0){
+
                         $cm3_sobrante_ancho = $t->sobrante_ancho * $item_diseno->largo * $t->alto * $t->cantidad_largo;
                     }else{
                         $cm3_sobrante_ancho = 0;
@@ -377,7 +388,7 @@ class MaderasOptimas {
                     'calificacion' => (int)$t->total,
                     'cm3' => $t->cm3,
                     'cm3_total' => 0,
-                    'veces_largo' => $t->largo/$item_diseno->largo,
+                    'veces_largo' => round($t->largo/$item_diseno->largo,1),
 
                 );
                 $cm3_total = 0;
@@ -415,12 +426,12 @@ class MaderasOptimas {
      *
      */
 
-    public function cubicaje($request){
+    public function cubicaje($request, $accion){
         $pedido = $this->datosPedido($request);
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosCubicaje($request, $item_diseno);
-
-        $cubicajes = $this->corteInicial($maderas,$item_diseno, 1);
+        $accionVer = $accion;
+        $cubicajes = $this->corteInicial($maderas,$item_diseno, $accionVer);
         $datos = Collection::make($cubicajes)->groupBy('bloque');
         $bloques = [];
         foreach($datos as $k => $dato){
@@ -475,5 +486,66 @@ class MaderasOptimas {
                                     'calificacion_maderas.total',
                                 ]);
         return $maderas;
+    }
+
+    /**
+     * funcion seleccionaPaqueta(), hace la seleccion de la paqueta
+     * @param  [type] $request [description]
+     * @return [type]          [description]
+     *
+     */
+
+     public function seleccionaPaqueta($request, $guardar)
+     {
+        $pedido = $this->datosPedido($request);
+        $item_diseno = $this->datosItemDiseno($pedido, $request);
+        $maderas = $this->datosSeleccion($request, $item_diseno);
+        $seleccion = $this->corteInicial($maderas,$item_diseno, $guardar);
+        return response()->json(['estado' => 'seleccionado']);
+
+     }
+
+     /**
+      * funcion datosSeleccion(), retorna una connsulta del modelo Cubicaje, filtrada por un rango de bloques
+      */
+        public function datosSeleccion($request, $item_diseno)
+        {
+            $maderas = Cubicaje::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id','=','cubicajes.entrada_madera_id')
+                                ->join('maderas','maderas.id','=','entradas_madera_maderas.madera_id')
+                                ->join('calificacion_maderas','calificacion_maderas.entrada_madera_id','=','entradas_madera_maderas.entrada_madera_id')
+                                ->where('cubicajes.paqueta',(int)$request->paqueta)
+                                ->where('cubicajes.entrada_madera_id',(int)$request->entrada_madera_id)
+                                ->where('largo','>=',$item_diseno->largo)
+                                ->where('ancho','>',($item_diseno->ancho + 0.5) + 0.5)
+                                ->where('alto','>',($item_diseno->alto + 0.5) + 0.5)
+                                ->whereBetween('cubicajes.bloque',[$request->bloque_inicial,$request->bloque_final])
+                                ->where('estado','DISPONIBLE')
+                                ->where('calificacion_maderas.aprobado','=','true')
+                                ->whereColumn('cubicajes.paqueta','calificacion_maderas.paqueta')
+                                ->orderBy('cubicajes.entrada_madera_id','asc')
+                                ->orderBy('cubicajes.paqueta','asc')
+                                ->get(['cubicajes.id',
+                                        'cubicajes.bloque',
+                                        'cubicajes.paqueta',
+                                        'cubicajes.entrada_madera_id',
+                                        'cubicajes.largo',
+                                        'cubicajes.ancho',
+                                        'cubicajes.alto',
+                                        'cubicajes.pulgadas_cuadradas',
+                                        'cubicajes.cm3',
+                                        'calificacion_maderas.total',
+                                    ]);
+            return $maderas;
+        }
+
+    /**
+     * funcion guardarTransformacion(), guarda las transformaciones en la base de datos
+     * @param  [array] $corte [corte de cada proceso]
+     * @return [type]        [description]
+     *
+     */
+    public function guardarTransformacion()
+    {
+        # code...
     }
 }
