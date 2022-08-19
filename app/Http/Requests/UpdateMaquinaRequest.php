@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateMaquinaRequest extends FormRequest
 {
@@ -26,10 +27,16 @@ class UpdateMaquinaRequest extends FormRequest
         return [
             'maquina' => [
                 'required',
-                'unique:maquinas,maquina',
+                //'unique:maquinas,maquina',
                 'max:50',
                 'min:5'
-            ]
+            ],
+            'corte'=>[
+                'required',
+                'string',
+                //Rule::in(['INICIAL', 'INTERMEDIO', 'FINAL']),
+                'in:INICIAL,INTERMEDIO,FINAL',
+            ],
 
         ];
     }
@@ -38,9 +45,12 @@ class UpdateMaquinaRequest extends FormRequest
     {
         return [
             'maquina.required' => 'El campo :attribute es obligatorio',
-            'maquina.unique' => 'El nombre de :attribute ya existe',
+            //'maquina.unique' => 'El nombre de :attribute ya existe',
             'maquina.max' => 'El nombre de :attribute debe tener un máximo de 50 caracteres',
-            'maquina.min' => 'El nombre de :attribute debe tener un mínimo de 5 caracteres'
+            'maquina.min' => 'El nombre de :attribute debe tener un mínimo de 5 caracteres',
+            'corte.required' => 'El campo :attribute es obligatorio',
+            'corte.string' => 'El campo :attribute debe ser un texto',
+            'corte.in' => 'Debe seleccionar una opción válida de tipo de corte.',
         ];
     }
 }

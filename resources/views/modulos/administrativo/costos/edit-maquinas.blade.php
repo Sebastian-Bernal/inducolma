@@ -14,18 +14,30 @@
                 <div class="modal-content">
                     <div class="modal-header">
                     <h4 class="modal-title" id="exampleModalLabel">Editar Maquina</h4>
-                    
+
                     </div>
                     <div class="modal-body">
-                        <div class="input-group mb-3"> 
-                            <span class="input-group-text">Maquina:</span>                               
-                            <input type="text" 
-                                    class="form-control text-uppercase" 
-                                    placeholder="Nombre maquina" 
-                                    name="maquina" 
-                                    id="maquina" 
-                                    required 
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Maquina:</span>
+                            <input type="text"
+                                    class="form-control text-uppercase"
+                                    placeholder="Nombre maquina"
+                                    name="maquina"
+                                    id="maquina"
+                                    required
                                     value="{{ $maquina->maquina }}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Corte:</span>
+                            <select name="corte"
+                                    id="corte"
+                                    class="form-select"
+                                    required>
+                                <option selected>Seleccione un tipo de corte</option>
+                                <option value="INICIAL" {{ $maquina->corte == 'INICIAL' ? 'selected' : '' }}>INICIAL</option>
+                                <option value="INTERMEDIO" {{ $maquina->corte == 'INTERMEDIO' ? 'selected' : '' }}>INTERMEDIO</option>
+                                <option value="FINAL" {{ $maquina->corte == 'FINAL' ? 'selected' : '' }}>FINAL</option>
+                            </select>
                         </div>
                     </div>
                     @if ($errors->any())
@@ -34,7 +46,7 @@
                             - {{ $error }} <br>
                         @endforeach
                     </div>
-                    
+
                 @endif
                     <div class="modal-footer">
                     <a href="{{ route('maquinas.index') }}" class="btn btn-secondary" >Volver</a>
@@ -43,7 +55,7 @@
                 </div>
             </div>
         </div>
-        
-      
+
+
 </form>
 @endsection

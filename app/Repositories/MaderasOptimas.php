@@ -8,6 +8,7 @@ use App\Models\Pedido;
 use App\Models\OrdenProduccion;
 use App\Models\Transformacion;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use PhpParser\Node\Expr\Cast\Object_;
 
 use function PHPUnit\Framework\returnSelf;
@@ -61,7 +62,7 @@ class MaderasOptimas {
     }
 
     // Funcion SObrantes(), retorna una coleccion de items que se pueden producir
-    // con los sobrantes que cumplen con largo = $item_diseno->largo, ancho > ($item_diseno->ancho + 0.5), alto > ($item_diseno->alto +0.5)
+    // con los sobrantes que cumplen con largo = $item_diseno->largo, ancho > (($item_diseno->ancho + 0.5) + 0.5), alto > (($item_diseno->alto + 0.5) +0.5)
     // y madera = $item_diseno->madera_id
     // que no esten en uso.
 
@@ -69,8 +70,8 @@ class MaderasOptimas {
     {
         $sobrantes = Transformacion::where('trnasformacion_final','SOBRANTE')
                             ->where('largo',(int)$item_diseno->largo)
-                            ->where('ancho','>',(int)$item_diseno->ancho + 0.5)
-                            ->where('alto','>',(int)$item_diseno->alto + 0.5)
+                            ->where('ancho','>',(int)($item_diseno->ancho + 0.5) + 0.5)
+                            ->where('alto','>',(int)($item_diseno->alto + 0.5) + 0.5)
                             ->where('madera_id',(int)$item_diseno->madera_id)
                             ->get();
         return $sobrantes;
@@ -78,7 +79,7 @@ class MaderasOptimas {
 
     /**
      * Funcion Maderas(), retorna una coleccion de maderas de la tabla cubicajes que cumplen con las siguientes condiciones:
-     * largo = $item_diseno->largo, ancho > ($item_diseno->ancho + 0.5), alto > ($item_diseno->alto +0.5)
+     * largo = $item_diseno->largo, ancho > (($item_diseno->ancho + 0.5) + 0.5), alto > (($item_diseno->alto + 0.5) +0.5)
      * y madera = $item_diseno->madera_id
      * calificacion eprovado  = true hacer join
      */
@@ -89,10 +90,13 @@ class MaderasOptimas {
                             ->join('maderas','maderas.id','=','entradas_madera_maderas.madera_id')
                             ->join('calificacion_maderas','calificacion_maderas.entrada_madera_id','=','entradas_madera_maderas.entrada_madera_id')
                             ->where('largo','>=',$item_diseno->largo)
-                            ->where('ancho','>',$item_diseno->ancho + 0.5)
-                            ->where('alto','>',$item_diseno->alto + 0.5)
+                            ->where('ancho','>',($item_diseno->ancho + 0.5) + 0.5)
+                            ->where('alto','>',($item_diseno->alto + 0.5) + 0.5)
                             ->where('maderas.tipo_madera_id',$item_diseno->madera_id)
                             ->where('calificacion_maderas.aprobado','=','true')
+                            ->whereColumn('cubicajes.paqueta','calificacion_maderas.paqueta')
+                            ->orderBy('cubicajes.entrada_madera_id','asc')
+                            ->orderBy('cubicajes.paqueta','asc')
                             ->get(['cubicajes.id',
                                     'cubicajes.bloque',
                                     'cubicajes.paqueta',
@@ -117,8 +121,8 @@ class MaderasOptimas {
         $sobrantes_usar = [];
 
         foreach ($sobrantes as $sobrante) {
-            $sobrante->cantidad_items = (int)(($sobrante->ancho/$item_diseno->ancho + $sobrante->alto/$item_diseno->alto ));//* $sobrante->cantidad
-            $sobrante->porcentaje_uso = (int)(($sobrante->cantidad_items * $item_diseno->alto * $item_diseno->ancho * $item_diseno->largo)/($sobrante->alto*$sobrante->largo*$sobrante->ancho)*100) ;
+            $sobrante->cantidad_items = (int)(($sobrante->ancho/($item_diseno->ancho + 0.5) + $sobrante->alto/($item_diseno->alto + 0.5) ));//* $sobrante->cantidad
+            $sobrante->porcentaje_uso = (int)(($sobrante->cantidad_items * ($item_diseno->alto + 0.5) * ($item_diseno->ancho + 0.5) * $item_diseno->largo)/($sobrante->alto*$sobrante->largo*$sobrante->ancho)*100) ;
             $sobrante->desperdicio = (int)(100 - $sobrante->porcentaje_uso) ;
             $sobrantes_usar[] = $sobrante;
         }
@@ -131,7 +135,13 @@ class MaderasOptimas {
      */
 
     public function corteInicial($maderas, $item_diseno, $paqueta ){
+
         $corteInicial = [];
+        /*
+        *  Agrupa la coleccion por entrada_madera_id y paqueta
+            $corteInicial = Collection::make($maderas)->groupBy(['entrada_madera_id','paqueta']);
+            return $corteInicial;
+        */
 
         foreach ($maderas as $madera) {
             $madera->cantidad_largo = (int)($madera->largo/$item_diseno->largo);
@@ -147,48 +157,57 @@ class MaderasOptimas {
 
             if ($sobrante_largo > 0) {
                 $madera->sobrante_largo = $sobrante_largo;
-               // $madera += $madera->sobrante_largo;
-            } else {
                 $madera->desperdicio_largo = 0;
             }
 
             if ($desperdicio_largo > 0) {
-               $madera += $madera->desperdicio_largo;
-            } else {
-                $madera->sobrante_largo = 0;
+               $madera->desperdicio_largo = $desperdicio_largo;
+               $madera->sobrante_largo = 0;
             }
 
             $corteInicial[] = $madera;
         }
+
+        //guarda en bd los datos de corte inicial
 
         return $this->corteIntermedio($corteInicial, $item_diseno, $paqueta);
     }
 
     public function corteIntermedio($corteInicial, $item_diseno, $paqueta)
     {
-        foreach ($corteInicial as $corte){
-            $nuevo_corte = (object)[];
-            $corte->cantidad_ancho = (int)$corte->ancho/$item_diseno->ancho * $corte->cantidad_largo;
-            $restante_ancho = $corte->ancho - ($item_diseno->ancho * $corte->cantidad_ancho);
 
+
+        foreach ($corteInicial as $corte){
+
+            $nuevo_corte = (object)[];
+            $corte->cantidad_ancho = ((int)($corte->ancho/(($item_diseno->ancho + 0.5)) ))* $corte->cantidad_largo;
+            $restante_ancho = $corte->ancho - ((($item_diseno->ancho + 0.5) * $corte->cantidad_ancho)/$corte->cantidad_largo);
+            $corte->cm3 = $corte->cm3 - $item_diseno->largo*$corte->alto*$restante_ancho;
+            // CUBICAJE ID
             if ($restante_ancho >= 15 && $restante_ancho <= 16) {
                 $corte->sobrante_ancho = $restante_ancho;
             }else{
-                if ($restante_ancho > 0.7 && $corte->alto > $item_diseno->ancho) {
+                if ($restante_ancho > 0.7 && $corte->alto > ($item_diseno->ancho + 0.5)) {
+                    $nuevo_corte->tipo = 'sobrante corte';
                     $nuevo_corte->id = $corte->id;
                     $nuevo_corte->bloque = $corte->bloque;
                     $nuevo_corte->paqueta = $corte->paqueta;
                     $nuevo_corte->entrada_madera_id = $corte->entrada_madera_id;
-                    $nuevo_corte->largo = $item_diseno->largo;
-                    $nuevo_corte->ancho = $item_diseno->ancho;
+                    $nuevo_corte->largo = (float)$item_diseno->largo;
+                    $nuevo_corte->ancho = (float)($item_diseno->ancho + 0.5);
                     $nuevo_corte->alto = $restante_ancho;
-                    $nuevo_corte->cantidad_ancho_sobrante = (int)($corte->alto/$item_diseno->ancho)* $corte->cantidad_largo;
+                    $nuevo_corte->cm3 = $item_diseno->largo*$corte->alto*$restante_ancho;
+                    $nuevo_corte->sobrante_largo = 0;
+                    $nuevo_corte->cantidad_ancho = ((int)($corte->alto/($item_diseno->ancho + 0.5)))* $corte->cantidad_largo;
+                    $nuevo_corte->total = $corte->total;
 
-                    $restante_ancho_sobrante = $corte->alto -($item_diseno->ancho * $nuevo_corte->cantidad_ancho_sobrante);
+                    $restante_ancho_sobrante = $corte->alto -((($item_diseno->ancho + 0.5) * $nuevo_corte->cantidad_ancho)/$corte->cantidad_largo);
                     if ($restante_ancho_sobrante >= 10) {
-                        $nuevo_corte->sobrante = $restante_ancho_sobrante;
+                        $nuevo_corte->desperdicio_ancho = 0;
+                        $nuevo_corte->sobrante_ancho = $restante_ancho_sobrante;
                     } else{
-                        $nuevo_corte->desperdicio = $restante_ancho_sobrante;
+                        $nuevo_corte->sobrante_ancho = 0;
+                        $nuevo_corte->desperdicio_ancho = $restante_ancho_sobrante;
                     }
                     $corteInicial[] = $nuevo_corte;
                 } else{
@@ -201,89 +220,68 @@ class MaderasOptimas {
             }
         }
 
+        // si guardar es true, guarda los cortes en la base de datos guarda bd corteiNICIAL
+
+
        return $this->corteFinal($corteInicial, $item_diseno, $paqueta);
     }
 
     public function corteFinal($corteInicial, $item_diseno, $paqueta)
     {
+        //return $corteInicial;
          // suma todos los cantidad_ancho de los elementos de la coleccion $corteInicial
          $cantidad_ancho = 0;
          foreach ($corteInicial as $corte) {
-             $cantidad_ancho += $corte->cantidad_ancho;
+
+            $cantidad_ancho += $corte->cantidad_ancho;
+
          }
+
          if ($cantidad_ancho > 0) {
              foreach($corteInicial as $corte){
-                 $corte->cantidad_items = (int)($corte->alto/$item_diseno->alto * $corte->cantidad_ancho);
-                 $restante_item = $corte->alto - ($item_diseno->alto * $corte->cantidad_items);
+                 $corte->cantidad_items = ((int)($corte->alto/($item_diseno->alto + 0.5))) * $corte->cantidad_ancho;
+                 if($corte->cantidad_ancho > 0){
+                    $restante_item = $corte->alto - ((($item_diseno->alto + 0.5) * $corte->cantidad_items)/$corte->cantidad_ancho);
+                 } else {
+                    $restante_item = 0;
+                 }
+
                  if ($restante_item > 0.7) {
                      $corte->sobrante_item = $restante_item;
+                     $corte->desperdicio_item = 0;
                  } else{
-                     $corte->desperdicio_item = $restante_item;
+                    $corte->sobrante_item = 0;
+                    $corte->desperdicio_item = $restante_item;
                  }
              }
+             // guardar en este punto
 
-             // retornar
-
-
-             $indice = 0;
-             $items = 0;
-             $cm3 = 0;
-             $cm3_total = 0;
-
-             for ($i=0; $i < count($corteInicial)-1 ; $i++) {
-
-                if (isset($corteInicial[$i+1])) {
-
-                    if ($corteInicial[$i+1]->entrada_madera_id == $corteInicial[$i]->entrada_madera_id
-                        && $corteInicial[$i+1]->paqueta == $corteInicial[$i]->paqueta) {
-
-                        $items += $corteInicial[$i]->cantidad_items;
-
-                        $cm3 += $corteInicial[$i]->cm3;
-
-                        if ($corteInicial[$i]->sobrante_largo > 0) {
-                            $cm3_sobrante_largo = $corteInicial[$i]->sobrante_largo * $corteInicial[$i]->ancho * $corteInicial[$i]->sobrante->alto;
-                        }else{
-                            $cm3_sobrante_largo = 0;
-                        }
-                        if($corteInicial[$i]->sobrante_ancho > 0){
-                            $cm3_sobrante_ancho = $corteInicial[$i]->sobrante_ancho * $item_diseno->largo * $corteInicial[$i]->alto * $corteInicial[$i]->cantidad_largo;
-                        }else{
-                            $cm3_sobrante_ancho = 0;
-                        }
-
-                        if ($corteInicial[$i]->sobrante_alto > 0) {
-                            $cm3_sobrante_alto = $corteInicial[$i]->sobrante_alto * $item_diseno->ancho * $item_diseno->largo * $corteInicial[$i]->cantidad_ancho;
-                        }else{
-                            $cm3_sobrante_alto = 0;
-                        }
-
-                        $cm3_items = $item_diseno->alto * $item_diseno->ancho * $item_diseno->largo * $corteInicial[$i]->cantidad_items;
-                        $cm3_total += $cm3_items + $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_alto;
-
-
-                        $maderas_disponibles[$indice]['entrada_madera_id'] = $corteInicial[$i]->entrada_madera_id;
-                        $maderas_disponibles[$indice]['paqueta'] = $corteInicial[$i]->paqueta;
-                        $maderas_disponibles[$indice]['cantidad_items'] = $items;
-                        $maderas_disponibles[$indice]['calificacion'] = (int)$corteInicial[$i]->total;
-                        $maderas_disponibles[$indice]['cm3'] = $cm3;
-                        $maderas_disponibles[$indice]['cm3_total'] = $cm3_total;
-                        $maderas_disponibles[$indice]['veces_largo'] = $corteInicial[$i]->largo/$item_diseno->largo;
-
-
-                    } else{
-                        $items = 0;
-                        $indice++;
-                    }
+             /* agrupa la coleccion por entrada_madera_id  y paqueta luego suma las cantidad_items
+                $corteInicial = Collection::make($corteInicial)->groupBy(['entrada_madera_id','paqueta']);
+                return $corteInicial;
+                foreach ($corteInicial as $key => $corte) {
+                    foreach($corte as $j => $dato)
+                    $corte[$j] = $dato->sum('cantidad_items');
                 }
+                return $corteInicial;
+              */
+            $corteInicial = array_values(Arr::sort($corteInicial, function ($value) {
+                return $value->entrada_madera_id;
+            }));
 
-             }
+            //return $corteInicial;
+            $maderas_disponibles = [];
+
+            $resultado = $this->agrupar($corteInicial,$item_diseno);
+            //return $resultado;
+
+            $maderas_disponibles = $resultado;
 
              if ($paqueta == 1) {
                 return $corteInicial;
              }
 
-             for($i=0; $i < count($maderas_disponibles); $i++){
+            for($i=0; $i < count($maderas_disponibles); $i++){
 
                 $maderas_disponibles[$i]['porcentaje_uso'] = (int)($maderas_disponibles[$i]['cm3_total']/$maderas_disponibles[$i]['cm3']*100);
                 $maderas_disponibles[$i]['margen_error'] = (100 - $maderas_disponibles[$i]['calificacion'])/2;
@@ -317,6 +315,79 @@ class MaderasOptimas {
          }
 
     }
+    /**
+     * Crea el array de maderas_usar en el indice indicado cuando el id_entrada y paqueta es igual
+     * @param  [array] $corteInicial[$i] [los elementos del corte en la posicion actual]
+     * @param  [int] $indice [Indice actual del array en construccion]
+     *
+     */
+
+    public function agrupar($corteInicial,$item_diseno)
+    {
+        $result = array();
+        $cm3_total = 0;
+        foreach($corteInicial as $t) {
+
+            $repeatir=false;
+
+            for($i=0;$i<count($result);$i++)
+
+            {
+                if($result[$i]['entrada_madera_id']==$t->entrada_madera_id
+                    && $result[$i]['paqueta']==$t->paqueta
+                    //&& $result[$i]['bloque']==$t->bloque
+                   )
+                {
+                    if ($t->sobrante_largo > 0) {
+                        $cm3_sobrante_largo = $t->sobrante_largo * $t->ancho * $t->sobrante_item;
+                    }else{
+                        $cm3_sobrante_largo = 0;
+                    }
+                    if($t->sobrante_ancho > 0){
+                        $cm3_sobrante_ancho = $t->sobrante_ancho * $item_diseno->largo * $t->alto * $t->cantidad_largo;
+                    }else{
+                        $cm3_sobrante_ancho = 0;
+                    }
+
+                    if ($t->sobrante_item > 0) {
+                        $cm3_sobrante_item = $t->sobrante_item * ($item_diseno->ancho + 0.5) * $item_diseno->largo * $t->cantidad_ancho;
+                    }else{
+                        $cm3_sobrante_item = 0;
+                    }
+
+                    $cm3_items = ($item_diseno->alto + 0.5) * ($item_diseno->ancho + 0.5) * $item_diseno->largo * $t->cantidad_items;
+                    //$cm3_total += $cm3_items + $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_item;
+
+                    $result[$i]['cantidad_items'] += $t->cantidad_items;
+                    $result[$i]['cm3'] += $t->cm3;
+                    $result[$i]['cm3_total'] += $cm3_items + $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_item;
+
+                    $repeatir=true;
+
+                    break;
+                }
+
+            }
+
+            if($repeatir==false){
+                $result[] = array(
+                    'entrada_madera_id' => $t->entrada_madera_id,
+                    'paqueta' => $t->paqueta,
+                    'cantidad_items' => $t->cantidad_items,
+                    'calificacion' => (int)$t->total,
+                    'cm3' => $t->cm3,
+                    'cm3_total' => 0,
+                    'veces_largo' => $t->largo/$item_diseno->largo,
+
+                );
+                $cm3_total = 0;
+            }
+
+
+        }
+        return $result;
+    }
+
 
     /**
      * funcion producir(), retorna la cantidad del total a producir del item
@@ -347,12 +418,27 @@ class MaderasOptimas {
     public function cubicaje($request){
         $pedido = $this->datosPedido($request);
         $item_diseno = $this->datosItemDiseno($pedido, $request);
-        $maderas = $this->datosCubicaje($request);
+        $maderas = $this->datosCubicaje($request, $item_diseno);
 
         $cubicajes = $this->corteInicial($maderas,$item_diseno, 1);
-        $count = round(count($cubicajes)/2,0,PHP_ROUND_HALF_UP);
-        $cubicajes = array_chunk($cubicajes, $count);
-        return response()->json(['cubicajes' => $cubicajes]);
+        $datos = Collection::make($cubicajes)->groupBy('bloque');
+        $bloques = [];
+        foreach($datos as $k => $dato){
+            $repetir = false;
+            foreach($dato as $d ){
+                if($repetir == false){
+                    $bloques[$k]['bloque'] = $d->bloque;
+                    $bloques[$k]['cantidad_items'] = $d->cantidad_items;
+                    $repetir = true;
+                } else{
+                    $bloques[$k]['cantidad_items'] += $d->cantidad_items;
+                }
+            }
+        }
+        //return $bloques;
+        $count = round(count($bloques)/2,0,PHP_ROUND_HALF_UP);
+        $bloques = array_chunk($bloques, $count);
+        return response()->json(['cubicajes' => $bloques]);
 
     }
     /**
@@ -362,15 +448,21 @@ class MaderasOptimas {
      * @return [type]  Collection  [description]
      *
      */
-    public function datosCubicaje($request)
+    public function datosCubicaje($request, $item_diseno)
     {
         $maderas = Cubicaje::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id','=','cubicajes.entrada_madera_id')
                             ->join('maderas','maderas.id','=','entradas_madera_maderas.madera_id')
                             ->join('calificacion_maderas','calificacion_maderas.entrada_madera_id','=','entradas_madera_maderas.entrada_madera_id')
                             ->where('cubicajes.paqueta',(int)$request->paqueta)
                             ->where('cubicajes.entrada_madera_id',(int)$request->entrada_madera_id)
+                            ->where('largo','>=',$item_diseno->largo)
+                            ->where('ancho','>',($item_diseno->ancho + 0.5) + 0.5)
+                            ->where('alto','>',($item_diseno->alto + 0.5) + 0.5)
                             ->where('estado','DISPONIBLE')
                             ->where('calificacion_maderas.aprobado','=','true')
+                            ->whereColumn('cubicajes.paqueta','calificacion_maderas.paqueta')
+                            ->orderBy('cubicajes.entrada_madera_id','asc')
+                            ->orderBy('cubicajes.paqueta','asc')
                             ->get(['cubicajes.id',
                                     'cubicajes.bloque',
                                     'cubicajes.paqueta',

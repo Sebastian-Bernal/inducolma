@@ -71,7 +71,7 @@ class MaquinaController extends Controller
         $maquina = Maquina::findOrFail($maquina->id);
         return view('modulos.administrativo.costos.edit-maquinas',[
             'maquina'   => $maquina,
-                      
+
         ]);
     }
 
@@ -88,6 +88,7 @@ class MaquinaController extends Controller
         //dd($request->maquina);
         $maquina = Maquina::findOrFail($maquina->id);
         $maquina->maquina = strtoupper($request->maquina);
+        $maquina->corte = strtoupper($request->corte);
         $maquina->save();
         return redirect()->route('maquinas.index')->with('status', "Maquina $maquina->maquina actualizada con éxito");
     }
