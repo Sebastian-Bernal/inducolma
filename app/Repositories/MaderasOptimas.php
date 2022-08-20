@@ -9,7 +9,7 @@ use App\Models\OrdenProduccion;
 use App\Models\Transformacion;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
-use PhpParser\Node\Expr\Cast\Object_;
+use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -136,6 +136,7 @@ class MaderasOptimas {
 
     public function corteInicial($maderas, $item_diseno, $accion ){
 
+
         $corteInicial = [];
         /*
         *  Agrupa la coleccion por entrada_madera_id y paqueta
@@ -144,39 +145,61 @@ class MaderasOptimas {
         */
 
         foreach ($maderas as $madera) {
+
+            $madera->transformacion = $item_diseno->descripcion;
             $madera->cantidad_largo = (int)($madera->largo/$item_diseno->largo);
 
             $restante_largo = (int)($madera->largo-($item_diseno->largo * $madera->cantidad_largo));
             if ($restante_largo > 15) {
                 $desperdicio_largo = 0;
                 $sobrante_largo = $restante_largo;
-            } else {
+            } else if ($restante_largo > 0 && $restante_largo < 15) {
                 $sobrante_largo = 0;
                 $desperdicio_largo = $restante_largo;
+            } else{
+                $sobrante_largo = 0;
+                $desperdicio_largo = 0;
             }
 
             if ($sobrante_largo > 0) {
+
                 $madera->sobrante_largo = $sobrante_largo;
                 $madera->desperdicio_largo = 0;
-            }
 
-            if ($desperdicio_largo > 0) {
+            } else if ($desperdicio_largo > 0) {
                $madera->desperdicio_largo = $desperdicio_largo;
                $madera->sobrante_largo = 0;
+            } else{
+                $madera->sobrante_largo = 0;
+                $madera->desperdicio_largo = 0;
             }
 
             $corteInicial[] = $madera;
         }
 
         if ($accion == 2) {
-            $this->guardarTransformacion($corteInicial);
+            foreach ($corteInicial as $guardar) {
+               $seleccion =  $this->guardarTransformacion(
+                    $guardar->ancho,
+                    $guardar->largo,
+                    $guardar->alto,
+                    $item_diseno->descripcion,
+                    $guardar->id,
+                    Auth::user()->id,
+                    $item_diseno->madera_id,
+                    $guardar->sobrante_largo,
+                    $guardar->desperdicio_largo,
+                    $guardar->cantidad_largo,
+                    'INICIAL'
+                );
+            }
         }
 
 
-        return $this->corteIntermedio($corteInicial, $item_diseno, $accion);
+        return $this->corteIntermedio($corteInicial, $item_diseno, $accion, $seleccion);
     }
 
-    public function corteIntermedio($corteInicial, $item_diseno, $accion)
+    public function corteIntermedio($corteInicial, $item_diseno, $accion, $seleccion = [])
     {
 
 
@@ -214,25 +237,50 @@ class MaderasOptimas {
                         $nuevo_corte->desperdicio_ancho = $restante_ancho_sobrante;
                     }
                     $corteInicial[] = $nuevo_corte;
+                    $corte->sobrante_ancho = 0;
+                    $corte->desperdicio_ancho = 0;
                 } else{
                     if ($restante_ancho > 0.7) {
                         $corte->sobrante_ancho = $restante_ancho;
-                    } else{
+                        $corte->desperdicio_ancho = 0;
+
+                    } else if ($restante_ancho > 0 && $restante_ancho < 0.7) {
                         $corte->desperdicio_ancho = $restante_ancho;
+                        $corte->sobrante_ancho = 0;
+
+                    } else{
+                        $corte->sobrante_ancho = 0;
+                        $corte->desperdicio_ancho = 0;
                     }
                 }
             }
         }
+        return $corteInicial;
 
         // si accion == 2, guarda la tradnsformacion
         if ($accion == 2) {
-            $this->guardarTransformacion($corteInicial);
+
+            foreach ($corteInicial as $guardar) {
+                $seleccion += $this->guardarTransformacion(
+                    $item_diseno->ancho,
+                    $item_diseno->largo,
+                    $guardar->alto,
+                    $item_diseno->descripcion,
+                    $guardar->id,
+                    Auth::user()->id,
+                    $item_diseno->madera_id,
+                    $guardar->sobrante_ancho,
+                    $guardar->desperdicio_ancho,
+                    $guardar->cantidad_ancho,
+                    'INTERMEDIO'
+                );
+            }
         }
 
-       return $this->corteFinal($corteInicial, $item_diseno, $accion);
+       return $this->corteFinal($corteInicial, $item_diseno, $accion, $seleccion);
     }
 
-    public function corteFinal($corteInicial, $item_diseno, $accion)
+    public function corteFinal($corteInicial, $item_diseno, $accion, $seleccion = [])
     {
         //return $corteInicial;
          // suma todos los cantidad_ancho de los elementos de la coleccion $corteInicial
@@ -244,36 +292,35 @@ class MaderasOptimas {
          }
 
          if ($cantidad_ancho > 0) {
-             foreach($corteInicial as $corte){
-                 $corte->cantidad_items = ((int)($corte->alto/($item_diseno->alto + 0.5))) * $corte->cantidad_ancho;
-                 if($corte->cantidad_ancho > 0){
-                    $restante_item = $corte->alto - ((($item_diseno->alto + 0.5) * $corte->cantidad_items)/$corte->cantidad_ancho);
-                 } else {
-                    $restante_item = 0;
-                 }
-
-                 if ($restante_item > 0.7) {
-                     $corte->sobrante_item = $restante_item;
-                     $corte->desperdicio_item = 0;
-                 } else{
-                    $corte->sobrante_item = 0;
-                    $corte->desperdicio_item = $restante_item;
-                 }
-             }
-             // si accion == 2, guarda la tradnsformacion
-                if ($accion == 2) {
-                    $this->guardarTransformacion($corteInicial);
+            foreach($corteInicial as $corte){
+                    $corte->cantidad_items = ((int)($corte->alto/($item_diseno->alto + 0.5))) * $corte->cantidad_ancho;
+                    if($corte->cantidad_ancho > 0){
+                        $restante_item = $corte->alto - ((($item_diseno->alto + 0.5) * $corte->cantidad_items)/$corte->cantidad_ancho);
+                    } else {
+                        $restante_item = 0;
+                    }
+                    if ($restante_item > 0.7) {
+                        $corte->sobrante_item = $restante_item;
+                        $corte->desperdicio_item = 0;
+                    } else if($restante_item > 0 && $restante_item < 0.7){
+                        $corte->sobrante_item = 0;
+                        $corte->desperdicio_item = $restante_item;
+                    } else{
+                        $corte->sobrante_item = 0;
+                        $corte->desperdicio_item = 0;
+                    }
                 }
 
-             /* agrupa la coleccion por entrada_madera_id  y paqueta luego suma las cantidad_items
-                $corteInicial = Collection::make($corteInicial)->groupBy(['entrada_madera_id','paqueta']);
-                return $corteInicial;
-                foreach ($corteInicial as $key => $corte) {
-                    foreach($corte as $j => $dato)
-                    $corte[$j] = $dato->sum('cantidad_items');
-                }
-                return $corteInicial;
-              */
+
+                /* agrupa la coleccion por entrada_madera_id  y paqueta luego suma las cantidad_items
+                    $corteInicial = Collection::make($corteInicial)->groupBy(['entrada_madera_id','paqueta']);
+                    return $corteInicial;
+                    foreach ($corteInicial as $key => $corte) {
+                        foreach($corte as $j => $dato)
+                        $corte[$j] = $dato->sum('cantidad_items');
+                    }
+                    return $corteInicial;
+                */
             $corteInicial = array_values(Arr::sort($corteInicial, function ($value) {
                 return $value->entrada_madera_id;
             }));
@@ -286,10 +333,30 @@ class MaderasOptimas {
 
             $maderas_disponibles = $resultado;
 
-             if ($accion == 1) {
+            if ($accion == 1) {
                 return $corteInicial;
-             }
+                }
 
+            if ($accion == 2) {
+                foreach ($corteInicial as $guardar) {
+                    $seleccion += $this->guardarTransformacion(
+
+                            $item_diseno->ancho,
+                            $item_diseno->largo,
+                            $item_diseno->alto,
+                            $guardar->tradnsformacion,
+                            $guardar->id,
+                            Auth::user()->id,
+                            $item_diseno->madera_id,
+                            $guardar->sobrante_item,
+                            $guardar->desperdicio_item,
+                            $guardar->cantidad_items,
+                            'FINAL'
+                        );
+                }
+                return $seleccion;
+
+            }
             for($i=0; $i < count($maderas_disponibles); $i++){
 
                 $maderas_disponibles[$i]['porcentaje_uso'] = (int)($maderas_disponibles[$i]['cm3_total']/$maderas_disponibles[$i]['cm3']*100);
@@ -501,7 +568,7 @@ class MaderasOptimas {
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosSeleccion($request, $item_diseno);
         $seleccion = $this->corteInicial($maderas,$item_diseno, $guardar);
-        return response()->json(['estado' => 'seleccionado']);
+        return $seleccion;
 
      }
 
@@ -544,8 +611,30 @@ class MaderasOptimas {
      * @return [type]        [description]
      *
      */
-    public function guardarTransformacion()
+    public function guardarTransformacion($ancho, $largo, $alto, $transformacion, $cubicaje_id, $user_id, $madera_id, $sobrante, $desperdicio, $cantidad, $tipo_corte  )
     {
-        # code...
+
+        $cubicajes = [];
+        $tansformacion = new Transformacion();
+        $tansformacion->ancho = $ancho;
+        $tansformacion->largo = $largo;
+        $tansformacion->alto = $alto;
+        $tansformacion->transformacion = $transformacion;
+        $tansformacion->cubicaje_id = $cubicaje_id;
+        $tansformacion->user_id = $user_id;
+        $tansformacion->madera_id = $madera_id;
+        $tansformacion->sobrante = $sobrante;
+        $tansformacion->desperdicio = $desperdicio;
+        $tansformacion->cantidad = $cantidad;
+        $tansformacion->tipo_corte = $tipo_corte;
+        if ($tansformacion->save()) {
+            $errorGuardar[] = array('error' => false);
+        }else{
+
+            $cubicajes[] += array('id' => $cubicaje_id);
+            $errorGuardar[] = array('error' => true, 'cubicajes' => $cubicajes );
+        }
+        return $errorGuardar;
+
     }
 }

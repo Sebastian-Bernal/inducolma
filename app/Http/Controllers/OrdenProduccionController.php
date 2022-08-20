@@ -141,7 +141,7 @@ class OrdenProduccionController extends Controller
         $item = $request->id_item;
         $optimas =  $this->maderas->Optimas($request);
 
-        //return $optimas['maderas_usar'] ;
+        return $optimas['maderas_usar'] ;
         if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
             if (count($optimas['maderas_usar'])>0 || count($optimas['sobrantes_usar'])>0) {
                 return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas','pedido','item'));
