@@ -177,6 +177,7 @@ class MaderasOptimas {
             $corteInicial[] = $madera;
         }
 
+        $seleccion = [];
         if ($accion == 2) {
             foreach ($corteInicial as $guardar) {
                $seleccion =  $this->guardarTransformacion(
@@ -255,9 +256,10 @@ class MaderasOptimas {
                 }
             }
         }
-        return $corteInicial;
+       // return $corteInicial;
 
         // si accion == 2, guarda la tradnsformacion
+
         if ($accion == 2) {
 
             foreach ($corteInicial as $guardar) {
