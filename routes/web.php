@@ -252,6 +252,10 @@ Route::controller(OrdenProduccionController::class)->group(function () {
         Route::post('dividir-paqueta','dividirPaqueta')
                 ->name('dividir-paqueta')
                 ->middleware('auth');
+        Route::get('programaciones/{pedido}/{item_id}', 'showMaderas')
+                ->name('getMaderas')
+                ->middleware('auth');
+
 });
 
 
