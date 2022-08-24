@@ -248,7 +248,7 @@ class OrdenProduccionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response json
      */
-    public function seleccionarViajePaqueta(Request $request){
+    public function seleccionar(Request $request){
         $this->authorize('admin');
         $guardar = 2;
         $seleccion = $this->maderas->seleccionaPaqueta($request,$guardar);

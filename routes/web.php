@@ -255,6 +255,9 @@ Route::controller(OrdenProduccionController::class)->group(function () {
         Route::get('programaciones/{pedido}/{item_id}', 'showMaderas')
                 ->name('getMaderas')
                 ->middleware('auth');
+        Route::post('seleccionar-madera', 'seleccionar')
+                ->name('seleccionar-madera')
+                ->middleware('auth')
 
 });
 
