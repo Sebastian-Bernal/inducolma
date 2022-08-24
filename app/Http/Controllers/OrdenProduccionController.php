@@ -90,9 +90,42 @@ class OrdenProduccionController extends Controller
     public function show(Pedido $ordenProduccion)
     {
         $pedido =  $ordenProduccion->datos();
+       /* $datos = [];
+        foreach ($pedido->items_pedido as $item) {
+            $datos[] =  (object)array(
+                        'item_id' => $item->item_id,
+                        'pedido'  => $pedido->id
+                        );
+        }*/
+
 
         return view('modulos.administrativo.programacion.show', compact('pedido'));
 
+    }
+
+    public function showMaderas($pedido, $item_id)
+    {
+
+        //return $pedido . ' '. $item_id;
+        $request = (object)[];
+        $request->id_pedido = $pedido;
+        $request->id_item = $item_id;
+        $item = $request->id_item;
+        $pedido = Pedido::find($request->id_pedido);
+        $optimas =  $this->maderas->Optimas($request);
+
+        //return $optimas['maderas_usar'] ;
+        if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
+            if (count($optimas['maderas_usar'])>0 || count($optimas['sobrantes_usar'])>0) {
+                return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas','pedido','item'));
+            } else {
+                $status= 'no hay maderas disponibles...';
+                return redirect()->back()->with('status', $status);
+            }
+        }else{
+            $status= 'no hay maderas disponibles...';
+            return redirect()->back()->with('status', $status);
+        }
     }
 
     /**
@@ -215,7 +248,7 @@ class OrdenProduccionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response json
      */
-    public function seleccionarViajePaqueta(Request $request){
+    public function seleccionar(Request $request){
         $this->authorize('admin');
         $guardar = 2;
         $seleccion = $this->maderas->seleccionaPaqueta($request,$guardar);
