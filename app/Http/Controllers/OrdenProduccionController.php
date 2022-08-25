@@ -9,8 +9,10 @@ use App\Models\Pedido;
 use App\Models\Item;
 use App\Models\Cliente;
 use App\Models\DisenoItem;
+use App\Models\Transformacion;
 use App\Repositories\MaderasOptimas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrdenProduccionController extends Controller
 {
@@ -223,6 +225,7 @@ class OrdenProduccionController extends Controller
         {
             $paqueta = Cubicaje::where('entrada_madera_id', $request->entrada_madera_id)
                                 ->where('paqueta', $request->paqueta)
+                                ->where('estado','DISPONIBLE')
                                 ->orderBy('pulgadas_cuadradas', 'desc')
                                 ->get(['pulgadas_cuadradas', 'bloque']);
             return response()->json($paqueta);
@@ -249,10 +252,32 @@ class OrdenProduccionController extends Controller
      * @return \Illuminate\Http\Response json
      */
     public function seleccionar(Request $request){
+
         $this->authorize('admin');
         $guardar = 2;
         $seleccion = $this->maderas->seleccionaPaqueta($request,$guardar);
-        return $seleccion ;
-        return response()->json(['success'=>'Orden de Producción creada con éxito.']);
+        $errorGuardar[] = array('error' => false);
+        $seleccion = $errorGuardar;
+        $error  = $seleccion[0]['error'];
+        // si seleccion error = false crear la orden de produccion, si es true se elimina todo lo creado en
+        // transformacione y se vuelve al estado Disponible en la tabla cubicajes
+        if($error){
+            Cubicaje::where('entrada_madera_id',$request->entrada_madera_id)
+                    ->where('paqueta',$request->paqueta)
+                    ->update(['estado' => 'DISPONIBLE']);
+            Transformacion::join('cubicajes.id','=','transformaciones.cubicaje_id')
+                            ->where('cubicajes.entrada_madera_id',$request->entrada_madera_id)
+                            ->delete();
+            return response()->json(['error' => true, 'datos_error' => $seleccion]);
+        }else{
+            $orden = new OrdenProduccion();
+            $orden->cantidad = $request->cantidad;
+            $orden->estado = '';
+            $orden->user_id = Auth::user()->id;
+            $orden->pedido_id = $request->id_pedido;
+            $orden->item_id = $request->id_item;
+            $orden->save();
+            return response()->json(['error'=> false]);
+        }
     }
 }

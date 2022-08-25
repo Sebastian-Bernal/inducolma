@@ -90,13 +90,15 @@ class MaderasOptimas {
                             ->join('maderas','maderas.id','=','entradas_madera_maderas.madera_id')
                             ->join('calificacion_maderas','calificacion_maderas.entrada_madera_id','=','entradas_madera_maderas.entrada_madera_id')
                             ->where('largo','>=',$item_diseno->largo)
-                            ->where('ancho','>',($item_diseno->ancho + 0.5) + 0.5)
-                            ->where('alto','>',($item_diseno->alto + 0.5) + 0.5)
+                            //->where('ancho','>',$item_diseno->ancho +  0.5)
+                            //->where('alto','>',$item_diseno->alto + 0.5)
                             ->where('maderas.tipo_madera_id',$item_diseno->madera_id)
                             ->where('calificacion_maderas.aprobado','=','true')
+                            ->where('estado','DISPONIBLE')
                             ->whereColumn('cubicajes.paqueta','calificacion_maderas.paqueta')
                             ->orderBy('cubicajes.entrada_madera_id','asc')
                             ->orderBy('cubicajes.paqueta','asc')
+                            ->orderBy('cubicajes.bloque','asc')
                             ->get(['cubicajes.id',
                                     'cubicajes.bloque',
                                     'cubicajes.paqueta',
@@ -209,7 +211,7 @@ class MaderasOptimas {
             $nuevo_corte = (object)[];
             $corte->cantidad_ancho = ((int)($corte->ancho/(($item_diseno->ancho + 0.5)) ))* $corte->cantidad_largo;
             $restante_ancho = $corte->ancho - ((($item_diseno->ancho + 0.5) * $corte->cantidad_ancho)/$corte->cantidad_largo);
-            $corte->cm3 = $corte->cm3 - $item_diseno->largo*$corte->alto*$restante_ancho;
+            $corte->cm3 = $corte->cm3 - $item_diseno->largo * $corte->alto * $restante_ancho;
             // CUBICAJE ID
             if ($restante_ancho >= 15 && $restante_ancho <= 16) {
                 $corte->sobrante_ancho = $restante_ancho;
@@ -293,7 +295,7 @@ class MaderasOptimas {
 
          }
 
-         if ($cantidad_ancho > 0) {
+        if ($cantidad_ancho > 0) {
             foreach($corteInicial as $corte){
                     $corte->cantidad_items = ((int)($corte->alto/($item_diseno->alto + 0.5))) * $corte->cantidad_ancho;
                     if($corte->cantidad_ancho > 0){
@@ -346,7 +348,7 @@ class MaderasOptimas {
                             $item_diseno->ancho,
                             $item_diseno->largo,
                             $item_diseno->alto,
-                            $guardar->tradnsformacion,
+                            $item_diseno->descripcion,
                             $guardar->id,
                             Auth::user()->id,
                             $item_diseno->madera_id,
@@ -404,7 +406,7 @@ class MaderasOptimas {
     {
 
         $result = array();
-        $cm3_total = 0;
+
         foreach($corteInicial as $t) {
 
             $repeatir=false;
@@ -435,7 +437,7 @@ class MaderasOptimas {
                         $cm3_sobrante_item = 0;
                     }
 
-                    $cm3_items = ($item_diseno->alto + 0.5) * ($item_diseno->ancho + 0.5) * $item_diseno->largo * $t->cantidad_items;
+                    $cm3_items = ($item_diseno->alto) * ($item_diseno->ancho) * $item_diseno->largo * $t->cantidad_items;
                     //$cm3_total += $cm3_items + $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_item;
 
                     $result[$i]['cantidad_items'] += $t->cantidad_items;
@@ -502,6 +504,7 @@ class MaderasOptimas {
         $accionVer = $accion;
         $cubicajes = $this->corteInicial($maderas,$item_diseno, $accionVer);
         $datos = Collection::make($cubicajes)->groupBy('bloque');
+        //return $datos;
         $bloques = [];
         foreach($datos as $k => $dato){
             $repetir = false;
@@ -536,13 +539,12 @@ class MaderasOptimas {
                             ->where('cubicajes.paqueta',(int)$request->paqueta)
                             ->where('cubicajes.entrada_madera_id',(int)$request->entrada_madera_id)
                             ->where('largo','>=',$item_diseno->largo)
-                            ->where('ancho','>',($item_diseno->ancho + 0.5) + 0.5)
-                            ->where('alto','>',($item_diseno->alto + 0.5) + 0.5)
-                            ->where('estado','DISPONIBLE')
+                            ->where('cubicajes.estado','DISPONIBLE')
                             ->where('calificacion_maderas.aprobado','=','true')
                             ->whereColumn('cubicajes.paqueta','calificacion_maderas.paqueta')
                             ->orderBy('cubicajes.entrada_madera_id','asc')
                             ->orderBy('cubicajes.paqueta','asc')
+                            ->orderBy('cubicajes.bloque','asc')
                             ->get(['cubicajes.id',
                                     'cubicajes.bloque',
                                     'cubicajes.paqueta',
@@ -585,8 +587,6 @@ class MaderasOptimas {
                                 ->where('cubicajes.paqueta',(int)$request->paqueta)
                                 ->where('cubicajes.entrada_madera_id',(int)$request->entrada_madera_id)
                                 ->where('largo','>=',$item_diseno->largo)
-                                ->where('ancho','>',($item_diseno->ancho + 0.5) + 0.5)
-                                ->where('alto','>',($item_diseno->alto + 0.5) + 0.5)
                                 ->whereBetween('cubicajes.bloque',[$request->bloque_inicial,$request->bloque_final])
                                 ->where('estado','DISPONIBLE')
                                 ->where('calificacion_maderas.aprobado','=','true')
@@ -621,7 +621,8 @@ class MaderasOptimas {
         $tansformacion->ancho = $ancho;
         $tansformacion->largo = $largo;
         $tansformacion->alto = $alto;
-        $tansformacion->transformacion = $transformacion;
+        $tansformacion->estado = 'DISPONIBLE';
+        $tansformacion->trnasformacion_final = $transformacion;
         $tansformacion->cubicaje_id = $cubicaje_id;
         $tansformacion->user_id = $user_id;
         $tansformacion->madera_id = $madera_id;
@@ -631,6 +632,7 @@ class MaderasOptimas {
         $tansformacion->tipo_corte = $tipo_corte;
         if ($tansformacion->save()) {
             $errorGuardar[] = array('error' => false);
+            Cubicaje::where('id', $tansformacion->cubicaje_id)->update(['estado' => 'NO DISPONIBLE']);
         }else{
 
             $cubicajes[] += array('id' => $cubicaje_id);
