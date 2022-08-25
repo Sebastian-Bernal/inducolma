@@ -50,7 +50,7 @@
                             <tr id="{{ $items->item_id }}">
                                 <td>{{ $items->descripcion }}</td>
                                 <td>{{ $items->cantidad}}</td>
-                                <td id="{{ 'cantidad'.$items->item_id }}">{{ $items->total}}</td>
+                                <td id="{{ 'cantidad'.$items->item_id }}">{{ $items->total > 0 ? $items->total : 0 }}</td>
                                 <td id="{{ 'existencias'.$items->item_id }}">{{ $items->existencias}}</td>
                                 <td>
 

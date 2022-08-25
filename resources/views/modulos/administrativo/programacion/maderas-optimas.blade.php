@@ -13,7 +13,7 @@
                 <h4>Maderas disponibles para la creacion del item</h4>
                 <p>
                     <strong>Descripción: </strong> {{ $optimas['item']->descripcion }} <br>
-                    <strong>Cantidad a producir :</strong> {{  $optimas['producir'] }} <br>
+                    <strong>Cantidad a producir :</strong> {{  $optimas['producir'] < 0 ? 0 : $optimas['producir'] }} <br>
 
                     <a href="{{ route('programaciones.index') }}" class="btn btn-outline-secondary btn-sm">volver</a>
                 </p>
