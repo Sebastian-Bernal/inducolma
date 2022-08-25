@@ -14,10 +14,7 @@ $(document).ready(function () {
 */
 
 function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,item,pedido) {
-    location.reload()
-    if (window.history.replaceState) { // verificamos disponibilidad
-        window.history.replaceState(null, null, window.location.href);
-    }
+
     mitad_can = (cantidad_items/2)/((margen_error/100)+1)
     if(mitad_can>producir){
         Swal.fire({
@@ -49,7 +46,7 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                         _token: $('input[name="_token"]').val()
                     },
                     success: function (e) {
-                        console.log(e)
+                        
                         let total_items = 0
                         let lista =`<div><div style="width: 45%; float: left; min-width: 320px; margin-left: 3%"><h2>Mitad No. 1</h2></br><table class="table table-striped table-bordered table-hover"><thead><tr><th>Bloque</th><th>Items por bloque</th><tr></thead><tbody>` ;
                         e.cubicajes[0].forEach(element => {
@@ -86,8 +83,6 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                             if(result.isConfirmed) {
                                 Swal.fire({
                                     title: 'Esta Seguro de usar esta mitad No. 1',
-                                    html: lista+lista2,
-                                    width: '80%',
                                     confirmButtonColor: '#597504',
                                     confirmButtonText: 'Aceptar',
                                     denyButtonColor: '#ff7e00',
@@ -95,8 +90,11 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                     showDenyButton: true,
                                 }).then((result) => {
                                     if(result.isConfirmed) {
+                                        let prueba = e.cubicajes[0]
+                                        let primero = prueba.pop()
+                                        let ultimo = prueba.shift()
                                         $.ajax({
-                                            url: `/dividir-paqueta`,
+                                            url: `/seleccionar`,
                                             type: "POST",
                                             dataType: "JSON",
                                             data: {
@@ -104,12 +102,12 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                                 paqueta: parseInt(paqueta),
                                                 id_pedido: parseInt(pedido['id']),
                                                 id_item: parseInt(item),
-                                                bloque_inicial: parseInt(bloqueIni),
-                                                bloque_final: parseInt(bloquefin),
+                                                bloque_inicial: parseInt(primero.bloque),
+                                                bloque_final: parseInt(ultimo.bloque),
                                                 _token: $('input[name="_token"]').val()
                                             },
                                             success: function(e) {
-                                                console.log(e)
+                                                console.log(ultimo)
                                                 
                                                 Swal.fire({
                                                 title: 'Mitad No. 1 de la paqueta guardada con exito',
@@ -118,17 +116,47 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                                 })
                                             },
                                         })
-                                    }else{
-
-                                    } 
+                                    }
                                 })    
                             }else{
                                 if(result.isDenied) {
                                     Swal.fire({
-                                        title: 'Mitad No. 2 de la paqueta guardada con exito',
-                                        confirmButtonText: 'Aceptar',
+                                        title: 'Esta Seguro de usar esta mitad No. 2',
                                         confirmButtonColor: '#597504',
-                                    }) 
+                                        confirmButtonText: 'Aceptar',
+                                        denyButtonColor: '#ff7e00',
+                                        denyButtonText: 'No usar',
+                                        showDenyButton: true,
+                                    }).then((result) => {
+                                        if(result.isConfirmed) {
+                                        let prueba = e.cubicajes[1]
+                                        let primero = prueba.pop()
+                                        let ultimo = prueba.shift()
+                                        $.ajax({
+                                            url: `/seleccionar`,
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            data: {
+                                                entrada_madera_id: parseInt(id_entrada),
+                                                paqueta: parseInt(paqueta),
+                                                id_pedido: parseInt(pedido['id']),
+                                                id_item: parseInt(item),
+                                                bloque_inicial: parseInt(primero.bloque),
+                                                bloque_final: parseInt(ultimo.bloque),
+                                                _token: $('input[name="_token"]').val()
+                                            },
+                                            success: function(e) {
+                                                console.log(ultimo)
+                                                
+                                                Swal.fire({
+                                                title: 'Mitad No. 2 de la paqueta guardada con exito',
+                                                confirmButtonText: 'Aceptar',
+                                                confirmButtonColor: '#597504',                                    
+                                                })
+                                            },
+                                        })
+                                    }
+                                })
                                 }
                             }    
                         });

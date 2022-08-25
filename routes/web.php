@@ -256,7 +256,7 @@ Route::controller(OrdenProduccionController::class)->group(function () {
                 ->name('getMaderas')
                 ->middleware('auth');
         Route::post('seleccionar-madera', 'seleccionar')
-                ->name('seleccionar-madera')
+                ->name('seleccionar')
                 ->middleware('auth');
 
 });
