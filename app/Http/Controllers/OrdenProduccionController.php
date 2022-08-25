@@ -9,6 +9,7 @@ use App\Models\Pedido;
 use App\Models\Item;
 use App\Models\Cliente;
 use App\Models\DisenoItem;
+use App\Models\Maquina;
 use App\Models\Transformacion;
 use App\Repositories\MaderasOptimas;
 use Illuminate\Http\Request;
@@ -19,10 +20,9 @@ class OrdenProduccionController extends Controller
 
     protected $maderas;
 
-    public function __construct( MaderasOptimas $maderas)
+    public function __construct(MaderasOptimas $maderas)
     {
         $this->maderas = $maderas;
-
     }
     /**
      * Display a listing of the resource.
@@ -31,23 +31,23 @@ class OrdenProduccionController extends Controller
      */
     public function index()
     {
-        $pedidos = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
-                            ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
-                            ->orderBy('pedidos.fecha_entrega','asc')
-                            ->get([
-                                    'pedidos.id',
-                                    'pedidos.cantidad',
-                                    'pedidos.created_at',
-                                    'pedidos.fecha_entrega',
-                                    'pedidos.estado',
-                                    'clientes.nombre',
-                                    'diseno_producto_finales.descripcion',
-                                    'diseno_producto_finales.id as diseno_id',
-                                ]);
-        $ordenes = OrdenProduccion::where('estado','!=','FINALIZADA')->get();
-        $cliente = Cliente::where('nombre','like','%INDUCOLMA%')->first();
-        $disenos = DisenoProductoFinal::get(['id','descripcion']);
-        return view('modulos.administrativo.programacion.index', compact('pedidos','ordenes','cliente','disenos'));
+        $pedidos = Pedido::join('clientes', 'pedidos.cliente_id', '=', 'clientes.id')
+            ->join('diseno_producto_finales', 'pedidos.diseno_producto_final_id', '=', 'diseno_producto_finales.id')
+            ->orderBy('pedidos.fecha_entrega', 'asc')
+            ->get([
+                'pedidos.id',
+                'pedidos.cantidad',
+                'pedidos.created_at',
+                'pedidos.fecha_entrega',
+                'pedidos.estado',
+                'clientes.nombre',
+                'diseno_producto_finales.descripcion',
+                'diseno_producto_finales.id as diseno_id',
+            ]);
+        $ordenes = OrdenProduccion::where('estado', '!=', 'FINALIZADA')->get();
+        $cliente = Cliente::where('nombre', 'like', '%INDUCOLMA%')->first();
+        $disenos = DisenoProductoFinal::get(['id', 'descripcion']);
+        return view('modulos.administrativo.programacion.index', compact('pedidos', 'ordenes', 'cliente', 'disenos'));
     }
 
     /**
@@ -55,13 +55,13 @@ class OrdenProduccionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Pedido $ordenProduccion )
+    public function create(Pedido $ordenProduccion)
     {
         return $ordenProduccion;
 
-        return $diseno_items = DisenoItem::join('items','items.id','=','diseno_items.item_id')
-                            ->where('diseno_producto_final_id', 6)
-                            ->get(['diseno_items.id','items.descripcion','diseno_items.cantidad']);
+        return $diseno_items = DisenoItem::join('items', 'items.id', '=', 'diseno_items.item_id')
+            ->where('diseno_producto_final_id', 6)
+            ->get(['diseno_items.id', 'items.descripcion', 'diseno_items.cantidad']);
     }
 
     /**
@@ -80,7 +80,7 @@ class OrdenProduccionController extends Controller
         $ordenProduccion->user_id = auth()->user()->id;
         $ordenProduccion->estado = $request->estado;
         $ordenProduccion->save();
-        return response()->json(['success'=>'Orden de Producción creada con éxito.']);
+        return response()->json(['success' => 'Orden de Producción creada con éxito.']);
     }
 
     /**
@@ -92,7 +92,7 @@ class OrdenProduccionController extends Controller
     public function show(Pedido $ordenProduccion)
     {
         $pedido =  $ordenProduccion->datos();
-       /* $datos = [];
+        /* $datos = [];
         foreach ($pedido->items_pedido as $item) {
             $datos[] =  (object)array(
                         'item_id' => $item->item_id,
@@ -102,13 +102,10 @@ class OrdenProduccionController extends Controller
 
 
         return view('modulos.administrativo.programacion.show', compact('pedido'));
-
     }
 
     public function showMaderas($pedido, $item_id)
     {
-
-        //return $pedido . ' '. $item_id;
         $request = (object)[];
         $request->id_pedido = $pedido;
         $request->id_item = $item_id;
@@ -117,17 +114,32 @@ class OrdenProduccionController extends Controller
         $optimas =  $this->maderas->Optimas($request);
 
         //return $optimas['maderas_usar'] ;
-        if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
-            if (count($optimas['maderas_usar'])>0 || count($optimas['sobrantes_usar'])>0) {
-                return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas','pedido','item'));
+        if ($optimas['producir'] <= 0) {
+            $this->rutaProcesos($request, $pedido);
+        } else {
+            if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
+                if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
+                    return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas', 'pedido', 'item'));
+                } else {
+                    $status = 'no hay maderas disponibles...';
+                    return redirect()->back()->with('status', $status);
+                }
             } else {
-                $status= 'no hay maderas disponibles...';
+                $status = 'no hay maderas disponibles...';
                 return redirect()->back()->with('status', $status);
             }
-        }else{
-            $status= 'no hay maderas disponibles...';
-            return redirect()->back()->with('status', $status);
         }
+    }
+    /**
+     * rutaMaquinas(), uestra la vista para la creacion de rutas que deben seguir
+     * @param $request [ contine: id_pedido, id_item]
+     * @param $pedido  [   la informacion del pedido]
+     *
+     */
+    public function rutaProcesos($request, $pedido)
+    {
+        $maquinas = Maquina::get();
+        return view('modulos.administrativo.programacion.seleccion-procesos')->with('request', 'pedido', 'maquinas');
     }
 
     /**
@@ -170,35 +182,35 @@ class OrdenProduccionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function maderasOptimas(Request $request)
-     {
+    public function maderasOptimas(Request $request)
+    {
         $pedido = Pedido::find($request->id_pedido);
         $item = $request->id_item;
         $optimas =  $this->maderas->Optimas($request);
 
         //return $optimas['maderas_usar'] ;
+
         if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
-            if (count($optimas['maderas_usar'])>0 || count($optimas['sobrantes_usar'])>0) {
-                return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas','pedido','item'));
+            if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
+                return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas', 'pedido', 'item'));
             } else {
-                $status= 'no hay maderas disponibles...';
+                $status = 'no hay maderas disponibles...';
                 return redirect()->back()->with('status', $status);
             }
-        }else{
-            $status= 'no hay maderas disponibles...';
+        } else {
+            $status = 'no hay maderas disponibles...';
             return redirect()->back()->with('status', $status);
         }
+    }
 
-     }
-
-     /**
-      * Crea una nueva orden de produccion, de items existentes en inventario, recibida por peticion ajax
-      * @param  \Illuminate\Http\Request  $request
-      * @return \Illuminate\Http\Response
+    /**
+     * Crea una nueva orden de produccion, de items existentes en inventario, recibida por peticion ajax
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
 
-     public function crearOrdenItemsInventario(Request $request)
-     {
+    public function crearOrdenItemsInventario(Request $request)
+    {
         //crea la orden de produccion
         $this->authorize('admin');
         $ordenProduccion = new OrdenProduccion();
@@ -212,24 +224,24 @@ class OrdenProduccionController extends Controller
         $item = Item::find($request->item_id);
         $item->existencias = $item->existencias - (int)$request->cantidad;
         $item->save();
-        return response()->json(['success'=>'Orden de Producción creada con éxito.']);
-     }
+        return response()->json(['success' => 'Orden de Producción creada con éxito.']);
+    }
 
-     /**
-      * verPaqueta() - funcion que devuelve los detalles de la paqueta en json
-      * @param  \Illuminate\Http\Request  $request
-      * @return \Illuminate\Http\Response json
-      */
+    /**
+     * verPaqueta() - funcion que devuelve los detalles de la paqueta en json
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response json
+     */
 
-        public function verPaqueta(Request $request)
-        {
-            $paqueta = Cubicaje::where('entrada_madera_id', $request->entrada_madera_id)
-                                ->where('paqueta', $request->paqueta)
-                                ->where('estado','DISPONIBLE')
-                                ->orderBy('pulgadas_cuadradas', 'desc')
-                                ->get(['pulgadas_cuadradas', 'bloque']);
-            return response()->json($paqueta);
-        }
+    public function verPaqueta(Request $request)
+    {
+        $paqueta = Cubicaje::where('entrada_madera_id', $request->entrada_madera_id)
+            ->where('paqueta', $request->paqueta)
+            ->where('estado', 'DISPONIBLE')
+            ->orderBy('pulgadas_cuadradas', 'desc')
+            ->get(['pulgadas_cuadradas', 'bloque']);
+        return response()->json($paqueta);
+    }
 
     /**
      * funcion dividirPaqueta() - funcion que divide la paqueta en dos partes, retorna dos arrays
@@ -241,7 +253,7 @@ class OrdenProduccionController extends Controller
     {
         $this->authorize('admin');
         $ver = 1;
-        $cubicaje = $this->maderas->cubicaje($request,$ver);
+        $cubicaje = $this->maderas->cubicaje($request, $ver);
         return $cubicaje;
     }
 
@@ -251,25 +263,24 @@ class OrdenProduccionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response json
      */
-    public function seleccionar(Request $request){
+    public function seleccionar(Request $request)
+    {
 
         $this->authorize('admin');
         $guardar = 2;
-        $seleccion = $this->maderas->seleccionaPaqueta($request,$guardar);
-        $errorGuardar[] = array('error' => false);
-        $seleccion = $errorGuardar;
-        $error  = $seleccion[0]['error'];
+        $seleccion = $this->maderas->seleccionaPaqueta($request, $guardar);
+        $error =  $seleccion[0]['error'];
         // si seleccion error = false crear la orden de produccion, si es true se elimina todo lo creado en
         // transformacione y se vuelve al estado Disponible en la tabla cubicajes
-        if($error){
-            Cubicaje::where('entrada_madera_id',$request->entrada_madera_id)
-                    ->where('paqueta',$request->paqueta)
-                    ->update(['estado' => 'DISPONIBLE']);
-            Transformacion::join('cubicajes.id','=','transformaciones.cubicaje_id')
-                            ->where('cubicajes.entrada_madera_id',$request->entrada_madera_id)
-                            ->delete();
+        if ($error) {
+            Cubicaje::where('entrada_madera_id', $request->entrada_madera_id)
+                ->where('paqueta', $request->paqueta)
+                ->update(['estado' => 'DISPONIBLE']);
+            Transformacion::join('cubicajes.id', '=', 'transformaciones.cubicaje_id')
+                ->where('cubicajes.entrada_madera_id', $request->entrada_madera_id)
+                ->delete();
             return response()->json(['error' => true, 'datos_error' => $seleccion]);
-        }else{
+        } else {
             $orden = new OrdenProduccion();
             $orden->cantidad = $request->cantidad;
             $orden->estado = '';
@@ -277,7 +288,7 @@ class OrdenProduccionController extends Controller
             $orden->pedido_id = $request->id_pedido;
             $orden->item_id = $request->id_item;
             $orden->save();
-            return response()->json(['error'=> false]);
+            return response()->json(['error' => false]);
         }
     }
 }
