@@ -78,7 +78,7 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                             denyButtonColor: '#ff7e00',
                             denyButtonText: 'Usar mitad No. 2',
                             showDenyButton: true,
-                            showCancelButton: true,
+                            showCloseButton: true,
                         }).then((result) => {
                             if(result.isConfirmed) {
                                 Swal.fire({
@@ -91,10 +91,10 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                 }).then((result) => {
                                     if(result.isConfirmed) {
                                         let prueba = e.cubicajes[0]
-                                        let primero = prueba.pop()
-                                        let ultimo = prueba.shift()
+                                        let primero = prueba.shift()
+                                        let ultimo = prueba.pop()
                                         $.ajax({
-                                            url: `/seleccionar`,
+                                            url: `/seleccionar-madera`,
                                             type: "POST",
                                             dataType: "JSON",
                                             data: {
@@ -104,22 +104,24 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                                 id_item: parseInt(item),
                                                 bloque_inicial: parseInt(primero.bloque),
                                                 bloque_final: parseInt(ultimo.bloque),
+                                                cantidad: parseInt(total_items),
                                                 _token: $('input[name="_token"]').val()
                                             },
                                             success: function(e) {
-                                                console.log(ultimo)
+                                               
                                                 
                                                 Swal.fire({
                                                 title: 'Mitad No. 1 de la paqueta guardada con exito',
                                                 confirmButtonText: 'Aceptar',
                                                 confirmButtonColor: '#597504',                                    
-                                                })
+                                                });
+                                                console.log(e);
                                             },
                                         })
                                     }
                                 })    
-                            }else{
-                                if(result.isDenied) {
+                            }else if(result.isDenied){
+                                 
                                     Swal.fire({
                                         title: 'Esta Seguro de usar esta mitad No. 2',
                                         confirmButtonColor: '#597504',
@@ -130,10 +132,10 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                     }).then((result) => {
                                         if(result.isConfirmed) {
                                         let prueba = e.cubicajes[1]
-                                        let primero = prueba.pop()
-                                        let ultimo = prueba.shift()
+                                        let primero = prueba.shift()
+                                        let ultimo = prueba.pop()
                                         $.ajax({
-                                            url: `/seleccionar`,
+                                            url: `/seleccionar-madera`,
                                             type: "POST",
                                             dataType: "JSON",
                                             data: {
@@ -143,6 +145,7 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                                 id_item: parseInt(item),
                                                 bloque_inicial: parseInt(primero.bloque),
                                                 bloque_final: parseInt(ultimo.bloque),
+                                                cantidad: parseInt(total_items),
                                                 _token: $('input[name="_token"]').val()
                                             },
                                             success: function(e) {
@@ -157,8 +160,8 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                         })
                                     }
                                 })
-                                }
-                            }    
+                                
+                            } 
                         });
                     },
                 })    
