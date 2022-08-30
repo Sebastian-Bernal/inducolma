@@ -139,7 +139,9 @@ class OrdenProduccionController extends Controller
     public function rutaProcesos($request, $pedido)
     {
         $maquinas = Maquina::get();
-        return view('modulos.administrativo.programacion.seleccion-procesos')->with('request', 'pedido', 'maquinas');
+        $orden = OrdenProduccion::where('pedido_id', $pedido);
+        return view('modulos.administrativo.programacion.seleccion-procesos')
+                ->with(compact('request', 'pedido', 'maquinas', 'orden'));
     }
 
     /**
