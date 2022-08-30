@@ -20,7 +20,7 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
         Swal.fire({
             title: 'La cantidad a producir supera la cantidad necesaria. Desea usar toda la paqueta?',
             showDenyButton: true,
-            showCancelButton: true,
+            showCloseButton: true,
             confirmButtonText: 'Si, usar toda la paqueta',
             confirmButtonColor: '#597504',
             denyButtonText: `No, dividir la paqueta`,
@@ -28,11 +28,63 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
         }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Paqueta guardada con exito',
-                    confirmButtonText: 'Aceptar',
-                    confirmButtonColor: '#597504',
-                })
+                $.ajax({
+                    url: `/paqueta`,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        entrada_madera_id: id_entrada,
+                        paqueta: paqueta,
+                        _token: $('input[name="_token"]').val()
+                    },
+                    success: function (e) {
+                       // console.log(e)
+                        
+                        e.sort(function(a,b){
+                           if(parseInt(a.bloque)>parseInt(b.bloque)){
+                            return 1;
+                           }
+                           if(parseInt(a.bloque)<parseInt(b.bloque)){
+                            return -1;
+                           }
+                           return 0;
+                        })
+                        //console.log(e)
+                        let primero
+                        let ultimo
+                        primero = e.shift()
+                        ultimo = e.pop()
+                        
+                        $.ajax({
+                            url: `/seleccionar-madera`,
+                            type: "POST",
+                            dataType: "JSON",
+                            data: {
+                                entrada_madera_id: parseInt(id_entrada),
+                                paqueta: parseInt(paqueta),
+                                id_pedido: parseInt(pedido['id']),
+                                id_item: parseInt(item),
+                                bloque_inicial: parseInt(primero.bloque),
+                                bloque_final: parseInt(ultimo.bloque),
+                                cantidad: parseInt(total_items),
+                                _token: $('input[name="_token"]').val()
+                            },
+                            success: function(e) {
+                               
+                                
+                                Swal.fire({
+                                    title: 'Paqueta guardada con exito',
+                                    confirmButtonText: 'Aceptar',
+                                    confirmButtonColor: '#597504',
+                                })
+                               // console.log(e);
+                               location.reload()
+                            },
+                        
+                        });
+                    },
+                });    
+               
             } else if (result.isDenied) {
                 $.ajax({
                     url: `/dividir-paqueta`,
@@ -115,7 +167,8 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                                 confirmButtonText: 'Aceptar',
                                                 confirmButtonColor: '#597504',                                    
                                                 });
-                                                console.log(e);
+                                                location.reload()
+                                               // console.log(e);
                                             },
                                         })
                                     }
@@ -149,13 +202,14 @@ function cantidadUso(id_entrada,paqueta,producir,cantidad_items,margen_error,ite
                                                 _token: $('input[name="_token"]').val()
                                             },
                                             success: function(e) {
-                                                console.log(ultimo)
+                                                //console.log(ultimo)
                                                 
                                                 Swal.fire({
                                                 title: 'Mitad No. 2 de la paqueta guardada con exito',
                                                 confirmButtonText: 'Aceptar',
                                                 confirmButtonColor: '#597504',                                    
                                                 })
+                                                location.reload()
                                             },
                                         })
                                     }
