@@ -8,7 +8,6 @@
     <div class="div container h-content ">
         <div class="row">
 
-
         </div>
     </div>
 @endsection

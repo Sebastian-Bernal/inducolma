@@ -115,7 +115,14 @@ class OrdenProduccionController extends Controller
 
         //return $optimas['maderas_usar'] ;
         if ($optimas['producir'] <= 0) {
-            $this->rutaProcesos($request, $pedido);
+            $maquinas = Maquina::get();
+            $orden = OrdenProduccion::where('pedido_id', $pedido->id)
+                                    ->where('item_id',$item)
+                                    ->first();
+
+            return view('modulos.administrativo.programacion.seleccion-procesos')
+                ->with(compact('request', 'pedido', 'maquinas', 'orden'));
+
         } else {
             if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
                 if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
@@ -130,19 +137,7 @@ class OrdenProduccionController extends Controller
             }
         }
     }
-    /**
-     * rutaMaquinas(), uestra la vista para la creacion de rutas que deben seguir
-     * @param $request [ contine: id_pedido, id_item]
-     * @param $pedido  [   la informacion del pedido]
-     *
-     */
-    public function rutaProcesos($request, $pedido)
-    {
-        $maquinas = Maquina::get();
-        $orden = OrdenProduccion::where('pedido_id', $pedido);
-        return view('modulos.administrativo.programacion.seleccion-procesos')
-                ->with(compact('request', 'pedido', 'maquinas', 'orden'));
-    }
+
 
     /**
      * Show the form for editing the specified resource.
