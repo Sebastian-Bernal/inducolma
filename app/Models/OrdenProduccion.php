@@ -10,5 +10,21 @@ class OrdenProduccion extends Model
     use HasFactory;
     protected $table = 'ordenes_produccion';
 
-    
+    /**
+     * relacion belongsTo Item
+     */
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    /**
+     * relacion belongsTo Pedido
+     */
+
+    public function pedido()
+    {
+        return $this->belongsTo(Pedido::class);
+    }
+
 }

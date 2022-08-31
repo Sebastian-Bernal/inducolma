@@ -114,28 +114,31 @@ class OrdenProduccionController extends Controller
         $optimas =  $this->maderas->Optimas($request);
 
         //return $optimas['maderas_usar'] ;
-        if ($optimas['producir'] <= 0) {
-            $maquinas = Maquina::get();
-            $orden = OrdenProduccion::where('pedido_id', $pedido->id)
-                                    ->where('item_id',$item)
-                                    ->first();
 
-            return view('modulos.administrativo.programacion.seleccion-procesos')
-                ->with(compact('request', 'pedido', 'maquinas', 'orden'));
+        if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
 
-        } else {
-            if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
+            if ($optimas['producir'] <= 0) {
+                $maquinas = Maquina::get(['id','maquina','corte'])->groupBy('corte');
+                $orden = OrdenProduccion::where('pedido_id', $pedido->id)
+                                        ->where('item_id',$item)
+                                        ->first();
+
+                return view('modulos.administrativo.programacion.seleccion-procesos')
+                    ->with(compact('maquinas', 'orden'));
+
+            } else {
                 if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
                     return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas', 'pedido', 'item'));
                 } else {
                     $status = 'no hay maderas disponibles...';
                     return redirect()->back()->with('status', $status);
                 }
-            } else {
-                $status = 'no hay maderas disponibles...';
-                return redirect()->back()->with('status', $status);
             }
+        } else {
+            $status = 'no hay maderas disponibles...';
+            return redirect()->back()->with('status', $status);
         }
+
     }
 
 
