@@ -61,6 +61,7 @@
                                         <option value="INICIAL">INICIAL</option>
                                         <option value="INTERMEDIO">INTERMEDIO</option>
                                         <option value="FINAL">FINAL</option>
+                                        <option value="ACABADOS">ACABADOS</option>
                                     </select>
                                 </div>
                             </div>
