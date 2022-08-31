@@ -12,7 +12,7 @@ class Item extends Model
 
     /**
      * relacion items hasMany costos_infraestructura
-     
+
      */
     public function costos_infraestructura()
     {
@@ -35,5 +35,13 @@ class Item extends Model
     {
         return $this->belongsTo(TipoMadera::class, 'madera_id')->withTrashed();
     }
-     
+
+    /**
+     * relacion hasOne OrdenProduccion
+     */
+    public function orden_produccion()
+    {
+        return $this->hasOne(OrdenProduccion::class);
+
+    }
 }

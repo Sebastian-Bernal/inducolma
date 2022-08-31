@@ -118,4 +118,13 @@ class Pedido extends Model
         return $pedido;
     }
 
+    /**
+     * relacion hasMany OrdenProduccion
+     */
+
+    public function ordenes_produccion()
+    {
+        return $this->hasMany(OrdenProduccion::class);
+    }
+
 }
