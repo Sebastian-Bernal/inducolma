@@ -40,10 +40,14 @@ class MaquinaController extends Controller
      */
     public function store(StoreMaquinaRequest $request)
     {
-        //dd($request->maquina);
+        //dd($request->all());
         $this->authorize('admin');
         Maquina::create(
-            ['maquina' => strtoupper($request->maquina)]
+            [
+                'maquina' => strtoupper($request->maquina),
+                'corte' =>strtoupper($request->corte),
+            ]
+
         );
         return back()->with('status', 'Maquina creada con éxito');
     }
