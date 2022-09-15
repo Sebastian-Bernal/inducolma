@@ -17,9 +17,9 @@ class UsuarioController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $usuarios = User::all('id', 'name', 'email', 'rol', 'identificacion')->load('roll')->except(1);
+        $usuarios = User::all('id', 'name', 'email', 'rol_id', 'identificacion')->load('roll')->except(1);
         $roles = Rol::all();
-        
+
         return view('modulos.administrativo.usuarios.index', compact('usuarios', 'roles'));
     }
 
@@ -51,7 +51,7 @@ class UsuarioController extends Controller
         $usuario->primer_apellido = strtoupper($request->primer_apellido);
         $usuario->segundo_apellido = strtoupper($request->segundo_apellido);
         $usuario->email = $request->email;
-        $usuario->rol = $request->rolUsuario;
+        $usuario->rol_id = $request->rolUsuario;
         $usuario->password = bcrypt($request->identificacionUsuario);
         $usuario->save();
         return redirect()->route('usuarios.index')->with('status', "Usuario $usuario->name creado correctamente");
@@ -65,8 +65,8 @@ class UsuarioController extends Controller
      */
     public function show(User $usuario)
     {
-        $this->authorize('admin');  
-        $roles = Rol::all();      
+        $this->authorize('admin');
+        $roles = Rol::all();
         return view('modulos.administrativo.usuarios.show', compact('usuario', 'roles'));
     }
 
@@ -100,7 +100,7 @@ class UsuarioController extends Controller
         $usuario->primer_apellido = strtoupper($request->primer_apellido);
         $usuario->segundo_apellido = strtoupper($request->segundo_apellido);
         $usuario->email = $request->email;
-        $usuario->rol = $request->rolUsuario;
+        $usuario->rol_id = $request->rolUsuario;
         $usuario->save();
         return redirect()->route('usuarios.index')->with('status', "Usuario $usuario->name actualizado correctamente");
     }

@@ -263,7 +263,7 @@ Route::controller(OrdenProduccionController::class)->group(function () {
 
 
 Auth::routes([
-            'register' => false,
+        'register' => false,
 
         ]);
 
