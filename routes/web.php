@@ -26,6 +26,8 @@ use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
 use App\Http\Controllers\DisenoInsumoController;
 use App\Http\Controllers\OrdenProduccionController;
+use App\Http\Controllers\ReportePdfController;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -260,6 +262,37 @@ Route::controller(OrdenProduccionController::class)->group(function () {
                 ->middleware('auth');
 
 });
+
+//rutas reportes
+
+Route::controller(ReportePdfController::class)->group(function(){
+    Route::get('ingreso-maderas-pdf', 'ingresoMaderas' )
+        ->name('ingreso-maderas-pdf')
+        ->middleware('auth');
+
+    Route::get('ingreso-cubiaje', 'ingresoCubicajes' )
+        ->name('ingreso-cubicaje')
+        ->middleware('auth');
+
+    Route::get('ingreso-personal', 'ingresoPersonal' )
+        ->name('ingreso-personal')
+        ->middleware('auth');
+
+    Route::get('horas-trabajo-personal', 'horasTrabajoPersonal' )
+        ->name('horas-trabajo-personal')
+        ->middleware('auth');
+
+    Route::get('inventario-maderas', 'inventarioMaderasAlmacen' )
+        ->name('inventario-maderas')
+        ->middleware('auth');
+
+    Route::get('pedidos-mes', 'pedidosMes' )
+        ->name('pedidos-mes')
+        ->middleware('auth');
+
+
+});
+
 
 
 Auth::routes([
