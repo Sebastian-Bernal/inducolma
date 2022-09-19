@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EntradaMadera;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Http\Request;
 
 class ReportePdfController extends Controller
 {
@@ -14,8 +14,9 @@ class ReportePdfController extends Controller
      * @param $hasta [date]
      * @return Pdf
      */
-    public function ingresoMaderas()
+    public function ingresoMaderas(Request $request)
     {
+       // return $request;
         $data = EntradaMadera::all();
 
         $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data'));
