@@ -1,23 +1,28 @@
 // variable global formularios
+
+
 var formReporteIgresoMadera = document.getElementById('reporteIngresoMadera');
 
-function reporteIngresoMaderas(ruta) {
+function seleccionaReporteIngresoMadera(ruta){
+    formReporteIgresoMadera.setAttribute('action', ruta);
+}
+
+function reporteIngresoMaderas() {
+
     let desde = $('#desdeIm');
     let hasta = $('#hastaIm');
-    if (desde.val() == '' || hasta.val() == '') {
-        Swal.fire({
-            title: 'Ingrese las fechas desde y hasta.!',
-            icon: 'error',
-            confirmButtonColor: '#597504',
-            confirmButtonText: 'OK'
-        })
-    } else {
-
-        formReporteIgresoMadera.setAttribute('action', ruta);
-        $('#reporteIngresoMadera').submit();
+    if (formReporteIgresoMadera.getAttribute('action') == '') {
+        alertaErrorSimple('Seleccione un tipo de reporte!', 'error');
+    } else if(desde.val() == '' || hasta.val() == ''){
+        alertaErrorSimple('Ingrese datos validos para las fechas desde y hasta!','error');
+    }
+    else {
+        console.log('submit')
+        //$('#reporteIngresoMadera').submit();
         desde.val('');
         hasta.val('');
     }
 
 
 }
+

@@ -1,5 +1,5 @@
 @extends('layouts.web')
-@section('title', ' Clientes | Inducolma')
+@section('title', ' Reportes | Inducolma')
 
 @section('submenu')
     @include('modulos.sidebars.costos-side')
@@ -19,54 +19,79 @@
                 @endif
 
                 <div class="card mb-3 shadow-sm">
-                    <h5 class="card-header bg-primary text-white">Reporte ingreso de maderas</h5>
-                    <div class="card-body">
-                        {{-- <h5 class="card-title">Special title treatment</h5> --}}
-                        <p class="card-text text-secondary">
-                            Puede generar un reporte por fecha del ingreso de maderas, Ej. Desde : 01/01/2022 - Hasta: 31/12/2022
-                        </p>
-                        <div class="row g-3">
-
-                                <form action="" id="reporteIngresoMadera"
-                                class="row gx-3 gy-2 align-items-center"
-                                name="reporteIngresoMadera"
-                                method="GET" target="_blank"
-                                rel="noopener noreferrer"
-                                >
-                                <div class="col-auto">
-                                    <div class="input-group ">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
-                                        <input type="date"
-                                                class="form-control"
-                                                aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default"
-                                                id="desdeIm"
-                                                name="desdeIm">
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="input-group">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Hasta: </span>
-                                        <input type="date"
-                                                class="form-control"
-                                                aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default"
-                                                id="hastaIm"
-                                                name="hastaIm">
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-outline-danger" onclick="reporteIngresoMaderas('ingreso-maderas-pdf')">PDF</button>
-                                </div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-outline-success" onclick="reporteIngresoMaderas('ingreso-maderas-xls')">EXCEL</button>
-                                </div>
-                                <div class="col-auto">
-                                    <button type="button"  class="btn btn-outline-success" onclick="reporteIngresoMaderas('ingreso-maderas-csv')">CSV</button>
-                                </div>
-                            </form>
+                    <h5 class="card-header bg-primary text-white">
+                        <div class="d-grid gap-2 align-content-left">
+                            <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collapseIngresoMadera" role="button" aria-expanded="false" aria-controls="collapseIngresoMadera">
+                                <h5 class="mb-0 text-start">Reporte ingreso de maderas</h5>
+                            </button>
                         </div>
+                    </h5>
 
+                    <div class="card-body">
+                        <div class="collapse" id="collapseIngresoMadera" >
+                            <p class="card-text text-secondary">
+                                Para generar un reporte de igreso de maderas es necesario seleccionar el tipo de reporte y las fechas
+                                ,Ej. ICA,  Desde : 01/01/2022 - Hasta: 31/12/2022
+                            </p>
+                            <div class="row g-3">
+                                <p>
+                                    <input type="radio" class="btn-check" name="options-outlined" id="alta-densidad" autocomplete="off" onclick="seleccionaReporteIngresoMadera('alta-densidad')">
+                                    <label class="btn btn-outline-primary" for="alta-densidad">Alta densidad</label>
+
+                                    <input type="radio" class="btn-check" name="options-outlined" id="baja-densidad" autocomplete="off" onclick="seleccionaReporteIngresoMadera('baja-densidad')">
+                                    <label class="btn btn-outline-primary" for="baja-densidad">Baja densidad</label>
+
+                                    <input type="radio" class="btn-check" name="options-outlined" id="proveedor" autocomplete="off" onclick="seleccionaReporteIngresoMadera('proveedor')">
+                                    <label class="btn btn-outline-primary" for="proveedor">Proveedor</label>
+
+                                    <input type="radio" class="btn-check" name="options-outlined" id="tipo-madera" autocomplete="off" onclick="seleccionaReporteIngresoMadera('tipo-madera')">
+                                    <label class="btn btn-outline-primary" for="tipo-madera">Tipo madera</label>
+
+                                    <input type="radio" class="btn-check" name="options-outlined" id="ica" autocomplete="off" onclick="seleccionaReporteIngresoMadera('ica')">
+                                    <label class="btn btn-outline-primary" for="ica">ICA</label>
+
+                                    <input type="radio" class="btn-check" name="options-outlined" id="cvc" autocomplete="off" onclick="seleccionaReporteIngresoMadera('cvc')">
+                                    <label class="btn btn-outline-primary" for="cvc">CVC</label>
+                                </p>
+                                <div>
+                                    <div class="card card-body">
+                                        <form action="" id="reporteIngresoMadera"
+                                            class="row gx-3 gy-2 align-items-center"
+                                            name="reporteIngresoMadera"
+                                            method="GET" target="_blank"
+                                            rel="noopener noreferrer"
+                                            >
+                                            <div class="col-auto">
+                                                <div class="input-group ">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
+                                                    <input type="date"
+                                                            class="form-control"
+                                                            aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default"
+                                                            id="desdeIm"
+                                                            name="desdeIm">
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Hasta: </span>
+                                                    <input type="date"
+                                                            class="form-control"
+                                                            aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default"
+                                                            id="hastaIm"
+                                                            name="hastaIm">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <button type="button"  class="btn btn-outline-success" onclick="reporteIngresoMaderas()">Generar reporte</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -151,5 +176,7 @@
 @endsection
 
 @section('js')
+<script src="/js/modulos/alertas-swift.js"></script>
 <script src="/js/modulos/reportes.js"></script>
+
 @endsection
