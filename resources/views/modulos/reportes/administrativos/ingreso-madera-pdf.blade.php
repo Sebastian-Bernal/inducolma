@@ -22,7 +22,7 @@
 
             @foreach ($data as $madera)
             <tr>
-                <td >{{ $madera->id . " " . $madera->proveedor->nombre }}</td>
+                <td >{{ $madera['entrada_madera_id']/* . " " . $madera->mes */ }}</td>
             </tr>
             @endforeach
 

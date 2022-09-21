@@ -20,7 +20,7 @@ class EntradaMadera extends Model
     //relacion EntradaMadera hasMany EntradasMaderaMaderas
     public function maderas(){
        // return $this->belongsToMany(Madera::class, 'entradas_madera_maderas');
-        return $this->hasMany(EntradasMaderaMaderas::class);
+        return $this->belongsToMany(Madera::class, 'entradas_madera_maderas');
     }
 
     //relacion EntradaMadera hasMany EntradasMaderaMaderas
@@ -37,7 +37,7 @@ class EntradaMadera extends Model
     public function setSalvoconductoRemisionAttribute($value){
         $this->attributes['salvoconducto_remision'] = strtoupper($value);
     }
-    
+
     //funcion para setear el nombre del titular del salvoconducto
     public function setTitularSalvoconductoAttribute($value){
         $this->attributes['titular_salvoconducto'] = strtoupper($value);

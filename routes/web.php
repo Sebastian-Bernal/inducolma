@@ -267,8 +267,8 @@ Route::controller(OrdenProduccionController::class)->group(function () {
 //rutas reportes
 
 Route::controller(ReportePdfController::class)->group(function(){
-        Route::get('ingreso-maderas-pdf', 'ingresoMaderas' )
-        ->name('ingreso-maderas-pdf')
+        Route::get('ingreso-maderas', 'ingresoMaderas' )
+        ->name('ingreso-maderas')
         ->middleware('auth');
 
         Route::get('ingreso-cubiaje', 'ingresoCubicajes' )

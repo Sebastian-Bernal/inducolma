@@ -34,28 +34,9 @@
                                 ,Ej. ICA,  Desde : 01/01/2022 - Hasta: 31/12/2022
                             </p>
                             <div class="row g-3">
-                                <p>
-                                    <input type="radio" class="btn-check" name="options-outlined" id="alta-densidad" autocomplete="off" onclick="seleccionaReporteIngresoMadera('alta-densidad')">
-                                    <label class="btn btn-outline-primary" for="alta-densidad">Alta densidad</label>
-
-                                    <input type="radio" class="btn-check" name="options-outlined" id="baja-densidad" autocomplete="off" onclick="seleccionaReporteIngresoMadera('baja-densidad')">
-                                    <label class="btn btn-outline-primary" for="baja-densidad">Baja densidad</label>
-
-                                    <input type="radio" class="btn-check" name="options-outlined" id="proveedor" autocomplete="off" onclick="seleccionaReporteIngresoMadera('proveedor')">
-                                    <label class="btn btn-outline-primary" for="proveedor">Proveedor</label>
-
-                                    <input type="radio" class="btn-check" name="options-outlined" id="tipo-madera" autocomplete="off" onclick="seleccionaReporteIngresoMadera('tipo-madera')">
-                                    <label class="btn btn-outline-primary" for="tipo-madera">Tipo madera</label>
-
-                                    <input type="radio" class="btn-check" name="options-outlined" id="ica" autocomplete="off" onclick="seleccionaReporteIngresoMadera('ica')">
-                                    <label class="btn btn-outline-primary" for="ica">ICA</label>
-
-                                    <input type="radio" class="btn-check" name="options-outlined" id="cvc" autocomplete="off" onclick="seleccionaReporteIngresoMadera('cvc')">
-                                    <label class="btn btn-outline-primary" for="cvc">CVC</label>
-                                </p>
                                 <div>
                                     <div class="card card-body">
-                                        <form action="" id="reporteIngresoMadera"
+                                        <form action="{{ route('ingreso-maderas') }}" id="reporteIngresoMadera"
                                             class="row gx-3 gy-2 align-items-center"
                                             name="reporteIngresoMadera"
                                             method="GET" target="_blank"
@@ -64,12 +45,31 @@
                                             <div class="col-auto">
                                                 <div class="input-group ">
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
+                                                    <select class="form-select form-select-sm"
+                                                            aria-label=".form-select-sm example"
+                                                            id="tipoReporte"
+                                                            name="tipoReporte"
+                                                            required>
+                                                        <option  value="" selected>Tipo reporte</option>
+                                                        <option value="1">Alta densidad</option>
+                                                        <option value="2">Baja densidad</option>
+                                                        <option value="3">Proveedor</option>
+                                                        <option value="4">Tipo madera</option>
+                                                        <option value="5">ICA</option>
+                                                        <option value="6">CVC</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="input-group ">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
                                                     <input type="date"
                                                             class="form-control"
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
                                                             id="desdeIm"
-                                                            name="desdeIm">
+                                                            name="desdeIm"
+                                                            required>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
@@ -80,7 +80,8 @@
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
                                                             id="hastaIm"
-                                                            name="hastaIm">
+                                                            name="hastaIm"
+                                                            required>
                                                 </div>
                                             </div>
 
