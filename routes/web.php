@@ -291,6 +291,14 @@ Route::controller(ReportePdfController::class)->group(function(){
                 ->name('pedidos-mes')
                 ->middleware('auth');
 
+        Route::get('get-proveedores', 'getProveedores')
+                ->name('get-proveedores')
+                ->middleware('auth');
+
+        Route::get('get-tipo-maderas', 'getTipoMadera')
+                ->name('get-tipo-maderas')
+                ->middleware('auth');
+
 
 });
 

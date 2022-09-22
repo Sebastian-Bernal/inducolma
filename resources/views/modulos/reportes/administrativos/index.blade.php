@@ -44,12 +44,13 @@
                                             >
                                             <div class="col-auto">
                                                 <div class="input-group ">
-                                                    <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Tipo reporte: </span>
                                                     <select class="form-select form-select-sm"
                                                             aria-label=".form-select-sm example"
                                                             id="tipoReporte"
                                                             name="tipoReporte"
-                                                            required>
+                                                            required
+                                                            onchange="datoEspecifico()">
                                                         <option  value="" selected>Tipo reporte</option>
                                                         <option value="1">Alta densidad</option>
                                                         <option value="2">Baja densidad</option>
@@ -57,6 +58,19 @@
                                                         <option value="4">Tipo madera</option>
                                                         <option value="5">ICA</option>
                                                         <option value="6">CVC</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="input-group " id="divEspecifico" style="display:none;">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Filtro: </span>
+                                                    <select class="form-select form-select-sm"
+                                                            aria-label=".form-select-sm example"
+                                                            id="especifico"
+                                                            name="especifico"
+                                                            required>
+                                                        <option  value="" selected></option>
+
                                                     </select>
                                                 </div>
                                             </div>
