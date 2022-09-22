@@ -4,12 +4,12 @@
 @section('submenu')
     @include('modulos.sidebars.costos-side')
 @endsection
-@section('content') 
-<div class="div container h-content ">        
-    <div class="row">            
+@section('content')
+<div class="div container h-content ">
+    <div class="row">
         <div class="col-12 col-sm-10 col-lg-6 mx-auto">
-            
-           
+
+
             <h1 class="display-6" >Roles</h1>
             <hr>
             <!-- Button trigger modal -->
@@ -18,14 +18,14 @@
                     Crear rol
                 </button>
             @endcan
-            
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)
                         - {{ $error }} <br>
                     @endforeach
                 </div>
-                
+
             @endif
             <!-- Modal Crea maquina-->
             <form action="{{ route('roles.store') }}" method="POST">
@@ -38,15 +38,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                             
-                            <div class="card-body">                                                
-                                                   
+
+                            <div class="card-body">
+
                                 <div class="row mb-3">
                                     <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('nombre') }}</label>
-        
+
                                     <div class="col-md-6">
                                         <input id="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror" name="nombre" value="{{ old('nombre') }}" required autocomplete="nombre" autofocus>
-        
+
                                         @error('nombre')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -57,7 +57,7 @@
 
                                 <div class="row mb-3">
                                     <label for="descripcion" class="col-md-4 col-form-label text-md-end">{{ __('Descripcion') }}</label>
-        
+
                                     <div class="col-md-6">
                                         <textarea name="descripcion" id="descripcion" cols="30" rows="4" class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion') }}</textarea>
                                         @error('descripcion')
@@ -67,7 +67,7 @@
                                         @enderror
                                     </div>
                                 </div>
-        
+
 
                                 <div class="row mb-3">
                                     <label for="nivel" class="col-md-4 col-form-label text-md-end">{{ __('Nivel') }}</label>
@@ -76,14 +76,14 @@
                                             <option selected>Seleccione...</option>
                                             <option value="1">1 - recepcion de maderas</option>
                                             <option value="2">2 - operario de maquinas, cubicaje</option>
-                                            <option value="3">3 - Auxiliar administrativo</option>                                            
-                                        </select>  
-                                    </div>                                                                  
-                                    
-                                </div>                
+                                            <option value="3">3 - Auxiliar administrativo</option>
+                                        </select>
+                                    </div>
+
+                                </div>
                         </div>
-                                
-                            
+
+
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -91,8 +91,8 @@
                         </div>
                     </div>
                     </div>
-                </div>   
-            </form>               
+                </div>
+            </form>
         </div>
         <!-- Tabla -->
 
@@ -100,10 +100,9 @@
             <thead>
                 <tr>
                     <th>Rol id</th>
-                    <th>Nombre rol</th>   
-                    <th>Descripcion</th> 
-                    <th>Nivel</th>       
-                    <th>Acciones</th>
+                    <th>Nombre rol</th>
+                    <th>Descripcion</th>
+                    {{-- <th>Acciones</th> --}}
                 </tr>
             </thead>
 
@@ -113,24 +112,23 @@
                         <td>{{ $rol->id }}</td>
                         <td>{{ $rol->nombre }}</td>
                         <th>{{ $rol->descripcion }}</th>
-                        <th>{{ $rol->nivel }}</th>
-                        <td>
+                        {{-- <td>
                             <div class="d-flex align-items-center ">
                                 @can('root')
                                 <button class="btn btn-sm btn-danger" onclick="eliminarRol({{ $rol}})">
                                     <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
                                 </button>
                                 @endcan
-                               
-                                <a href="{{ route('roles.edit',$rol) }}" class="btn btn-sm btn-warning">
-                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+
+                                <a href="{{ route('roles.edit',$rol) }}" class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-eye fa-lg"></i>
                                 </a>
-                               
+
                             </div>
-                        </td>
-                    </tr> 
+                        </td> --}}
+                    </tr>
                 @endforeach
-                
+
             </tbody>
         </table>
     </div>

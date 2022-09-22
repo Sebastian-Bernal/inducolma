@@ -28,25 +28,25 @@ class AuthServiceProvider extends ServiceProvider
         //gate para la autorizacion de los roles, entrada para administrador
 
         Gate::define('admin', function ($user) {
-            return $user->rol > 3;
+            return $user->rol_id > 3;
         });
 
         //Gate para usuario con rol entrada de maderas
         Gate::define('entrada-maderas', function ($user) {
-            return $user->rol === 1;
+            return $user->rol_id === 1;
         });
 
         //Gate para usuario con rol entrada de maderas
         Gate::define('ver-entrada', function ($user) {
-            return $user->rol === 1;
+            return $user->rol_id === 1;
         });
 
         //Gate para usuario cubicaje
         Gate::define('cubicaje',function($user){
-            return $user->rol === 2;
+            return $user->rol_id === 2;
         });
 
     }
 
-    
+
 }
