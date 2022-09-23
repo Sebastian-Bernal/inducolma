@@ -8,6 +8,50 @@ use App\Models\Madera;
 class ConsultasReportes {
 
     /**
+     * selecciona el tipo de consulta que llega por request
+     * @param Request $request [request enviado con datos del tipo de reporte a generar]
+     * @return $data [data que enuentra la consulta]
+     * @return $encabezado [encabezado del tipo de reporte generado]
+     */
+    public function seleccionarReporte($request)
+    {
+        $desde = $request->desdeIm;
+        $hasta = $request->hastaIm;
+        $tipoReporte = $request->tipoReporte;
+        switch ($tipoReporte) {
+            case '1':
+                $data = $this->consulta($desde, $hasta,'maderas.densidad' ,'ALTA DENSIDAD');
+                $encabezado = 'REPORTE MADERA DE ALTA DENSIDAD';
+                break;
+            case '2':
+                $data = $this->consulta($desde, $hasta, 'maderas.densidad' , 'BAJA DENSIDAD');
+                $encabezado = 'REPORTE MADERA DE BAJA DENSIDAD';
+                break;
+            case '3':
+                $data = $this->consulta($desde, $hasta,'proveedores.id',$request->especifico);
+                $encabezado = 'REPORTE MADERAS POR PROVEEDOR';
+                break;
+            case '4':
+                $data = $this->consulta($desde, $hasta, 'tipo_maderas.id', $request->especifico);
+                $encabezado = 'REPORTE MADERA POR TIPO DE MADERA';
+                break;
+            case '5':
+                $data = $this->consulta($desde, $hasta, 'entidad_vigilante', 'ICA');
+                $encabezado = 'REPORTE MADERA POR ENTIDAD VIGILANTE ICA';
+                break;
+            case '6':
+                $data = $this->consulta($desde, $hasta, 'entidad_vigilante', 'CVC');
+                $encabezado = 'REPORTE MADERA POR ENTIDAD VIGILANTE CVC';
+                break;
+            default:
+                return redirect()->back()->with('status','No se encontraron datos para la consulta.');
+                break;
+        }
+        return [$data, $encabezado];
+    }
+
+
+    /**
      * funcion consulta, retorna los datos de la consulta filtrada por los parametros $where, $termino
      * @param $desde [fecha inicial de la busqueda]
      * @param $hasta [fecha final de la busqueda]

@@ -26,9 +26,8 @@ use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
 use App\Http\Controllers\DisenoInsumoController;
 use App\Http\Controllers\OrdenProduccionController;
-use App\Http\Controllers\ReportePdfController;
+use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReposrtesController;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -266,9 +265,13 @@ Route::controller(OrdenProduccionController::class)->group(function () {
 
 //rutas reportes
 
-Route::controller(ReportePdfController::class)->group(function(){
+Route::controller(ReporteController::class)->group(function(){
         Route::get('ingreso-maderas', 'ingresoMaderas' )
         ->name('ingreso-maderas')
+        ->middleware('auth');
+
+        Route::post('ingreso-maderas-pdf', 'generarReporteIngresoMaderaPdf' )
+        ->name('ingreso-maderas-pdf')
         ->middleware('auth');
 
         Route::get('ingreso-cubiaje', 'ingresoCubicajes' )

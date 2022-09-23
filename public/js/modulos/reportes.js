@@ -106,3 +106,26 @@ function tipoMadera() {
         },
     })
 }
+
+
+function generarReporteIngresoMadera(tipo_reporte) {
+    console.log(tipo_reporte);
+    switch (tipo_reporte) {
+        case '1':
+            $('#generar').val('1');
+            $('#generarReporteIngresoMadera').submit();
+            break;
+        case '2':
+            $('#generar').val('2');
+            $('#generarReporteIngresoMadera').submit();
+            break;
+        case '3':
+            $('#generar').val('3');
+            $('#generarReporteIngresoMadera').submit();
+            break;
+        default:
+            alertaErrorSimple('opcion invalida al generar reporte', 'error');
+            break;
+    }
+
+}
