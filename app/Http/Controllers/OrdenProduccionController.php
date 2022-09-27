@@ -268,8 +268,10 @@ class OrdenProduccionController extends Controller
 
         $this->authorize('admin');
         $guardar = 2;
-        $seleccion = $this->maderas->seleccionaPaqueta($request, $guardar);
+        $orden = $this->crearOrden($request);
+        $seleccion = $this->maderas->seleccionaPaqueta($request, $guardar, $orden);
         $error =  $seleccion[0]['error'];
+
         // si seleccion error = false crear la orden de produccion, si es true se elimina todo lo creado en
         // transformacione y se vuelve al estado Disponible en la tabla cubicajes
         if ($error) {
@@ -279,16 +281,31 @@ class OrdenProduccionController extends Controller
             Transformacion::join('cubicajes.id', '=', 'transformaciones.cubicaje_id')
                 ->where('cubicajes.entrada_madera_id', $request->entrada_madera_id)
                 ->delete();
+
+            $orden->delete();
             return response()->json(['error' => true, 'datos_error' => $seleccion]);
+
         } else {
-            $orden = new OrdenProduccion();
-            $orden->cantidad = $request->cantidad;
-            $orden->estado = '';
-            $orden->user_id = Auth::user()->id;
-            $orden->pedido_id = $request->id_pedido;
-            $orden->item_id = $request->id_item;
-            $orden->save();
+
             return response()->json(['error' => false]);
         }
+    }
+
+    /**
+     * crearOrden()
+     * @return object
+     */
+
+    public function crearOrden( $request)
+    {
+        $orden = new OrdenProduccion();
+        $orden->cantidad = $request->cantidad;
+        $orden->estado = '';
+        $orden->user_id = Auth::user()->id;
+        $orden->pedido_id = $request->id_pedido;
+        $orden->item_id = $request->id_item;
+        $orden->save();
+
+        return $orden;
     }
 }
