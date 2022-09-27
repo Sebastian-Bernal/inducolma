@@ -8,12 +8,12 @@ function comprobarLocalStorage() {
         rutasProg = [];
     } else {
         rutasProg = JSON.parse(localStorage.getItem('rutasProg'));
-        listarProcesos(rutasProg);    
+        listarProcesos(rutasProg);
     }
 }
 
 function guardarProceso(entra, sale, maquina, idMaquina, observa) {
-    
+
     let coincide = rutasProg.filter(rutasProg => rutasProg.maquina == maquina ).length
     if(coincide > 0 ){
         Swal.fire({
@@ -22,7 +22,7 @@ function guardarProceso(entra, sale, maquina, idMaquina, observa) {
             confirmButtonColor: '#597504',
             confirmButtonText: 'OK'
         });
-        
+
     }else{
         numProceso++;
         let rutaNum = numProceso;
@@ -48,7 +48,7 @@ function agregaRutaInicial(){
         campoValor = value.value
         if(campoValor == 0){
             camposVacios()
-        
+
         }else{
             if(value.id == 'entraInicial'){
                 entra= value.value
@@ -59,7 +59,7 @@ function agregaRutaInicial(){
             if(value.id == 'maquinaInicial'){
                 maquina = maquinaria.options[maquinaria.selectedIndex].text
                 idMaquina = value.value
-            } 
+            }
         }
     });
     if(entra == 0 || sale == 0 || maquina == 0){
@@ -74,7 +74,7 @@ function agregaRutaInicial(){
                     confirmButtonText: 'Si',
                     showDenyButton: true,
                     denyButtonText: 'No'
-                    
+
                 }).then((result) => {
                     if(result.isConfirmed){
                         if(campoValor != 0){
@@ -91,13 +91,13 @@ function agregaRutaInicial(){
                         validar(valido, proceso ,  entra, sale, maquina, idMaquina, observa)
                     }
                 });
-            } 
+            }
             if(observaciones != '' && campoValor != 0){
                 valido = true;
-                observa = observaciones 
+                observa = observaciones
                 validar(valido, proceso,  entra, sale, maquina, idMaquina, observa)
             }
-            
+
 };
 
 function agregaRutaIntermedia(){
@@ -112,15 +112,15 @@ function agregaRutaIntermedia(){
         camposVacios()
         }else{
             if(value.id == 'entraIntermedia'){
-                
+
                 entra= value.value
             }
             if(value.id == 'saleIntermedia'){
-                
+
                 sale = value.value
             }
             if(value.id == 'maquinaIntermedia'){
-                
+
                 maquina = maquinaria.options[maquinaria.selectedIndex].text
                 idMaquina = value.value
             }
@@ -138,7 +138,7 @@ function agregaRutaIntermedia(){
             confirmButtonText: 'Si',
             showDenyButton: true,
             denyButtonText: 'No'
-            
+
         }).then((result) => {
             if(result.isConfirmed){
                 if(campoValor != 0){
@@ -147,20 +147,20 @@ function agregaRutaIntermedia(){
                 validar(valido, proceso, entra, sale, maquina, idMaquina, observa)
                 }else{
                     camposVacios()
-                    
+
                 }
             }else{
                 valido = false;
                 validar(valido, proceso ,  entra, sale, maquina, idMaquina, observa)
             }
         });
-    } 
+    }
     if(observaciones != '' && campoValor != 0){
         valido = true;
-        observa = observaciones 
+        observa = observaciones
         validar(valido, proceso,  entra, sale, maquina, idMaquina, observa)
     }
-    
+
 
 };
 
@@ -198,7 +198,7 @@ function agregaRutaFinal(){
             confirmButtonText: 'Si',
             showDenyButton: true,
             denyButtonText: 'No'
-            
+
         }).then((result) => {
             if(result.isConfirmed){
                 if(campoValor != 0){
@@ -213,13 +213,13 @@ function agregaRutaFinal(){
                 validar(valido, proceso ,  entra, sale, maquina, idMaquina, observa)
             }
         });
-    } 
+    }
     if(observaciones != '' && campoValor != 0){
         valido = true;
-        observa = observaciones 
+        observa = observaciones
         validar(valido, proceso,  entra, sale, maquina, idMaquina, observa)
     }
-    
+
 };
 
 function agregaRutaAcabados(){
@@ -256,7 +256,7 @@ function agregaRutaAcabados(){
             confirmButtonText: 'Si',
             showDenyButton: true,
             denyButtonText: 'No'
-            
+
         }).then((result) => {
             if(result.isConfirmed){
                 if(campoValor != 0){
@@ -271,19 +271,19 @@ function agregaRutaAcabados(){
                 validar(valido, proceso ,  entra, sale, maquina, idMaquina, observa)
             }
         });
-    } 
+    }
     if(observaciones != '' && campoValor != 0){
         valido = true;
-        observa = observaciones 
+        observa = observaciones
         validar(valido, proceso,  entra, sale, maquina, idMaquina, observa)
     }
-    
+
 };
 
 
 
 // Validacion de datos correcta - procede a enviar a localStorage
-function validar(valido, proceso,  entra, sale, maquina, idMaquina, observa) {            
+function validar(valido, proceso,  entra, sale, maquina, idMaquina, observa) {
     if(valido) {
         console.log("envia datos");
         procesoEjecutado(proceso)
@@ -342,7 +342,7 @@ function limpiarAcabados(){
 
 //Mensaje de campos vacios en select
 function camposVacios(){
-    
+
         Swal.fire({
             title: '¡Ingrese todos los datos!',
             icon: 'warning',
@@ -366,13 +366,13 @@ function listarProcesos(rutasProg) {
                         <td><button type="button" class="btn btn-danger" onclick="eliminarMadera(${rutasProg.rutaNum})"><i class="fas fa-trash-alt"></i></button></td>
                     </tr>`;
         $('#listarProcesos').append(fila);
-        
+
     })
-    
+
 }
 
  function eliminarMadera(rutaNum) {
-    
+
     Swal.fire({
         title: '¿Está seguro que desea eliminar el proceso?',
         text: "¡No podrá revertir esta acción!",
@@ -383,9 +383,9 @@ function listarProcesos(rutasProg) {
         confirmButtonText: '¡Si, eliminar!',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
-        //$(`#${id}`).remove(); 
-        if (result.isConfirmed) {    
-            rutasProg = rutasProg.filter(rutasProg => rutasProg.rutaNum != rutaNum); 
+        //$(`#${id}`).remove();
+        if (result.isConfirmed) {
+            rutasProg = rutasProg.filter(rutasProg => rutasProg.rutaNum != rutaNum);
             localStorage.setItem('rutasProg', JSON.stringify(rutasProg));
             listarProcesos(rutasProg);
         }

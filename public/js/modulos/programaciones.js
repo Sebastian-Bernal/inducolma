@@ -1,7 +1,7 @@
 // Funcion usarInventario, pregunta si va a usar las existencias en el inventario
 function usarInventario( item, pedido) {
-   console.log(item);
-    cantidad = $('#cantidad_atual_'+item).val();    
+    console.log(item);
+    cantidad = $('#cantidad_atual_'+item).val();
     existencias = $('#existencia_atual_'+item).val();
     if (parseInt(existencias)  > 0){
         Swal.fire({
@@ -25,7 +25,7 @@ function usarInventario( item, pedido) {
         }).then((result) => {
             if (result.isConfirmed) {
                 cantidad_u = $('#cantidad_usar').val();
-               if (cantidad_u <= existencias && cantidad_u > 0) {
+                if (cantidad_u <= existencias && cantidad_u > 0) {
                     cantidad -=cantidad_u;
                     console.log(cantidad);
                     existencias -=cantidad_u;
@@ -36,7 +36,7 @@ function usarInventario( item, pedido) {
                     $('#existencias'+item).html(existencias);
                     //enviar peticion para crear nueva orden de produccion
                     crearOrdenProduccion(item, pedido, cantidad_u);
-               } else{
+                } else{
                     Swal.fire({
                         title: 'Error!',
                         text: 'No puede usar mas existencias que las que tiene',
@@ -44,8 +44,8 @@ function usarInventario( item, pedido) {
                         confirmButtonColor: '#597504',
                         confirmButtonText: 'OK'
                     })
-               }
-            } 
+                }
+            }
         })
     } else{
         Swal.fire({
@@ -84,4 +84,3 @@ function crearOrdenProduccion(item, pedido, cantidad_u) {
         }
     })
 }
-    

@@ -26,6 +26,7 @@ use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
 use App\Http\Controllers\DisenoInsumoController;
 use App\Http\Controllers\OrdenProduccionController;
+use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReposrtesController;
 use Illuminate\Support\Facades\Auth;
@@ -262,6 +263,15 @@ Route::controller(OrdenProduccionController::class)->group(function () {
                 ->middleware('auth');
 
 });
+
+Route::resource('procesos', ProcesoController::class)
+    ->parameters(['procesos'=> 'proceso'])
+    ->names('procesos')
+    ->middleware('auth');
+
+
+
+
 
 //rutas reportes
 
