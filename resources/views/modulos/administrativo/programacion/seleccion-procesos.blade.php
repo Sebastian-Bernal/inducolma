@@ -295,7 +295,7 @@
               </table>
             </div>
             <div>
-                <button type="button" class="btn btn-primary container-fluid">Guardar ruta de programación</button>
+                <button type="button" class="btn btn-primary container-fluid" on-click="terminarRuta()">Guardar ruta de programación</button>
             </div>
         </div>
         
