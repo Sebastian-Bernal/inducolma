@@ -391,3 +391,68 @@ function listarProcesos(rutasProg) {
         }
     })
 }
+
+function guardarRutaBD() {
+        
+    $.ajax({
+        url: '/procesos',
+        data: {
+            proceso: rutasProg,
+            _token: $('input[name="_token"]').val()
+        },
+        type: 'post', 
+        success: function(guardado) {
+            if(guardado.error == false) {
+                Swal.fire({
+                    title: guardado.message,
+                    icon: 'success',
+                    confirmButtonColor: '#597504',
+                    confirmButtonText: 'OK'
+                })
+                .then(() => {
+                    rutasProg = [];
+                    numBloque = 0;
+                    localStorage.removeItem('rutasProg');                            
+                    window.location.href = '/procesos';
+                   
+                })
+            } else {
+                Swal.fire({
+                    title: guardado.message,
+                    icon: 'error',
+                    confirmButtonColor: '#597504',
+                    confirmButtonText: 'OK'
+                })
+            }
+        }
+    })
+       
+}
+
+function terminarRuta() {
+    if (cubicajes.length > 0) {
+        
+        Swal.fire({
+            title: '¿Está seguro que desea terminar la ruta?',
+            text: "¡No podrá revertir esta acción!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#597504',
+            cancelButtonColor: '#ff7e00',
+            confirmButtonText: '¡Si, terminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+               
+               guardarRutaBD();
+            }
+        })
+    } else {
+        swal.fire({
+            title: '¡La ruta no tiene procesos agregados, no se puede terminar!',
+            icon: 'warning',
+            confirmButtonColor: '#597504',
+            confirmButtonText: 'OK'
+        })
+    }
+}
