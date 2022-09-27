@@ -198,7 +198,7 @@ class MaderasOptimas
                     $guardar->desperdicio_largo,
                     $guardar->cantidad_largo,
                     'INICIAL',
-                    $guardar->$orden_id,
+                    $orden_id,
                 );
             }
         }
@@ -280,7 +280,7 @@ class MaderasOptimas
                     $guardar->desperdicio_ancho,
                     $guardar->cantidad_ancho,
                     'INTERMEDIO',
-                    $guardar->$orden_id,
+                    $orden_id,
                 );
             }
         }
@@ -359,7 +359,7 @@ class MaderasOptimas
                         $guardar->desperdicio_item,
                         $guardar->cantidad_items,
                         'FINAL',
-                        $guardar->$orden_id,
+                        $orden_id,
                     );
                 }
                 return $seleccion;
@@ -497,7 +497,7 @@ class MaderasOptimas
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosCubicaje($request, $item_diseno);
         $accionVer = $accion;
-        $cubicajes = $this->corteInicial($maderas, $item_diseno, $accionVer, $orden_id = 0);
+        $cubicajes = $this->corteInicial($maderas, $item_diseno, $accionVer, 0);
         $datos = Collection::make($cubicajes)->groupBy('bloque');
         //return $datos;
         $bloques = [];
@@ -563,10 +563,11 @@ class MaderasOptimas
 
     public function seleccionaPaqueta($request, $guardar, $orden)
     {
+        //return $orden;
         $pedido = $this->datosPedido($request);
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosSeleccion($request, $item_diseno);
-        $seleccion = $this->corteInicial($maderas, $item_diseno, $guardar, $orden->id);
+        $seleccion = $this->corteInicial($maderas, $item_diseno, $guardar, $orden);
         return $seleccion;
     }
 

@@ -269,7 +269,8 @@ class OrdenProduccionController extends Controller
         $this->authorize('admin');
         $guardar = 2;
         $orden = $this->crearOrden($request);
-        $seleccion = $this->maderas->seleccionaPaqueta($request, $guardar, $orden);
+
+        $seleccion = $this->maderas->seleccionaPaqueta($request, $guardar, $orden->id);
         $error =  $seleccion[0]['error'];
 
         // si seleccion error = false crear la orden de produccion, si es true se elimina todo lo creado en
