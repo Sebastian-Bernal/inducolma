@@ -26,6 +26,8 @@ use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
 use App\Http\Controllers\DisenoInsumoController;
 use App\Http\Controllers\OrdenProduccionController;
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\ReposrtesController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -261,9 +263,68 @@ Route::controller(OrdenProduccionController::class)->group(function () {
 
 });
 
+//rutas reportes
+
+Route::controller(ReporteController::class)->group(function(){
+        Route::get('ingreso-maderas', 'ingresoMaderas' )
+        ->name('ingreso-maderas')
+        ->middleware('auth');
+
+        Route::post('ingreso-maderas-pdf', 'generarReporteIngresoMaderaPdf' )
+        ->name('ingreso-maderas-pdf')
+        ->middleware('auth');
+
+        Route::get('ingreso-cubiaje', 'ingresoCubicajes' )
+                ->name('ingreso-cubicaje')
+                ->middleware('auth');
+
+        Route::get('ingreso-personal', 'ingresoPersonal' )
+                ->name('ingreso-personal')
+                ->middleware('auth');
+
+        Route::get('horas-trabajo-personal', 'horasTrabajoPersonal' )
+                ->name('horas-trabajo-personal')
+                ->middleware('auth');
+
+        Route::get('inventario-maderas', 'inventarioMaderasAlmacen' )
+                ->name('inventario-maderas')
+                ->middleware('auth');
+
+        Route::get('pedidos-mes', 'pedidosMes' )
+                ->name('pedidos-mes')
+                ->middleware('auth');
+
+        Route::get('get-proveedores', 'getProveedores')
+                ->name('get-proveedores')
+                ->middleware('auth');
+
+        Route::get('get-tipo-maderas', 'getTipoMadera')
+                ->name('get-tipo-maderas')
+                ->middleware('auth');
+
+
+});
+
+
+// rutas views index reportes
+
+Route::controller(ReposrtesController::class)->group(function(){
+    Route::view('reportes-administrativos','modulos.reportes.administrativos.index')
+        ->name('reportes-administrativos')
+        ->middleware('auth');
+
+    Route::view('reportes-ventas','modulos.reportes.ventas.index')
+        ->name('reportes-ventas')
+        ->middleware('auth');
+
+    Route::view('reportes-procesos','modulos.reportes.procesos.index')
+        ->name('reportes-procesos')
+        ->middleware('auth');
+});
+
 
 Auth::routes([
-            'register' => false,
+        'register' => false,
 
         ]);
 
