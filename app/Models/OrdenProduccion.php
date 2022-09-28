@@ -27,4 +27,13 @@ class OrdenProduccion extends Model
         return $this->belongsTo(Pedido::class);
     }
 
+    /**
+     * relacion hasMany transformaciones
+     */
+
+    public function transformaciones()
+    {
+        return $this->hasMany(Transformacion::class);
+    }
+
 }

@@ -122,9 +122,10 @@ class OrdenProduccionController extends Controller
                 $orden = OrdenProduccion::where('pedido_id', $pedido->id)
                                         ->where('item_id',$item)
                                         ->first();
+                $cubicaje_id = $orden->transformaciones->first()->cubicaje->id;
 
                 return view('modulos.administrativo.programacion.seleccion-procesos')
-                    ->with(compact('maquinas', 'orden'));
+                    ->with(compact('maquinas', 'orden', 'cubicaje_id'));
 
             } else {
                 if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
