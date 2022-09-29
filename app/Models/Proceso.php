@@ -16,4 +16,13 @@ class Proceso extends Model
     {
         return $this->belongsTo(Cubicaje::class);
     }
+
+    /**
+     * relacion belongsTo ordenProduccion
+     */
+
+    public function orden()
+    {
+        return $this->belongsTo(ordenProduccion::class);
+    }
 }

@@ -36,4 +36,13 @@ class OrdenProduccion extends Model
         return $this->hasMany(Transformacion::class);
     }
 
+    /**
+     * relacion hasMany Procesos
+     */
+
+    public function procesos()
+    {
+        return $this->hasMany(Proceso::class);
+    }
+
 }

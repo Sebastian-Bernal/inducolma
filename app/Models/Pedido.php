@@ -91,7 +91,7 @@ class Pedido extends Model
 
         }
 
-       return (object)$items_pedido;
+        return (object)$items_pedido;
 
     }
 

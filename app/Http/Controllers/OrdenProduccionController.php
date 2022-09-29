@@ -10,6 +10,7 @@ use App\Models\Item;
 use App\Models\Cliente;
 use App\Models\DisenoItem;
 use App\Models\Maquina;
+use App\Models\Proceso;
 use App\Models\Transformacion;
 use App\Repositories\MaderasOptimas;
 use Illuminate\Http\Request;
@@ -92,14 +93,6 @@ class OrdenProduccionController extends Controller
     public function show(Pedido $ordenProduccion)
     {
         $pedido =  $ordenProduccion->datos();
-        /* $datos = [];
-        foreach ($pedido->items_pedido as $item) {
-            $datos[] =  (object)array(
-                        'item_id' => $item->item_id,
-                        'pedido'  => $pedido->id
-                        );
-        }*/
-
 
         return view('modulos.administrativo.programacion.show', compact('pedido'));
     }
@@ -118,15 +111,14 @@ class OrdenProduccionController extends Controller
         if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
 
             if ($optimas['producir'] <= 0) {
-                $maquinas = Maquina::get(['id','maquina','corte'])->groupBy('corte');
+                $maquinas = Maquina::get(['id', 'maquina', 'corte'])->groupBy('corte');
                 $orden = OrdenProduccion::where('pedido_id', $pedido->id)
-                                        ->where('item_id',$item)
-                                        ->first();
+                    ->where('item_id', $item)
+                    ->first();
                 $cubicaje_id = $orden->transformaciones->first()->cubicaje->id;
 
                 return view('modulos.administrativo.programacion.seleccion-procesos')
                     ->with(compact('maquinas', 'orden', 'cubicaje_id'));
-
             } else {
                 if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
                     return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas', 'pedido', 'item'));
@@ -139,7 +131,6 @@ class OrdenProduccionController extends Controller
             $status = 'no hay maderas disponibles...';
             return redirect()->back()->with('status', $status);
         }
-
     }
 
 
@@ -286,7 +277,6 @@ class OrdenProduccionController extends Controller
 
             $orden->delete();
             return response()->json(['error' => true, 'datos_error' => $seleccion]);
-
         } else {
 
             return response()->json(['error' => false]);
@@ -298,7 +288,7 @@ class OrdenProduccionController extends Controller
      * @return object
      */
 
-    public function crearOrden( $request)
+    public function crearOrden($request)
     {
         $orden = new OrdenProduccion();
         $orden->cantidad = $request->cantidad;
