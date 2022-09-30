@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrdenProduccion extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = 'ordenes_produccion';
-
+    protected $fillable = [
+        'user_id',
+    ];
     /**
      * relacion belongsTo Item
      */
@@ -24,7 +27,7 @@ class OrdenProduccion extends Model
 
     public function pedido()
     {
-        return $this->belongsTo(Pedido::class);
+        return $this->belongsTo(Pedido::class, 'pedido_id');
     }
 
     /**

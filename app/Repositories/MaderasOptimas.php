@@ -626,7 +626,7 @@ class MaderasOptimas
         $tansformacion->desperdicio = $desperdicio;
         $tansformacion->cantidad = $cantidad;
         $tansformacion->tipo_corte = $tipo_corte;
-        $tansformacion->orden_id = $orden_id;
+        $tansformacion->orden_produccion_id = $orden_id;
         if ($tansformacion->save()) {
             $errorGuardar[] = array('error' => false);
             Cubicaje::where('id', $tansformacion->cubicaje_id)->update(['estado' => 'NO DISPONIBLE']);

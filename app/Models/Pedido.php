@@ -127,4 +127,12 @@ class Pedido extends Model
         return $this->hasMany(OrdenProduccion::class);
     }
 
+    /**
+     * relacion belongsTo DisenoProductoFinal
+     */
+    public function diseno_producto_final()
+    {
+        //dd($this->belongsTo(DisenoProductoFinal::class)) ;
+        return $this->belongsTo(DisenoProductoFinal::class);
+    }
 }

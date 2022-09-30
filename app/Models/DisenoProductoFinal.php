@@ -69,8 +69,8 @@ class DisenoProductoFinal extends Model
 
     public function pedidos()
     {
-        return $this->hasMany(Pedido::class,'foreign_key','diseno_producto_final_id');
+        return $this->hasMany(Pedido::class,'diseno_producto_final_id');
     }
-    
+
 }
 

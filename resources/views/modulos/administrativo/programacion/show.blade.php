@@ -11,7 +11,7 @@
 
 
                 <h4 class="display-8" >
-                    Ordenes de producción para el pedido:
+                    Items del pedido:
                 </h4>
                 <h5>
                     #{{ $pedido->id }} - {{ $pedido->nombre }} - {{ $pedido->descripcion }} - {{ $pedido->cantidad }}
@@ -56,10 +56,20 @@
 
                                     <div class="row row-cols-lg-auto g-3 align-items-center">
 
+                                        @if ($items->total > 0)
                                         <a href="{{ route('getMaderas',[$pedido->id, $items->item_id]) }}"
                                             class="btn btn-primary"
                                             title="Procesar item">
                                             <i class="fa-solid fa-hammer"></i>
+                                        </a>
+                                        @else
+
+                                        @endif
+
+                                        <a href="{{ route('odenes-produccion',[$pedido->id, $items->item_id]) }}"
+                                            class="btn btn-primary mx-1"
+                                            title="programar ruta de proceos">
+                                            <i class="fa-solid fa-eye"></i>
                                         </a>
 
                                         @if ($items->existencias > 0)

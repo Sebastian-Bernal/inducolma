@@ -12,6 +12,7 @@ use App\Models\DisenoItem;
 use App\Models\Maquina;
 use App\Models\Proceso;
 use App\Models\Transformacion;
+use App\Repositories\DeleteOrden;
 use App\Repositories\MaderasOptimas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,12 @@ class OrdenProduccionController extends Controller
 {
 
     protected $maderas;
+    protected $delete_orden;
 
-    public function __construct(MaderasOptimas $maderas)
+    public function __construct(MaderasOptimas $maderas, DeleteOrden $delete_orden)
     {
         $this->maderas = $maderas;
+        $this->delete_orden = $delete_orden;
     }
     /**
      * Display a listing of the resource.
@@ -111,14 +114,7 @@ class OrdenProduccionController extends Controller
         if (isset($optimas['maderas_usar'], $optimas['sobrantes_usar'])) {
 
             if ($optimas['producir'] <= 0) {
-                $maquinas = Maquina::get(['id', 'maquina', 'corte'])->groupBy('corte');
-                $orden = OrdenProduccion::where('pedido_id', $pedido->id)
-                    ->where('item_id', $item)
-                    ->first();
-                $cubicaje_id = $orden->transformaciones->first()->cubicaje->id;
-
-                return view('modulos.administrativo.programacion.seleccion-procesos')
-                    ->with(compact('maquinas', 'orden', 'cubicaje_id'));
+                return redirect()->route('odenes-produccion',[$pedido, $item_id]);
             } else {
                 if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
                     return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas', 'pedido', 'item'));
@@ -133,6 +129,34 @@ class OrdenProduccionController extends Controller
         }
     }
 
+    /**
+     * muestra las ordenes de produccion creadas para el pedido
+     *
+     */
+    public function showOrden($pedido, $item)
+    {
+        $ordenes = OrdenProduccion::where('pedido_id', $pedido)
+                                    ->where('item_id', $item)
+                                    ->get();
+        return view('modulos.administrativo.programacion.show-ordenes', compact('ordenes', 'pedido'));
+    }
+
+    /**
+     * muestra el formulario de creacion de procesos para la orden de produccion
+     */
+
+    public function rutaProcesos($pedido, $item)
+    {
+        $this->authorize('admin');
+        $maquinas = Maquina::get(['id', 'maquina', 'corte'])->groupBy('corte');
+        $orden = OrdenProduccion::where('pedido_id', $pedido)
+            ->where('item_id', $item)
+            ->first();
+        $cubicaje_id = $orden->transformaciones->first()->cubicaje->id;
+
+        return view('modulos.administrativo.programacion.seleccion-procesos')
+            ->with(compact('maquinas', 'orden', 'cubicaje_id'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -165,7 +189,7 @@ class OrdenProduccionController extends Controller
      */
     public function destroy(OrdenProduccion $ordenProduccion)
     {
-        //
+        return $this->delete_orden->deleteOrden($ordenProduccion);
     }
 
     /**
@@ -292,7 +316,7 @@ class OrdenProduccionController extends Controller
     {
         $orden = new OrdenProduccion();
         $orden->cantidad = $request->cantidad;
-        $orden->estado = '';
+        $orden->estado = 'PENDIENTE';
         $orden->user_id = Auth::user()->id;
         $orden->pedido_id = $request->id_pedido;
         $orden->item_id = $request->id_item;
