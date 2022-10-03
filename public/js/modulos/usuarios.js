@@ -1,33 +1,32 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('#listaUsuarios').DataTable({
         "language": {
-                "url": "/DataTables/Spanish.json"
-                },
+            "url": "/DataTables/Spanish.json"
+        },
         "responsive": true
     });
-} ); 
+});
 // funcion para eliminar un usuario
 function eliminarUsuario(id) {
     Swal.fire({
-        title: '¿Está seguro de eliminar el usuario con id '+id+'?',
-       
+        title: '¿Está seguro de eliminar el usuario con id ' + id + '?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#597504',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Si, eliminarlo!',
         cancelButtonText: 'Cancelar'
-        }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
-           $.ajax({
-                url: "/usuarios/"+id,
+            $.ajax({
+                url: "/usuarios/" + id,
                 type: "DELETE",
                 dataType: "JSON",
                 data: {
                     _token: $('input[name="_token"]').val()
                 },
                 success: function (e) {
-                   // console.log(e);
+                    // console.log(e);
                     Swal.fire({
                         title: 'Eliminado!',
                         text: e.success,
@@ -36,12 +35,12 @@ function eliminarUsuario(id) {
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            location.reload();                            
+                            location.reload();
                         }
                     })
-                    
+
                 },
-          })
+            })
         }
     })
 }
@@ -50,7 +49,7 @@ function eliminarUsuario(id) {
 function editarUsuario(id) {
     console.log(id);
     $.ajax({
-        url: "/usuarios.show/"+id,
+        url: "/usuarios.show/" + id,
         type: "GET",
         dataType: "JSON",
         // data: {

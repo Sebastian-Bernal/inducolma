@@ -26,8 +26,10 @@ use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
 use App\Http\Controllers\DisenoInsumoController;
 use App\Http\Controllers\OrdenProduccionController;
+use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReposrtesController;
+use App\Http\Controllers\TurnoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -257,11 +259,29 @@ Route::controller(OrdenProduccionController::class)->group(function () {
         Route::get('programaciones/{pedido}/{item_id}', 'showMaderas')
                 ->name('getMaderas')
                 ->middleware('auth');
+        Route::get('odenes-produccion/{pedido}/{item_id}', 'showOrden')
+                ->name('odenes-produccion')
+                ->middleware('auth');
         Route::post('seleccionar-madera', 'seleccionar')
                 ->name('seleccionar')
                 ->middleware('auth');
+        Route::get('rutas-procesos/{pedido}/{item}', 'rutaProcesos')
+                ->name('rutas-procesos')
+                ->middleware('auth');
+
 
 });
+
+Route::resource('procesos', ProcesoController::class)
+    ->parameters(['procesos'=> 'proceso'])
+    ->names('procesos')
+    ->middleware('auth');
+
+
+Route::resource('turnos',TurnoController::class)
+    ->parameters(['turnos'=> 'turno'])
+    ->names('turnos');
+
 
 //rutas reportes
 

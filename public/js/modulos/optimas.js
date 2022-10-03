@@ -33,13 +33,13 @@ function verPaqueta(id_entrada,paqueta) {
                     '<td>' + element.pulgadas_cuadradas + '</td>' +
                 '</tr>'
             });
-            
+
             Swal.fire({
                 title: 'Datos de la paqueta',
                 html: lista + '</tbody></table>',
                 confirmButtonColor: '#597504',
                 confirmButtonText: 'OK'
-            });           
+            });
         },
-  })
+    })
 }

@@ -32,7 +32,7 @@ class MaderasOptimas
         } else {
 
             return [
-                'maderas_usar' => $this->corteInicial($maderas, $item_diseno, 0),
+                'maderas_usar' => $this->corteInicial($maderas, $item_diseno, 0, 0),
                 'sobrantes_usar' => $this->sobrantesUsar($sobrantes, $item_diseno),
                 'item' => $item_diseno,
                 'producir' => $producir,
@@ -140,7 +140,7 @@ class MaderasOptimas
      * cantidad_items, porcentaje_uso, desperdicio
      */
 
-    public function corteInicial($maderas, $item_diseno, $accion)
+    public function corteInicial($maderas, $item_diseno, $accion, $orden_id)
     {
 
 
@@ -197,16 +197,17 @@ class MaderasOptimas
                     $guardar->sobrante_largo,
                     $guardar->desperdicio_largo,
                     $guardar->cantidad_largo,
-                    'INICIAL'
+                    'INICIAL',
+                    $orden_id,
                 );
             }
         }
 
 
-        return $this->corteIntermedio($corteInicial, $item_diseno, $accion, $seleccion);
+        return $this->corteIntermedio($corteInicial, $item_diseno, $accion, $seleccion, $orden_id);
     }
 
-    public function corteIntermedio($corteInicial, $item_diseno, $accion, $seleccion = [])
+    public function corteIntermedio($corteInicial, $item_diseno, $accion, $seleccion = [], $orden_id)
     {
 
 
@@ -278,15 +279,16 @@ class MaderasOptimas
                     $guardar->sobrante_ancho,
                     $guardar->desperdicio_ancho,
                     $guardar->cantidad_ancho,
-                    'INTERMEDIO'
+                    'INTERMEDIO',
+                    $orden_id,
                 );
             }
         }
 
-        return $this->corteFinal($corteInicial, $item_diseno, $accion, $seleccion);
+        return $this->corteFinal($corteInicial, $item_diseno, $accion, $seleccion, $orden_id);
     }
 
-    public function corteFinal($corteInicial, $item_diseno, $accion, $seleccion = [])
+    public function corteFinal($corteInicial, $item_diseno, $accion, $seleccion = [], $orden_id)
     {
         //return $corteInicial;
         // suma todos los cantidad_ancho de los elementos de la coleccion $corteInicial
@@ -356,7 +358,8 @@ class MaderasOptimas
                         $guardar->sobrante_item,
                         $guardar->desperdicio_item,
                         $guardar->cantidad_items,
-                        'FINAL'
+                        'FINAL',
+                        $orden_id,
                     );
                 }
                 return $seleccion;
@@ -494,7 +497,7 @@ class MaderasOptimas
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosCubicaje($request, $item_diseno);
         $accionVer = $accion;
-        $cubicajes = $this->corteInicial($maderas, $item_diseno, $accionVer);
+        $cubicajes = $this->corteInicial($maderas, $item_diseno, $accionVer, 0);
         $datos = Collection::make($cubicajes)->groupBy('bloque');
         //return $datos;
         $bloques = [];
@@ -558,12 +561,13 @@ class MaderasOptimas
      *
      */
 
-    public function seleccionaPaqueta($request, $guardar)
+    public function seleccionaPaqueta($request, $guardar, $orden)
     {
+        //return $orden;
         $pedido = $this->datosPedido($request);
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosSeleccion($request, $item_diseno);
-        $seleccion = $this->corteInicial($maderas, $item_diseno, $guardar);
+        $seleccion = $this->corteInicial($maderas, $item_diseno, $guardar, $orden);
         return $seleccion;
     }
 
@@ -605,7 +609,7 @@ class MaderasOptimas
      * @return [type]        [description]
      *
      */
-    public function guardarTransformacion($ancho, $largo, $alto, $transformacion, $cubicaje_id, $user_id, $madera_id, $sobrante, $desperdicio, $cantidad, $tipo_corte)
+    public function guardarTransformacion($ancho, $largo, $alto, $transformacion, $cubicaje_id, $user_id, $madera_id, $sobrante, $desperdicio, $cantidad, $tipo_corte, $orden_id)
     {
 
         $cubicajes = [];
@@ -622,6 +626,7 @@ class MaderasOptimas
         $tansformacion->desperdicio = $desperdicio;
         $tansformacion->cantidad = $cantidad;
         $tansformacion->tipo_corte = $tipo_corte;
+        $tansformacion->orden_produccion_id = $orden_id;
         if ($tansformacion->save()) {
             $errorGuardar[] = array('error' => false);
             Cubicaje::where('id', $tansformacion->cubicaje_id)->update(['estado' => 'NO DISPONIBLE']);

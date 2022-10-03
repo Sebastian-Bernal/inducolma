@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTurnoRequest;
 use App\Models\Turno;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,9 @@ class TurnoController extends Controller
      */
     public function index()
     {
-        //
+        $this->authorize('admin');
+        $turnos = Turno::all();
+        return view('modulos.administrativo.turnos.index',compact('turnos'));
     }
 
     /**
@@ -33,7 +36,7 @@ class TurnoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTurnoRequest $request)
     {
         //
     }

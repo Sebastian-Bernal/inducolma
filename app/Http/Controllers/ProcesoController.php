@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proceso;
+use App\Repositories\RegistroProcesos;
 use Illuminate\Http\Request;
 
 class ProcesoController extends Controller
 {
+
+    protected $registroProceso;
+
+    public function __construct( RegistroProcesos $registroProcesos)
+    {
+        $this->registroProceso = $registroProcesos;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +43,9 @@ class ProcesoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('admin');
+        return $this->registroProceso->registrar_ruta($request->proceso);
+
     }
 
     /**
