@@ -106,7 +106,7 @@ class OrdenProduccionController extends Controller
         $request->id_pedido = $pedido;
         $request->id_item = $item_id;
         $item = $request->id_item;
-        $pedido = Pedido::find($request->id_pedido);
+        $pedido = Pedido::select('id','cantidad','diseno_producto_final_id','cliente_id')->where('id',$request->id_pedido)->first();
         $optimas =  $this->maderas->Optimas($request);
 
         //return $optimas['maderas_usar'] ;
