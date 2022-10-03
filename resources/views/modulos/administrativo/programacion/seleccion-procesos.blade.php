@@ -12,6 +12,8 @@
                 <p class="text-center m-1">
                     <strong>Item a realizar: {{ $orden->item->descripcion }} / Cliente: {{ $orden->pedido->cliente->nombre }}</strong></br>
                     <label>Orden de pedido No.: {{ $orden->pedido->id }} / Tipo de Madera: {{ $orden->item->tipo_madera->descripcion }}</label>
+                    <input class="hidden" id="ordenPedido" value="{{ $orden->pedido->id }}"></input>
+                    <input class="hidden" id="itemPedido" value="{{ $orden->item->id }}"></input>
                 </p> 
             </h4>
             <div class="d-flex flex-wrap row-col-sm-1 row-col-md-2 container-fluid">
