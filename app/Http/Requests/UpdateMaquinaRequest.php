@@ -34,8 +34,7 @@ class UpdateMaquinaRequest extends FormRequest
             'corte'=>[
                 'required',
                 'string',
-                //Rule::in(['INICIAL', 'INTERMEDIO', 'FINAL']),
-                'in:INICIAL,INTERMEDIO,FINAL',
+                'in:INICIAL,INTERMEDIO,FINAL, ACABADOS',
             ],
 
         ];
