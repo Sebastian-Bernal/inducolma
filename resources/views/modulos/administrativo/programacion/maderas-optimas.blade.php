@@ -61,6 +61,8 @@
                                 <p class="card-text mb-1">
                                     <strong>Cantidad Items: </strong>{{ $optima['cantidad_items'] }} <br>
                                     <strong>Porcentaje de uso: </strong>{{ $optima['porcentaje_uso'] }}% <br>
+                                    <strong>cm3 sobrantes: </strong>{{ $optima['cm3_sobrantes'] }}</strong> <br>
+                                    <strong>cm3 totales: </strong>{{ $optima['cm3'] }}</strong> <br>
                                     <strong>Margen de error: </strong>{{ $optima['margen_error'] }}% <br>
                                     <strong>Veces largo: </strong>{{ $optima['veces_largo'] }} <br>
                                 </p>

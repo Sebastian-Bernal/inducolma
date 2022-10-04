@@ -156,7 +156,12 @@ class MaderasOptimas
             $madera->transformacion = $item_diseno->descripcion;
             $madera->cantidad_largo = (int)($madera->largo / $item_diseno->largo);
 
-            $restante_largo = (int)($madera->largo - ($item_diseno->largo * $madera->cantidad_largo));
+            if ($madera->cantidad_largo <= 0) {
+                $restante_largo = $madera->largo;
+            } else {
+                $restante_largo = (int)($madera->largo - ($item_diseno->largo * $madera->cantidad_largo));
+            }
+
             if ($restante_largo > 15) {
                 $desperdicio_largo = 0;
                 $sobrante_largo = $restante_largo;
@@ -214,52 +219,59 @@ class MaderasOptimas
         foreach ($corteInicial as $corte) {
 
             $nuevo_corte = (object)[];
-            $corte->cantidad_ancho = ((int)($corte->ancho / (($item_diseno->ancho + 0.5)))) * $corte->cantidad_largo;
-            $restante_ancho = $corte->ancho - ((($item_diseno->ancho + 0.5) * $corte->cantidad_ancho) / $corte->cantidad_largo);
-            $corte->cm3 = $corte->cm3 - $item_diseno->largo * $corte->alto * $restante_ancho;
-            // CUBICAJE ID
-            if ($restante_ancho >= 15 && $restante_ancho <= 16) {
-                $corte->sobrante_ancho = $restante_ancho;
-            } else {
-                if ($restante_ancho > 0.7 && $corte->alto > ($item_diseno->ancho + 0.5)) {
-                    $nuevo_corte->tipo = 'sobrante corte';
-                    $nuevo_corte->id = $corte->id;
-                    $nuevo_corte->bloque = $corte->bloque;
-                    $nuevo_corte->paqueta = $corte->paqueta;
-                    $nuevo_corte->entrada_madera_id = $corte->entrada_madera_id;
-                    $nuevo_corte->largo = (float)$item_diseno->largo;
-                    $nuevo_corte->ancho = (float)($item_diseno->ancho + 0.5);
-                    $nuevo_corte->alto = $restante_ancho;
-                    $nuevo_corte->cm3 = $item_diseno->largo * $corte->alto * $restante_ancho;
-                    $nuevo_corte->sobrante_largo = 0;
-                    $nuevo_corte->cantidad_largo = 0;
-                    $nuevo_corte->cantidad_ancho = ((int)($corte->alto / ($item_diseno->ancho + 0.5))) * $corte->cantidad_largo;
-                    $nuevo_corte->total = $corte->total;
+            if ($corte->cantidad_largo != 0) {
+                $corte->cantidad_ancho = ((int)($corte->ancho / (($item_diseno->ancho + 0.5)))) * $corte->cantidad_largo;
 
-                    $restante_ancho_sobrante = $corte->alto - ((($item_diseno->ancho + 0.5) * $nuevo_corte->cantidad_ancho) / $corte->cantidad_largo);
-                    if ($restante_ancho_sobrante >= 10) {
-                        $nuevo_corte->desperdicio_ancho = 0;
-                        $nuevo_corte->sobrante_ancho = $restante_ancho_sobrante;
-                    } else {
-                        $nuevo_corte->sobrante_ancho = 0;
-                        $nuevo_corte->desperdicio_ancho = $restante_ancho_sobrante;
-                    }
-                    $corteInicial[] = $nuevo_corte;
-                    $corte->sobrante_ancho = 0;
-                    $corte->desperdicio_ancho = 0;
+                $restante_ancho = $corte->ancho - (($item_diseno->ancho + 0.5) * ($corte->cantidad_ancho / $corte->cantidad_largo));
+
+                // CUBICAJE ID
+                if ($restante_ancho >= 15 && $restante_ancho <= 16) {
+                    $corte->sobrante_ancho = $restante_ancho;
                 } else {
-                    if ($restante_ancho > 0.7) {
-                        $corte->sobrante_ancho = $restante_ancho;
-                        $corte->desperdicio_ancho = 0;
-                    } else if ($restante_ancho > 0 && $restante_ancho < 0.7) {
-                        $corte->desperdicio_ancho = $restante_ancho;
+                    if ($restante_ancho > 0.7 && $corte->alto > ($item_diseno->ancho + 0.5)) {
+                        $corte->cm3 = $corte->cm3 - $item_diseno->largo * $corte->alto * $restante_ancho;
+                        $nuevo_corte->tipo = 'sobrante corte';
+                        $nuevo_corte->id = $corte->id;
+                        $nuevo_corte->bloque = $corte->bloque;
+                        $nuevo_corte->paqueta = $corte->paqueta;
+                        $nuevo_corte->entrada_madera_id = $corte->entrada_madera_id;
+                        $nuevo_corte->largo = (float)$item_diseno->largo;
+                        $nuevo_corte->ancho = (float)($item_diseno->ancho + 0.5);
+                        $nuevo_corte->alto = $restante_ancho;
+                        $nuevo_corte->cm3 = $item_diseno->largo * $corte->alto * $restante_ancho;
+                        $nuevo_corte->sobrante_largo = 0;
+                        $nuevo_corte->cantidad_largo = 0;
+                        $nuevo_corte->cantidad_ancho = ((int)($corte->alto / ($item_diseno->ancho + 0.5))) * $corte->cantidad_largo;
+                        $nuevo_corte->total = $corte->total;
+
+                        $restante_ancho_sobrante = $corte->alto - ((($item_diseno->ancho + 0.5) * $nuevo_corte->cantidad_ancho) / $corte->cantidad_largo);
+                        if ($restante_ancho_sobrante >= 10) {
+                            $nuevo_corte->desperdicio_ancho = 0;
+                            $nuevo_corte->sobrante_ancho = $restante_ancho_sobrante;
+                        } else {
+                            $nuevo_corte->sobrante_ancho = 0;
+                            $nuevo_corte->desperdicio_ancho = $restante_ancho_sobrante;
+                        }
+                        $corteInicial[] = $nuevo_corte;
                         $corte->sobrante_ancho = 0;
+                        $corte->desperdicio_ancho = 0;
                     } else {
-                        $corte->sobrante_ancho = 0;
-                        $corte->desperdicio_ancho = 0;
+                        if ($restante_ancho > 0.7) {
+                            $corte->sobrante_ancho = $restante_ancho;
+                            $corte->desperdicio_ancho = 0;
+                        } else if ($restante_ancho > 0 && $restante_ancho < 0.7) {
+                            $corte->desperdicio_ancho = $restante_ancho;
+                            $corte->sobrante_ancho = 0;
+                        } else {
+                            $corte->sobrante_ancho = 0;
+                            $corte->desperdicio_ancho = 0;
+                        }
                     }
                 }
+            }else{
+                $corte->cantidad_ancho = 0;
             }
+
         }
         // return $corteInicial;
 
@@ -300,22 +312,29 @@ class MaderasOptimas
 
         if ($cantidad_ancho > 0) {
             foreach ($corteInicial as $corte) {
-                $corte->cantidad_items = ((int)($corte->alto / ($item_diseno->alto + 0.5))) * $corte->cantidad_ancho;
-                if ($corte->cantidad_ancho > 0) {
-                    $restante_item = $corte->alto - ((($item_diseno->alto + 0.5) * $corte->cantidad_items) / $corte->cantidad_ancho);
+                if ($corte->cantidad_ancho != 0) {
+                    $corte->cantidad_items = ((int)($corte->alto / ($item_diseno->alto + 0.5))) * $corte->cantidad_ancho;
+                    if ($corte->cantidad_ancho > 0) {
+                        $restante_item = $corte->alto - ((($item_diseno->alto + 0.5) * $corte->cantidad_items) / $corte->cantidad_ancho);
+                    } else {
+                        $restante_item = 0;
+                    }
+
+                    if ($restante_item > 0.7) {
+                        $corte->sobrante_item = $restante_item;
+                        $corte->desperdicio_item = 0;
+                    } else if ($restante_item > 0 && $restante_item < 0.7) {
+                        $corte->sobrante_item = 0;
+                        $corte->desperdicio_item = $restante_item;
+                    } else {
+                        $corte->sobrante_item = 0;
+                        $corte->desperdicio_item = 0;
+                    }
                 } else {
-                    $restante_item = 0;
-                }
-                if ($restante_item > 0.7) {
-                    $corte->sobrante_item = $restante_item;
-                    $corte->desperdicio_item = 0;
-                } else if ($restante_item > 0 && $restante_item < 0.7) {
-                    $corte->sobrante_item = 0;
-                    $corte->desperdicio_item = $restante_item;
-                } else {
                     $corte->sobrante_item = 0;
                     $corte->desperdicio_item = 0;
                 }
+
             }
 
 
@@ -418,19 +437,19 @@ class MaderasOptimas
                     //&& $result[$i]['bloque']==$t->bloque
                 ) {
                     if ($t->sobrante_largo > 0) {
-                        $cm3_sobrante_largo = $t->sobrante_largo * $t->ancho * $t->sobrante_item;
+                        $cm3_sobrante_largo = $t->sobrante_largo * $t->ancho * $t->alto;
                     } else {
                         $cm3_sobrante_largo = 0;
                     }
                     if ($t->sobrante_ancho > 0) {
 
-                        $cm3_sobrante_ancho = $t->sobrante_ancho * $item_diseno->largo * $t->alto * $t->cantidad_largo;
+                        $cm3_sobrante_ancho = $t->sobrante_ancho * $item_diseno->largo * $t->alto ;//* $t->cantidad_largo;
                     } else {
                         $cm3_sobrante_ancho = 0;
                     }
 
                     if ($t->sobrante_item > 0) {
-                        $cm3_sobrante_item = $t->sobrante_item * ($item_diseno->ancho + 0.5) * $item_diseno->largo * $t->cantidad_ancho;
+                        $cm3_sobrante_item = $t->sobrante_item * $item_diseno->ancho * $item_diseno->largo ;//* $t->cantidad_ancho;
                     } else {
                         $cm3_sobrante_item = 0;
                     }
@@ -440,7 +459,8 @@ class MaderasOptimas
 
                     $result[$i]['cantidad_items'] += $t->cantidad_items;
                     $result[$i]['cm3'] += $t->cm3;
-                    $result[$i]['cm3_total'] += $cm3_items + $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_item;
+                    $result[$i]['cm3_total'] += $cm3_items ;
+                    $result[$i]['cm3_sobrantes'] += $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_item;
 
                     $repeatir = true;
 
@@ -456,6 +476,7 @@ class MaderasOptimas
                     'calificacion' => (int)$t->total,
                     'cm3' => $t->cm3,
                     'cm3_total' => 0,
+                    'cm3_sobrantes' => 0,
                     'veces_largo' => round($t->largo / $item_diseno->largo, 1),
 
                 );

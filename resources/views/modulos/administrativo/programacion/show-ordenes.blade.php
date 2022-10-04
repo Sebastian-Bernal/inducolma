@@ -72,6 +72,10 @@
                                                 title="crear ruta de proceos">
                                                 <i class="fa-solid fa-route"></i>
                                             </a>
+
+                                            <button  class="btn btn-danger mx-1" title="Eliminar orden produccion" onclick="eliminarOrdenProduccion({{ $orden->id.','.$orden->pedido_id }})">
+                                                <i class="fa fa-trash-can text-white"></i>
+                                            </button>
                                             @endif
                                         @endif
                                     </div>

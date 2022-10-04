@@ -219,9 +219,9 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                         });
                     },
                 })
-            } else {
-                swal.fire('Se resta la cantidad')
             }
         })
+    } else {
+        swal.fire('Se resta la cantidad')
     }
 }
