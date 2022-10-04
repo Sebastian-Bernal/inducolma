@@ -17,15 +17,16 @@ class EntradaMadera extends Model
         //return $this->belongsTo(Proveedor::class, 'proveedor_id');
     }
 
-    //relacion EntradaMadera hasMany EntradasMaderaMaderas
+    //relacion EntradaMadera  EntradasMaderaMaderas
     public function maderas(){
        // return $this->belongsToMany(Madera::class, 'entradas_madera_maderas');
-        return $this->belongsToMany(Madera::class, 'entradas_madera_maderas');
+        return $this->belongsToMany(Madera::class, 'entradas_madera_maderas')
+                        ->as('maderas_entrada');
     }
 
     //relacion EntradaMadera hasMany EntradasMaderaMaderas
     public function entradas_madera_maderas(){
-        return $this->hasMany(EntradasMaderaMaderas::class);
+        return $this->hasMany(EntradasMaderaMaderas::class, 'entrada_madera_id');
     }
 
     //funcion para setear el nombre del acto administrativo
