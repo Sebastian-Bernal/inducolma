@@ -227,6 +227,7 @@ class MaderasOptimas
                 // CUBICAJE ID
                 if ($restante_ancho >= 15 && $restante_ancho <= 16) {
                     $corte->sobrante_ancho = $restante_ancho;
+                    $corte->desperdicio_ancho = 0;
                 } else {
                     if ($restante_ancho > 0.7 && $corte->alto > ($item_diseno->ancho + 0.5)) {
                         $corte->cm3 = $corte->cm3 - $item_diseno->largo * $corte->alto * $restante_ancho;
@@ -270,6 +271,8 @@ class MaderasOptimas
                 }
             }else{
                 $corte->cantidad_ancho = 0;
+                $corte->desperdicio_ancho = 0;
+                $corte->sobrante_ancho = 0;
             }
 
         }
@@ -333,6 +336,7 @@ class MaderasOptimas
                 } else {
                     $corte->sobrante_item = 0;
                     $corte->desperdicio_item = 0;
+                    $corte->cantidad_items = 0;
                 }
 
             }
