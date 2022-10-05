@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTurnoUserRequest;
+use App\Models\Maquina;
+use App\Models\Turno;
 use App\Models\TurnoUsuario;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TurnoUsuarioController extends Controller
@@ -14,7 +18,14 @@ class TurnoUsuarioController extends Controller
      */
     public function index()
     {
-        //
+        $turnos = Turno::get(['id', 'turno']);
+        $usuarios = User::whereBetween('rol_id',[1, 2])->get(['id', 'name']);
+        $maquinas = Maquina::get(['id', 'maquina']);
+
+        $turnos_usuarios = TurnoUsuario::orderBy('id', 'desc')->take(100)->get();
+
+        return view('modulos.administrativo.turnos-usuarios.index',
+            compact('turnos', 'usuarios', 'maquinas', 'turnos_usuarios'));
     }
 
     /**
@@ -33,18 +44,18 @@ class TurnoUsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTurnoUserRequest $request)
     {
-        //
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TurnoUsuario  $turnoUsuario
+     * @param  \App\Models\TurnoUsuario  $asignar_turno
      * @return \Illuminate\Http\Response
      */
-    public function show(TurnoUsuario $turnoUsuario)
+    public function show(TurnoUsuario $asignar_turno)
     {
         //
     }
@@ -52,10 +63,10 @@ class TurnoUsuarioController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\TurnoUsuario  $turnoUsuario
+     * @param  \App\Models\TurnoUsuario  $asignar_turno
      * @return \Illuminate\Http\Response
      */
-    public function edit(TurnoUsuario $turnoUsuario)
+    public function edit(TurnoUsuario $asignar_turno)
     {
         //
     }
@@ -64,10 +75,10 @@ class TurnoUsuarioController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TurnoUsuario  $turnoUsuario
+     * @param  \App\Models\TurnoUsuario  $asignar_turno
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TurnoUsuario $turnoUsuario)
+    public function update(Request $request, TurnoUsuario $asignar_turno)
     {
         //
     }
@@ -75,11 +86,14 @@ class TurnoUsuarioController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TurnoUsuario  $turnoUsuario
+     * @param  \App\Models\TurnoUsuario  $asignar_turno
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TurnoUsuario $turnoUsuario)
+    public function destroy(TurnoUsuario $asignar_turno)
     {
-        //
+
+        $this->authorize('admin');
+        $asignar_turno->delete();
+        return response()->json(array('success' => "El turno asignado fue eliminado"));
     }
 }

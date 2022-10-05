@@ -14,8 +14,11 @@
             <hr>
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#creaUsuario">
-                Crear nuevo tipo de turno
+                Crear nuevo turno
             </button>
+            <a class="btn btn-outline-primary mb-3" href="{{ route('asignar-turnos.index') }}">
+                Asignar turno a un empleado
+            </a>
             @if ($errors->any())
             <div class="alert alert-danger">
                 @foreach ($errors->all() as $error)
@@ -25,14 +28,14 @@
 
             @endif
             <!-- Modal Crea tipo de madera-->
-            <form action="{{ route('tipos-maderas.store') }}" method="POST">
+            <form action="{{ route('turnos.store') }}" method="POST">
                 @csrf
                 <div class="modal fade" id="creaUsuario" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Crear tipo madera</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Crear turno</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
@@ -87,8 +90,9 @@
                                         <label for="estado" class="col-md-4 col-form-label text-md-end">{{ __('Estado') }}</label>
                                         <div class="col-md-6">
                                             <select name="estado" id="estado" class="form-control ">
+
                                                 <option value="DISPONIBLE">DISPONIBLE</option>
-                                                <option value="etc">etc</option>
+                                                <option value="NO DISPONIBLE">NO DISPONIBLE</option>
                                             </select>
                                             @error('estado')
                                             <span class="invalid-feedback" role="alert">
@@ -115,7 +119,10 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Tipo de madera </th>
+                    <th>Descripción</th>
+                    <th>Hora inicio</th>
+                    <th>Hora fin</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -125,13 +132,16 @@
                 <tr>
                     <td>{{ $turno->id }}</td>
                     <td>{{ $turno->turno }}</td>
+                    <td>{{ $turno->hora_inicio }}</td>
+                    <td>{{ $turno->hora_fin }}</td>
+                    <td>{{ $turno->estado }}</td>
                     <td>
                         <div class="d-flex align-items-center ">
 
-                            <button class="btn btn-sm btn-danger" onclick="eliminarTipoMadera({{ $madera}})">
+                            <button class="btn btn-sm btn-danger" onclick="eliminarTurno({{ $turno}})">
                                 <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
                             </button>
-                            <a href="{{ route('tipos-maderas.edit',$madera) }}" class="btn btn-sm btn-warning">
+                            <a href="{{ route('turnos.edit',$turno) }}" class="btn btn-sm btn-warning">
                                 <i class="fa-solid fa-pen-to-square fa-lg"></i>
                             </a>
 

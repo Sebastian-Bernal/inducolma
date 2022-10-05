@@ -10,20 +10,15 @@ $(document).ready(function() {
 
 });
 
-function mayusculas() {
-
-    var x = document.getElementById("turno");
-    x.value = x.value.toUpperCase();
-
-}
 
 /**
  * eliina el turno indicado, devuele la respuesta de confirmacion
  * @param {object} turno
  */
-function eliminarTurno(turno) {
+function eliminarTurnoAsignado(turno) {
     Swal.fire({
-        title: '¿Está seguro de eliminar el turno: '+ turno.turno+ '?',
+        title: '¿Está seguro de eliminar el turno?',
+        text: 'Usuario : ' + turno.user.name + ' Fecha: ' + turno.fecha + ' Maquina: ' + turno.maquina.maquina,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#597504',
@@ -33,14 +28,14 @@ function eliminarTurno(turno) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: "/turnos/" + turno.id,
+                url: "/asignar-turnos/" +turno.id,
                 type: "DELETE",
                 dataType: "JSON",
                 data: {
                     _token: $('input[name="_token"]').val()
                 },
                 success: function (e) {
-                    // console.log(e);
+                    console.log(e);
                     Swal.fire({
                         title: 'Eliminado!',
                         text: e.success,

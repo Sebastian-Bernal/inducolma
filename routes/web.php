@@ -30,6 +30,7 @@ use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReposrtesController;
 use App\Http\Controllers\TurnoController;
+use App\Http\Controllers\TurnoUsuarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -282,6 +283,9 @@ Route::resource('turnos',TurnoController::class)
     ->parameters(['turnos'=> 'turno'])
     ->names('turnos');
 
+Route::resource('asignar-turnos', TurnoUsuarioController::class)
+    ->parameters(['turnoUsuario'=> 'turnoUsuario'])
+    ->names('asignar-turnos');
 
 //rutas reportes
 

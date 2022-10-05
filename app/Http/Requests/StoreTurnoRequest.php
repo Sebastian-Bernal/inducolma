@@ -27,7 +27,11 @@ class StoreTurnoRequest extends FormRequest
             'turno' =>'required',
             'hora_inicio' =>'required',
             'hora_fin' =>'required',
-            'estado' =>'required',
+            'estado' =>[
+                'required',
+                'in:DISPONIBLE, NO DISPONIBLE',
+            ]
+
         ];
     }
 
@@ -44,6 +48,7 @@ class StoreTurnoRequest extends FormRequest
             'hora_inicio.required' => 'La hora inicio es obligatoria',
             'hora_fin.required' => 'La hora fim es obligatoria',
             'estado.required' => 'El estado es obligatorio',
+            'estado.in' => 'El estado debe ser DISPONIBLE O NO DISPONIBLE',
         ];
     }
 
