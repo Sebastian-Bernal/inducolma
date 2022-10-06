@@ -25,7 +25,7 @@
 
             @endif
             <!-- Modal Crea tipo de madera-->
-            <form action="{{ route('asignar-turnos.store') }}" method="POST">
+            <form action="{{ route('asignar-turnos.store') }}" method="POST" id="formAsignarTurno">
                 @csrf
                 <div class="modal fade" id="creaUsuario" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
@@ -130,7 +130,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="submit" class="btn btn-primary">Asignar turno</button>
+                                <button type="button" class="btn btn-primary" onclick="comprobarTurno()">Asignar turno</button>
                             </div>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
         </div>
         <!-- Tabla -->
 
-        <table id="listaTurno" class="table table-bordered table-striped dt-responsive">
+        <table id="listaTurnosAsignados" class="table table-bordered table-striped dt-responsive">
             <thead>
                 <tr>
 
@@ -160,6 +160,7 @@
                     <td>{{ $turno_usuario->fecha }}</td>
 
                     <td>
+
                         <div class="d-flex align-items-center ">
 
                             <button class="btn btn-sm btn-danger" onclick="eliminarTurnoAsignado({{ $turno_usuario }})">

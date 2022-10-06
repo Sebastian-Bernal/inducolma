@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class TurnoUsuario extends Model
 {
     use HasFactory;
-
+    public $timestamps = false;
+    protected $fillable = [
+        'user_id',
+        'turno_id',
+        'maquina_id',
+        'fecha'
+    ];
     protected $table = 'turno_usuarios';
 
     /**

@@ -286,6 +286,13 @@ Route::resource('turnos',TurnoController::class)
 Route::resource('asignar-turnos', TurnoUsuarioController::class)
     ->parameters(['turnoUsuario'=> 'turnoUsuario'])
     ->names('asignar-turnos');
+Route::controller(TurnoUsuarioController::class)->group(function (){
+    Route::post('turnos-usuario', 'TurnosUsuario')
+        ->name('turnos-usuario')
+        ->middleware('auth');
+
+});
+
 
 //rutas reportes
 

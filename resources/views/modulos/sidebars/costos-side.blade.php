@@ -77,7 +77,7 @@
                         </p>
 
                         <p>
-                            <a class="btn btn-primary seleccionado" href="{{ route('turnos.index') }}">
+                            <a class="btn btn-primary seleccionado" href="{{ route('asignar-turnos.index') }}">
                                 Asignar turno a usuario
                             </a>
                         </p>
