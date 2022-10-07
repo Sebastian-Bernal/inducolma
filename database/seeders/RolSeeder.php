@@ -19,19 +19,19 @@ class RolSeeder extends Seeder
             'id' => 1 ,
             'nombre' => 'Recepcionista madera',
             'descripcion' => 'descripcion del rol es editable',
-            'nivel'  => 1,
+
         ]);
         DB::table('rols')->insert([
             'id' => 2 ,
             'nombre' => 'Operario maquinas',
             'descripcion' => 'descripcion del rol es editable',
-            'nivel' => 2,
+
         ]);
         DB::table('rols')->insert([
             'id' => 3 ,
             'nombre' => 'Auxiliar administrativo contable',
             'descripcion' => 'descripcion del rol es editable',
-            'nivel' => 3,
+
         ]);
 
         DB::table('rols')->insert([
