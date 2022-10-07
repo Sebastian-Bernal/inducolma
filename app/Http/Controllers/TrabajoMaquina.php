@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
+use App\Models\EventoProceso;
 use App\Models\Maquina;
+use App\Models\TiepoUsuarioDia;
 use App\Models\TurnoUsuario;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -102,4 +104,41 @@ class TrabajoMaquina extends Controller
     /**
      * guarda el registro de la asistencia de usuario
      */
+
+    public function guardaAsistencia(Request $request)
+    {
+        $asistencia  = new TiepoUsuarioDia();
+        $asistencia->fecha = date('Y-m-d');
+        $asistencia->entrada = time();
+        $asistencia->usuario_id = $request->usuario_id;
+        $asistencia->maquina_id = $request->maquina_id;
+
+        try {
+            $asistencia->save();
+            return response()->json(array('error' => false, 'mensaje' => "asistencia guardada" ));
+        } catch (\Throwable $th) {
+            return response()->json(array('error' => true, 'mensaje' => "asistencia no pudo ser guardada" ));
+        }
+
+    }
+
+    /**
+     * guarda la eventualidad de la maquina
+     */
+
+    public function guardaEventualidad(Request $request)
+    {
+        $evento = new EventoProceso();
+        $evento->proceso_id = $request->proceso_id ;
+        $evento->evento_id = $request->evento_id ;
+        $evento->user_id = $request->usuario_id ;
+
+        try {
+            $evento->save();
+            return response()->json(array('error' => false, 'mensaje' => "evento guardado" ));
+        } catch (\Throwable $th) {
+            return response()->json(array('error' => true, 'mensaje' => "evento no pudo ser guardado" ));
+        }
+
+    }
 }
