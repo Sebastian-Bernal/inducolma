@@ -1,9 +1,9 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     $('#listaTurnosAsignados').DataTable({
         "language": {
-                "url": "/DataTables/Spanish.json"
-                },
+            "url": "/DataTables/Spanish.json"
+        },
         "responsive": true
 
     });
@@ -28,7 +28,7 @@ function eliminarTurnoAsignado(turno) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: "/asignar-turnos/" +turno.id,
+                url: "/asignar-turnos/" + turno.id,
                 type: "DELETE",
                 dataType: "JSON",
                 data: {
@@ -98,9 +98,9 @@ function comprobarTurno() {
                     });
                     lista += '</ul>';
                     Swal.fire({
-                        title: '¡El usuario: '+$('select[id="usuario"] option:selected').text()+' ya tiene turnos asignados en las fechas!',
+                        title: '¡El usuario: ' + $('select[id="usuario"] option:selected').text() + ' ya tiene turnos asignados en las fechas!',
                         icon: 'warning',
-                        html : lista,
+                        html: lista,
                         confirmButtonColor: '#597504',
                         confirmButtonText: 'OK'
                     });

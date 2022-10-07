@@ -29,6 +29,7 @@ use App\Http\Controllers\OrdenProduccionController;
 use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReposrtesController;
+use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\TurnoUsuarioController;
 use Illuminate\Support\Facades\Auth;
@@ -280,12 +281,13 @@ Route::resource('procesos', ProcesoController::class)
 
 
 Route::resource('turnos',TurnoController::class)
-    ->parameters(['turnos'=> 'turno'])
-    ->names('turnos');
+        ->parameters(['turnos'=> 'turno'])
+        ->names('turnos');
 
 Route::resource('asignar-turnos', TurnoUsuarioController::class)
-    ->parameters(['turnoUsuario'=> 'turnoUsuario'])
-    ->names('asignar-turnos');
+        ->parameters(['turnoUsuario'=> 'turnoUsuario'])
+        ->names('asignar-turnos')
+        ->middleware('auth');
 Route::controller(TurnoUsuarioController::class)->group(function (){
     Route::post('turnos-usuario', 'TurnosUsuario')
         ->name('turnos-usuario')
@@ -293,6 +295,10 @@ Route::controller(TurnoUsuarioController::class)->group(function (){
 
 });
 
+Route::resource('trabajo-maquina', TrabajoMaquina::class)
+        ->parameters(['trabajo-maquina' => 'trabajo-maquina'])
+        ->names('trabajo-maquina')
+        ->middleware('auth');
 
 //rutas reportes
 

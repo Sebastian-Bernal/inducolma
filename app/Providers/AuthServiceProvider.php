@@ -46,6 +46,11 @@ class AuthServiceProvider extends ServiceProvider
             return $user->rol_id === 2;
         });
 
+        // gate para usuario proceso
+        Gate::define('procesos',function($user){
+            return $user->rol_id === 2;
+        });
+
     }
 
 

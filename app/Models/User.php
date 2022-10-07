@@ -85,4 +85,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Maquina::class, 'turno_usuarios');
     }
+
+    /**
+     * relacion hasMany TurnoUsuario
+     */
+
+    /* public function turno_usuario(Type $var = null)
+    {
+        # code...
+    } */
 }

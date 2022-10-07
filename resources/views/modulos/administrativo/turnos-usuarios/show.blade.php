@@ -35,7 +35,7 @@
                             <div class="row mb-3">
                                 <label for="usuario" class="col-md-4 col-form-label text-md-end">{{ __('Empleado') }}</label>
                                 <div class="col-md-6">
-                                    <select name="usuario" id="usuario" class="form-control ">
+                                    <select name="usuario" id="usuario" class="form-control">
                                         <option value="{{ $asignar_turno->user_id }}" selected>{{ $asignar_turno->user->name }}</option>
                                     </select>
                                     @error('usuario')
@@ -90,6 +90,7 @@
                                         name="desde" value="{{ old('desde', $asignar_turno->fecha) }}"
                                         min='{{ date('Y-m-d', strtotime('1 days')) }}'
                                         required
+                                        readonly
                                         autocomplete="desde" autofocus onkeyup="mayusculas()">
                                     @error('desde')
                                     <span class="invalid-feedback" role="alert">
@@ -103,7 +104,7 @@
                     </div>
                     <div class="modal-footer">
                         <a class="btn btn-secondary" href="{{ route('asignar-turnos.index') }}">volver</a>
-                        <button type="button" class="btn btn-primary" onclick="comprobarTurno()">Modificar turno asignado</button>
+                        <button type="submit" class="btn btn-primary">Modificar turno asignado</button>
                     </div>
                 </div>
             </form>

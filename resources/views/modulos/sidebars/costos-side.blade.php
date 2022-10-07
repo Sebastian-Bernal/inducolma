@@ -277,6 +277,10 @@
             <a href="{{ route('calificaciones.index') }}" class="btn btn-primary seleccionado">{{ __('Calificaciones')
                 }}</a>
         </p>
+        <p>
+            <a href="{{ route('trabajo-maquina.index') }}" class="btn btn-primary seleccionado">{{ __('Trabajo en Maquina')
+                }}</a>
+        </p>
         </li>
         @endcan
 
