@@ -300,6 +300,15 @@ Route::resource('trabajo-maquina', TrabajoMaquina::class)
         ->names('trabajo-maquina')
         ->middleware('auth');
 
+Route::controller('registros-maquina')->group(function(){
+    Route::post('guardar-asistencia', 'guardaAsistencia')
+            ->name('guardar-asistencia')
+            ->middleware('auth');
+
+    Route::post('guardar-eventualidad','guardaEventualidad')
+        ->name('guardar-eventualidad')
+        ->middleware('auth');
+});
 //rutas reportes
 
 Route::controller(ReporteController::class)->group(function(){
