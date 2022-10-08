@@ -6,13 +6,22 @@
 @endsection
 @section('content')
      <div class="container h-content ">
-        <button class="hidden" id="users" onclick="listaUser({{ $turno_usuarios }})"></button>
-           <div class="row"></div>
+        <div id="nombres">
+        @forelse ($turno_usuarios as $turno)
+            
+        <input id="{{ $turno->user_id }}" style="display:none" value="{{ $turno->user->name }}">
+                    
+        @empty
+            
+        @endforelse
+     </div>
+        <button style="display:none" id="users" onclick="listaUser({{ $turno_usuarios }})"></button>
+           {{--  <div class="row"></div>
             {{ $usuario }} <br>
             {{ $turno_usuarios }} <br>
             {{ $maquinas }} <br>
             {{ $eventos }} <br> 
-        </div>    
+        </div>      --}}
         <div class="d-flex flex-wrap justify-content-center container-fluid">
             {{-- PROCESO --}}
             <div id="maquinas" class="container card  bg-light shadow m-2 rounded-3">
@@ -24,7 +33,7 @@
                     <div class="text-center">
                         <label> Maquina a trabajar </label>
                     </div>
-                     <form id="confirmarMaquina">
+                    
                         <div class="input-group mb-3 mt-3">
                             
                             <label class="input-group-text" for="maquina">Maquina</label>
@@ -45,7 +54,7 @@
                             <button type="button" class="text-white btn btn-warning container-fluid" onclick="confirmaMaquina({{ $turno_usuarios }})">Confirma maquina a trabajar</button>
                         </div>
                      
-                    </form>   
+               
                   
                 </div>
     
@@ -68,14 +77,14 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Turno No.</th>
+                                       
                                         <th scope="col">Usuario</th>
-                                        <th scope="col">Usuario ID.</th>
+                                       
                                         <th scope="col">Acciones</th>
                                         
                                     </tr>
                                 </thead>
-                                <tbody id="listaUser">
+                                <tbody id="listarUsers">
                                    
                                 </tbody>
                             </table>
