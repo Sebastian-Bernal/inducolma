@@ -117,3 +117,19 @@ function eliminarTurno(turnoUsuario, usuarioId){
         }
     })        
 }
+
+function cambiarUsuario(){
+    Swal.fire({
+        title: '¡Esta seguro de asignar nuevos usuarios!',
+        icon: 'warning',
+        confirmButtonColor: '#597504',
+        confirmButtonText: 'Si',
+        showDenyButton: true,
+        denyButtonText: 'No'
+
+    }).then((result) => {
+        if (result.isConfirmed) {
+            alert("se cambia los valores de auxiliares")
+        }
+    }) 
+}
