@@ -98,7 +98,7 @@
                                             <input id="desde" type="date"
                                                 class="form-control @error('desde') is-invalid @enderror text-uppercase"
                                                 name="desde" value="{{ old('desde') }}"
-                                                min='{{ date('Y-m-d', strtotime('1 days')) }}'
+                                                min='{{ date('Y-m-d') }}'
                                                 required
                                                 autocomplete="desde" autofocus onkeyup="mayusculas()">
                                             @error('desde')
@@ -116,7 +116,7 @@
                                                 class="form-control @error('hasta') is-invalid @enderror text-uppercase"
                                                 name="hasta" value="{{ old('hasta') }}"
                                                 required
-                                                min='{{ date('Y-m-d', strtotime('1 days')) }}'
+                                                min='{{ date('Y-m-d') }}'
                                                 autocomplete="hasta" autofocus onkeyup="mayusculas()">
                                             @error('hasta')
                                             <span class="invalid-feedback" role="alert">

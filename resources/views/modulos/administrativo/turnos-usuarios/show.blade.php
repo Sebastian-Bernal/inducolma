@@ -88,7 +88,7 @@
                                     <input id="desde" type="date"
                                         class="form-control @error('desde') is-invalid @enderror text-uppercase"
                                         name="desde" value="{{ old('desde', $asignar_turno->fecha) }}"
-                                        min='{{ date('Y-m-d', strtotime('1 days')) }}'
+                                        min='{{ date('Y-m-d') }}'
                                         required
                                         readonly
                                         autocomplete="desde" autofocus onkeyup="mayusculas()">

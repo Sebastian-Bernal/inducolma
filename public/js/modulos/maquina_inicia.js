@@ -29,7 +29,7 @@ function confirmaMaquina(turnos,usuario){
                     confirmButtonText: 'Si',
                     showDenyButton: true,
                     denyButtonText: 'No'
-        
+
                 }).then((result) => {
                     if (result.isConfirmed) {
                         actualizaMaquina(maquinaId, usuId)
@@ -37,7 +37,7 @@ function confirmaMaquina(turnos,usuario){
                         leeUsuraio(maquinaId)
                         alert("se cambia los valores de auxiliares")
                     }
-                })        
+                })
             }else{
                 guardaUsuario(maquinaId,usuId)
                 alert("se guarda la informacion")
@@ -65,32 +65,38 @@ function listaUser(turnos){
         leerName()
         inicial = 1
     }
-        
-    let turnoMaquina = turnos
-    $('#listarUsers').html('');
-    turnoMaquina.forEach(turnoMaquina => {
-        let nombreUser = usuarioMaquina.filter(usuarioMaquina => usuarioMaquina.identi == turnoMaquina.user_id)
-        let fila = `<tr id ="${ turnoMaquina.id }">
-                        <td style="display:none">${ turnoMaquina.id }</td>
-                        <td >${ nombreUser[0].nombre }</td>
-                        <td style="display:none">${ turnoMaquina.user_id }</td>
-                        <td><button type="button" class="btn btn-primary" onclick="confirmarTurno(${ turnoMaquina.id }, ${ turnoMaquina.user_id })"><i class="text-white fa-solid fa-check"></i></button>
-                        <button type="button" class="btn btn-danger" onclick="eliminarTurno(${ turnoMaquina.id }, ${ turnoMaquina.user_id })"><i class="text-white fas fa-trash"></i></button></td>
-                        </tr>  `;
-        $('#listarUsers').append(fila);
 
-    })
+    if (turnos == undefined) {
+        $('#listarUsers').append('ningun usuario asignado a este turno');
+    } else {
+        let turnoMaquina = turnos
+        $('#listarUsers').html('');
+        turnoMaquina.forEach(turnoMaquina => {
+            let nombreUser = usuarioMaquina.filter(usuarioMaquina => usuarioMaquina.identi == turnoMaquina.user_id)
+            let fila = `<tr id ="${ turnoMaquina.id }">
+                            <td style="display:none">${ turnoMaquina.id }</td>
+                            <td >${ nombreUser[0].nombre }</td>
+                            <td style="display:none">${ turnoMaquina.user_id }</td>
+                            <td><button type="button" class="btn btn-primary" onclick="confirmarTurno(${ turnoMaquina.id }, ${ turnoMaquina.user_id })"><i class="text-white fa-solid fa-check"></i></button>
+                            <button type="button" class="btn btn-danger" onclick="eliminarTurno(${ turnoMaquina.id }, ${ turnoMaquina.user_id })"><i class="text-white fas fa-trash"></i></button></td>
+                            </tr>  `;
+            $('#listarUsers').append(fila);
+
+        })
+    }
+
+
 }
 
 //injerto para leer y guardar en array objetos traidos del documento
 function leerName(){
     let campos = $('#nombres').find('input');
     $.each(campos, function (index, value) {
-    
+
     let identi = value.id
     let nombre = document.getElementById(identi).value
-    
- 
+
+
        registroUsuario = Object.assign({}, { nombre, identi });
        usuarioMaquina.unshift(registroUsuario);
     })
@@ -115,5 +121,5 @@ function eliminarTurno(turnoUsuario, usuarioId){
         if (result.isConfirmed) {
             alert("se cambia los valores de auxiliares")
         }
-    })        
+    })
 }

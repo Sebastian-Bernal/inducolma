@@ -90,8 +90,8 @@ class User extends Authenticatable
      * relacion hasMany TurnoUsuario
      */
 
-    /* public function turno_usuario(Type $var = null)
+    public function turno_usuario()
     {
-        # code...
-    } */
+        return $this->hasMany(TurnoUsuario::class, 'turno_usuarios');
+    }
 }

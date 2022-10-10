@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Evento;
 use App\Models\EventoProceso;
 use App\Models\Maquina;
-use App\Models\TiepoUsuarioDia;
 use App\Models\TurnoUsuario;
 use App\Models\User;
+use App\Repositories\RegistroAsistencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TrabajoMaquina extends Controller
 {
+    protected $registroAsistencia;
+
+    public function __construct(RegistroAsistencia $registroAsitencia)
+    {
+        $this->registroAsistencia = $registroAsitencia;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,15 +31,21 @@ class TrabajoMaquina extends Controller
         $turno = TurnoUsuario::where('user_id',Auth::user()->id)
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
-        $turno_usuarios = TurnoUsuario::where('turno_id',$turno->turno_id)
-                                ->where('fecha', date('Y-m-d'))
-                                ->get()
-                                ->except($turno->id);
-        $maquinas = Maquina::get(['id', 'maquina']);
-        $eventos = Evento::get(['id', 'descripcion']);
+        if (!empty($turno)) {
+            $turno_usuarios = TurnoUsuario::where('turno_id',$turno->turno_id)
+                            ->where('fecha', date('Y-m-d'))
+                            ->get()
+                            ->except($turno->id);
 
-        return view('modulos.operaciones.trabajo-maquina.index',
-                compact('usuario', 'turno_usuarios', 'maquinas','eventos'));
+            $maquinas = Maquina::get(['id', 'maquina']);
+            $eventos = Evento::get(['id', 'descripcion']);
+
+            return view('modulos.operaciones.trabajo-maquina.index',
+                    compact('usuario', 'turno_usuarios', 'maquinas','eventos', 'turno'));
+        } else {
+            return redirect()->back()->with('status', "El usuario no tiene turno asignado para la fecha: ". date('Y-m-d'));
+        }
+
     }
 
     /**
@@ -103,23 +116,14 @@ class TrabajoMaquina extends Controller
 
     /**
      * guarda el registro de la asistencia de usuario
+     *
+     * @param  Request $request [el request debe contener user_id, maquina_id, turno_id]
+     * @return Response JSON
      */
 
     public function guardaAsistencia(Request $request)
     {
-        $asistencia  = new TiepoUsuarioDia();
-        $asistencia->fecha = date('Y-m-d');
-        $asistencia->entrada = time();
-        $asistencia->usuario_id = $request->usuario_id;
-        $asistencia->maquina_id = $request->maquina_id;
-
-        try {
-            $asistencia->save();
-            return response()->json(array('error' => false, 'mensaje' => "asistencia guardada" ));
-        } catch (\Throwable $th) {
-            return response()->json(array('error' => true, 'mensaje' => "asistencia no pudo ser guardada" ));
-        }
-
+        return $this->registroAsistencia->guardar($request);
     }
 
     /**
@@ -139,6 +143,7 @@ class TrabajoMaquina extends Controller
         } catch (\Throwable $th) {
             return response()->json(array('error' => true, 'mensaje' => "evento no pudo ser guardado" ));
         }
-
     }
+
+
 }
