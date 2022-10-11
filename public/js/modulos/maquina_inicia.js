@@ -61,26 +61,22 @@ function leeUsuario(maquinaId){
 
 // listado de usuarios auxiliares
 function listaUser(turnos){
-    if (inicial == 0){
-        leerName()
-        inicial = 1
-    }
 
     if (turnos == undefined) {
         $('#listarUsers').append('ningun usuario asignado a este turno');
     } else {
-        let turnoMaquina = turnos
         $('#listarUsers').html('');
-        turnoMaquina.forEach(turnoMaquina => {
-            let nombreUser = usuarioMaquina.filter(usuarioMaquina => usuarioMaquina.identi == turnoMaquina.user_id)
-            let fila = `<tr id ="${ turnoMaquina.id }">
-                            <td style="display:none">${ turnoMaquina.id }</td>
-                            <td >${ nombreUser[0].nombre }</td>
-                            <td style="display:none">${ turnoMaquina.user_id }</td>
-                            <td><button type="button" class="btn btn-primary" onclick="confirmarTurno(${ turnoMaquina.id }, ${ turnoMaquina.user_id })"><i class="text-white fa-solid fa-check"></i></button>
-                            <button type="button" class="btn btn-danger" onclick="eliminarTurno(${ turnoMaquina.id }, ${ turnoMaquina.user_id })"><i class="text-white fas fa-trash"></i></button></td>
+        turnos.forEach(turno => {
+            if (turno.asistencia == null) {
+                let fila = `<tr id ="${ turno.id }">
+                            <td style="display:none">${ turno.id }</td>
+                            <td >${ turno.user.name }</td>
+                            <td style="display:none">${ turno.user_id }</td>
+                            <td><button type="button" class="btn btn-primary" onclick="confirmarTurno(${ turno.turno_id }, ${ turno.user_id }, ${ turno.maquina_id}, ${ true })"><i class="text-white fa-solid fa-check"></i></button>
+                            <button type="button" class="btn btn-danger" onclick="eliminarTurno(${ turno.id }, ${ turno.user_id })"><i class="text-white fas fa-trash"></i></button></td>
                             </tr>  `;
-            $('#listarUsers').append(fila);
+                $('#listarUsers').append(fila);
+            }
 
         })
     }
@@ -88,23 +84,48 @@ function listaUser(turnos){
 
 }
 
-//injerto para leer y guardar en array objetos traidos del documento
-function leerName(){
-    let campos = $('#nombres').find('input');
-    $.each(campos, function (index, value) {
+function confirmarTurno(turno_id, user_id, maquina_id, estado){
+    console.log(turno_id, user_id, maquina_id, estado);
+    Swal.fire({
+        title: '¡Esta seguro de confirar el turno para el usuario!',
+        icon: 'warning',
+        confirmButtonColor: '#597504',
+        confirmButtonText: 'Si',
+        showDenyButton: true,
+        denyButtonText: 'No'
 
-    let identi = value.id
-    let nombre = document.getElementById(identi).value
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/guardar-asistencia`,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    turno_id: turno_id,
+                    usuario_id: user_id,
+                    maquina_id: maquina_id,
+                    estado: estado,
+                    _token: $('input[name="_token"]').val()
+                },
+                beforeSend: function (e) {
+                    $('#spinnerAuxiliares').append(
+                        `<div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                        </div>`
+                    );
+                },
+                success: function (e) {
+                    alertaErrorSimple(e.mensaje, 'success');
+                    listaUser(e.usuarios);
+                    $('#spinnerAuxiliares').html('');
+                },
 
-
-       registroUsuario = Object.assign({}, { nombre, identi });
-       usuarioMaquina.unshift(registroUsuario);
+                error: function (error){
+                    console.log(error);
+                }
+            })
+        }
     })
-}
-
-function confirmarTurno(turnoUsuario, usuarioId){
-    console.log(turnoUsuario, usuarioId)
-    alert("se envian los datos")
 }
 
 function eliminarTurno(turnoUsuario, usuarioId){

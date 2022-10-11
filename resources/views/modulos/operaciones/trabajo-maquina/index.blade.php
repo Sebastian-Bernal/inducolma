@@ -71,7 +71,9 @@
             <div class="text-center">
                 <label> Usuarios auxiliares en este proceso </label>
             </div>
+            <div class="text-center" id="spinnerAuxiliares">
 
+            </div>
 
             <div class="input-group mb-3 mt-3">
 
@@ -111,5 +113,6 @@
 @endsection
 
 @section('js')
+<script src="/js/modulos/alertas-swift.js"></script>
 <script src="/js/modulos/maquina_inicia.js"></script>
 @endsection

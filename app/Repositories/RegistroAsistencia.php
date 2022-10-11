@@ -12,7 +12,7 @@ class RegistroAsistencia {
     {
         $asistencia  = new TiepoUsuarioDia();
         $asistencia->fecha = date('Y-m-d');
-        $asistencia->entrada = time();
+        $asistencia->entrada = date('G:i:s');
         $asistencia->usuario_id = $request->usuario_id;
         $asistencia->maquina_id = $request->maquina_id;
 
@@ -22,21 +22,26 @@ class RegistroAsistencia {
                             ->first();
 
         if ($request->estado) {
+
             try {
                 $asistencia->save();
-                $turno->update(['asistencia' => $request->estado]);
-                $usuarios = $this->usuariosDia($request);
-                return response()->json(array('error' => false, 'mensaje' => "asistencia guardada", "usuarios" => $usuarios ));
-            } catch (\Throwable $th) {
-                return response()->json(array('error' => true, 'mensaje' => "asistencia no pudo ser guardada", "usuarios" => $usuarios ));
-            }
-        } else {
-            try {
-                $turno->update(['asistencia' => $request->estado]);
+                $turno->asistencia = true;
+                $turno->save();
                 $usuarios = $this->usuariosDia($request);
                 return response()->json(array('error' => false, 'mensaje' => "Asistencia guardada", "usuarios" => $usuarios ));
             } catch (\Throwable $th) {
-                return response()->json(array('error' => true, 'mensaje' => "asistencia no pudo ser guardada", "usuarios" => $usuarios ));
+                $usuarios = $this->usuariosDia($request);
+                return response()->json(array('error' => true, 'mensaje' => "Asistencia no pudo ser guardada", "usuarios" => $usuarios ));
+            }
+        } else {
+            try {
+                $turno->asistencia = false;
+                $turno->save();
+                $usuarios = $this->usuariosDia($request);
+                return response()->json(array('error' => false, 'mensaje' => "Asistencia guardada", "usuarios" => $usuarios ));
+            } catch (\Throwable $th) {
+                $usuarios = $this->usuariosDia($request);
+                return response()->json(array('error' => true, 'mensaje' => "Asistencia no pudo ser guardada", "usuarios" => $usuarios ));
             }
         }
     }
@@ -54,10 +59,10 @@ class RegistroAsistencia {
         $turno = TurnoUsuario::where('user_id',Auth::user()->id)
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
-        $usuarios = TurnoUsuario::join('users','users.id', '=', 'turno_usuarios.user_id')
-                            ->where('turno_id', $request->turno_id)
+        $usuarios = TurnoUsuario::where('turno_id', $request->turno_id)
                             ->where('fecha',date('Y-m-d'))
-                            ->get(['users.id','users.name','fecha', 'asistencia', 'turno_id', 'maquina_id'])
+                            ->get()
+                            ->load('user')
                             ->except($turno->id);
         return $usuarios;
     }

@@ -32,11 +32,7 @@ class TrabajoMaquina extends Controller
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
         if (!empty($turno)) {
-            $turno_usuarios = TurnoUsuario::where('turno_id',$turno->turno_id)
-                            ->where('fecha', date('Y-m-d'))
-                            ->get()
-                            ->except($turno->id);
-
+            $turno_usuarios = $this->registroAsistencia->usuariosDia($turno);
             $maquinas = Maquina::get(['id', 'maquina']);
             $eventos = Evento::get(['id', 'descripcion']);
 
@@ -123,6 +119,7 @@ class TrabajoMaquina extends Controller
 
     public function guardaAsistencia(Request $request)
     {
+
         return $this->registroAsistencia->guardar($request);
     }
 
