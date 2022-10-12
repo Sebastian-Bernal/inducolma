@@ -6,22 +6,9 @@
 @endsection
 @section('content')
 <div class="container h-content ">
-    <div id="nombres">
-        @forelse ($turno_usuarios as $turno)
 
-        <input id="{{ $turno->user_id }}" style="display:none" value="{{ $turno->user->name }}">
-
-        @empty
-
-        @endforelse
-    </div>
     <button style="display:none" id="users" onclick="listaUser({{ count($turno_usuarios) > 0 ? $turno_usuarios : ''}})"></button>
-    {{-- <div class="row"></div>
-    {{ $usuario }} <br>
-    {{ $turno_usuarios }} <br>
-    {{ $maquinas }} <br>
-    {{ $eventos }} <br>
-</div> --}}
+
 <div class="d-flex flex-wrap justify-content-center container-fluid">
     {{-- PROCESO --}}
     <div id="maquinas" class="container card  bg-light shadow m-2 rounded-3">
@@ -96,8 +83,34 @@
 
             <div>
                 <button type="button" class="text-white btn btn-danger container-fluid"
-                    onclick="cambiarUsuario()">Seleccionar otro auxiliar para esta maquina</button>
+                    data-bs-toggle="modal" data-bs-target="#modalCambioUsuario"
+                >Seleccionar otro auxiliar para esta maquina</button>
+                <!-- Modal -->
+                <div class="modal fade" id="modalCambioUsuario" tabindex="-1" aria-labelledby="modalCambioUsuarioLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="modalCambioUsuarioLabel">Usuarios</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <select class="form-select" id="auxiliar" name="auxiliar">
+                                @forelse ($usuarios as $usuario)
+                                    <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+                                @empty
+                                <option>No se encontraron usuarios</option>
+                                @endforelse
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="seleccionarAuxiliar({{ $turno->maquina_id. ',' .$turno->turno_id }})">Seleccionar usuario</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
             </div>
+
 
 
         </div>

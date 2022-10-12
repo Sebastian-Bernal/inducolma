@@ -67,4 +67,41 @@ class RegistroAsistencia {
         return $usuarios;
     }
 
+    /**
+     * crea un nueva asignacion de turno retorna json con datos de éxito o fallo
+     */
+
+    public function nuevoAuxiliar($request)
+    {
+        $nuevo_auxiliar = new TurnoUsuario();
+        $nuevo_auxiliar->user_id = $request->usuario_id;
+        $nuevo_auxiliar->maquina_id = $request->maquina_id;
+        $nuevo_auxiliar->turno_id = $request->turno_id;
+        $nuevo_auxiliar->fecha = date('Y-m-d');
+        $nuevo_auxiliar->asistencia = true;
+
+        $asistencia  = new TiepoUsuarioDia();
+        $asistencia->fecha = date('Y-m-d');
+        $asistencia->entrada = date('G:i:s');
+        $asistencia->usuario_id = $request->usuario_id;
+        $asistencia->maquina_id = $request->maquina_id;
+
+        $asignado = TurnoUsuario::where('user_id', $nuevo_auxiliar->user_id)
+                                ->where('fecha', $nuevo_auxiliar->fecha)
+                                ->first();
+
+
+        if ($asignado == ''){
+            try {
+                $asistencia->save();
+                $nuevo_auxiliar->save();
+                return response()->json(array('error' => false, 'mensaje' => "El axiliar se registro con éxito", ));
+            } catch (\Throwable $th) {
+                return response()->json(array('error' => true, 'mensaje' => "El axiliar no pudo ser registrado", ));
+            }
+        } else {
+            return response()->json(array('error' => true, 'mensaje' => "El auxiliar ya tiene un turno asignado", ));
+        }
+    }
+
 }

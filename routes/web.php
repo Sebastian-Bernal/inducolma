@@ -308,6 +308,10 @@ Route::controller(TrabajoMaquina::class)->group(function(){
     Route::post('guardar-eventualidad','guardaEventualidad')
         ->name('guardar-eventualidad')
         ->middleware('auth');
+
+    Route::post('guardar-auxiliar','nuevoAuxiliar')
+        ->name('guardar-auxiliar')
+        ->middleware('auth');
 });
 //rutas reportes
 

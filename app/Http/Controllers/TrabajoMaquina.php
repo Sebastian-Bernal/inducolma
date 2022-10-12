@@ -35,9 +35,9 @@ class TrabajoMaquina extends Controller
             $turno_usuarios = $this->registroAsistencia->usuariosDia($turno);
             $maquinas = Maquina::get(['id', 'maquina']);
             $eventos = Evento::get(['id', 'descripcion']);
-
+            $usuarios = User::where('rol_id', 2)->get(['id', 'name']);
             return view('modulos.operaciones.trabajo-maquina.index',
-                    compact('usuario', 'turno_usuarios', 'maquinas','eventos', 'turno'));
+                    compact('usuario', 'turno_usuarios', 'maquinas','eventos', 'turno', 'usuarios'));
         } else {
             return redirect()->back()->with('status', "El usuario no tiene turno asignado para la fecha: ". date('Y-m-d'));
         }
@@ -140,6 +140,19 @@ class TrabajoMaquina extends Controller
         } catch (\Throwable $th) {
             return response()->json(array('error' => true, 'mensaje' => "evento no pudo ser guardado" ));
         }
+    }
+
+    /**
+     * guarda una nueva asignacion de turno a un usuario retorna el array de turnos dia
+     *
+     * @param Request $request [maquina_id, turno_id, user_id( usuario nuevo)]
+     *
+     * @return Response JSON
+     */
+
+    public function nuevoAuxiliar(Request $request)
+    {
+        return $this->registroAsistencia->nuevoAuxiliar($request);
     }
 
 

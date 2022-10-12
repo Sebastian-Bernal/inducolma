@@ -144,3 +144,51 @@ function eliminarTurno(turnoUsuario, usuarioId){
         }
     })
 }
+
+
+function seleccionarAuxiliar(maquina, turno) {
+    let auxiliar = $('select[name="auxiliar"] option:selected');
+    Swal.fire({
+        title: `¡Esta seguro de asignar el auxiliar ${auxiliar.text()}!`,
+        icon: 'warning',
+        confirmButtonColor: '#597504',
+        confirmButtonText: 'Si',
+        showDenyButton: true,
+        denyButtonText: 'No'
+
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/guardar-auxiliar`,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    turno_id: turno,
+                    usuario_id: auxiliar.val(),
+                    maquina_id: maquina,
+                    _token: $('input[name="_token"]').val()
+                },
+                beforeSend: function (e) {
+                    $('#spinnerAuxiliares').append(
+                        `<div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                        </div>`
+                    );
+                },
+                success: function (e) {
+                    if (e.error == false) {
+                        alertaErrorSimple(e.mensaje, 'success');
+
+                    } else {
+                        alertaErrorSimple(e.mensaje, 'error');
+                    }
+                    $('#spinnerAuxiliares').html('');
+                },
+                error: function (error){
+                    console.log(error);
+                }
+            })
+        }
+    })
+
+}
