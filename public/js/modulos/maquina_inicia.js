@@ -1,63 +1,4 @@
-usuarioMaquina=[];
-let inicial = 0
 document.getElementById("users").click();
-
-
-
-//confirmar la maquina a trabajar
-function confirmaMaquina(turnos,usuario){
-    let campos = $('#maquinas').find('select');
-    let usuId = usuario;
-    maquinaAsignada = turnos
-    let maquinaId
-    $.each(campos, function (index, value) {
-        campoValor = value.value
-        if (campoValor == '') {
-            camposVacios()
-
-        } else {
-            if (value.id == 'maquina') {
-                maquinaId = value.value
-            }
-            //valida si la maquina seleccionada es la misma asignada
-            let coincide = maquinaAsignada.filter(maquinaAsignada => maquinaAsignada.maquina_id == maquinaId).length
-            if (coincide <= 0){
-                Swal.fire({
-                    title: '¡Esta seguro de cambiar la maquina en la que esta asignado!',
-                    icon: 'warning',
-                    confirmButtonColor: '#597504',
-                    confirmButtonText: 'Si',
-                    showDenyButton: true,
-                    denyButtonText: 'No'
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        actualizaMaquina(maquinaId, usuId)
-                        guardaUsuario(maquinaId, usuId)
-                        leeUsuraio(maquinaId)
-                        alert("se cambia los valores de auxiliares")
-                    }
-                })
-            }else{
-                guardaUsuario(maquinaId,usuId)
-                alert("se guarda la informacion")
-            }
-        }
-    })
-}
-
-function camposVacios(){
-    Swal.fire({
-        title: '¡Seleccione una maquina!',
-        icon: 'warning',
-        confirmButtonColor: '#597504',
-        confirmButtonText: 'OK'
-    });
-}
-
-function leeUsuario(maquinaId){
-
-}
 
 // listado de usuarios auxiliares
 function listaUser(turnos){
@@ -72,8 +13,8 @@ function listaUser(turnos){
                             <td style="display:none">${ turno.id }</td>
                             <td >${ turno.user.name }</td>
                             <td style="display:none">${ turno.user_id }</td>
-                            <td><button type="button" class="btn btn-primary" onclick="confirmarTurno(${ turno.turno_id }, ${ turno.user_id }, ${ turno.maquina_id}, ${ true })"><i class="text-white fa-solid fa-check"></i></button>
-                            <button type="button" class="btn btn-danger" onclick="eliminarTurno(${ turno.id }, ${ turno.user_id })"><i class="text-white fas fa-trash"></i></button></td>
+                            <td><button type="button" class="btn btn-primary" onclick="confirmarTurno(${ turno.turno_id }, ${ turno.user_id }, ${ turno.maquina_id}, ${ 1 })"><i class="text-white fa-solid fa-check"></i></button>
+                            <button type="button" class="btn btn-danger" onclick="faltaTurno(${ turno.turno_id }, ${ turno.user_id }, ${ turno.maquina_id})"><i class="text-white fas fa-xmark"></i></button></td>
                             </tr>  `;
                 $('#listarUsers').append(fila);
             }
@@ -83,11 +24,25 @@ function listaUser(turnos){
 
 
 }
-
+/**
+ * envia peticion Ajax para confirmar la asistencia del usuario, retorna mensaje de confirmacion
+ * o error, y lista los usuarios
+ *
+ * @param {integer} turno_id
+ * @param {integer} user_id
+ * @param {integer} maquina_id
+ * @param {boolean} estado
+ */
 function confirmarTurno(turno_id, user_id, maquina_id, estado){
-    console.log(turno_id, user_id, maquina_id, estado);
+    let title;
+    if(estado == 0 ){
+        title = 'Esta seguro de asignar la falta al usuario?';
+    } else {
+        title = '¡Esta seguro de confirar el turno para el usuario!';
+    }
+
     Swal.fire({
-        title: '¡Esta seguro de confirar el turno para el usuario!',
+        title: title,
         icon: 'warning',
         confirmButtonColor: '#597504',
         confirmButtonText: 'Si',
@@ -115,80 +70,87 @@ function confirmarTurno(turno_id, user_id, maquina_id, estado){
                     );
                 },
                 success: function (e) {
-                    alertaErrorSimple(e.mensaje, 'success');
-                    listaUser(e.usuarios);
                     $('#spinnerAuxiliares').html('');
-                },
 
-                error: function (error){
-                    console.log(error);
-                }
-            })
-        }
-    })
-}
-
-function eliminarTurno(turnoUsuario, usuarioId){
-    console.log(turnoUsuario, usuarioId)
-    Swal.fire({
-        title: '¡Esta seguro de eliminar el usuario asignado!',
-        icon: 'warning',
-        confirmButtonColor: '#597504',
-        confirmButtonText: 'Si',
-        showDenyButton: true,
-        denyButtonText: 'No'
-
-    }).then((result) => {
-        if (result.isConfirmed) {
-            alert("se cambia los valores de auxiliares")
-        }
-    })
-}
-
-
-function seleccionarAuxiliar(maquina, turno) {
-    let auxiliar = $('select[name="auxiliar"] option:selected');
-    Swal.fire({
-        title: `¡Esta seguro de asignar el auxiliar ${auxiliar.text()}!`,
-        icon: 'warning',
-        confirmButtonColor: '#597504',
-        confirmButtonText: 'Si',
-        showDenyButton: true,
-        denyButtonText: 'No'
-
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: `/guardar-auxiliar`,
-                type: "POST",
-                dataType: "JSON",
-                data: {
-                    turno_id: turno,
-                    usuario_id: auxiliar.val(),
-                    maquina_id: maquina,
-                    _token: $('input[name="_token"]').val()
-                },
-                beforeSend: function (e) {
-                    $('#spinnerAuxiliares').append(
-                        `<div class="spinner-border text-warning" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                        </div>`
-                    );
-                },
-                success: function (e) {
-                    if (e.error == false) {
-                        alertaErrorSimple(e.mensaje, 'success');
-
-                    } else {
-                        alertaErrorSimple(e.mensaje, 'error');
+                    if (e.usuarios.length <= 0) {
+                        location.reload();
                     }
-                    $('#spinnerAuxiliares').html('');
+                    listaUser(e.usuarios);
+                    alertaErrorSimple(e.mensaje, 'success');
                 },
+
                 error: function (error){
                     console.log(error);
                 }
             })
         }
     })
+}
 
+/**
+ * envia la peticion Ajax para asignar la falta del usuario al proceso del dia retorna
+ * mensaje de confirmacion o error
+ *
+ * @param {integer} turnoUsuario
+ * @param {integer} usuarioId
+ */
+var turnoUsuario, usuarioId, maquina;
+function faltaTurno(turno, usuario, maquina){
+
+    Swal.fire({
+        title: '¡Esta seguro de asignar falta al usuario asignado!',
+        icon: 'warning',
+        confirmButtonColor: '#597504',
+        confirmButtonText: 'Si',
+        showDenyButton: true,
+        denyButtonText: 'No'
+
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+            $('#eventualidad').click();
+            turnoUsuario = turno;
+            usuarioId = usuario;
+            maquinaId = maquina;
+        }
+    })
+}
+
+/**
+ * guarda la eventualidad del usuario
+ *
+ * @param {integer} userId {usuario que registra el evento}
+ */
+
+function guardaEvento(userId){
+
+    let eventoId = $('select[name="eventos"] option:selected');
+    let observacion = $('#observacionEvento').val();
+    $.ajax({
+        url: `/guardar-eventualidad`,
+        type: "POST",
+        dataType: "JSON",
+        data: {
+            proceso_id: maquinaId,
+            evento_id: eventoId.val(),
+            user_id: userId,
+            observaciones: observacion,
+            _token: $('input[name="_token"]').val()
+        },
+        success: function (e) {
+            if (e.error) {
+                alertaErrorSimple(e.message, 'error');
+            }else {
+                alertaErrorSimple(e.mensaje, 'success');
+                confirmarTurno(turnoUsuario, usuarioId, maquinaId, 0);
+                $('#cerrarEvento').click();
+            }
+
+        },
+        error: function (error){
+            console.log(error);
+        }
+
+
+    })
 }

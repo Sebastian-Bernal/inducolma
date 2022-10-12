@@ -21,7 +21,8 @@ class RegistroAsistencia {
                             ->where('fecha', date('Y-m-d'))
                             ->first();
 
-        if ($request->estado) {
+
+        if ($request->estado == true) {
 
             try {
                 $asistencia->save();
@@ -38,10 +39,10 @@ class RegistroAsistencia {
                 $turno->asistencia = false;
                 $turno->save();
                 $usuarios = $this->usuariosDia($request);
-                return response()->json(array('error' => false, 'mensaje' => "Asistencia guardada", "usuarios" => $usuarios ));
+                return response()->json(array('error' => false, 'mensaje' => "Falta guardada", "usuarios" => $usuarios ));
             } catch (\Throwable $th) {
                 $usuarios = $this->usuariosDia($request);
-                return response()->json(array('error' => true, 'mensaje' => "Asistencia no pudo ser guardada", "usuarios" => $usuarios ));
+                return response()->json(array('error' => true, 'mensaje' => "Falta no pudo ser guardada", "usuarios" => $usuarios ));
             }
         }
     }
@@ -60,48 +61,14 @@ class RegistroAsistencia {
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
         $usuarios = TurnoUsuario::where('turno_id', $request->turno_id)
+                            ->where('asistencia', null)
                             ->where('fecha',date('Y-m-d'))
                             ->get()
-                            ->load('user')
-                            ->except($turno->id);
+                            ->load('user');
+                            //->except($turno->id);
         return $usuarios;
     }
 
-    /**
-     * crea un nueva asignacion de turno retorna json con datos de éxito o fallo
-     */
 
-    public function nuevoAuxiliar($request)
-    {
-        $nuevo_auxiliar = new TurnoUsuario();
-        $nuevo_auxiliar->user_id = $request->usuario_id;
-        $nuevo_auxiliar->maquina_id = $request->maquina_id;
-        $nuevo_auxiliar->turno_id = $request->turno_id;
-        $nuevo_auxiliar->fecha = date('Y-m-d');
-        $nuevo_auxiliar->asistencia = true;
-
-        $asistencia  = new TiepoUsuarioDia();
-        $asistencia->fecha = date('Y-m-d');
-        $asistencia->entrada = date('G:i:s');
-        $asistencia->usuario_id = $request->usuario_id;
-        $asistencia->maquina_id = $request->maquina_id;
-
-        $asignado = TurnoUsuario::where('user_id', $nuevo_auxiliar->user_id)
-                                ->where('fecha', $nuevo_auxiliar->fecha)
-                                ->first();
-
-
-        if ($asignado == ''){
-            try {
-                $asistencia->save();
-                $nuevo_auxiliar->save();
-                return response()->json(array('error' => false, 'mensaje' => "El axiliar se registro con éxito", ));
-            } catch (\Throwable $th) {
-                return response()->json(array('error' => true, 'mensaje' => "El axiliar no pudo ser registrado", ));
-            }
-        } else {
-            return response()->json(array('error' => true, 'mensaje' => "El auxiliar ya tiene un turno asignado", ));
-        }
-    }
 
 }

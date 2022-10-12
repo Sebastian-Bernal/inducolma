@@ -18,31 +18,9 @@
         <div class=" card-body">
 
             <div class="text-center">
-                <label> Maquina a trabajar </label>
+                <label> Maquina a trabajar: </label>
+                <h4 class="text-warning fw-bolder">{{ $turno->maquina->maquina }}</h4>
             </div>
-
-            <div class="input-group mb-3 mt-3">
-
-                <label class="input-group-text" for="maquina">Maquina</label>
-                <select class="form-select" id="maquina">
-                    <option value="0">Seleccionar...</option>
-                    @forelse ($maquinas as $maquina)
-                    <option value="{{ $maquina->id }}" {{ $maquina->id == $turno->maquina_id ? 'selected' : '' }}>{{ $maquina->maquina
-                        }}</option>
-
-
-                    @empty
-                    <option>No existen maquinas creadas</option>
-                    @endforelse
-                </select>
-
-            </div>
-            <div>
-                <button type="button" class="text-white btn btn-warning container-fluid"
-                    onclick="confirmaMaquina({{ $turno }})">Confirma maquina a trabajar</button>
-            </div>
-
-
 
         </div>
 
@@ -80,43 +58,53 @@
                 </table>
 
             </div>
-
-            <div>
-                <button type="button" class="text-white btn btn-danger container-fluid"
-                    data-bs-toggle="modal" data-bs-target="#modalCambioUsuario"
-                >Seleccionar otro auxiliar para esta maquina</button>
-                <!-- Modal -->
-                <div class="modal fade" id="modalCambioUsuario" tabindex="-1" aria-labelledby="modalCambioUsuarioLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="modalCambioUsuarioLabel">Usuarios</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <select class="form-select" id="auxiliar" name="auxiliar">
-                                @forelse ($usuarios as $usuario)
-                                    <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
-                                @empty
-                                <option>No se encontraron usuarios</option>
-                                @endforelse
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" onclick="seleccionarAuxiliar({{ $turno->maquina_id. ',' .$turno->turno_id }})">Seleccionar usuario</button>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-
-
-
         </div>
 
 
     </div>
+
+    {{-- MODAL EVENTUALIDADES --}}
+    <!-- Button trigger modal -->
+    <button type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+            hidden
+            id="eventualidad">
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Evento falta del trabajador</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3 mt-3">
+                    <select class="form-select" name="eventos" id="eventos">
+                        @forelse ($eventos as $evento)
+                            <option value="{{ $evento->id }}">{{ $evento->descripcion }}</option>
+                        @empty
+                            <option value="">Ningun evento encontrado</option>
+                        @endforelse
+                    </select>
+                </div>
+
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Observaciones" id="observacionEvento" style="height: 100px"></textarea>
+                    <label for="floatingTextarea2">Observaciones:</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarEvento">Cerrar</button>
+            <button type="button" class="btn btn-primary" onclick="guardaEvento({{ $turno->user_id }})">Guardar evento</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
 </div>
 
 

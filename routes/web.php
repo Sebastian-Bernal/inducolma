@@ -296,7 +296,7 @@ Route::controller(TurnoUsuarioController::class)->group(function (){
 });
 
 Route::resource('trabajo-maquina', TrabajoMaquina::class)
-        ->parameters(['trabajo-maquina' => 'trabajo-maquina'])
+        ->parameters(['trabajo_maquina' => 'trabajo_maquina'])
         ->names('trabajo-maquina')
         ->middleware('auth');
 
@@ -309,9 +309,8 @@ Route::controller(TrabajoMaquina::class)->group(function(){
         ->name('guardar-eventualidad')
         ->middleware('auth');
 
-    Route::post('guardar-auxiliar','nuevoAuxiliar')
-        ->name('guardar-auxiliar')
-        ->middleware('auth');
+
+
 });
 //rutas reportes
 
