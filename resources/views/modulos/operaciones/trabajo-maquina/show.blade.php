@@ -18,6 +18,10 @@
             <thead>
                 <tr>
                     <th>Id</th>
+                    <th>Viaje</th>
+                    <th>Paqueta</th>
+                    <th>Bloque inicial</th>
+                    <th>BLoque final</th>
                     <th>Observación</th>
                     <th>Entrada</th>
                     <th>Salida</th>
@@ -30,7 +34,11 @@
                 @foreach ($procesos as $proceso)
                 <tr>
                     <td>{{ $proceso->id }}</td>
-                    <td>{{ $proceso->observacion }}</td>
+                    <td>{{ $proceso->cubicaje->entrada_madera_id }}</td>
+                    <td>{{ $proceso->cubicaje->paqueta }}</td>
+                    <td>{{ $proceso->orden_produccion->transformaciones->where('tipo_corte', 'INICIAL')->load('cubicaje')->min('cubicaje.bloque') }}</td>
+                    <td>{{ $proceso->orden_produccion->transformaciones->where('tipo_corte', 'INICIAL')->load('cubicaje')->max('cubicaje.bloque') }}</td>
+                    <th>{{ $proceso->observacion }}</th>
                     <td>{{ $proceso->entrada }}</td>
                     <td>{{ $proceso->salida }}</td>
                     <td>{{ $proceso->estado }}</td>

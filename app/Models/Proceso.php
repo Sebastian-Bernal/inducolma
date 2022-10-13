@@ -21,7 +21,7 @@ class Proceso extends Model
      * relacion belongsTo ordenProduccion
      */
 
-    public function orden()
+    public function orden_produccion()
     {
         return $this->belongsTo(ordenProduccion::class);
     }
