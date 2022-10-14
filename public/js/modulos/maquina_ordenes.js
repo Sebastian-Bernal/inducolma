@@ -1,3 +1,4 @@
+let estado = 'INICIAL'
 $(document).ready(function() {
     $('#listaOrdenes').DataTable({
         "language": {
@@ -7,3 +8,8 @@ $(document).ready(function() {
         
     });
 })
+
+
+function estadoDeMaquina(xeve){
+    alert("se dio click en un boton")
+}
