@@ -309,6 +309,10 @@ Route::controller(TrabajoMaquina::class)->group(function(){
         ->name('guardar-eventualidad')
         ->middleware('auth');
 
+    Route::post('guardar-estado','guardaEstado')
+        ->name('guardar-estado')
+        ->middleware('auth');
+
 
 
 });

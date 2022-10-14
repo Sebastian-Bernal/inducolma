@@ -15,7 +15,7 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        $estados = Estado::all();
+        $estados = Estado::all()->except([1,2]);
         return view('modulos.administrativo.estados.index', compact('estados'));
     }
 

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estado;
+use App\Models\EstadoMaquina;
 use App\Models\Evento;
 use App\Models\EventoProceso;
 use App\Models\Maquina;
 use App\Models\Proceso;
+use App\Models\TipoEvento;
 use App\Models\TurnoUsuario;
 use App\Models\User;
 use App\Repositories\RegistroAsistencia;
@@ -45,7 +48,11 @@ class TrabajoMaquina extends Controller
                                     ->where('estado', 'PENDIENTE')
                                     ->oldest()
                                     ->get();
-                return view('modulos.operaciones.trabajo-maquina.show', compact('procesos'));
+                $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
+                $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
+                $estados = Estado::get(['id', 'descripcion']);
+                return view('modulos.operaciones.trabajo-maquina.show',
+                    compact('procesos', 'tipos_evento', 'eventos'));
 
 
             }
@@ -152,6 +159,48 @@ class TrabajoMaquina extends Controller
             return response()->json(array('error' => false, 'mensaje' => "evento guardado" ));
         } catch (\Throwable $th) {
             return response()->json(array('error' => true, 'mensaje' => "evento no pudo ser guardado" ));
+        }
+    }
+
+    /**
+     * guarda el estado de la maquina
+     *
+     * @param json $request
+     */
+
+    public function guardaEstado(Request $request)
+    {
+        $estado = (integer)$request->estado_id;
+        $estado_actual = EstadoMaquina::where('maquina_id', $estado)
+                                    ->latest('id')
+                                    ->first();
+
+
+        switch ($estado) {
+            case 1:
+                if ($estado_actual == '' || $estado_actual->estado_id == 2) {
+                    return $this->registroAsistencia->guardaEstado($request);
+                } else{
+                    return response()->json(array('error' => true, 'message' =>'La maquina ya esta encendida'));
+                }
+                break;
+            case 2:
+                if ($estado_actual->estado_id == 1) {
+                    return $this->registroAsistencia->guardaEstado($request);
+                } else{
+                    return response()->json(array('error' => true, 'message' =>'La maquina ya esta apagada'));
+                }
+                break;
+            default:
+                if ($estado_actual->estado_id !=1 ) {
+                    return $this->registroAsistencia->guardaEstado($request);
+                } else{
+                    return response()->json(array(
+                                            'error' => true,
+                                            'message' =>'La maquina debe estar apagada, para guardar el etado seleccionado'
+                                        ));
+                }
+                break;
         }
     }
 

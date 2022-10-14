@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\EstadoMaquina;
 use App\Models\TiepoUsuarioDia;
 use App\Models\TurnoUsuario;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +70,27 @@ class RegistroAsistencia {
         return $usuarios;
     }
 
+    /**
+     * guarda el estado de la maquina
+     * @param Request $request
+     * @return Response JSON
+     */
+    public function guardaEstado($request)
+    {
+        $estado = new EstadoMaquina();
+        $estado->maquina_id = $request->maquina_id;
+        $estado->estado_id = $request->estado_id;
+        $estado->fecha = now();
+
+        try {
+            $estado->save();
+            return response()->json(array('error' => False, 'mensaje' => 'Esado de la maquina guardado'));
+        } catch (\Throwable $th) {
+            return response()->json(array('error' => true, 'mensaje' => 'Esado de la maquina no pudo ser guardado'));
+        }
+
+
+    }
 
 
 }
