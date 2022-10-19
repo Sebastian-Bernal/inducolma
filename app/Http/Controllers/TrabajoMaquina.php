@@ -51,8 +51,15 @@ class TrabajoMaquina extends Controller
                 $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
                 $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
                 $estados = Estado::get(['id', 'descripcion']);
+                $maquina = $turno->maquina_id;
+                $estado_actual = EstadoMaquina::where('maquina_id', $turno->maquina_id)->latest('id')->first('estado_id');
                 return view('modulos.operaciones.trabajo-maquina.show',
-                    compact('procesos', 'tipos_evento', 'eventos'));
+                    compact('procesos',
+                            'tipos_evento',
+                            'eventos',
+                            'estados',
+                            'maquina',
+                            'estado_actual'));
 
 
             }
@@ -91,6 +98,12 @@ class TrabajoMaquina extends Controller
      */
     public function show(Proceso $trabajo_maquina)
     {
+        $apagado = EstadoMaquina::where('maquina_id', $trabajo_maquina->maquina_id)
+                                ->latest('id')
+                                ->first('estado_id');
+        if ($apagado->estado_id != 1){
+            return redirect()->back()->with('status', 'La maquina no ha sido encendida');
+        }
         return view('modulos.operaciones.trabajo-maquina.trabajo-proceso', compact('trabajo_maquina'));
     }
 
@@ -171,38 +184,47 @@ class TrabajoMaquina extends Controller
     public function guardaEstado(Request $request)
     {
         $estado = (integer)$request->estado_id;
-        $estado_actual = EstadoMaquina::where('maquina_id', $estado)
+        $estado_actual = EstadoMaquina::where('maquina_id', (integer)$request->maquina_id)
                                     ->latest('id')
                                     ->first();
 
-
         switch ($estado) {
             case 1:
-                if ($estado_actual == '' || $estado_actual->estado_id == 2) {
+                if ($estado_actual == '' || $estado_actual->estado_id >= 2) {
                     return $this->registroAsistencia->guardaEstado($request);
                 } else{
-                    return response()->json(array('error' => true, 'message' =>'La maquina ya esta encendida'));
+                    return response()->json(array('error' => true, 'mensaje' =>'la maquina ya esta encendida'));
                 }
                 break;
             case 2:
-                if ($estado_actual->estado_id == 1) {
+                if (isset($estado_actual->estado_id) && $estado_actual->estado_id == 1) {
                     return $this->registroAsistencia->guardaEstado($request);
                 } else{
-                    return response()->json(array('error' => true, 'message' =>'La maquina ya esta apagada'));
+                    return response()->json(array('error' => true, 'mensaje' =>'La maquina ya esta apagada'));
                 }
                 break;
             default:
-                if ($estado_actual->estado_id !=1 ) {
+                if ($estado_actual->estado_id !=1 && $estado_actual->estado_id != $estado) {
                     return $this->registroAsistencia->guardaEstado($request);
                 } else{
                     return response()->json(array(
                                             'error' => true,
-                                            'message' =>'La maquina debe estar apagada, para guardar el etado seleccionado'
+                                            'mensaje' =>'La maquina debe estar apagada, o el eveto seleccionado ya fue guardado'
                                         ));
                 }
                 break;
         }
     }
+    /**
+     * guarda el estado apagado de la maquina cuando por error no se apago en el sistema
+     *
+     * @param Request $request
+     */
 
+    public function apagarMaquina(Request $request)
+    {
+        return $this->registroAsistencia->apagarMaquina($request);
+
+    }
 
 }
