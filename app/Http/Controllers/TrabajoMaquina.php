@@ -52,7 +52,7 @@ class TrabajoMaquina extends Controller
                 $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
                 $estados = Estado::get(['id', 'descripcion']);
                 return view('modulos.operaciones.trabajo-maquina.show',
-                    compact('procesos', 'tipos_evento', 'eventos'));
+                    compact('procesos', 'tipos_evento', 'eventos', 'estados'));
 
 
             }

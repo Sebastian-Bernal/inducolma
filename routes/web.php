@@ -377,7 +377,7 @@ Route::controller(ReposrtesController::class)->group(function(){
 
 
 Auth::routes([
-        'register' => false,
+        'register' => true,
 
         ]);
 

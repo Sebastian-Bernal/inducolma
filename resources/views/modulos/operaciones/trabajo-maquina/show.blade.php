@@ -1,6 +1,6 @@
 @extends('layouts.web')
 @section('title', ' Procesos | Inducolma')
-
+{{ $estados }}
 @section('submenu')
 @include('modulos.sidebars.costos-side')
 @endsection
@@ -16,9 +16,11 @@
                     <div class="collapse " id="estadoMaquina">
                         <div class="card card-body border border-warning border-4 rounded-3">
                             <button type="button" class="btn w-80 btn-primary text-light m-2" onclick="estadoDeMaquina('ENCENDIDA')">ENCENDIDA</button>
-                            <button type="button" class="btn w-80 btn-secondary text-light m-2 " onclick="estadoDeMaquina('ASEO')">ASEO</button>
-                            <button type="button" class="btn w-80  btn-secondary text-light m-2" onclick="estadoDeMaquina('MANTENIMIENTO')">MANTENIMIENTO</button>
-                            <button type="button" class="btn w-80 btn-secondary text-light m-2" onclick="estadoDeMaquina('REPARACION')">REPARACIÓN</button>
+                            @forelse( $estados as $estado )
+                            <button type="button" class="btn w-80 btn-secondary text-light m-2 " onclick="estadoDeMaquina({{ $estado }})">ASEO</button>
+                            @empty
+
+                            @endforelse
                             <button type="button" class="btn w-80 btn-danger text-light m-2" onclick="estadoDeMaquina('APAGADA')">APAGADA</button>
                         </div>
                     </div>
@@ -29,10 +31,14 @@
                     </button>
                     <div class="collapse " id="eventoMaquina">
                         <div class="card card-body border border-primary border-4 rounded-3">
-                            <button type="button" class="btn w-80 btn-warning text-light m-2">EVENTO DE LA MAQUINA</button>
-                            <button type="button" class="btn w-80 btn-warning text-light m-2">EVENTO DE PRODUCCIÓN</button>
-                            <button type="button" class="btn w-80 btn-warning text-light m-2">EVENTO DE OPERARIO</button>
-                            <button type="button" class="btn w-80 btn-warning text-light m-2">EVENTO ADMINISTRATIVO</button>
+                            <select class="form-select" aria-label="eventos">
+                                <option selected>Selecione el evento a reportar...</option>
+                                @forelse ( $tipos_evento as $t_evento)
+                                    <option id="{{ $t_evento->id }}">{{ $t_evento->tipo_evento }}</option>
+                                @empty
+                                    <option id="0">No ha creado eventos</option>
+                                @endforelse
+                              </select>
                         </div>
                     </div>
                 </div>
