@@ -1,6 +1,6 @@
 @extends('layouts.web')
 @section('title', ' Procesos | Inducolma')
-
+{{ $estados }}
 @section('submenu')
 @include('modulos.sidebars.costos-side')
 @endsection
