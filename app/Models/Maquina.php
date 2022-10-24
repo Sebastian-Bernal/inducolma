@@ -20,4 +20,20 @@ class Maquina extends Model
         return $this->hasOne(CostosInfraestructura::class);
     }
 
+    /**
+     * relacion belongsToMany turnos
+     */
+    public function turnos()
+    {
+        return $this->belongsToMany(Turno::class, 'turno_usuarios');
+    }
+
+    /**
+     * relacion belongsToMany usuarios
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'turno_usuarios');
+    }
+
 }

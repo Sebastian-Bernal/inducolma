@@ -69,4 +69,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(DiseñoProductoFinal::class, 'user_id');
     }
+
+    /**
+     * relacion belongsToMany turnos
+     */
+    public function turnos()
+    {
+        return $this->belongsToMany(Turno::class, 'turno_usuarios', 'user_id');
+    }
+
+    /**
+     * relacion belongsToMany maquinas
+     */
+    public function maquinas()
+    {
+        return $this->belongsToMany(Maquina::class, 'turno_usuarios');
+    }
+
+    /**
+     * relacion hasMany TurnoUsuario
+     */
+
+    public function turno_usuario()
+    {
+        return $this->hasMany(TurnoUsuario::class, 'turno_usuarios');
+    }
 }

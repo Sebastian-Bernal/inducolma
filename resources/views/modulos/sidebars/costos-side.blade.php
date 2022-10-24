@@ -48,7 +48,7 @@
                 <h2 class="accordion-header" id="flush-headingTwo">
                     <button class="accordion-button collapsed seleccionado" type="button" data-bs-toggle="collapse"
                         data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                        Usuarios - roles - contratistas
+                        Usuarios - roles - contratistas- turnos
                     </button>
                 </h2>
                 <div id="flush-collapseTwo" class="accordion-collapse collapse " aria-labelledby="flush-headingTwo"
@@ -67,6 +67,18 @@
                         <p>
                             <a class="btn btn-primary seleccionado" href="{{ route('contratistas.index') }}">
                                 Contratistas
+                            </a>
+                        </p>
+
+                        <p>
+                            <a class="btn btn-primary seleccionado" href="{{ route('turnos.index') }}">
+                                Turnos
+                            </a>
+                        </p>
+
+                        <p>
+                            <a class="btn btn-primary seleccionado" href="{{ route('asignar-turnos.index') }}">
+                                Asignar turno a usuario
                             </a>
                         </p>
                     </div>
@@ -263,6 +275,10 @@
         </p>
         <p>
             <a href="{{ route('calificaciones.index') }}" class="btn btn-primary seleccionado">{{ __('Calificaciones')
+                }}</a>
+        </p>
+        <p>
+            <a href="{{ route('trabajo-maquina.index') }}" class="btn btn-primary seleccionado">{{ __('Trabajo en Maquina')
                 }}</a>
         </p>
         </li>

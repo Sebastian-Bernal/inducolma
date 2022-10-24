@@ -1,16 +1,16 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     if (window.location.pathname.includes('/pedidos/') || window.location.pathname.includes('/pedidos')) {
 
-    } else{
+    } else {
         cargarProductos();
     }
     $('#listapedidos').DataTable({
         "language": {
-                "url": "/DataTables/Spanish.json"
-                },
+            "url": "/DataTables/Spanish.json"
+        },
         "responsive": true
-        
+
     });
     $('#items').select2({
         width: 'resolve',
@@ -53,11 +53,11 @@ $(document).ready(function() {
             },
             processResults: function (data) {
                 //console.log(data);
-               // console.log(JSON.stringify(data));
+                // console.log(JSON.stringify(data));
                 return {
                     results: data
                 };
-                
+
             },
         },
         language: {
@@ -88,19 +88,19 @@ function cargarProductos() {
             id: id
         },
         dataType: 'json',
-        success: function(items) {
-           
+        success: function (items) {
+
             if (items.length > 0) {
                 $('#spProducto').html('');
                 $('#items').empty();
-                $.each(items, function(index, value) {
+                $.each(items, function (index, value) {
                     $('#items').append('<option value="' + value.id + '">' + value.descripcion + '</option>');
                 });
             } else {
                 $('#spProducto').html('');
                 $('#items').empty();
                 Swal.fire({
-                    position: 'top-end',                    
+                    position: 'top-end',
                     title: 'No hay productos para este cliente',
                     text: 'Agregue un producto al cliente',
                     icon: 'warning',
@@ -125,19 +125,19 @@ function mayusculas() {
 
 // funcion para eliminar un Insumo
 function eliminarPedido(pedido) {
-    
+
     Swal.fire({
         title: `¿Está seguro de eliminar el pedido ?`,
-        text: `${pedido.nombre} - ${pedido.descripcion} - ${pedido.cantidad}`,             
+        text: `${pedido.nombre} - ${pedido.descripcion} - ${pedido.cantidad}`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#597504',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Si, eliminarlo!',
         cancelButtonText: 'Cancelar'
-        }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
-           $.ajax({
+            $.ajax({
                 url: `/pedidos/${pedido.id}`,
                 type: "DELETE",
                 dataType: "JSON",
@@ -145,7 +145,7 @@ function eliminarPedido(pedido) {
                     _token: $('input[name="_token"]').val()
                 },
                 success: function (e) {
-                   // console.log(e);
+                    // console.log(e);
                     Swal.fire({
                         title: 'Eliminado!',
                         text: e.success,
@@ -154,12 +154,12 @@ function eliminarPedido(pedido) {
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            location.reload();                            
+                            location.reload();
                         }
                     })
-                    
+
                 },
-          })
+            })
         }
     })
 }
@@ -175,8 +175,8 @@ function asignarDiseno() {
     let producto = $('#productos').val();
     let cliente_nombre = $('#cliente option:selected').text();
     let producto_nombre = $('#productos option:selected').text();
-    
-    if (cliente =='') {
+
+    if (cliente == '') {
         Swal.fire({
             title: 'Error!',
             text: 'Debe seleccionar un cliente',
@@ -184,7 +184,7 @@ function asignarDiseno() {
             confirmButtonColor: '#597504',
             confirmButtonText: 'OK'
         })
-    } else if (producto =='') {
+    } else if (producto == '') {
         Swal.fire({
             title: 'Error!',
             text: 'Debe seleccionar un producto',
@@ -193,18 +193,18 @@ function asignarDiseno() {
             confirmButtonText: 'OK'
         })
     } else {
-            Swal.fire({
+        Swal.fire({
             title: `¿Está seguro de asignar el diseño:
-                    ${producto_nombre} al cliente: ${cliente_nombre} ?`,       
+                    ${producto_nombre} al cliente: ${cliente_nombre} ?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#597504',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, asignarlo!',
             cancelButtonText: 'Cancelar'
-            }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-            $.ajax({
+                $.ajax({
                     url: `/disenos-cliente`,
                     type: "POST",
                     dataType: "JSON",
@@ -214,8 +214,8 @@ function asignarDiseno() {
                         diseno_id: producto
                     },
                     success: function (e) {
-                        console.log(e.error); 
-                        if (e.error == true ) {
+                        console.log(e.error);
+                        if (e.error == true) {
                             Swal.fire({
                                 title: '¡Error al asignar el diseño!',
                                 text: e.message,
@@ -223,7 +223,7 @@ function asignarDiseno() {
                                 confirmButtonColor: '#597504',
                                 confirmButtonText: 'OK'
                             });
-                        } else{
+                        } else {
                             cargarProductos();
                             Swal.fire({
                                 position: 'top-end',

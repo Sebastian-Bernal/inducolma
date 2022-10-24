@@ -29,7 +29,9 @@ use App\Http\Controllers\OrdenProduccionController;
 use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReposrtesController;
+use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
+use App\Http\Controllers\TurnoUsuarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -279,10 +281,44 @@ Route::resource('procesos', ProcesoController::class)
 
 
 Route::resource('turnos',TurnoController::class)
-    ->parameters(['turnos'=> 'turno'])
-    ->names('turnos');
+        ->parameters(['turnos'=> 'turno'])
+        ->names('turnos');
+
+Route::resource('asignar-turnos', TurnoUsuarioController::class)
+        ->parameters(['turnoUsuario'=> 'turnoUsuario'])
+        ->names('asignar-turnos')
+        ->middleware('auth');
+Route::controller(TurnoUsuarioController::class)->group(function (){
+    Route::post('turnos-usuario', 'TurnosUsuario')
+        ->name('turnos-usuario')
+        ->middleware('auth');
+
+});
+
+Route::resource('trabajo-maquina', TrabajoMaquina::class)
+        ->parameters(['trabajo_maquina' => 'trabajo_maquina'])
+        ->names('trabajo-maquina')
+        ->middleware('auth');
+
+Route::controller(TrabajoMaquina::class)->group(function(){
+        Route::post('guardar-asistencia', 'guardaAsistencia')
+            ->name('guardar-asistencia')
+            ->middleware('auth');
+
+        Route::post('guardar-eventualidad','guardaEventualidad')
+            ->name('guardar-eventualidad')
+            ->middleware('auth');
+
+        Route::post('guardar-estado','guardaEstado')
+            ->name('guardar-estado')
+            ->middleware('auth');
+
+        Route::post('apagar-maquina','apagarMaquina')
+            ->name('apagar-maquina')
+            ->middleware('auth');
 
 
+});
 //rutas reportes
 
 Route::controller(ReporteController::class)->group(function(){

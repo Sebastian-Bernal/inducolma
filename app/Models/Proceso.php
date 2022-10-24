@@ -21,8 +21,26 @@ class Proceso extends Model
      * relacion belongsTo ordenProduccion
      */
 
-    public function orden()
+    public function orden_produccion()
     {
         return $this->belongsTo(ordenProduccion::class);
+    }
+    /**
+     * relacion belongsTo items
+     *
+     */
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    /**
+     * relacion belongsTo maquinas
+     */
+
+    public function maquina()
+    {
+        return $this->belongsTo(Maquina::class);
     }
 }

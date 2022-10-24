@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTurnoRequest;
+use App\Http\Requests\UpdateTurnoRequest;
 use App\Models\Turno;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,10 @@ class TurnoController extends Controller
      */
     public function store(StoreTurnoRequest $request)
     {
-        //
+        $this->authorize('admin');
+        $turno = Turno::create($request->all());
+        return redirect()->route('turnos.index')
+            ->with('status',"El turno $turno->id, $turno->turno fue creado con éxito");
     }
 
     /**
@@ -60,7 +64,8 @@ class TurnoController extends Controller
      */
     public function edit(Turno $turno)
     {
-        //
+        $this->authorize('admin');
+        return view('modulos.administrativo.turnos.edit',compact('turno'));
     }
 
     /**
@@ -70,9 +75,12 @@ class TurnoController extends Controller
      * @param  \App\Models\Turno  $turno
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Turno $turno)
+    public function update(UpdateTurnoRequest $request, Turno $turno)
     {
-        //
+        $this->authorize('admin');
+        $turno->update($request->all());
+        return redirect()->route('turnos.index')
+                ->with('status',"El turno $turno->id, $turno->turno fue actualizado con éxito");
     }
 
     /**
@@ -83,6 +91,8 @@ class TurnoController extends Controller
      */
     public function destroy(Turno $turno)
     {
-        //
+        $this->authorize('admin');
+        $turno->delete();
+        return response()->json(array('success' => "turno eliminado"));
     }
 }

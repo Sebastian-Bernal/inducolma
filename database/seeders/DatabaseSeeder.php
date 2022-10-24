@@ -21,15 +21,17 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        TipoMadera::factory(9)->create();
+        /* TipoMadera::factory(9)->create();
         Madera::factory(9)->create();
         Item::factory(50)->create();
         DisenoProductoFinal::factory(50)->create();
         EntradaMadera::factory(50)->create();
         Cubicaje::factory(50)->create();
-        Pedido::factory(50)->create();
+        Pedido::factory(50)->create(); */
 
 
-        
+
+
+
     }
 }

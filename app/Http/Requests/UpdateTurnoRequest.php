@@ -24,10 +24,13 @@ class UpdateTurnoRequest extends FormRequest
     public function rules()
     {
         return [
-            'turno' =>'required|unique:turnos,turno',
+            //'turno' =>'required|unique:turnos,turno'.$this->route('turnos.edit')->id,
             'hora_inicio' =>'required',
             'hora_fin' =>'required',
-            'estado' =>'required',
+            'estado' =>[
+                'required',
+                'in:DISPONIBLE,NO DISPONIBLE',
+            ]
         ];
     }
 
