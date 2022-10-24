@@ -301,18 +301,21 @@ Route::resource('trabajo-maquina', TrabajoMaquina::class)
         ->middleware('auth');
 
 Route::controller(TrabajoMaquina::class)->group(function(){
-    Route::post('guardar-asistencia', 'guardaAsistencia')
+        Route::post('guardar-asistencia', 'guardaAsistencia')
             ->name('guardar-asistencia')
             ->middleware('auth');
 
-    Route::post('guardar-eventualidad','guardaEventualidad')
-        ->name('guardar-eventualidad')
-        ->middleware('auth');
+        Route::post('guardar-eventualidad','guardaEventualidad')
+            ->name('guardar-eventualidad')
+            ->middleware('auth');
 
-    Route::post('guardar-estado','guardaEstado')
-        ->name('guardar-estado')
-        ->middleware('auth');
+        Route::post('guardar-estado','guardaEstado')
+            ->name('guardar-estado')
+            ->middleware('auth');
 
+        Route::post('apagar-maquina','apagarMaquina')
+            ->name('apagar-maquina')
+            ->middleware('auth');
 
 
 });
