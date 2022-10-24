@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\EstadoMaquina;
+use App\Models\Subproceso;
 use App\Models\TiepoUsuarioDia;
 use App\Models\TurnoUsuario;
 use Illuminate\Support\Facades\Auth;
@@ -81,7 +82,25 @@ class RegistroAsistencia {
         $estado->maquina_id = $request->maquina_id;
         $estado->estado_id = $request->estado_id;
         $estado->fecha = now();
+        //$estado->save();
+        try {
+            $estado->save();
+            return response()->json(array('error' => False, 'mensaje' => 'Esado de la maquina guardado'));
+        } catch (\Throwable $th) {
+            return response()->json(array('error' => true, 'mensaje' => 'Esado de la maquina no pudo ser guardado'));
+        }
+    }
 
+    public function apagarMaquina($request)
+    {
+        $ultimo_subproceso = Subproceso::where('maquina_id', $request->maquina_id)
+                                        ->latest('id')
+                                        ->first();
+
+        $estado = new EstadoMaquina();
+        $estado->maquina_id = $request->maquina_id;
+        $estado->estado_id = 2;
+        $estado->fecha = now();//$ultimo_subproceso->created_at;
         try {
             $estado->save();
             return response()->json(array('error' => False, 'mensaje' => 'Esado de la maquina guardado'));
@@ -89,8 +108,6 @@ class RegistroAsistencia {
             return response()->json(array('error' => true, 'mensaje' => 'Esado de la maquina no pudo ser guardado'));
         }
 
-
     }
-
 
 }

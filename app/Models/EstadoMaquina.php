@@ -10,5 +10,5 @@ class EstadoMaquina extends Model
     use HasFactory;
 
     protected $table = 'estado_maquinas';
-    protected $fillable = ['maquina_id','estado_id'];
+    protected $fillable = ['maquina_id','estado_id', 'fecha'];
 }
