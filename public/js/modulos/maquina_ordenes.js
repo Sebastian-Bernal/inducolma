@@ -41,6 +41,12 @@ function estadoDeMaquina(estado, maquina) {
                         if (result.isDenied) {
                             console.log('cambia estado ');
                             apagarMaquina(estado, maquina);
+                            let timeout;
+                            timeout = setTimeout(() =>{
+                                $('#eventosDeMaquina').click();
+                                $('#tipoEvento2').click();
+                            }, 3000)
+
                         }
 
                     })
@@ -147,7 +153,7 @@ function apagarMaquina(estado, maquina){
             if (e.error) {
                 alertaErrorSimple(e.mensaje, 'error');
             } else {
-                alertaErrorSimple(e.mensaje, 'success');
+                //alertaErrorSimple(e.mensaje, 'success');
                 estadoDeMaquina(estado, maquina);
             }
 
