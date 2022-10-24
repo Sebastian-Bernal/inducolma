@@ -380,7 +380,7 @@ Route::controller(ReposrtesController::class)->group(function(){
 
 
 Auth::routes([
-        'register' => true,
+        'register' => false,
 
         ]);
 
