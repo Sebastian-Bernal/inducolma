@@ -36,7 +36,7 @@ class TrabajoMaquina extends Controller
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
         if (!empty($turno)) {
-            $turno_usuarios = $this->registroAsistencia->usuariosDia($turno);
+            $turno_usuarios = $this->registroAsistencia->usuariosDia();
             if (count($turno_usuarios->toArray()) > 0) {
                 $maquinas = Maquina::get(['id', 'maquina']);
                 $eventos = Evento::get(['id', 'descripcion']);
@@ -108,10 +108,28 @@ class TrabajoMaquina extends Controller
         $apagado = EstadoMaquina::where('maquina_id', $trabajo_maquina->maquina_id)
                                 ->latest('id')
                                 ->first('estado_id');
+        $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
+        $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
+        $maquina = $trabajo_maquina->maquina_id;
+        $turno = TurnoUsuario::where('user_id',Auth::user()->id)
+                                ->where('fecha', date('Y-m-d'))
+                                ->first();
+        $turno_usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
+                                ->where('asistencia', true)
+                                ->where('fecha',date('Y-m-d'))
+                                ->get()
+                                ->load('user');
+
         if ($apagado->estado_id != 1){
             return redirect()->back()->with('status', 'La maquina no ha sido encendida');
         }
-        return view('modulos.operaciones.trabajo-maquina.trabajo-proceso', compact('trabajo_maquina'));
+        return view('modulos.operaciones.trabajo-maquina.trabajo-proceso',
+        compact('trabajo_maquina',
+                'tipos_evento',
+                'eventos',
+                'maquina',
+                'turno_usuarios',
+                        ));
     }
 
     /**

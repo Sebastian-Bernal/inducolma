@@ -30,20 +30,20 @@ class RegistroAsistencia {
                 $asistencia->save();
                 $turno->asistencia = true;
                 $turno->save();
-                $usuarios = $this->usuariosDia($request);
+                $usuarios = $this->usuariosDia();
                 return response()->json(array('error' => false, 'mensaje' => "Asistencia guardada", "usuarios" => $usuarios ));
             } catch (\Throwable $th) {
-                $usuarios = $this->usuariosDia($request);
+                $usuarios = $this->usuariosDia();
                 return response()->json(array('error' => true, 'mensaje' => "Asistencia no pudo ser guardada", "usuarios" => $usuarios ));
             }
         } else {
             try {
                 $turno->asistencia = false;
                 $turno->save();
-                $usuarios = $this->usuariosDia($request);
+                $usuarios = $this->usuariosDia();
                 return response()->json(array('error' => false, 'mensaje' => "Falta guardada", "usuarios" => $usuarios ));
             } catch (\Throwable $th) {
-                $usuarios = $this->usuariosDia($request);
+                $usuarios = $this->usuariosDia();
                 return response()->json(array('error' => true, 'mensaje' => "Falta no pudo ser guardada", "usuarios" => $usuarios ));
             }
         }
@@ -57,12 +57,12 @@ class RegistroAsistencia {
      * @return Response json
      */
 
-    public function usuariosDia($request)
+    public function usuariosDia()
     {
         $turno = TurnoUsuario::where('user_id',Auth::user()->id)
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
-        $usuarios = TurnoUsuario::where('turno_id', $request->turno_id)
+        $usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
                             ->where('asistencia', null)
                             ->where('fecha',date('Y-m-d'))
                             ->get()
