@@ -1,6 +1,5 @@
 @extends('layouts.web')
 @section('title', ' Procesos | Inducolma')
-{{ $estados }}
 @section('submenu')
 @include('modulos.sidebars.costos-side')
 @endsection
@@ -36,13 +35,14 @@
                 <div class="self-end col-md-6 col-sm-12 col-12">
                     <button class="btn btn-primary text-light mt-2 mb-2 w-100 rounded-pill" type="button"
                         data-bs-toggle="collapse" data-bs-target="#eventoMaquina" aria-expanded="false"
-                        aria-controls="eventoMaquina">
+                        aria-controls="eventoMaquina" id="eventosDeMaquina">
                         EVENTOS DE LA MAQUINA
                     </button>
                     <div class="collapse " id="eventoMaquina">
                         <div class="card card-body border border-primary border-4 rounded-3">
                             @forelse ($tipos_evento as $tipo_evento)
                             <button type="button" class="btn w-80 btn-primary text-light m-2"
+                                id="{{ 'tipoEvento'.$tipo_evento->id }}"
                                 onclick="listarEventos({{ $tipo_evento->id .','. $eventos }})">
                                 {{ $tipo_evento->tipo_evento }}
                             </button>

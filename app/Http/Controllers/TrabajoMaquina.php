@@ -53,6 +53,13 @@ class TrabajoMaquina extends Controller
                 $estados = Estado::get(['id', 'descripcion']);
                 $maquina = $turno->maquina_id;
                 $estado_actual = EstadoMaquina::where('maquina_id', $turno->maquina_id)->latest('id')->first('estado_id');
+                if ($estado_actual == '') {
+                    $estado_actual = EstadoMaquina::create([
+                        'maquina_id' => $turno->maquina_id,
+                        'estado_id' => 2,
+                        'fecha' => now(),
+                    ]);
+                }
                 return view('modulos.operaciones.trabajo-maquina.show',
                     compact('procesos',
                             'tipos_evento',
