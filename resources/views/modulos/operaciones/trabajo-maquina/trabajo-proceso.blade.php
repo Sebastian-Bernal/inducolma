@@ -50,9 +50,9 @@
                 <label class="text-center w-100" for="entradacan">Cantidad entrada:</label><br>
                 <input class="w-100 rounded rounded-pill text-center" type="number" name="entradacan" value="{{ $trabajo_maquina->cantidad_items }}" readonly>
             </div>
-            <div class="col-sm-12 col-md-6 p-2">
-                <label class="text-center w-100" for="salidacan">Cantidad salida:</label><br>
-                <input class="w-100 rounded rounded-pill text-center" type="number" name="salidacan" >
+            <div class="input-group col-sm-12 col-md-6 p-2">
+                <span class="input-gtoup-text text-center">Cantidad salida:</span>
+                <input class="form-control rounded rounded-pill text-center" type="number" name="salidacan" >
             </div>
         </div>
         <div class="col-sm-12 p-2 m-auto d-flex flex-wrap container-fluid">
