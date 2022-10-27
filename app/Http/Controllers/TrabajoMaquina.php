@@ -123,6 +123,9 @@ class TrabajoMaquina extends Controller
         if ($apagado->estado_id != 1){
             return redirect()->back()->with('status', 'La maquina no ha sido encendida');
         }
+        if($trabajo_maquina->estado=='TERMINADO'){
+            return redirect()->route('trabajo-maquina.index')->with('status', 'La orden ya fue terminada');
+        }
         return view('modulos.operaciones.trabajo-maquina.trabajo-proceso',
         compact('trabajo_maquina',
                 'tipos_evento',

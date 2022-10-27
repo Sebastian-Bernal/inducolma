@@ -58,16 +58,18 @@
                                                 <th scope="col">Producto</th>
                                                 <th scope="col">Item</th>
                                                 <th scope="col">Cantidad</th>
+                                                <th>Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($ordenes as $orden)
                                                 <tr>
-                                                    <th scope="row">{{ $orden->id }}</th>
-                                                    <td>{{ $orden->pedido_id }}</td>
-                                                    <td>{{ $orden->estado }}</td>
-                                                    <td>{{ $orden->item_id }}</td>
+                                                    <td>{{ $orden->id }}</td>
+                                                    <td>{{ $orden->pedido->cliente->nombre }}</td>
+                                                    <td>{{ $orden->pedido->diseno_producto_final->descripcion }}</td>
+                                                    <td>{{ $orden->item->descripcion }}</td>
                                                     <td>{{ $orden->cantidad }}</td>
+                                                    <td>{{ $orden->estado }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>

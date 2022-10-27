@@ -2,11 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSubprocesoReuquest;
 use App\Models\Subproceso;
+use App\Repositories\guardarSubproceso;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubprocesoController extends Controller
 {
+    protected $guardarSubproceso;
+
+    public function __construct( guardarSubproceso $guardarSubproceso)
+    {
+        $this->guardarSubproceso = $guardarSubproceso;
+    }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -36,6 +48,11 @@ class SubprocesoController extends Controller
     public function store(Request $request)
     {
         //
+        $subproceso_existente = Subproceso::where('proceso_id', $request->procesoId)
+                                ->latest()
+                                ->first();
+        return $this->guardarSubproceso->guardar($subproceso_existente, $request);
+
     }
 
     /**
