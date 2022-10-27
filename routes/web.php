@@ -29,6 +29,7 @@ use App\Http\Controllers\OrdenProduccionController;
 use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReposrtesController;
+use App\Http\Controllers\SubprocesoController;
 use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\TurnoUsuarioController;
@@ -319,6 +320,13 @@ Route::controller(TrabajoMaquina::class)->group(function(){
 
 
 });
+
+Route::resource('subprocesos', SubprocesoController::class)
+        ->parameters(['subproceso' => 'subproceso'])
+        ->names('subprocesos')
+        ->middleware('auth');
+
+
 //rutas reportes
 
 Route::controller(ReporteController::class)->group(function(){

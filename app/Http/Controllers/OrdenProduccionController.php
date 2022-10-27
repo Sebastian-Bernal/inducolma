@@ -48,7 +48,7 @@ class OrdenProduccionController extends Controller
                 'diseno_producto_finales.descripcion',
                 'diseno_producto_finales.id as diseno_id',
             ]);
-        $ordenes = OrdenProduccion::where('estado', '!=', 'FINALIZADA')->get();
+        $ordenes = OrdenProduccion::where('estado', '!=', 'TERMINADO')->get();
         $cliente = Cliente::where('nombre', 'like', '%INDUCOLMA%')->first();
         $disenos = DisenoProductoFinal::get(['id', 'descripcion']);
         return view('modulos.administrativo.programacion.index', compact('pedidos', 'ordenes', 'cliente', 'disenos'));
