@@ -34,7 +34,7 @@ class UpdateMaquinaRequest extends FormRequest
             'corte'=>[
                 'required',
                 'string',
-                'in:INICIAL,INTERMEDIO,FINAL,ACABADOS',
+                'in:INICIAL,INTERMEDIO,FINAL,ACABADOS,ENSAMBLE',
             ],
 
         ];

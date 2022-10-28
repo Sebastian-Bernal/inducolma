@@ -38,6 +38,7 @@
                                 <option value="INTERMEDIO" {{ $maquina->corte == 'INTERMEDIO' ? 'selected' : '' }}>INTERMEDIO</option>
                                 <option value="FINAL" {{ $maquina->corte == 'FINAL' ? 'selected' : '' }}>FINAL</option>
                                 <option value="ACABADOS" {{ $maquina->corte == 'ACABADOS' ? 'selected' : '' }}>ACABADOS</option>
+                                <option value="ENSAMBLE" {{ $maquina->corte == 'ENSAMBLE' ? 'selected' : '' }}>ENSAMBLE</option>
                             </select>
                         </div>
                     </div>
