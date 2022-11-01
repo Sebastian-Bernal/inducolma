@@ -7,6 +7,7 @@ use App\Models\EstadoMaquina;
 use App\Models\Evento;
 use App\Models\EventoProceso;
 use App\Models\Maquina;
+use App\Models\Pedido;
 use App\Models\Proceso;
 use App\Models\TipoEvento;
 use App\Models\TurnoUsuario;
@@ -60,13 +61,18 @@ class TrabajoMaquina extends Controller
                         'fecha' => now(),
                     ]);
                 }
-                return view('modulos.operaciones.trabajo-maquina.show',
+                if ($turno->maquina->corte != 'ENSAMBLE' ) {
+                    return view('modulos.operaciones.trabajo-maquina.show',
                     compact('procesos',
                             'tipos_evento',
                             'eventos',
                             'estados',
                             'maquina',
                             'estado_actual'));
+                }
+
+                return redirect()->route('trabajo-maquina.create');
+
 
 
             }
@@ -83,7 +89,25 @@ class TrabajoMaquina extends Controller
      */
     public function create()
     {
+        $pedidos = Pedido::all()->load('ordenes_produccion');
+        $pedidos_ordenes = collect();
 
+        foreach ($pedidos as $pedido) {
+            if ($pedido->ordenes_produccion->all() != []) {
+                $guardar = true;
+                foreach ($pedido->ordenes_produccion as $orden) {
+                    if ($orden->estado != 'PENDIENTE') {
+                        $guardar = false;
+                        break ;
+                    }
+                }
+                if ($guardar) {
+                    $pedidos_ordenes->push($pedido);
+                }
+            }
+        }
+
+        return view('modulos.operaciones.trabajo-maquina.ensamble', compact('pedidos_ordenes'));
     }
 
     /**

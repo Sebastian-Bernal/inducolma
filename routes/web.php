@@ -319,6 +319,7 @@ Route::controller(TrabajoMaquina::class)->group(function(){
             ->middleware('auth');
 
 
+
 });
 
 Route::resource('subprocesos', SubprocesoController::class)
