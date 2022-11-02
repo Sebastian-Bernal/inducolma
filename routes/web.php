@@ -318,7 +318,9 @@ Route::controller(TrabajoMaquina::class)->group(function(){
             ->name('apagar-maquina')
             ->middleware('auth');
 
-
+        Route::get('trabajo-ensamble/{pedido}', 'trabajoEnsamble')
+                ->name('trabajo-ensamble')
+                ->middleware('auth');
 
 });
 

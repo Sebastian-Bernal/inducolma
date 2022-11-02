@@ -111,6 +111,44 @@ class TrabajoMaquina extends Controller
     }
 
     /**
+     * Show the form for create a new producto
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function trabajoEnsamble(Pedido $pedido)
+    {
+        $turno = TurnoUsuario::where('user_id',Auth::user()->id)
+                                ->where('fecha', date('Y-m-d'))
+                                ->first();
+        $turno_usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
+                                ->where('asistencia', true)
+                                ->where('fecha',date('Y-m-d'))
+                                ->get()
+                                ->load('user');
+        $maquina = $turno->maquina_id;
+        $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
+        $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
+
+        $i = 0;
+        foreach ($pedido->diseno_producto_final->items as $item) {
+            if ($item->existencias < $pedido->items_pedido[$i]->cantidad ) {
+                return back()->with('status',
+                    "El item: $item->descripcion, no tiene existencias suficientes, no puede ensamblar el producto para el pedido No. $pedido->id");
+                break;
+            }
+            $i++;
+        }
+
+        return view('modulos.operaciones.trabajo-maquina.trabajo-ensamble',
+                compact('pedido',
+                        'turno_usuarios',
+                        'tipos_evento',
+                        'eventos',
+                        'maquina'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

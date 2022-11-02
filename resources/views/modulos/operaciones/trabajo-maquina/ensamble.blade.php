@@ -43,7 +43,7 @@
 
                             <td>
                                 <div class="d-flex align-items-center ">
-                                    <a href="{{ route('trabajo-maquina.show',$pedido) }}"
+                                    <a href="{{ route('trabajo-ensamble',$pedido) }}"
                                         class="btn btn-sm btn-primary"
                                         title="Ensamblar pedido {{ $pedido->id }}">
                                         <i class="fa-solid fa-puzzle-piece"></i>
