@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Item;
 use App\Models\Maquina;
 use App\Models\OrdenProduccion;
 use App\Models\Proceso;
@@ -77,10 +78,14 @@ class guardarSubproceso{
     public function actualizaProceso($request, $accion, $subproceso_existente = null)
     {
         $proceso = Proceso::find($request->procesoId);
+        $item = Item::find($proceso->item_id);
         $orden = OrdenProduccion::where('id', $proceso->orden_produccion_id)->first();
-       // return $orden;
+        $cantidad_preprocesados = Proceso::where('orden_produccion_id', $orden->id)->max('cantidad_items');
+
         $proceso->cm3_salida += (float)$request->cm3Salida;
         if ($accion == 1) {
+            $item->preprocesado += (integer)$cantidad_preprocesados;
+            $item->save();
             $proceso->estado = 'EN PRODUCION';
             $proceso->hora_inicio = date('G:i:s');
             $proceso->fecha_ejecucion= now();
@@ -93,7 +98,10 @@ class guardarSubproceso{
             $proceso->sub_paqueta = Subproceso::where('proceso_id', $request->procesoId)->count();
             $maquina = Maquina::where('id',$proceso->maquina_id)->first();
 
-            if ($maquina->corte == 'FINAL') {
+            if ($maquina->corte == 'ACABADOS') {
+                $item->preprocesado -= $cantidad_preprocesados;
+                $item->existencias += $cantidad_preprocesados;
+                $item->save();
                 $orden->estado = 'TERMINADO';
                 $orden->save();
             } else{

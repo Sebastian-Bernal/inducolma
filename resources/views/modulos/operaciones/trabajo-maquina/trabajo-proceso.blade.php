@@ -61,7 +61,7 @@
                         value="{{ $trabajo_maquina->cm3_entrada }}"
                         readonly>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" hidden>
                 <label for="cm3Salida" class="form-label">cm3 salida:</label>
                 <input type="number"
                         class="form-control @error('cm3Salida') is-invalid @enderror text-uppercase"
@@ -76,7 +76,7 @@
                 @enderror
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6" hidden>
                 <label for="camtidadEntrada" class="form-label">Cantidad entrada: </label>
                 <input type="text"
                         class="form-control"
