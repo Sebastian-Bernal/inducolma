@@ -135,4 +135,14 @@ class Pedido extends Model
         //dd($this->belongsTo(DisenoProductoFinal::class)) ;
         return $this->belongsTo(DisenoProductoFinal::class);
     }
+
+    /**
+     * relacion belongsToMany Pedido_Producto
+     */
+
+    public function pedido_producto()
+    {
+        return $this->belongsToMany(DisenoProductoFinal::class, 'pedido_producto')
+                    ->select(['pedido_id', 'diseno_producto_final_id', 'pedido_producto.cantidad_producida']);
+    }
 }

@@ -7,7 +7,7 @@
 @section('content')
 <div class="div container h-content m-auto">
     <h1 class="text-primary text-center m-auto">Ensamble del pedido Nro. {{ $pedido->id }} / Cliente: {{ $pedido->cliente->nombre }}</h1>
-    <h3 class="text-secondary text-center">Producto: {{ $pedido->diseno_producto_final->descripcion }}</h3>
+    <h3 class="text-secondary text-center">Producto: {{ $pedido->diseno_producto_final->descripcion }} / cantidad: {{ $pedido->cantidad }}</h3>
 
 
     <div class="d-flex flex-wrap row  m-auto align-items-center container-fluid ">
@@ -44,14 +44,14 @@
                         <thead>
                             <tr>
                                 <th>Item</th>
-                                <th>Existencias</th>
+                                <th>Cantidad</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pedido->diseno_producto_final->items as $item)
+                            @foreach ($pedido->items_pedido as $item)
                             <tr>
                                 <td>{{ $item->descripcion }}</td>
-                                <td>{{ $item->existencias <= 0 ? 0 : $item->existencias }}</td>
+                                <td>{{ $item->cantidad <= 0 ? 0 : $item->cantidad }}</td>
                             </tr>
                             @endforeach
 
@@ -64,7 +64,7 @@
                         <thead>
                             <tr>
                                 <th>Insumo</th>
-                                <th>Existencias</th>
+                                <th>Cantidad</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,17 +82,16 @@
         </div>
         </div>
 
-        <form class="row g-3" id="formSubpaqueta"  action="{{ route('subprocesos.store') }}" method="POST">
+        <form class="row g-3" id="formProducto"  action="{{ route('trabajo-maquina.store') }}" method="POST">
             @csrf
             {{-- inputs hidden --}}
-            {{-- <input type="hidden" name="procesoId" value="{{ $trabajo_maquina->id }}">
-            <input type="hidden" name="maquinaId" value="{{ $trabajo_maquina->maquina_id }}">
-            <input type="hidden" name="paqueta" value="{{ $trabajo_maquina->cubicaje->paqueta }}">
-            <input type="hidden" name="terminar" value="" id="terminar"> --}}
+            <input type="hidden" name="pedido" value="{{ $pedido->id }}">
+            <input type="hidden" name="diseno" value="{{ $pedido->diseno_producto_final_id }}">
+            <input type="hidden" name="terminar" value="" id="terminar">
 
 
 
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <label for="tarjetaEntrada" class="form-label">Tarjeta entrada: </label>
                 <input type="text"
                         class="form-control"
@@ -105,28 +104,30 @@
                         class="form-control"
                         id="tarjetaSalida"
                         name="tarjetaSalida">
-            </div>
+            </div> --}}
 
 
-            <div class="form-floating">
+            {{-- <div class="form-floating">
                 <textarea class="form-control text-uppercase"
                             placeholder="Leave a comment here"
                             id="observacionSubpaqueta"
                             name="observacionSubpaqueta"
                             style="height: 100px"></textarea>
                 <label for="floatingTextarea2">Observaciones de producto</label>
-            </div>
+            </div> --}}
 
             <div class="col-sm-12 p-2 m-auto d-flex flex-wrap container-fluid">
                 <button type="button"
                         class="btn text-light rounded rounded-pill btn-warning w-100 col-sm-12"
-                        onclick="guardarSubpaqueta()">Guardar producto</button>
+                        onclick="guardarProducto()">Guardar producto</button>
             </div>
         </form>
 
 
     </div>
     <hr>
+    <button class="btn text-light rounded rounded-pill btn-primary w-100 col-sm-12 mb-4"
+                onclick="terminarPedido()">Terminar pedido</button>
 
 </div>
 
@@ -134,6 +135,6 @@
 
 @section('js')
 <script src="/js/modulos/alertas-swift.js"></script>
-<script src="/js/modulos/procesos.js"></script>
+<script src="/js/modulos/ensamble.js"></script>
 <script src="/js/modulos/partials/eventos.js"></script>
 @endsection
