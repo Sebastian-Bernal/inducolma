@@ -20,9 +20,12 @@
                 {{-- REPORTE INGRESO DE MADERAS --}}
                 <div class="card mb-3 shadow-sm">
                     <h5 class="card-header bg-primary text-white">
-                        <div class="d-grid gap-2 align-content-left">
+                        <div class="d-grid gap-2 align-content-left ">
                             <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collapseIngresoMadera" role="button" aria-expanded="false" aria-controls="collapseIngresoMadera">
-                                <h5 class="mb-0 text-start">Reporte ingreso de maderas</h5>
+                                <h5 class="d-flex justify-content-between mb-0">
+                                    Reporte ingreso de maderas  <i class="fa-solid fa-chevron-down text-end"></i>
+                                </h5>
+
                             </button>
                         </div>
                     </h5>
@@ -114,7 +117,9 @@
                     <h5 class="card-header bg-warning text-white">
                         <div class="d-grid gap-2 align-content-left">
                             <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collapseCubicajes" role="button" aria-expanded="false" aria-controls="collapseCubicajes">
-                                <h5 class="mb-0 text-start">Reporte cubicajes</h5>
+                                <h5 class="d-flex justify-content-between mb-0 text-start">
+                                    Reporte cubicajes <i class="fa-solid fa-chevron-down text-end"></i>
+                                </h5>
                             </button>
                         </div>
                     </h5>
@@ -208,7 +213,9 @@
                     <h5 class="card-header bg-secondary text-white">
                         <div class="d-grid gap-2 align-content-left">
                             <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collapseIngresoPersonal" role="button" aria-expanded="false" aria-controls="collapseIngresoPersonal">
-                                <h5 class="mb-0 text-start">Reporte ingreso de personal</h5>
+                                <h5 class="d-flex justify-content-between mb-0 text-start">
+                                    Reporte ingreso de personal <i class="fa-solid fa-chevron-down text-end"></i>
+                                </h5>
                             </button>
                         </div>
                     </h5>

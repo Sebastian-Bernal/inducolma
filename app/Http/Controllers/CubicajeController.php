@@ -56,6 +56,24 @@ class CubicajeController extends Controller
     }
 
     /**
+     * Muestra el formulario ingreso trozas con la informacion de la entrada
+     */
+    public function cubicajeTroza(Request $request)
+    {
+        $entrada = EntradaMadera::find((integer)$request->entrada);
+        if ($entrada == null) {
+            return back()->with('status', "No se encontro la entrada de madera  $request->entrada");
+        }
+
+        $contiene_troza = $entrada->entradas_madera_maderas->contains('condicion_madera', 'TROZA');
+        if ($contiene_troza == false) {
+            return back()->with('status',"La entrada de madera $request->entrada, no contiene maderas en troza");
+        }
+
+        return  view('modulos.operaciones.cubicaje.cubicaje-troza', compact('entrada'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -65,7 +83,7 @@ class CubicajeController extends Controller
     {
         $this->authorize('cubicaje');
         $datos =  $request->cubicajes;
-         return $this->registroCubicaje->guardar($datos);
+        return $this->registroCubicaje->guardar($datos);
     }
 
     /**
