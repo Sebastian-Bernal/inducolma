@@ -64,6 +64,11 @@ class TrabajoMaquina extends Controller
                         'fecha' => now(),
                     ]);
                 }
+
+                if ($turno->maquina->corte == 'ASERRIO'){
+                    return view('modulos.operaciones.trabajo-maquina.transformacion-troza');
+                }
+
                 if ($turno->maquina->corte != 'ENSAMBLE' ) {
                     return view('modulos.operaciones.trabajo-maquina.show',
                     compact('procesos',
@@ -72,10 +77,6 @@ class TrabajoMaquina extends Controller
                             'estados',
                             'maquina',
                             'estado_actual'));
-                }
-
-                if ($turno->maquina->corte == 'ASERRIO'){
-                    return view('modulos.operaciones.trabajo-maquina.transformacion-troza');
                 }
 
                 return redirect()->route('trabajo-maquina.create');
