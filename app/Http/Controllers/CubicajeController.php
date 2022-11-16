@@ -81,10 +81,17 @@ class CubicajeController extends Controller
      */
     public function store(Request $request)
     {
+        //return $request->troza;
         $this->authorize('cubicaje');
         $datos =  $request->cubicajes;
+
+        if ($request->troza == 1){
+            return $this->registroCubicaje->guardarTroza($datos);
+        }
         return $this->registroCubicaje->guardar($datos);
     }
+
+
 
     /**
      * Display the specified resource.

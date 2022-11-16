@@ -16,6 +16,7 @@ use App\Repositories\ProductosTerminados;
 use App\Repositories\RegistroAsistencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Return_;
 
 class TrabajoMaquina extends Controller
 {
@@ -71,6 +72,10 @@ class TrabajoMaquina extends Controller
                             'estados',
                             'maquina',
                             'estado_actual'));
+                }
+
+                if ($turno->maquina->corte == 'ASERRIO'){
+                    return view('modulos.operaciones.trabajo-maquina.transformacion-troza');
                 }
 
                 return redirect()->route('trabajo-maquina.create');

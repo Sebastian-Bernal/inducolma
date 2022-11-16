@@ -270,6 +270,6 @@
 @endsection
 
 @section('js')
-<script src="/js/modulos/cubicaje.js"></script>
+<script src="/js/modulos/cubicaje-troza.js"></script>
 <script src="/js/modulos/calificacion.js"></script>
 @endsection
