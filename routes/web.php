@@ -328,6 +328,10 @@ Route::controller(TrabajoMaquina::class)->group(function(){
                 ->name('trabajo-ensamble')
                 ->middleware('auth');
 
+        Route::get('trabajo-troza/{entrada}', 'trabajoTroza')
+                ->name('trabajo-troza')
+                ->middleware('auth');
+
 });
 
 Route::resource('subprocesos', SubprocesoController::class)

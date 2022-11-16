@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cubicaje;
+use App\Models\EntradaMadera;
 use App\Models\Estado;
 use App\Models\EstadoMaquina;
 use App\Models\Evento;
@@ -66,7 +68,10 @@ class TrabajoMaquina extends Controller
                 }
 
                 if ($turno->maquina->corte == 'ASERRIO'){
-                    return view('modulos.operaciones.trabajo-maquina.transformacion-troza');
+                    $entradas = EntradaMadera::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
+                                        ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
+                                        ->get();
+                    return view('modulos.operaciones.trabajo-maquina.troza-index', compact('entradas'));
                 }
 
                 if ($turno->maquina->corte != 'ENSAMBLE' ) {
@@ -116,6 +121,23 @@ class TrabajoMaquina extends Controller
         }
 
         return view('modulos.operaciones.trabajo-maquina.ensamble', compact('pedidos_ordenes'));
+    }
+
+
+
+    public function trabajoTroza(EntradaMadera $entrada)
+    {
+        $trozas = Cubicaje::where('entrada_madera_id', $entrada->id)
+                            ->where('estado', 'TROZA')
+                            ->orderBy('id')
+                            ->get([
+                                'id',
+                                'entrada_madera_id',
+                                'bloque',
+                                'paqueta',
+                                'largo',
+                            ]);
+        return view('modulos.operaciones.trabajo-maquina..transformacion-troza', compact('entrada', 'trozas'));
     }
 
     /**
