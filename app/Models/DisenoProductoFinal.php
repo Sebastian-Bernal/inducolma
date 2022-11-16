@@ -43,7 +43,19 @@ class DisenoProductoFinal extends Model
 
     public function items()
     {
-        return $this->belongsToMany(Item::class,'diseno_items');
+        return $this->belongsToMany(Item::class,'diseno_items')
+                    ->select([
+                        'items.id',
+                        'descripcion',
+                        'alto',
+                        'largo',
+                        'ancho',
+                        'diseno_producto_final_id',
+                        'item_id',
+                        'preprocesado',
+                        'madera_id',
+                        'existencias',
+                        'diseno_items.cantidad']);
     }
 
     /**
@@ -52,7 +64,9 @@ class DisenoProductoFinal extends Model
 
     public function insumos()
     {
-        return $this->belongsToMany(InsumosAlmacen::class,'diseno_insumos', 'diseno_producto_final_id', 'insumo_almacen_id');
+        return $this->belongsToMany(InsumosAlmacen::class,'diseno_insumos', 'diseno_producto_final_id', 'insumo_almacen_id')
+                    ->select(['diseno_producto_final_id', 'insumo_almacen_id', 'diseno_insumos.cantidad', 'descripcion']);
+
     }
 
     /**

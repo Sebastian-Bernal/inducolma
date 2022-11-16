@@ -134,6 +134,12 @@ Route::resource('cubicaje',CubicajeController::class)
                 ->names('cubicaje')
                 ->middleware('auth');
 
+Route::controller(CubicajeController::class)->group(function (){
+
+        Route::get('cubicaje-troza', 'cubicajeTroza')
+                ->name('cubicaje-troza')
+                ->middleware('auth');
+});
 
 Route::resource('clientes',ClienteController::class)
                 ->parameters(['clientes'=> 'cliente'])

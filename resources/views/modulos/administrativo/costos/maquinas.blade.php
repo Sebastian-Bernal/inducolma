@@ -63,6 +63,7 @@
                                         <option value="FINAL">FINAL</option>
                                         <option value="ACABADOS">ACABADOS</option>
                                         <option value="ENSAMBLE">ENSAMBLE</option>
+                                        <option value="ASERRIO">ASERRIO</option>
                                     </select>
                                 </div>
                             </div>

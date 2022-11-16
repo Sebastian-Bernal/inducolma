@@ -39,5 +39,38 @@ class RegistroCubicajes
         } else {
             return ['error' => true, 'message' => 'Error al guardar cubicajes'];
         }
+
+    }
+
+    public function guardarTroza($datos)
+    {
+        // return $datos[0]->paqueta;
+        $guardados = 0;
+        foreach ($datos as $cubicaje) {
+            $registro = new Cubicaje();
+            $registro->paqueta = $cubicaje['paqueta'];
+            $registro->largo = $cubicaje['largo'];
+            if ((int)$cubicaje['alto'] < (int)$cubicaje['ancho']) {
+                $registro->diametro_mayor = $cubicaje['ancho'];
+                $registro->diametro_menor = $cubicaje['alto'];
+                $registro->cm3 = (3.1417*($cubicaje['alto']/2) * $cubicaje['largo']);
+            } else {
+                $registro->diametro_mayor = $cubicaje['alto'];
+                $registro->diametro_menor = $cubicaje['ancho'];
+                $registro->cm3 = (3.1417*($cubicaje['ancho']/2) * $cubicaje['largo']);
+            }
+
+            $registro->bloque = $cubicaje['bloque'];
+            $registro->estado = 'TROZA';
+            $registro->entrada_madera_id = $cubicaje['entrada_id'];
+            $registro->user_id = $cubicaje['user_id'];
+            $registro->save();
+            $guardados++;
+        }
+        if($guardados == count($datos)){
+            return ['error' => false, 'message' => 'Cubicajes guardados correctamente'];
+        } else {
+            return ['error' => true, 'message' => 'Error al guardar cubicajes'];
+        }
     }
 }

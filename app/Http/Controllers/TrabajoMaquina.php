@@ -12,17 +12,20 @@ use App\Models\Proceso;
 use App\Models\TipoEvento;
 use App\Models\TurnoUsuario;
 use App\Models\User;
+use App\Repositories\ProductosTerminados;
 use App\Repositories\RegistroAsistencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Return_;
 
 class TrabajoMaquina extends Controller
 {
-    protected $registroAsistencia;
+    protected $registroAsistencia, $productosTerminados;
 
-    public function __construct(RegistroAsistencia $registroAsitencia)
+    public function __construct(RegistroAsistencia $registroAsitencia, ProductosTerminados $productosTerminados )
     {
         $this->registroAsistencia = $registroAsitencia;
+        $this->productosTerminados = $productosTerminados;
     }
 
     /**
@@ -61,6 +64,11 @@ class TrabajoMaquina extends Controller
                         'fecha' => now(),
                     ]);
                 }
+
+                if ($turno->maquina->corte == 'ASERRIO'){
+                    return view('modulos.operaciones.trabajo-maquina.transformacion-troza');
+                }
+
                 if ($turno->maquina->corte != 'ENSAMBLE' ) {
                     return view('modulos.operaciones.trabajo-maquina.show',
                     compact('procesos',
@@ -130,7 +138,7 @@ class TrabajoMaquina extends Controller
         $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
         $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
 
-        $i = 0;
+        /*  $i = 0;
         foreach ($pedido->diseno_producto_final->items as $item) {
             if ($item->existencias < $pedido->items_pedido[$i]->cantidad ) {
                 return back()->with('status',
@@ -139,7 +147,7 @@ class TrabajoMaquina extends Controller
             }
             $i++;
         }
-
+        */
         return view('modulos.operaciones.trabajo-maquina.trabajo-ensamble',
                 compact('pedido',
                         'turno_usuarios',
@@ -156,7 +164,8 @@ class TrabajoMaquina extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->productosTerminados->guardar($request);
+
     }
 
     /**
