@@ -2,13 +2,13 @@
 // variables globales
 var trozasEntrada;
 var cubicajeBloques = []
-var cubicajeSobrantes = [];
+var cubicajeIngresado = [];
 
-
-$(document).ready(function() {
+$(document).ready(function () {
     $('#trozas').click();
-    mostrarTrozaActual();
     comprobarLocalStorage();
+    mostrarTrozaActual();
+
     $("#listaCubicaje").DataTable({
         language: {
             url: "/DataTables/Spanish.json",
@@ -25,7 +25,7 @@ $(document).ready(function() {
  * @param {*} trozas
  */
 function cargarTrozas(trozas) {
-    trozasEntrada =  trozas;
+    trozasEntrada = trozas;
 }
 
 /**
@@ -33,18 +33,39 @@ function cargarTrozas(trozas) {
  */
 function mostrarTrozaActual() {
     let mostrar;
-    if ( cubicajeBloques.length == 0) {
+    if (cubicajeIngresado.length == 0) {
         mostrar = trozasEntrada[0];
-    } else {
-        mostrar = trozasEntrada.find(troza => cubicajeBloques.indexOf(troza) ? false : true);
+        mostrarValorTrozaActual(mostrar);
+    } else if( cubicajeIngresado.length == trozasEntrada.length){
+        mostrarValorTrozaActual(mostrar);
     }
-    $('#idCubicaje').val(mostrar.id);
-    $('#numeroBloque').empty().append(mostrar.bloque);
-    $('#largo').val(mostrar.largo);
-    $('#entradaId').val(mostrar.entrada_madera_id);
-    $('#bloque').val(mostrar.bloque);
-    $('#paqueta').val(mostrar.paqueta);
+    else {
+        trozasEntrada.reverse();
+        trozasEntrada.forEach(function (troza) {
+            if (!cubicajeIngresado.includes(troza)) {
+                mostrar = troza;
+            }
+        });
+        trozasEntrada.reverse();
+        mostrarValorTrozaActual(mostrar);
+    }
 
+
+}
+
+function mostrarValorTrozaActual(mostrar) {
+    console.log(mostrar);
+    if (mostrar == undefined) {
+        alertaErrorSimple('Fin de las trozas a transformar, por favor termine el proceso de transformacion de la entrada')
+        $('#largo').val('');
+    } else {
+        $('#idCubicaje').val('').val(mostrar.id);
+        $('#numeroBloque').empty().append(mostrar.bloque);
+        $('#largo').val(mostrar.largo);
+        $('#entradaId').val(mostrar.entrada_madera_id);
+        $('#bloque').val(mostrar.bloque);
+        $('#paqueta').val(mostrar.paqueta);
+    }
 }
 ////////////////////////////////////////////////////////////////////////
 
@@ -56,10 +77,14 @@ function comprobarLocalStorage() {
         localStorage.getItem("cubicajes") == "[]"
     ) {
         cubicajeBloques = [];
+        cubicajeIngresado = [];
     } else {
         cubicajeBloques = JSON.parse(localStorage.getItem("cubicajes"));
+        cubicajeIngresado = JSON.parse(localStorage.getItem("cubicajeIngresados"));
         listarPaquetas(cubicajeBloques);
     }
+
+
 }
 
 // funcion verificarInputs, verifica que los inputs no esten vacios, si no estan agrega el dato a la tabla
@@ -81,9 +106,8 @@ function verificarInputs() {
             if (
                 validaLargo() == false &&
                 validaAncho() == false &&
-                validaAlto() == false &&
-                validaPulgadasAlto() == false &&
-                validaPulgadasAncho() == false
+                validaAlto() == false
+
             ) {
                 valido = true;
             } else {
@@ -92,11 +116,8 @@ function verificarInputs() {
         }
     });
     if (valido) {
-        //console.log("envia datos");
+
         guardarPaqueta();
-    } else {
-        console.log("no envia datos");
-        // verificarInputs();
     }
 }
 
@@ -154,41 +175,7 @@ function validaAlto() {
     }
 }
 
-//funcion validaPulgadasAlto, valida que el alto este entre 0 y 10, sino muestra un mensaje de error
-// y se hace focus en el input hasta que se ingrese un valor valido
-function validaPulgadasAlto() {
-    var pulgadasAlto = $("#pulgadas_alto").val();
-    if (pulgadasAlto < 0 || pulgadasAlto > 10) {
-        Swal.fire({
-            title: "¡Ingrese un valor de pulgadas menos alto entre 0 y 10!",
-            icon: "warning",
-            confirmButtonColor: "#597504",
-            confirmButtonText: "OK",
-        });
-        $("#pulgadas_alto").focus();
-        return true;
-    } else {
-        return false;
-    }
-}
 
-//funcion validaPulgadasAncho, valida que el ancho este entre 0 y 10, sino muestra un mensaje de error
-// y se hace focus en el input hasta que se ingrese un valor valido
-function validaPulgadasAncho() {
-    var pulgadasAncho = $("#pulgadas_ancho").val();
-    if (pulgadasAncho < 0 || pulgadasAncho > 10) {
-        Swal.fire({
-            title: "¡Ingrese un valor de pulgadas menos ancho entre 0 y 10!",
-            icon: "warning",
-            confirmButtonColor: "#597504",
-            confirmButtonText: "OK",
-        });
-        $("#pulgadas_ancho").focus();
-        return true;
-    } else {
-        return false;
-    }
-}
 
 // funcion guardarPaqueta, guarda los datos en la tabla paquetas, guarda en memoria localstorage y asigna el id a la variable local cubicaje
 // limpia los inputs
@@ -203,6 +190,8 @@ function guardarPaqueta() {
     let pulgadasAncho = $("#pulgadas_ancho").val();
     let entrada_id = $("#entradaId").val();
     let user_id = $("#userId").val();
+
+    $('#ingresoAnterior').val(id);
 
     registroPaqueta = Object.assign(
         {},
@@ -219,8 +208,17 @@ function guardarPaqueta() {
             user_id,
         }
     );
+    var registroIngresado;
+    trozasEntrada.forEach(function (troza) {
+        if (troza.id == parseInt(id)) {
+            registroIngresado = troza;
+        }
+    })
+    cubicajeIngresado.push(registroIngresado);
+
     cubicajeBloques.unshift(registroPaqueta);
     localStorage.setItem("cubicajes", JSON.stringify(cubicajeBloques));
+    localStorage.setItem("cubicajeIngresados", JSON.stringify(cubicajeIngresado));
     //let cubicajesLocal = JSON.parse(localStorage.getItem('cubicajes'));
     listarPaquetas(cubicajeBloques);
     limpiarInputs();
@@ -276,12 +274,15 @@ function eliminarMadera(id, idCubicaje) {
     }).then((result) => {
         //$(`#${id}`).remove();
         if (result.isConfirmed) {
+            cubicajeIngresado = cubicajeIngresado.filter((ingresado) => ingresado.id != parseInt(idCubicaje))
             cubicajeBloques = cubicajeBloques.filter((cubicaje) => parseInt(cubicaje.id) != idCubicaje);
             localStorage.setItem("cubicajes", JSON.stringify(cubicajeBloques));
+            localStorage.setItem("cubicajeIngresados", JSON.stringify(cubicajeIngresado));
             listarPaquetas(cubicajeBloques);
+            mostrarTrozaActual();
         }
     });
-    mostrarTrozaActual();
+
 }
 
 // funcion terminarPaqueta, envia los datos de la variable cubicaje a la funcion guardarPaqueta
