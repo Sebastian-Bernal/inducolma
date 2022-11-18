@@ -88,10 +88,15 @@ class CubicajeController extends Controller
         if ($request->troza == 1){
             return $this->registroCubicaje->guardarTroza($datos);
         }
+
         return $this->registroCubicaje->guardar($datos);
     }
 
 
+    public function cubicajeTransformacion(Request $request)
+    {
+        return $request->all();
+    }
 
     /**
      * Display the specified resource.

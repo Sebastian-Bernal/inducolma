@@ -9,6 +9,7 @@ $(document).ready(function () {
     comprobarLocalStorage();
     mostrarTrozaActual();
 
+
     $("#listaCubicaje").DataTable({
         language: {
             url: "/DataTables/Spanish.json",
@@ -19,6 +20,9 @@ $(document).ready(function () {
         lengthChange: false,
     });
 });
+
+
+
 
 /**
  * carga las trozas a la variable global trozas
@@ -40,13 +44,17 @@ function mostrarTrozaActual() {
         mostrarValorTrozaActual(mostrar);
     }
     else {
-        trozasEntrada.reverse();
-        trozasEntrada.forEach(function (troza) {
-            if (!cubicajeIngresado.includes(troza)) {
-                mostrar = troza;
+        var copiaIngresados = [].concat(cubicajeIngresado);
+        var copiaTrozas = [].concat(trozasEntrada);
+        var ultimo = copiaIngresados.pop();
+        for(i in copiaTrozas){
+            if ( copiaTrozas[i].id == ultimo.id+1) {
+                mostrar = copiaTrozas[i];
+                break;
             }
-        });
-        trozasEntrada.reverse();
+        }
+        copiaIngresados = [];
+        copiaTrozas = [];
         mostrarValorTrozaActual(mostrar);
     }
 
@@ -54,7 +62,7 @@ function mostrarTrozaActual() {
 }
 
 function mostrarValorTrozaActual(mostrar) {
-    console.log(mostrar);
+
     if (mostrar == undefined) {
         alertaErrorSimple('Fin de las trozas a transformar, por favor termine el proceso de transformacion de la entrada')
         $('#largo').val('');
@@ -290,7 +298,7 @@ function terminarPaqueta() {
     if (cubicajeBloques.length > 0) {
         //guardarPaquetaBD();
         Swal.fire({
-            title: "¿Está seguro que desea terminar la paqueta?",
+            title: "¿Está seguro que desea terminar la transformacion de la entrada?",
             text: "¡No podrá revertir esta acción!",
             icon: "warning",
             showCancelButton: true,
@@ -300,26 +308,23 @@ function terminarPaqueta() {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
-                estado();
-                $("#calificarMadera").click();
+                if (cubicajesSobrantes.length > 0) {
+                    guardarPaquetaBDSobrante();
+                }
+                guardarPaquetaBD();
             }
         });
     } else {
-        swal.fire({
-            title: "¡La paqueta tiene 0 bloques agregados no se puede terminar!",
-            icon: "warning",
-            confirmButtonColor: "#597504",
-            confirmButtonText: "OK",
-        });
+        alertaErrorSimple('La paqueta tiene 0 bloques no puede guardar', 'warning');
     }
 }
 
 // funcion guardarPaquetaBD, guarda los datos en la base de datos
 function guardarPaquetaBD() {
     $.ajax({
-        url: "/cubicaje",
+        url: "/cubicaje-transformacion",
         data: {
-            cubicajes: cubicajes,
+            cubicajesTransformacion: cubicajeBloques,
             _token: $('input[name="_token"]').val(),
         },
         type: "post",
@@ -345,5 +350,9 @@ function guardarPaquetaBD() {
                 });
             }
         },
+        error: function(error){
+            alertaErrorSimple('Error interno del servidor', 'error');
+            console.log(error);
+        }
     });
 }

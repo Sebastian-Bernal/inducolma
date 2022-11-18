@@ -43,15 +43,15 @@
 
                 <div class="col-md-4 col-12">
                     <label for="largo" class="form-label">Largo</label>
-                    <input type="number" class="form-control" id="largo" name="largo" step="0.1" readonly>
+                    <input type="number" class="form-control" id="largo"  step="0.1" readonly>
                 </div>
                 <div class="col-md-4 col-12">
                     <label for="alto" class="form-label">Alto</label>
-                    <input type="number" class="form-control" id="alto" name="alto" step="0.1">
+                    <input type="number" class="form-control" id="alto"  step="0.1" min="1">
                 </div>
                 <div class="col-md-4 col-12">
                     <label for="ancho" class="form-label">Ancho</label>
-                    <input type="number" class="form-control" id="ancho">
+                    <input type="number" class="form-control" id="ancho" step="0.1" min="1">
                 </div>
                 <div class="col-md-4 col-12">
                     <button type="button" class="btn btn-primary" onclick="verificarInputs()">Guardar bloque</button>
@@ -63,17 +63,18 @@
 
             <form class=" row g-3 mt-3" id="agregarSobrante">
                 <input type="hidden" id="ingresoAnterior">
+                <input type="hidden" id="trozaId">
                 <div class="col-md-4 col-12">
                     <label for="largoSobrante" class="form-label">Largo</label>
-                    <input type="number" class="form-control" id="largoSobrante" name="largoSobrante" step="0.1">
+                    <input type="number" class="form-control" id="largoSobrante" step="0.1"  min="1">
                 </div>
                 <div class="col-md-4 col-12">
                     <label for="altoSobrante" class="form-label">Alto</label>
-                    <input type="number" class="form-control" id="altoSobrante" name="altoSobrante" step="0.1">
+                    <input type="number" class="form-control" id="altoSobrante"  step="0.1" min="1">
                 </div>
                 <div class="col-md-4 col-12">
                     <label for="anchoSobrante" class="form-label">Ancho</label>
-                    <input type="number" class="form-control" id="anchoSobrante">
+                    <input type="number" class="form-control" id="anchoSobrante" step="0.1" min="1">
                 </div>
                 <div class="col-md-4 col-12">
                     <button type="button" class="btn btn-warning" onclick="verificarInputsSobrante()">Guardar sobrante</button>
@@ -103,7 +104,7 @@
             </div>
             <div class="mb-4">
                 <button type="button" class="btn btn-secondary container-fluid"
-                    onclick="GuardarTransformaciones()">Terminar transformacion de entrada</button>
+                    onclick="terminarPaqueta()">Terminar transformacion de entrada</button>
             </div>
         </div>
     </div>

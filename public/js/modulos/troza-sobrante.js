@@ -2,10 +2,11 @@
 var cubicajesSobrantes = [];
 var numBloque = 0;
 var ultimoIngreso;
+var ultimaPaqueta;
 //carga de pagina
 $(document).ready(function () {
     comprobarLocalStorageSobrante();
-
+    ObtenerUltimaPaqueta();
     $("#paquetas").DataTable({
         language: {
             url: "/DataTables/Spanish.json",
@@ -24,28 +25,62 @@ function comprobarLocalStorageSobrante() {
         localStorage.getItem("cubicajesSobrantes") == "[]"
     ) {
         cubicajesSobrantes = [];
+        obtenerUltimoIngreso();
     } else {
         cubicajesSobrantes = JSON.parse(localStorage.getItem("cubicajesSobrantes"));
         listarPaquetasSobrante(cubicajesSobrantes);
+        obtenerUltimoIngreso();
     }
 }
+/**
+ * Selecciona el ultimo objeto ingresado en el cubicaje de la troza
+ *
+ * @return {void}
+ */
 
-// funcion verificarInputs, verifica que los inputs no esten vacios, si no estan agrega el dato a la tabla
-// guarda en localstorage, y asigna el id a la variable local cubicaje
+function obtenerUltimoIngreso() {
+    var copiaIngresados = [].concat(cubicajeBloques);
+    ultimoIngreso = copiaIngresados.pop();
+    if (ultimoIngreso != undefined) {
+        $('#ingresoAnterior').val(ultimoIngreso.entrada_id);
+        $('#trozaId').val(ultimoIngreso.id);
+    }
+
+}
+
+/**
+ * Selecciona el ultimo registro del array trozasEntrada
+ *
+ * @return {void}
+ */
+function ObtenerUltimaPaqueta() {
+    var copiaTrozasPaqueta = [].concat(trozasEntrada);
+    ultimaPaqueta = copiaTrozasPaqueta.pop().paqueta;
+
+}
+
+/**
+ * funcion verificarInputs, verifica que los inputs no esten vacios, si no estan agrega el dato a la tabla
+ * guarda en localstorage, y asigna el id a la variable local cubicaje
+ *
+ * @return {void}
+ * */
 function verificarInputsSobrante() {
+    console.log("verificarInputsSobrante");
     var valido;
+
+    if ($('#ingresoAnterior').val() == "") {
+        alertaErrorSimple('No existe el identificador del ultimo ingreso, no puede agregar el sobrante', 'error');
+    }
+
     var campos = $("#agregarSobrante").find("input");
     $.each(campos, function (index, value) {
         if (value.value == "") {
-            Swal.fire({
-                title: "¡Ingrese todos los datos!",
-                icon: "warning",
-                confirmButtonColor: "#597504",
-                confirmButtonText: "OK",
-            });
+            alertaErrorSimple("Ingrese todos los datos del sobrante", "warning");
+            obtenerUltimoIngreso();
             valido = false;
         } else {
-            obtenerUltimoIngresado();
+            obtenerUltimoIngreso();
             if (
                 validarLargoSobrante() == false &&
                 validarAnchoSobrante() == false &&
@@ -62,22 +97,20 @@ function verificarInputsSobrante() {
     }
 }
 
-function obtenerUltimoIngresado() {
-    cubicajeBloques
-}
+
 
 // funcion validarLargoSobrante, valida que el largo este entre 70 y 600, sino muestra un mensaje de error
 // y se hace focus en el input hasta que se ingrese un valor valido
 function validarLargoSobrante() {
-    var largo = $("#largo").val();
-    if (largo < 70 || largo > 600) {
+    var largo = parseFloat($("#largoSobrante").val());
+    if (largo < 1 || largo > parseInt(ultimoIngreso.largo)) {
         Swal.fire({
-            title: "¡Ingrese un valor de largo entre 70 y 600!",
+            title: "¡Ingrese un valor de largo entre 1 y "+ parseInt(ultimoIngreso.largo),
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
         });
-        $("#largo").focus();
+        $("#largoSobrante").focus();
         return true;
     } else {
         return false;
@@ -87,15 +120,15 @@ function validarLargoSobrante() {
 // funcion validarAnchoSobrante, valida que el ancho este entre 10 y 50, sino muestra un mensaje de error
 // y se hace focus en el input hasta que se ingrese un valor valido
 function validarAnchoSobrante() {
-    var ancho = $("#ancho").val();
-    if (ancho < 10 || ancho > 50) {
+    var ancho = parseFloat($("#anchoSobrante").val());
+    if (ancho < 1 || ancho > ultimoIngreso.ancho) {
         Swal.fire({
-            title: "¡Ingrese un valor de ancho entre 10 y 50!",
+            title: "¡Ingrese un valor de ancho entre 1 y "+ parseInt(ultimoIngreso.ancho),
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
         });
-        $("#ancho").focus();
+        $("#anchoSobrante").focus();
         return true;
     } else {
         return false;
@@ -105,15 +138,15 @@ function validarAnchoSobrante() {
 // funcion validarAltoSobrante, valida que el alto este entre 10 y 50, sino muestra un mensaje de error
 // y se hace focus en el input hasta que se ingrese un valor valido
 function validarAltoSobrante() {
-    var alto = $("#alto").val();
-    if (alto < 10 || alto > 50) {
+    var alto = parseFloat($("#altoSobrante").val());
+    if (alto < 1 || alto > ultimoIngreso.alto) {
         Swal.fire({
-            title: "¡Ingrese un valor de alto entre 10 y 50!",
+            title: "¡Ingrese un valor de alto entre 1 y "+ parseInt(ultimoIngreso.alto),
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
         });
-        $("#alto").focus();
+        $("#altoSobrante").focus();
         return true;
     } else {
         return false;
@@ -126,18 +159,18 @@ function validarAltoSobrante() {
 // limpia los inputs
 function guardarPaquetaSobrante() {
     numBloque++;
-    let paqueta = $("#paqueta").val();
+    let paqueta = ultimaPaqueta + 1;
     let bloque = numBloque;
-    let largo = $("#largo").val();
-    let alto = $("#alto").val();
-    let ancho = $("#ancho").val();
-    let pulgadasAlto = $("#pulgadas_alto").val();
-    let pulgadasAncho = $("#pulgadas_ancho").val();
-    let entrada_id = $("#entradaId").val();
+    let largo = $("#largoSobrante").val();
+    let alto = $("#altoSobrante").val();
+    let ancho = $("#anchoSobrante").val();
+    let entrada_id = $("#ingresoAnterior").val();
     let user_id = $("#userId").val();
+    let troza_id = $("#trozaId").val();
+    let pulgadasAlto = 0;
+    let pulgadasAncho = 0;
 
-    registroPaqueta = Object.assign(
-        {},
+    registroPaqueta = Object.assign({},
         {
             paqueta,
             bloque,
@@ -148,6 +181,7 @@ function guardarPaquetaSobrante() {
             pulgadasAncho,
             entrada_id,
             user_id,
+            troza_id
         }
     );
     cubicajesSobrantes.unshift(registroPaqueta);
@@ -158,12 +192,9 @@ function guardarPaquetaSobrante() {
 }
 //funcion limpiarInputsSobrante, limpia los inputs
 function limpiarInputsSobrante() {
-    // $('#largo').val('');
-    $("#alto").val("");
-    $("#ancho").val("");
-    $("#pulgadas_alto").val("0");
-    $("#pulgadas_ancho").val("0");
-    $("#alto").focus();
+    $('#largoSobrante').val('');
+    $("#altoSobrante").val("");
+    $("#anchoSobrante").val("");
 }
 
 // funcion listarPaquetasSobrante, recibe un array de objetos y los muestra en la tabla
@@ -215,7 +246,7 @@ function terminarPaquetaSobrante() {
     if (cubicajesSobrantes.length > 0) {
         //guardarPaquetaBDSobrante();
         Swal.fire({
-            title: "¿Está seguro que desea terminar la paqueta?",
+            title: "¿Está seguro que desea terminar la paqueta sobrante?",
             text: "¡No podrá revertir esta acción!",
             icon: "warning",
             showCancelButton: true,
@@ -225,8 +256,7 @@ function terminarPaquetaSobrante() {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
-                estado();
-                $("#calificarMadera").click();
+                guardarPaquetaBDSobrante();
             }
         });
     } else {
@@ -244,7 +274,7 @@ function guardarPaquetaBDSobrante() {
     $.ajax({
         url: "/cubicaje",
         data: {
-            cubicajesSobrantes: cubicajesSobrantes,
+            cubicajes: cubicajesSobrantes,
             _token: $('input[name="_token"]').val(),
         },
         type: "post",
@@ -259,16 +289,14 @@ function guardarPaquetaBDSobrante() {
                     cubicajesSobrantes = [];
                     numBloque = 0;
                     localStorage.removeItem("cubicajesSobrantes");
-                    window.location.href = "/cubicaje";
                 });
             } else {
-                Swal.fire({
-                    title: guardado.message,
-                    icon: "error",
-                    confirmButtonColor: "#597504",
-                    confirmButtonText: "OK",
-                });
+                alertaErrorSimple(guardado.message, 'error')
             }
+        },
+        error: function(error){
+            alertaErrorSimple('Error interno del servidor', 'error');
+            console.log(error);
         },
     });
 }

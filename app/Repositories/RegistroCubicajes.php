@@ -31,6 +31,7 @@ class RegistroCubicajes
             $registro->estado = 'DISPONIBLE';
             $registro->entrada_madera_id = $cubicaje['entrada_id'];
             $registro->user_id = $cubicaje['user_id'];
+            $registro->troza_id = $cubicaje['troza_id'];
             $registro->save();
             $guardados++;
         }

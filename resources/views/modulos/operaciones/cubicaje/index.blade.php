@@ -30,7 +30,7 @@
 
             @endif
             <!-- Modal Busca entrada de la adera en bloque-->
-            <form id="formRegistro" action="{{ route('cubicaje.create') }}" method="POST">
+            <form id="formRegistro" action="{{ route('cubicaje.create') }}" method="GET">
 
                 <div class="modal fade" id="creaUsuario" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
