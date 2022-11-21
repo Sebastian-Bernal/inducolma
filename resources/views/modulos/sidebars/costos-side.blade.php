@@ -41,6 +41,11 @@
                             <a href="{{ route('costos-de-infraestructura.index') }}"
                                 class="btn btn-primary seleccionado">Costos infraestructura</a>
                         </div>
+
+                        <div class="mt-3">
+                            <a href="{{ route('costo-madera') }}"
+                                class="btn btn-primary seleccionado">Costos de madera</a>
+                        </div>
                     </div>
                 </div>
             </div>

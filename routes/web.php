@@ -128,6 +128,12 @@ Route::post('elimina-madera', [EntradaMaderaController::class, 'eliminarMadera']
         ->name('elimina-madera')
         ->middleware('auth');
 
+Route::controller(EntradaMaderaController::class)->group(function () {
+    Route::get('costo-madera', 'indexEntradas')
+            ->name('costo-madera')
+            ->middleware('auth');
+});
+
 
 Route::resource('cubicaje',CubicajeController::class)
                 ->parameters(['cubicaje'=> 'cubicaje'])

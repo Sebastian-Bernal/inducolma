@@ -19,20 +19,21 @@ class EntradaMaderaController extends Controller
      * @return \Illuminate\Http\Response
      */
     protected $registroEntradaMadera;
-    
+
     public function __construct(RegistroEntradaMadera $registroEntradaMadera)
     {
         $this->registroEntradaMadera = $registroEntradaMadera;
-        
     }
 
     public function index()
     {
-        $entradas = EntradaMadera::whereBetween('created_at',
-                            [date('Y-m-d', strtotime('-1 month')), date('Y-m-d', strtotime('+1 day'))])
-                            ->where('user_id', auth()->user()->id)                            
-                            ->get();
-        
+        $entradas = EntradaMadera::whereBetween(
+            'created_at',
+            [date('Y-m-d', strtotime('-1 month')), date('Y-m-d', strtotime('+1 day'))]
+        )
+            ->where('user_id', auth()->user()->id)
+            ->get();
+
         $proveedores = Proveedor::select('id', 'nombre')->get();
         $maderas = Madera::select('id', 'nombre_cientifico')->get();
         return view('modulos.administrativo.entradas-madera.index', compact('entradas', 'proveedores', 'maderas'));
@@ -45,8 +46,8 @@ class EntradaMaderaController extends Controller
      */
     public function create()
     {
-      //
-        
+        //
+
     }
 
     /**
@@ -57,16 +58,13 @@ class EntradaMaderaController extends Controller
      */
     public function store(Request $request)
     {
-       //return $request->all();
-       
-       if ($request->entrada[2] == 0) {
-            return $this->registroEntradaMadera->guardar($request);
-       } else{
-            return $this->registroEntradaMadera->actualizar($request);
-       }
+        //return $request->all();
 
-       
-        
+        if ($request->entrada[2] == 0) {
+            return $this->registroEntradaMadera->guardar($request);
+        } else {
+            return $this->registroEntradaMadera->actualizar($request);
+        }
     }
 
     /**
@@ -77,13 +75,15 @@ class EntradaMaderaController extends Controller
      */
     public function show(EntradaMadera $entrada)
     {
-        
+
         $entrada = EntradaMadera::find($entrada->id)->load('proveedor', 'maderas', 'entradas_madera_maderas');
-        //return $entrada; 
+        //return $entrada;
         $proveedores = Proveedor::select('id', 'nombre')->get();
         $maderas = Madera::select('id', 'nombre')->get();
-        return view('modulos.administrativo.entradas-madera.show',
-                     compact('entrada', 'proveedores', 'maderas'));
+        return view(
+            'modulos.administrativo.entradas-madera.show',
+            compact('entrada', 'proveedores', 'maderas')
+        );
     }
 
     /**
@@ -126,31 +126,31 @@ class EntradaMaderaController extends Controller
     public function verificarRegistro(Request $request)
     {
         //return $request->all();
-        $entrada = EntradaMadera::where(trim('acto_administrativo'),trim( $request->acto));
-        if($entrada->count() > 0)
-        {
+        $entrada = EntradaMadera::where(trim('acto_administrativo'), trim($request->acto));
+        if ($entrada->count() > 0) {
             return response()->json(['error' => true]);
         } else {
             return response()->json(['error' => false]);
         }
     }
 
-    // retorna un json con los datos de la ultima entrada 
+    // retorna un json con los datos de la ultima entrada
     public function ultimaEntrada(Request $request)
     {
         $ultimaEntrada = EntradaMadera::findOrFail($request->id)
-                        ->load('proveedor');
-        $maderas = DB::table('entradas_madera_maderas')                   
-                    ->join('maderas', 'entradas_madera_maderas.madera_id', '=', 'maderas.id')
-                    ->select('entradas_madera_maderas.id',
-                            'maderas.nombre',                             
-                            'entradas_madera_maderas.condicion_madera',
-                            'entradas_madera_maderas.m3entrada',
-                            'entradas_madera_maderas.madera_id',
-                            'entradas_madera_maderas.entrada_madera_id'
-                            )
-                    ->where('entrada_madera_id', $request->id)
-                    ->get();
+            ->load('proveedor');
+        $maderas = DB::table('entradas_madera_maderas')
+            ->join('maderas', 'entradas_madera_maderas.madera_id', '=', 'maderas.id')
+            ->select(
+                'entradas_madera_maderas.id',
+                'maderas.nombre',
+                'entradas_madera_maderas.condicion_madera',
+                'entradas_madera_maderas.m3entrada',
+                'entradas_madera_maderas.madera_id',
+                'entradas_madera_maderas.entrada_madera_id'
+            )
+            ->where('entrada_madera_id', $request->id)
+            ->get();
         return response()->json(compact('ultimaEntrada', 'maderas'));
     }
 
@@ -160,5 +160,12 @@ class EntradaMaderaController extends Controller
         $madera = EntradasMaderaMaderas::findOrFail($request->id);
         $madera->delete();
         return response()->json(['error' => false]);
+    }
+
+    public function indexEntradas()
+    {
+        $entradas = EntradasMaderaMaderas::where('costo', 0)->with('entrada_madera')->get();
+
+        return view('modulos.administrativo.entradas-madera.index-maderas', compact('entradas'));
     }
 }
