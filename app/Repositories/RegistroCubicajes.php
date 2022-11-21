@@ -42,7 +42,11 @@ class RegistroCubicajes
         }
 
     }
-
+    /**
+     * guarda las trozas ingresadas en cubicaje
+     *
+     * @param Object $datos
+     */
     public function guardarTroza($datos)
     {
         // return $datos[0]->paqueta;
@@ -73,5 +77,40 @@ class RegistroCubicajes
         } else {
             return ['error' => true, 'message' => 'Error al guardar cubicajes'];
         }
+    }
+
+    /**
+     * Actualiza los registros de cubicajes que ingresaron como trozas asignando los datos
+     * de la transformacion realizada.
+     *
+     * @param Object $datos
+     */
+
+    public function actualizarTrozas($bloques)
+    {
+        $bloques = json_decode(json_encode($bloques));
+        $guardados = 0;
+        foreach ($bloques as $bloque) {
+            try {
+                $actualizar = Cubicaje::find($bloque->id);
+                $actualizar->ancho =  $bloque->ancho;
+                $actualizar->alto = $bloque->alto;
+                $actualizar->pulgadas_cuadradas = (($bloque->alto/2.54))*(($bloque->ancho/2.54));
+                $actualizar->pulgadas_cuadradas_x3_metros = ($bloque->largo/300)* (((integer)($bloque->alto/2.54)) * ((integer)($bloque->ancho/2.54)));
+                $actualizar->estado = 'DISPONIBLE';
+                $actualizar->save();
+                $guardados ++;
+            } catch (\Throwable $th) {
+                return  ['error' => true, 'message' => 'No se encontro el cubicaje con id: ' . $bloque->id . 'contacte al administrador'];
+                break;
+            }
+        }
+
+        if ($guardados != count($bloques)) {
+            return ['error' => true, 'message' => 'Uno o mas bloques no pudo ser guardado'];
+        }
+
+        return  ['error' => false, 'message' => 'Los bloques se guardaron con éxito'];
+
     }
 }

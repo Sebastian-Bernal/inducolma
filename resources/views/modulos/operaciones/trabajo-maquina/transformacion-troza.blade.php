@@ -85,22 +85,56 @@
                     <h2>Transformaciones por guardar</h2>
                     <br>
                 </div>
-                <table class="table table-striped" id="listaCubicaje">
-                    <thead>
-                        <tr>
-                            <th scope="col">Paqueta</th>
-                            <th scope="col">Entrada</th>
-                            <th scope="col">Bloque No.</th>
-                            <th scope="col">Alto</th>
-                            <th scope="col">Ancho</th>
-                            <th scope="col">Largo</th>
-                            <th> Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="listarPaquetas">
+                <p>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBloques" aria-expanded="false" aria-controls="collapseBloques">
+                        Ver bloques
+                    </button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSobrantes" aria-expanded="false" aria-controls="collapseSobrantes">
+                        Ver bloques Sobrantes
+                    </button>
+                </p>
+                <div class="collapse" id="collapseBloques">
+                    <div class="card card-body">
+                        <table class="table table-striped" id="listaCubicaje">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Paqueta</th>
+                                    <th scope="col">Entrada</th>
+                                    <th scope="col">Bloque No.</th>
+                                    <th scope="col">Alto</th>
+                                    <th scope="col">Ancho</th>
+                                    <th scope="col">Largo</th>
+                                    <th> Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listarPaquetas">
 
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="collapse" id="collapseSobrantes">
+                    <div class="card card-body">
+                        <table class="table" id="listaCubicajeSobrante">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Paqueta</th>
+                                    <th scope="col">Entrada</th>
+                                    <th scope="col">Bloque No.</th>
+                                    <th scope="col">Alto</th>
+                                    <th scope="col">Ancho</th>
+                                    <th scope="col">Largo</th>
+                                    <th> Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listarSobrantes">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
             <div class="mb-4">
                 <button type="button" class="btn btn-secondary container-fluid"

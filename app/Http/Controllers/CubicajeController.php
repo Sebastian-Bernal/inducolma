@@ -95,7 +95,10 @@ class CubicajeController extends Controller
 
     public function cubicajeTransformacion(Request $request)
     {
-        return $request->all();
+        $this->authorize('cubicaje');
+        $datos_actualizar = $request->cubicajesTransformacion;
+
+        return $this->registroCubicaje->actualizarTrozas($datos_actualizar);
     }
 
     /**

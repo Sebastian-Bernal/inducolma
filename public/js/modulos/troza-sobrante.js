@@ -66,7 +66,7 @@ function ObtenerUltimaPaqueta() {
  * @return {void}
  * */
 function verificarInputsSobrante() {
-    console.log("verificarInputsSobrante");
+
     var valido;
 
     if ($('#ingresoAnterior').val() == "") {
@@ -199,22 +199,21 @@ function limpiarInputsSobrante() {
 
 // funcion listarPaquetasSobrante, recibe un array de objetos y los muestra en la tabla
 function listarPaquetasSobrante(cubicajesSobrantes) {
-    $("#listarPaquetasSobrante").html("");
+    $("#listarSobrantes").html("");
     let trid = 0;
     //let id = 0;
     cubicajesSobrantes.forEach((cubicaje) => {
 
         let fila = `<tr id ="${trid}">
                         <td>${cubicaje.paqueta}</td>
+                        <td>${cubicaje.entrada_id}</td>
                         <td>${cubicaje.bloque}</td>
                         <td>${cubicaje.largo}</td>
                         <td>${cubicaje.alto}</td>
                         <td>${cubicaje.ancho}</td>
-                        <td>${cubicaje.pulgadasAlto}</td>
-                        <td>${cubicaje.pulgadasAncho}</td>
                         <td><button type="button" class="btn btn-danger" onclick="eliminarMaderaSobrante(${trid},${cubicaje.bloque})"><i class="fas fa-trash-alt"></i></button></td>
                     </tr>`;
-        $("#listarPaquetasSobrante").append(fila);
+        $("#listarSobrantes").append(fila);
         trid++;
     });
 }
@@ -223,7 +222,7 @@ function listarPaquetasSobrante(cubicajesSobrantes) {
 function eliminarMaderaSobrante(id, bloque) {
     numBloque--;
     Swal.fire({
-        title: "¿Está seguro que desea eliminar la paqueta?",
+        title: "¿Está seguro que desea eliminar el bloque sobrante # "+ bloque +"?" ,
         text: "¡No podrá revertir esta acción!",
         icon: "warning",
         showCancelButton: true,

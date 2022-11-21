@@ -16,8 +16,7 @@ $(document).ready(function () {
         },
         responsive: true,
         pageLength: 5,
-
-        lengthChange: false,
+        //lengthChange: false,
     });
 });
 
@@ -271,7 +270,7 @@ function listarPaquetas(cubicajeBloques) {
 function eliminarMadera(id, idCubicaje) {
     //console.log(idCubicaje);
     Swal.fire({
-        title: "¿Está seguro que desea eliminar la paqueta?",
+        title: "¿Está seguro que desea eliminar el bloque?",
         text: "¡No podrá revertir esta acción!",
         icon: "warning",
         showCancelButton: true,
@@ -338,8 +337,8 @@ function guardarPaquetaBD() {
                 }).then(() => {
                     cubicajes = [];
                     numBloque = 0;
-                    localStorage.removeItem("cubicajes");
-                    window.location.href = "/cubicaje";
+                    localStorage.clear();
+                    window.location.href = "/trabajo-maquina";
                 });
             } else {
                 Swal.fire({
