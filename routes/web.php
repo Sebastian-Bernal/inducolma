@@ -132,6 +132,12 @@ Route::controller(EntradaMaderaController::class)->group(function () {
     Route::get('costo-madera', 'indexEntradas')
             ->name('costo-madera')
             ->middleware('auth');
+    Route::get('editar-costo/{entrada}', 'editEntrada')
+            ->name('editar-costo')
+            ->middleware('auth');
+    Route::put('actualizar-costo/{entrada}', 'updateEntrada')
+            ->name('actualizar-costo')
+            ->middleware('auth');
 });
 
 

@@ -28,6 +28,7 @@
             <thead>
                 <tr>
                     <th>Id</th>
+                    <th>Viaje</th>
                     <th>Proveedor</th>
                     <th>Tipo de madera</th>
                     <th>Condición</th>
@@ -40,13 +41,14 @@
                 @foreach ($entradas as $entrada)
                 <tr>
                     <td>{{ $entrada->id }}</td>
+                    <td>{{ $entrada->entrada_madera_id }}</td>
                     <td>{{ $entrada->entrada_madera->proveedor->nombre }}</td>
                     <td>{{ $entrada->madera->tipo_madera->descripcion }}</td>
                     <td>{{ $entrada->condicion_madera }}</td>
                     <td>{{ $entrada->m3entrada }}</td>
                     <td>
                         <div class="d-flex align-items-center ">
-                            <a href="{{ route('entradas-maderas.show',$entrada) }}"
+                            <a href="{{ route('editar-costo',$entrada) }}"
                                 class="btn btn-sm btn-warning"
                                 title="Editar costo">
                                 <i class="fa-solid fa-pen-to-square fa-lg"></i>

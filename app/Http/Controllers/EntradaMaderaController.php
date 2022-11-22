@@ -162,10 +162,49 @@ class EntradaMaderaController extends Controller
         return response()->json(['error' => false]);
     }
 
+    /**
+     * muestra el listado inicial de las maderas con costo cero
+     *
+     * @return void
+     */
     public function indexEntradas()
     {
         $entradas = EntradasMaderaMaderas::where('costo', 0)->with('entrada_madera')->get();
 
         return view('modulos.administrativo.entradas-madera.index-maderas', compact('entradas'));
     }
+
+    /**
+     * muestra el formulario de actualiacion de costo de la madera
+     */
+    public function editEntrada(EntradasMaderaMaderas $entrada)
+    {
+        return view('modulos.administrativo.entradas-madera.edit-madera', compact('entrada'));
+    }
+
+    public function updateEntrada(Request $request ,EntradasMaderaMaderas $entrada )
+    {
+        $costo = 0;
+        switch ($request->medida) {
+            case 'CENTIMETROS CUBICOS':
+                $costo = (float)$request->costo;
+                break;
+            case 'METRO CUBICO':
+                $costo = (float)$request->costo / 1000000;
+                break;
+            case 'PULGADA CUADRADA POR 3 METROS':
+                $costo = (float)$request->costo / 1935.48;
+                break;
+        }
+
+        $entrada->costo = $costo;
+        try {
+            $entrada->save();
+            return redirect()->route('costo-madera')
+            ->with('status', "El precio de compra de la entrada $entrada->id se actualizo correctamente");
+        } catch (\Throwable $th) {
+            return back()->with('status','no se pudo actualizar el precio de compra de la entrada');
+        }
+    }
+
 }
