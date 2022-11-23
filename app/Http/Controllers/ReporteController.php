@@ -44,7 +44,7 @@ class ReporteController extends Controller
             if ($generar == '1') {
                 $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data', 'encabezado'));
                 $pdf->setPaper('a4', 'landscape');
-                return $pdf->download($encabezado.'-'.$desde.'-'.$hasta.'.pdf');
+                return $pdf->stream($encabezado.'-'.$desde.'-'.$hasta.'.pdf');
 
             } elseif ($generar == '2') {
                 return Excel::download(new EntradaMaderaExport($data), "$encabezado-$desde-$hasta.xlsx");

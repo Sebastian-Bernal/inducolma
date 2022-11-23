@@ -1,22 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Laravel</title>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-        table {
-            font-size: 12px;
-        }
-    </style>
-</head>
-    <h5>{{ $encabezado }}</h5>
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> --}}
+
+
+    <h5 class="h5">{{ $encabezado }}</h5>
     <body>
-        <table class="table table-bordered mt-5" >
+        <table class="table table-striped table-bordered align-middle mt-5" >
             <thead>
-                <tr>
+                <tr class="table-primary">
                     <th>Proveedor</th>
                     <th>Entidad vigilante</th>
                     <th>mes</th>
@@ -24,7 +23,7 @@
                     <th>fecha</th>
                     <th>Acto administrativo</th>
                     <th>Salvoconducto remision</th>
-                    <th>Titular del salvoconducto_remision</th>
+                    <th>Titular del salvoconducto remision</th>
                     <th>procedencia de la madera</th>
                     <th>maderas</th>
                 </tr>
