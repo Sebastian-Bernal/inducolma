@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Controllers\Reportes\Administrativos;
+
+use App\Http\Controllers\Controller;
+use App\Models\EntradaMadera;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class ReporteCubicajesController extends Controller
+{
+
+    /**
+     * get entradas maderas devuelve un json de la informacion
+     *
+     * @return json
+     */
+    public function getEntradas()
+    {
+        $entradas = EntradaMadera::orderBy('id')->get(['id', 'id as text']);
+        $entradas->toJson();
+        return response()->json($entradas);
+    }
+
+    /**
+     * muestra la vista de los datos encontrados
+     */
+    public function reporteCubicajes(Request  $request)
+    {
+        $desde = $request->desdeIm;
+        $hasta = $request->hastaIm;
+        $tipoReporte = $request->tipoReporte;
+        $especifico = $request->especifico;
+        $generar = $request->generar;
+        //$datos = $this->reporte->seleccionarReporte($request);
+        //$encabezado = $datos[1];
+        //$data = json_decode(json_encode($datos[0]));
+
+        if (true ) {
+            return redirect()
+                    ->back()
+                    ->with('status','No se encontraron datos de cubicajes en los filtros seleccionados.');
+        } else {
+            if ($generar == '1') {
+            /*  $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data', 'encabezado'));
+                $pdf->setPaper('a4', 'landscape');
+                return $pdf->stream($encabezado.'-'.$desde.'-'.$hasta.'.pdf'); */
+
+            } elseif ($generar == '2') {
+               // return Excel::download(new EntradaMaderaExport($data), "$encabezado-$desde-$hasta.xlsx");
+
+            }elseif ($generar == '3') {
+               //return Excel::download(new EntradaMaderaExport($data), "$encabezado-$desde-$hasta.csv");
+
+            }else{
+                return view('modulos.reportes.administrativos.cubicajes.index-cubicajes',
+                compact('data', 'encabezado', 'desde', 'hasta', 'tipoReporte','especifico'));
+            }
+        }
+    }
+}

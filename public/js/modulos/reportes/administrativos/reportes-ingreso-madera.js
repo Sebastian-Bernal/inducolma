@@ -1,3 +1,8 @@
+/**
+ * envia el formulario reporteIngresoMaderas
+ *
+ * @return {void}
+ */
 function reporteIngresoMaderas() {
 
     let desde = $('#desdeIm');
@@ -6,12 +11,12 @@ function reporteIngresoMaderas() {
     let especifico = $('#especifico');
     if (reporte.val() == "") {
         alertaErrorSimple('Seleccione un tipo de reporte!', 'error');
-    } else if(desde.val() == '' || hasta.val() == ''){
-        alertaErrorSimple('Ingrese datos validos para las fechas desde y hasta!','error');
+    } else if (desde.val() == '' || hasta.val() == '') {
+        alertaErrorSimple('Ingrese datos validos para las fechas desde y hasta!', 'error');
     }
     else {
         if ((reporte.val() == '3' || reporte.val() == '4') && especifico.val() == "") {
-            alertaErrorSimple('Seleccione el filtro de busqueda!','error');
+            alertaErrorSimple('Seleccione el filtro de busqueda!', 'error');
             especifico.click();
         } else {
             $('#reporteIngresoMadera').submit();
@@ -20,24 +25,33 @@ function reporteIngresoMaderas() {
             reporte.val('');
         }
     }
-
-
 }
 
+/**
+ * muestra el input del dato especifico cargado con los datos de la opcion seleccionada
+ *
+ * @returns {void}
+ */
 function datoEspecifico() {
+
     let reporte = $('#tipoReporte');
     let especifico = $('#especifico');
-
+    console.log(reporte.val());
     if (reporte.val() == '3') {
-        proveedores();
-    } else if (reporte.val() == '4'){
+        proveedoresIngreso();
+    } else if (reporte.val() == '4') {
         tipoMadera();
-    } else{
+    } else {
         $('#divEspecifico').hide(300);
     }
 }
 
-function proveedores () {
+/**
+ * busca los proveedores y los carga en el select
+ *
+ * @returns {void}
+ */
+function proveedoresIngreso() {
     $('#especifico').val('')
     $('#divEspecifico').show(300);
     $('#especifico').select2({
@@ -72,6 +86,11 @@ function proveedores () {
     })
 }
 
+/**
+ * busca llos tipos de madera y los carga en el select
+ *
+ * @returns {void}
+ */
 function tipoMadera() {
     $('#especifico').val('')
     $('#divEspecifico').show(300);
@@ -107,6 +126,11 @@ function tipoMadera() {
     })
 }
 
+/**
+ * envia el formulario para generar el tipo de reporte segun la seleecion del usuario
+ *
+ * @param {String} tipo_reporte [ numero del tipo de reporte ]
+ */
 
 function generarReporteIngresoMadera(tipo_reporte) {
     console.log(tipo_reporte);

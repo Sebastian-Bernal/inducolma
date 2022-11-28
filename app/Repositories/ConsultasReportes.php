@@ -20,27 +20,27 @@ class ConsultasReportes {
         $tipoReporte = $request->tipoReporte;
         switch ($tipoReporte) {
             case '1':
-                $data = $this->consulta($desde, $hasta,'maderas.densidad' ,'ALTA DENSIDAD');
+                $data = $this->consulta($desde, $hasta,'maderas.densidad' ,'ALTA DENSIDAD', $request->generar);
                 $encabezado = 'REPORTE MADERA DE ALTA DENSIDAD';
                 break;
             case '2':
-                $data = $this->consulta($desde, $hasta, 'maderas.densidad' , 'BAJA DENSIDAD');
+                $data = $this->consulta($desde, $hasta, 'maderas.densidad' , 'BAJA DENSIDAD', $request->generar);
                 $encabezado = 'REPORTE MADERA DE BAJA DENSIDAD';
                 break;
             case '3':
-                $data = $this->consulta($desde, $hasta,'proveedores.id',$request->especifico);
+                $data = $this->consulta($desde, $hasta,'proveedores.id',$request->especifico,  $request->generar);
                 $encabezado = 'REPORTE MADERAS POR PROVEEDOR';
                 break;
             case '4':
-                $data = $this->consulta($desde, $hasta, 'tipo_maderas.id', $request->especifico);
+                $data = $this->consulta($desde, $hasta, 'tipo_maderas.id', $request->especifico, $request->generar);
                 $encabezado = 'REPORTE MADERA POR TIPO DE MADERA';
                 break;
             case '5':
-                $data = $this->consulta($desde, $hasta, 'entidad_vigilante', 'ICA');
+                $data = $this->consulta($desde, $hasta, 'entidad_vigilante', 'ICA', $request->generar);
                 $encabezado = 'REPORTE MADERA POR ENTIDAD VIGILANTE ICA';
                 break;
             case '6':
-                $data = $this->consulta($desde, $hasta, 'entidad_vigilante', 'CVC');
+                $data = $this->consulta($desde, $hasta, 'entidad_vigilante', 'CVC',  $request->generar);
                 $encabezado = 'REPORTE MADERA POR ENTIDAD VIGILANTE CVC';
                 break;
             default:
@@ -58,7 +58,7 @@ class ConsultasReportes {
      * @param $where [clausula where a consultar]
      * @param $termino [valor del filtro a consultar]
      */
-    public function consulta($desde, $hasta, $where, $termino)
+    public function consulta($desde, $hasta, $where, $termino, $generar)
     {
         $data = EntradaMadera::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
                                 ->join('maderas', 'maderas.id', '=', 'entradas_madera_maderas.madera_id')
@@ -83,6 +83,9 @@ class ConsultasReportes {
 
                                 ]);
 
+        if ($generar == '2' || $generar == '3') {
+            return $data;
+        }
         return $this->agrupar($data);
     }
 

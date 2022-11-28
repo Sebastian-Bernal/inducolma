@@ -26,7 +26,7 @@ class EntradaMaderaExport implements FromView, WithStyles, ShouldAutoSize
     */
     public function view(): View
     {
-        return view('modulos.reportes.administrativos.ingreso-madera-xls',[
+        return view('modulos.reportes.administrativos.ingresos-madera.ingreso-madera-xls',[
             'data' => $this->data,
         ]);
     }

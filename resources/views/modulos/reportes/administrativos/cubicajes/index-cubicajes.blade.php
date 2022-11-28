@@ -8,7 +8,7 @@
 
     <div class="div container h-content ">
         <div class="row">
-            <h5>{{ $encabezado }}</h5>
+            <h5>ENCABEZADO</h5>
             <div style=" height: 30rem; overflow-y: scroll;">
                 <table class="table table-striped table-bordered align-middle mt-5" >
                     <thead>
@@ -25,25 +25,7 @@
                             <th>maderas</th>
                         </tr>
                     </thead>
-                    @foreach ($data as $madera)
-                    <tr>
-                        <td >{{ $madera->proveedor }}</td>
-                        <td>{{ $madera->entidad_vigilante }}</td>
-                        <td>{{ $madera->mes }}</td>
-                        <td>{{ $madera->ano }}</td>
-                        <td>{{ $madera->fecha }}</td>
-                        <td>{{ $madera->acto_administrativo }}</td>
-                        <td>{{ $madera->salvoconducto_remision }}</td>
-                        <td>{{ $madera->titular_salvoconducto }}</td>
-                        <td>{{ $madera->procedencia_madera }}</td>
-                        <td>
-                            @foreach ($madera->maderas as $item)
-                                {{ "$item->nobre_comun - $item->nombre_cientifico - $item->m3entrada \n" }}
-                                <hr>
-                            @endforeach
-                        </td>
-                    </tr>
-                    @endforeach
+
 
                 </table>
             </div>
@@ -51,11 +33,11 @@
                     rel="noopener noreferrer" --}}
                     id="generarReporteIngresoMadera">
                 <div hidden>
-                    <input type="text" readonly name="tipoReporte" id="tipoReporte" value="{{ $tipoReporte }}">
+                    {{-- <input type="text" readonly name="tipoReporte" id="tipoReporte" value="{{ $tipoReporte }}">
                     <input type="text" readonly name="especifico" id="especifico" value="{{ $especifico }}">
                     <input type="text" readonly name="desdeIm" id="desdeIm" value="{{ $desde }}">
                     <input type="text" readonly name="hastaIm" id="hastaIm" value="{{ $hasta }}">
-                    <input type="text" readonly name="generar" id="generar" value="">
+                    <input type="text" readonly name="generar" id="generar" value=""> --}}
                 </div>
                 <div class="d-flex justify-content-end mb-5 mt-2" >
                     <a href="{{ route('reportes-administrativos') }}" class=" btn btn-secondary">volver</a>
@@ -72,6 +54,6 @@
 
 @section('js')
 <script src="/js/modulos/alertas-swift.js"></script>
-<script src="/js/modulos/reportes.js"></script>
+<script src="/js/modulos/reportes/administrativos/reportes-ingreso-madera.js"></script>
 
 @endsection

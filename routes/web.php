@@ -28,7 +28,7 @@ use App\Http\Controllers\DisenoInsumoController;
 use App\Http\Controllers\OrdenProduccionController;
 use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
-use App\Http\Controllers\ReposrtesController;
+use App\Http\Controllers\Reportes\Administrativos\ReporteCubicajesController;
 use App\Http\Controllers\SubprocesoController;
 use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
@@ -363,30 +363,6 @@ Route::controller(ReporteController::class)->group(function(){
         ->name('ingreso-maderas')
         ->middleware('auth');
 
-        Route::post('ingreso-maderas-pdf', 'generarReporteIngresoMaderaPdf' )
-        ->name('ingreso-maderas-pdf')
-        ->middleware('auth');
-
-        Route::get('ingreso-cubiaje', 'ingresoCubicajes' )
-                ->name('ingreso-cubicaje')
-                ->middleware('auth');
-
-        Route::get('ingreso-personal', 'ingresoPersonal' )
-                ->name('ingreso-personal')
-                ->middleware('auth');
-
-        Route::get('horas-trabajo-personal', 'horasTrabajoPersonal' )
-                ->name('horas-trabajo-personal')
-                ->middleware('auth');
-
-        Route::get('inventario-maderas', 'inventarioMaderasAlmacen' )
-                ->name('inventario-maderas')
-                ->middleware('auth');
-
-        Route::get('pedidos-mes', 'pedidosMes' )
-                ->name('pedidos-mes')
-                ->middleware('auth');
-
         Route::get('get-proveedores', 'getProveedores')
                 ->name('get-proveedores')
                 ->middleware('auth');
@@ -398,22 +374,25 @@ Route::controller(ReporteController::class)->group(function(){
 
 });
 
+Route::controller(ReporteCubicajesController::class)->group(function (){
+    Route::get('get-entradas/{proveedor}', 'getEntradas')->name('get-entradas')->middleware('auth');
+    Route::get('reporte-cubicajes', 'reporteCubicajes')->name('reporte-cubicajes')->middleware('auth');
 
+});
 // rutas views index reportes
 
-Route::controller(ReposrtesController::class)->group(function(){
-    Route::view('reportes-administrativos','modulos.reportes.administrativos.index')
-        ->name('reportes-administrativos')
-        ->middleware('auth');
 
-    Route::view('reportes-ventas','modulos.reportes.ventas.index')
-        ->name('reportes-ventas')
-        ->middleware('auth');
+Route::view('reportes-administrativos','modulos.reportes.administrativos.index')
+    ->name('reportes-administrativos')
+    ->middleware('auth');
 
-    Route::view('reportes-procesos','modulos.reportes.procesos.index')
-        ->name('reportes-procesos')
-        ->middleware('auth');
-});
+Route::view('reportes-ventas','modulos.reportes.ventas.index')
+    ->name('reportes-ventas')
+    ->middleware('auth');
+
+Route::view('reportes-procesos','modulos.reportes.procesos.index')
+    ->name('reportes-procesos')
+    ->middleware('auth');
 
 
 Auth::routes([
