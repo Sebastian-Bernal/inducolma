@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+trtr<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -9,45 +9,82 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> --}}
-
-
-    <h5 class="h5">{{ $encabezado }}</h5>
+  
     <body>
-        <table class="table table-striped table-bordered align-middle mt-5" >
-            <thead>
-                <tr class="table-primary">
-                    <th>Proveedor</th>
-                    <th>Entidad vigilante</th>
-                    <th>mes</th>
-                    <th>ano</th>
-                    <th>fecha</th>
-                    <th>Acto administrativo</th>
-                    <th>Salvoconducto remision</th>
-                    <th>Titular del salvoconducto remision</th>
-                    <th>procedencia de la madera</th>
-                    <th>maderas</th>
-                </tr>
-            </thead>
-            @foreach ($data as $madera)
-            <tr>
-                <td >{{ $madera->proveedor }}</td>
-                <td>{{ $madera->entidad_vigilante }}</td>
-                <td>{{ $madera->mes }}</td>
-                <td>{{ $madera->ano }}</td>
-                <td>{{ $madera->fecha }}</td>
-                <td>{{ $madera->acto_administrativo }}</td>
-                <td>{{ $madera->salvoconducto_remision }}</td>
-                <td>{{ $madera->titular_salvoconducto }}</td>
-                <td>{{ $madera->procedencia_madera }}</td>
-                <td>
-                    @foreach ($madera->maderas as $item)
-                        {{ "$item->nobre_comun - $item->nombre_cientifico - $item->m3entrada \n" }}
-                        <hr>
-                    @endforeach
-                </td>
-            </tr>
-            @endforeach
-
-        </table>
+        <p class="px-2 py-2 text-center rounded" style=" background-color:#fb8c00; color: white;">
+            <strong>{{ $encabezado }}</strong>
+       
+        </p>
+        <div  class="container-fluid px-2 py-2 " >
+            <div>
+                @foreach ($data as $madera)
+                <div class="row col-10 m-auto mt-1 mb-2 rounded p-1 border border-ligth" style="page-break-inside:avoid;" >
+                    <div class="mt-1 mx-auto" style="background-color:#649f21;">
+                        <p class="col-10 text-white m-1 mx-auto" style="font-size: 10px;"> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 
+                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;Entidad Vigilante:  {{ $madera->entidad_vigilante }}
+                            &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 
+                            &nbsp; &nbsp;&nbsp; - &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;Mes: {{ $madera->mes }}  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 
+                            &nbsp; &nbsp;&nbsp; - &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Año: {{ $madera->ano }}
+                            &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp; &nbsp; 
+                            &nbsp; &nbsp;&nbsp; - &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;Fecha de Ingreso:  {{ $madera->fecha }}
+                            &nbsp; &nbsp;&nbsp;
+                        
+                        </p>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <label class="col-1 px-2 py-2" style="color:#649f21; font-size:10px;">PROVEEDOR:</label>
+                        
+                        <label class="col-2 rounded  py-2 px-2" style="font-size:10px; background-color:#cccccc;">{{ $madera->proveedor }}</label>
+                        
+                        <label class="col-1 px-2 py-2" style="color:#649f21; font-size:10px;">ACTO-ADMON:</label>
+                        
+                        <label class="col-2 rounded py-2 px-2" style="font-size:10px; background-color:#cccccc;">{{ $madera->acto_administrativo }}</label>
+                        <label class="col-2 px-2 py-2" style="color:#649f21; font-size:10px;">SALVOCNDUCTO:</label>
+                        
+                        <label class="col-2 rounded py-2 px-2" style="font-size:10px; background-color:#cccccc;">{{ $madera->salvoconducto_remision }}</label>
+                    </div>
+                    <div class="col-12 mt-1">
+                        <label class="col-2 px-2 py-2" style="color:#649f21; font-size:10px;">TITULAR SALVOCONDUCTO:</label>
+                        
+                        <label class="col-2 rounded  py-2 px-2" style="font-size:10px; background-color:#cccccc;">{{ $madera->titular_salvoconducto }}</label>
+                        
+                        <label class="col-1 px-2 py-2" style="color:#649f21; font-size:10px;">CIUDAD:</label>
+                        
+                        <label class="col-5 rounded py-2 px-2" style="font-size:10px; background-color:#cccccc;">{{ $madera->procedencia_madera }}</label>
+                       
+                    </div>
+                    <div class="col-10 mt-1 mx-auto">
+                        <p style="background-color:#fb8c00; min-height:2px;"></p>
+                        <p class="text-center" style="color:#fb8c00; min-height:2px;">Maderas en esta entrada</p>
+                        <table class="border border-light mx-auto col-10">
+                            <thead style="background-color:#bbbbbb">
+                              <tr>  
+                                <th class="pl-2 border border-secondary">Viaje No.</th>
+                                <th class="pl-2 border border-secondary">Nombre Común</th>
+                                <th class="pl-2 border border-secondary">Nombre Cientifico</th>
+                                <th class="pl-2 border border-secondary">Metros Cubicos</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($madera->maderas as $item)
+                                <td class="text-center border border-secondary">5</td>
+                                <td class="text-center border border-secondary">{{ "$item->nobre_comun" }}</td>
+                                <td class="text-center border border-secondary">{{ "$item->nombre_cientifico" }}</td>
+                                <td class="text-center border border-secondary">{{ "$item->m3entrada" }}</td>
+                                @endforeach
+                              
+                            </tbody>
+                          
+                        </table>
+                    </div>
+                   
+                       
+                    
+                </div>  
+                <br>  
+                @endforeach
+            </div>
+           
+        </div>    
     </body>
 </html>
