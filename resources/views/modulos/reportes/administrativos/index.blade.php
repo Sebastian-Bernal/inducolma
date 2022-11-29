@@ -164,7 +164,7 @@
                                             </div>
                                             <div class="col-auto">
                                                 <div class="input-group " id="divFiltroCubicaje2" style="display:none;">
-                                                    <span class="input-group-text" id="inputGroup-sizing-default">Filtro: </span>
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Proveedor: </span>
                                                     <select class="form-select form-select-sm"
                                                             aria-label=".form-select-sm example"
                                                             id="filtroCubiaje2"

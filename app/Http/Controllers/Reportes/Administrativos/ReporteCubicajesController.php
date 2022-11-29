@@ -4,11 +4,19 @@ namespace App\Http\Controllers\Reportes\Administrativos;
 
 use App\Http\Controllers\Controller;
 use App\Models\EntradaMadera;
+use App\Repositories\Reportes\ConsultasCubicajes;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReporteCubicajesController extends Controller
 {
+
+    protected $consultaCubicaje;
+
+    public function __construct(ConsultasCubicajes $consultasCubicajes){
+        $this->consultaCubicaje = $consultasCubicajes;
+    }
+
 
     /**
      * get entradas maderas devuelve un json de la informacion
@@ -27,16 +35,17 @@ class ReporteCubicajesController extends Controller
      */
     public function reporteCubicajes(Request  $request)
     {
+
         $desde = $request->desdeIm;
         $hasta = $request->hastaIm;
         $tipoReporte = $request->tipoReporte;
         $especifico = $request->especifico;
         $generar = $request->generar;
-        //$datos = $this->reporte->seleccionarReporte($request);
-        //$encabezado = $datos[1];
-        //$data = json_decode(json_encode($datos[0]));
+        $datos = $this->consultaCubicaje->consultaDatos($request);
+        $encabezado = $datos[1];
+        $data = json_decode(json_encode($datos[0]));
 
-        if (true ) {
+        if (count($data) == 0 ) {
             return redirect()
                     ->back()
                     ->with('status','No se encontraron datos de cubicajes en los filtros seleccionados.');

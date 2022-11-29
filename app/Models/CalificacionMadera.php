@@ -12,7 +12,17 @@ class CalificacionMadera extends Model
     /**
      * relacion calificacion madera belongsTo entrada madera
      */
-    public function entradaMadera(){
-        return $this->belongsTo(EntradaMadera::class);
+    public function entradaMaderaMadera(){
+        return $this->belongsTo(EntradasMaderaMaderas::class);
+    }
+
+    /**
+     * relacion belongsTo entradas_madera_maderas
+     *
+     */
+
+    public function entrada_madera_madera()
+    {
+        return $this->belongsTo(EntradasMaderaMaderas::class, 'entrada_madera_id', 'id', );
     }
 }

@@ -4,16 +4,16 @@
 @section('submenu')
     @include('modulos.sidebars.costos-side')
 @endsection
-@section('content') 
-<div class="div container h-content ">        
-    <div class="row">            
+@section('content')
+<div class="div container h-content ">
+    <div class="row">
         <div class="col-12 col-sm-10 col-lg-6 mx-auto">
-            
-           
+
+
             <h1 class="display-6" >Calificaciones</h1>
             <hr>
-            
-            
+
+
         </div>
         <!-- Tabla -->
 
@@ -22,12 +22,12 @@
                 <tr>
                     <th>Id</th>
                     <th>Entrada de madera</th>
-                    <th>Paqueta</th> 
+                    <th>Paqueta</th>
                     <th>Total calificaci&oacute;n</th>
                     <th>Estado</th>
                     <th>Proveedor</th>
                     <th>Acciones</th>
-                    
+
                 </tr>
             </thead>
 
@@ -37,30 +37,30 @@
                         <td>{{ $calificacion->id }}</td>
                         <td>{{ $calificacion->entrada_madera_id }}</td>
                         <td>{{ $calificacion->paqueta }}</td>
-                        
+
                         <td>{{ $calificacion->total }}</td>
                         <td>
                             @if ($calificacion->aprobado == true)
-                                {!! '<span class="badge bg-success">APROBADA</span>'  !!} 
+                                {!! '<span class="badge bg-success">APROBADA</span>'  !!}
                             @else
-                                {!! '<span class="badge bg-danger">NO APROBADA</span>'  !!} 
+                                {!! '<span class="badge bg-danger">NO APROBADA</span>'  !!}
                             @endif
                         </td>
-                        <td>{{ $calificacion->entradaMadera->proveedor->nombre }}</td>
+                        <td>{{ $calificacion->entrada_madera_madera->entrada_madera->proveedor->nombre }}</td>
                         <td>
-                           
+
                             <div class="d-flex align-items-center ">
-                                    
+
                                 <a href="{{ route('calificaciones.edit',$calificacion) }}" class="btn btn-sm btn-warning">
                                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                 </a>
-                                
-                            </div>                           
-                            
+
+                            </div>
+
                         </td>
-                    </tr> 
+                    </tr>
                 @endforeach
-                
+
             </tbody>
         </table>
     </div>

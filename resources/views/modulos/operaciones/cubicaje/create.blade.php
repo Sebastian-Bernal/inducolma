@@ -22,27 +22,9 @@
                         <h4 class="  ">{{ 'Numero de entrada: '. $entrada->id }}</h4>
                     </div>
                     <div class="card-body">
-                        <h6 class="card-title">{{ 'Acto administrativo: '. $entrada->acto_administrativo }}</h6>
-                        <h6 class="card-title">{{ 'Proveedor: '. $entrada->proveedor->nombre }}</h6>
+                        <h6 class="card-title">{{ 'Acto administrativo: '. $entrada->entrada_madera->acto_administrativo }}</h6>
+                        <h6 class="card-title">{{ 'Proveedor: '. $entrada->entrada_madera->proveedor->nombre }}</h6>
                         <hr>
-                        <span>Lista de maderas en el viaje:</span>
-                        <table class="table table-bordered table-striped dt-responsive">
-                            <thead>
-                                <tr>
-                                    <th>Nombre madera</th>
-                                    <th>Condici&oacute;n</th>
-                                    <th>Metros cubicos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($entrada->entradas_madera_maderas as $madera)
-                                <tr>
-                                    <td>{{ $madera->madera->nombre_cientifico }}</td>
-                                    <td>{{ $madera->condicion_madera }}</td>
-                                    <td>{{ $madera->m3entrada }}</td>
-                                </tr>
-                                @endforeach
-                        </table>
 
                         <a href="{{ route('cubicaje.index') }}" class="btn btn-secondary">volver al inicio</a>
                     </div>

@@ -25,7 +25,7 @@
                             <th>maderas</th>
                         </tr>
                     </thead>
-
+                    {{ print_r($data) }}
 
                 </table>
             </div>

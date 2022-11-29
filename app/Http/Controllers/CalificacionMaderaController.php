@@ -52,18 +52,18 @@ class CalificacionMaderaController extends Controller
         $calificacion->total = $request->total;
         $calificacion->updated_at = null;
         $calificacion->entrada_madera_id = $request->entrada_madera_id;
-        $calificacion->paqueta = $request->paqueta;        
+        $calificacion->paqueta = $request->paqueta;
         $calificacion->user_id = auth()->user()->id;
-       
-        
+
+
         if ( $request->total > 60   && $request->rajadura > 1.25 && $request->bichos > 1.25 ) {
-            $calificacion->aprobado = true;        
+            $calificacion->aprobado = true;
         } else {
             $calificacion->aprobado = false;
         }
-            
+
         if ( $calificacion->save()) {
-            $calificacion_proveedor = Proveedor::find($calificacion->entradaMadera->proveedor->id);
+            $calificacion_proveedor = Proveedor::find($calificacion->entrada_madera_madera->entrada_madera->proveedor->id);
                 if ($calificacion_proveedor->calificacion == 0.00) {
                     $calificacion_proveedor->calificacion = $calificacion->total;
                 } else {
@@ -72,10 +72,10 @@ class CalificacionMaderaController extends Controller
             $calificacion_proveedor->save();
             return response()->json(['success' => true, 'message' => 'Calificación guardada correctamente']);
         } else {
-              return response()->json(['success' => false, 'message' => 'Error al guardar la calificación']);
+            return response()->json(['success' => false, 'message' => 'Error al guardar la calificación']);
         }
-        
-        
+
+
 
     }
 
@@ -122,7 +122,7 @@ class CalificacionMaderaController extends Controller
         $calificacion->user_id = auth()->user()->id;
 
         if ( $request->puntos > 60   && $request->rajadura > 1.25 && $request->bichos > 1.25 ) {
-            $calificacion->aprobado = true;        
+            $calificacion->aprobado = true;
         } else {
             $calificacion->aprobado = false;
         }

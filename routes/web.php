@@ -115,6 +115,8 @@ Route::resource('entradas-maderas', EntradaMaderaController::class)
             ->names('entradas-maderas')
             ->middleware('auth');
 
+
+
 Route::post('revisa-acto', [EntradaMaderaController::class, 'verificarRegistro'])
         ->name('revisa-acto')
         ->middleware('auth');
@@ -137,6 +139,9 @@ Route::controller(EntradaMaderaController::class)->group(function () {
             ->middleware('auth');
     Route::put('actualizar-costo/{entrada}', 'updateEntrada')
             ->name('actualizar-costo')
+            ->middleware('auth');
+    Route::get('entradas-madera-reporte', 'showEntradas')
+            ->name('entradas-madera-reporte')
             ->middleware('auth');
 });
 

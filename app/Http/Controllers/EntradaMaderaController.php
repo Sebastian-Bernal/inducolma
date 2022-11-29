@@ -9,6 +9,7 @@ use App\Http\Requests\StoreEntraMaderaRequest;
 use App\Models\EntradasMaderaMaderas;
 use Illuminate\Http\Request;
 use App\Repositories\RegistroEntradaMadera;
+use Doctrine\DBAL\Schema\View;
 use Illuminate\Support\Facades\DB;
 
 class EntradaMaderaController extends Controller
@@ -205,6 +206,13 @@ class EntradaMaderaController extends Controller
         } catch (\Throwable $th) {
             return back()->with('status','no se pudo actualizar el precio de compra de la entrada');
         }
+    }
+
+
+    public function showEntradas()
+    {
+        $entradas = EntradasMaderaMaderas::orderBy('id', 'desc')->take(50)->get();
+        return view('modulos.administrativo.entradas-madera.show-entradas', compact('entradas'));
     }
 
 }

@@ -272,6 +272,11 @@
                 Reporte ingreso de personas a las instalaciones
             </a>
         </p>
+        <p>
+            <a class="btn btn-primary seleccionado" href="{{ route('entradas-madera-reporte') }}">
+                Reporte entradas de madera
+            </a>
+        </p>
         @endcan
 
         @can('cubicaje')
