@@ -15,7 +15,11 @@ class ConsultasCubicajes {
         switch ($tipoReporte) {
             case '1':
                 $data = $this->consultaCubicajeViaje($request->filtroCubiaje1);
-                $encabezado = 'CUBICAJE POR VIAJE';
+                if (count($data) > 0) {
+                    $encabezado = "CUBICAJE DEL VIAJE No. {$data[0]->entrada_madera_id}" ;
+                }else{
+                    $encabezado = 'algo';
+                }
                 break;
             /* case '2':
                 $data = $this->consulta($desde, $hasta, 'maderas.densidad' , 'BAJA DENSIDAD', $request->generar);
@@ -41,12 +45,15 @@ class ConsultasCubicajes {
     public function consultaCubicajeViaje($viaje)
     {
         $cubicajes = Cubicaje::join('entradas_madera_maderas', 'cubicajes.entrada_madera_id', '=', 'entradas_madera_maderas.id')
+                            ->join('entrada_maderas', 'entrada_maderas.id', '=','entradas_madera_maderas.entrada_madera_id')
+                            ->join('proveedores', 'proveedores.id', '=','entrada_maderas.proveedor_id')
                             ->join('maderas', 'maderas.id', '=', 'entradas_madera_maderas.madera_id')
                             ->join('tipo_maderas', 'tipo_maderas.id' , '=', 'maderas.tipo_madera_id')
                             ->where('entradas_madera_maderas.id', (integer)$viaje)
                             ->orderBy('paqueta', 'asc')
                             ->orderBy('bloque', 'asc')
                             ->get([
+                                'proveedores.nombre',
                                 'cubicajes.paqueta',
                                 'cubicajes.bloque',
                                 'cubicajes.largo',
@@ -55,7 +62,8 @@ class ConsultasCubicajes {
                                 'cubicajes.created_at',
                                 'cubicajes.pulgadas_cuadradas',
                                 'entradas_madera_maderas.entrada_madera_id',
-                                'tipo_maderas.descripcion'
+                                'tipo_maderas.descripcion',
+
                             ]);
         return $cubicajes;
 

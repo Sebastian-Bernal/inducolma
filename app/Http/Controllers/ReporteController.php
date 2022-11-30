@@ -43,7 +43,7 @@ class ReporteController extends Controller
         } else {
             if ($generar == '1') {
                 $pdf = Pdf::loadView('modulos.reportes.administrativos.ingresos-madera.ingreso-madera-pdf', compact('data', 'encabezado'));
-                $pdf->setPaper('a4', 'landscape');
+                $pdf->setPaper('a4');
                 return $pdf->stream($encabezado.'-'.$desde.'-'.$hasta.'.pdf');
 
             } elseif ($generar == '2') {

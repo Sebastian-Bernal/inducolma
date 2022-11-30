@@ -36,10 +36,10 @@ class ReporteCubicajesController extends Controller
     public function reporteCubicajes(Request  $request)
     {
 
-        $desde = $request->desdeIm;
-        $hasta = $request->hastaIm;
-        $tipoReporte = $request->tipoReporte;
-        $especifico = $request->especifico;
+        $desde = $request->cubicajeDesde;
+        $hasta = $request->cubicajeHasta;
+        $tipoReporte = $request->tipoReporteCubicaje;
+        $especifico = $request->filtroCubiaje1;
         $generar = $request->generar;
         $datos = $this->consultaCubicaje->consultaDatos($request);
         $encabezado = $datos[1];
@@ -51,9 +51,10 @@ class ReporteCubicajesController extends Controller
                     ->with('status','No se encontraron datos de cubicajes en los filtros seleccionados.');
         } else {
             if ($generar == '1') {
-            /*  $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data', 'encabezado'));
-                $pdf->setPaper('a4', 'landscape');
-                return $pdf->stream($encabezado.'-'.$desde.'-'.$hasta.'.pdf'); */
+
+                $pdf = Pdf::loadView('modulos.reportes.administrativos.cubicajes.pdf-cubicajes-viaje', compact('data', 'encabezado'));
+                $pdf->setPaper('a4');
+                return $pdf->stream($encabezado.'pdf');
 
             } elseif ($generar == '2') {
                // return Excel::download(new EntradaMaderaExport($data), "$encabezado-$desde-$hasta.xlsx");

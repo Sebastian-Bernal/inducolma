@@ -123,3 +123,32 @@ function reporteCubicajes() {
         }
     }
 }
+
+
+/**
+ * envia el formulario para generar el tipo de reporte segun la seleecion del usuario
+ *
+ * @param {String} tipo_reporte [ numero del tipo de reporte ]
+ */
+
+function generarReporteCubicajes(tipo_reporte) {
+    console.log(tipo_reporte);
+    switch (tipo_reporte) {
+        case '1':
+            $('#generar').val('1');
+            $('#formGenerarReporteCubicajes').submit();
+            break;
+        case '2':
+            $('#generar').val('2');
+            $('#formGenerarReporteCubicajes').submit();
+            break;
+        case '3':
+            $('#generar').val('3');
+            $('#formGenerarReporteCubicajes').submit();
+            break;
+        default:
+            alertaErrorSimple('opcion invalida al generar reporte', 'error');
+            break;
+    }
+
+}
