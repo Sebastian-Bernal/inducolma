@@ -45,8 +45,8 @@
 
                 </table>
             </div>
-            <form action="{{ route('reporte-cubicajes') }}" method="GET" {{-- target="_blank"
-                    rel="noopener noreferrer" --}}
+            <form action="{{ route('reporte-cubicajes') }}" method="GET" target="_blank"
+                    rel="noopener noreferrer"
                     id="formGenerarReporteCubicajes">
                 <div hidden>
                     <input type="text" readonly name="tipoReporteCubicaje" id="tipoReporteCubicaje" value="{{ $tipoReporte }}">

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Reportes\Administrativos;
 
+use App\Exports\CubicajesExport;
 use App\Http\Controllers\Controller;
 use App\Models\EntradaMadera;
 use App\Repositories\Reportes\ConsultasCubicajes;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReporteCubicajesController extends Controller
 {
@@ -57,10 +59,10 @@ class ReporteCubicajesController extends Controller
                 return $pdf->stream($encabezado.'pdf');
 
             } elseif ($generar == '2') {
-               // return Excel::download(new EntradaMaderaExport($data), "$encabezado-$desde-$hasta.xlsx");
+                return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.xlsx");
 
             }elseif ($generar == '3') {
-               //return Excel::download(new EntradaMaderaExport($data), "$encabezado-$desde-$hasta.csv");
+                return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.csv");
 
             }else{
                 return view('modulos.reportes.administrativos.cubicajes.index-cubicajes',
