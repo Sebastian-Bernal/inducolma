@@ -2,32 +2,30 @@
 
 namespace App\Exports;
 
-use App\Models\EntradaMadera;
+use App\Models\Cubicaje;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Style;
-use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class EntradaMaderaExport implements FromView, WithStyles, ShouldAutoSize
+
+class CubicajesExport implements FromView, WithStyles, ShouldAutoSize
 {
+    protected $datosCubicaje;
 
-    protected $data;
-
-    function __construct($data)
+    public function __construct($datosCubicaje)
     {
-        $this->data = $data;
+        $this->datosCubicaje = $datosCubicaje;
     }
+
     /**
     * @return \Illuminate\Support\Collection
     */
     public function view(): View
     {
-        return view('modulos.reportes.administrativos.ingresos-madera.ingreso-madera-xls',[
-            'data' => $this->data,
+        return view('modulos.reportes.administrativos.cubicajes.xls-cubicajes-viaje',[
+            'data' => $this->datosCubicaje,
         ]);
     }
 
@@ -40,5 +38,4 @@ class EntradaMaderaExport implements FromView, WithStyles, ShouldAutoSize
                     ],
         ];
     }
-
 }

@@ -11,12 +11,14 @@
             <th>SALVOCONDUCTO REMISION</th>
             <th>TITULAR DEL SALVOCONDUCTO</th>
             <th>PROCEDENCIA DE LA MADERA</th>
-            <th>MADERAS</th>
+            <th>M3 ENTRADA</th>
+            <th>NOMBRE CIENTIFICO</th>
+            <th>TIPO DE MADERA</th>
         </tr>
     </thead>
     @foreach ($data as $madera)
     <tr>
-        <td>{{ $madera->proveedor }}</td>
+        <td>{{ $madera->nombre }}</td>
         <td>{{ $madera->entidad_vigilante }}</td>
         <td>{{ $madera->mes }}</td>
         <td>{{ $madera->ano }}</td>
@@ -25,16 +27,9 @@
         <td>{{ $madera->salvoconducto_remision }}</td>
         <td>{{ $madera->titular_salvoconducto }}</td>
         <td>{{ $madera->procedencia_madera }}</td>
-        <td>
-            <ol>
-                @foreach ($madera->maderas as $item)
-
-                    <li>{{ "- $item->nobre_comun - $item->nombre_cientifico - $item->m3entrada m3" }}</li>
-
-                @endforeach
-            </ol>
-
-        </td>
+        <td>{{ $madera->m3entrada }}</td>
+        <td>{{ $madera->nombre_cientifico }}</td>
+        <td>{{ $madera->descripcion }}</td>
     </tr>
     @endforeach
 

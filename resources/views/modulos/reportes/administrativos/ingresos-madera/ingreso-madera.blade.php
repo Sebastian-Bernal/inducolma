@@ -72,6 +72,6 @@
 
 @section('js')
 <script src="/js/modulos/alertas-swift.js"></script>
-<script src="/js/modulos/reportes.js"></script>
+<script src="/js/modulos/reportes/administrativos/reportes-ingreso-madera.js"></script>
 
 @endsection

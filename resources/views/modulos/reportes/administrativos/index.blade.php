@@ -127,15 +127,14 @@
                     <div class="card-body">
                         <div class="collapse" id="collapseCubicajes" >
                             <p class="card-text text-secondary">
-                                Para generar un reporte cubicajes es necesario seleccionar el tipo de reporte y las fechas
-                                ,Ej. ICA,  Desde : 01/01/2022 - Hasta: 31/12/2022
+
                             </p>
                             <div class="row g-3">
                                 <div>
                                     <div class="card card-body">
-                                        <form action="#" id="reporteIngresoMadera"
+                                        <form action="{{ route('reporte-cubicajes') }}" id="formReporteCubicajes"
                                             class="row gx-3 gy-2 align-items-center"
-                                            name="reporteIngresoMadera"
+                                            name="formReporteCubicajes"
                                             method="GET" target="_blank"
                                             rel="noopener noreferrer"
                                             >
@@ -144,60 +143,68 @@
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Tipo reporte: </span>
                                                     <select class="form-select form-select-sm"
                                                             aria-label=".form-select-sm example"
-                                                            id=""
-                                                            name=""
+                                                            id="tipoReporteCubicaje"
+                                                            name="tipoReporteCubicaje"
                                                             required
-                                                            onchange="datoEspecifico()">
-                                                        <option  value="" selected>Tipo reporte</option>
-                                                        <option value="1">Alta densidad</option>
-                                                        <option value="2">Baja densidad</option>
-                                                        <option value="3">Proveedor</option>
-                                                        <option value="4">Tipo madera</option>
-                                                        <option value="5">ICA</option>
-                                                        <option value="6">CVC</option>
+                                                            onchange="filtroCubicajes()">
+                                                        <option  value="" selected>Seleccione...</option>
+                                                        <option value="1">Cubicaje por viaje</option>
+                                                        <option value="2">Transformacion  de madera por viaje</option>
+                                                        <option value="3">Calificacion de paquetas por viaje</option>
+                                                        <option value="4">Calificacion de paquetas por proveedor por viaje </option>
+
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                <div class="input-group " id="divEspecifico" style="display:none;">
-                                                    <span class="input-group-text" id="inputGroup-sizing-default">Filtro: </span>
+                                                <div class="input-group " id="divFiltroCubicaje1" style="display:none;">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Viaje: </span>
+                                                    <input  class="form-control"  type="number" id="filtroCubiaje1" name="filtroCubiaje1" required min="1">
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="input-group " id="divFiltroCubicaje2" style="display:none;">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Proveedor: </span>
                                                     <select class="form-select form-select-sm"
                                                             aria-label=".form-select-sm example"
-                                                            id=""
-                                                            name=""
+                                                            id="filtroCubiaje2"
+                                                            name="filtroCubiaje2"
+
                                                             required>
                                                         <option  value="" selected></option>
 
                                                     </select>
                                                 </div>
                                             </div>
+
                                             <div class="col-auto">
-                                                <div class="input-group ">
+                                                <div class="input-group " id="divDesde" style="display:none;">
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
                                                     <input type="date"
                                                             class="form-control"
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
-                                                            id=""
-                                                            name=""
+                                                            id="cubicajeDesde"
+                                                            name="cubicajeDesde"
                                                             required>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                <div class="input-group">
+                                                <div class="input-group" id="divHasta" style="display:none;">
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Hasta: </span>
                                                     <input type="date"
                                                             class="form-control"
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
-                                                            id=""
-                                                            name=""
+                                                            id="cubicajeHasta"
+                                                            name="cubicajeHasta"
                                                             required>
                                                 </div>
                                             </div>
 
+
                                             <div class="col-auto">
-                                                <button type="button"  class="btn btn-outline-success" onclick="reporteIngresoMaderas()">Generar reporte</button>
+                                                <button type="button"  class="btn btn-outline-success" onclick="reporteCubicajes()">Generar reporte</button>
                                             </div>
                                         </form>
                                     </div>
@@ -223,8 +230,7 @@
                     <div class="card-body">
                         <div class="collapse" id="collapseIngresoPersonal" >
                             <p class="card-text text-secondary">
-                                Para generar un reporte de igreso de personal es necesario seleccionar el tipo de reporte y las fechas
-                                ,Ej. ICA,  Desde : 01/01/2022 - Hasta: 31/12/2022
+
                             </p>
                             <div class="row g-3">
                                 <div>
@@ -244,13 +250,13 @@
                                                             name=""
                                                             required
                                                             onchange="datoEspecifico()">
-                                                        <option  value="" selected>Tipo reporte</option>
-                                                        <option value="1">Alta densidad</option>
-                                                        <option value="2">Baja densidad</option>
-                                                        <option value="3">Proveedor</option>
-                                                        <option value="4">Tipo madera</option>
-                                                        <option value="5">ICA</option>
-                                                        <option value="6">CVC</option>
+                                                        <option  value="" selected>Seleccione...</option>
+                                                        <option value="1">Turno por empleado</option>
+                                                        <option value="2">Eventos de empleados</option>
+                                                        <option value="3">Horas laboradas</option>
+                                                        <option value="4">Ingreso de empleados</option>
+                                                        <option value="5">ingreso de terceros</option>
+
                                                     </select>
                                                 </div>
                                             </div>
@@ -311,6 +317,7 @@
 
 @section('js')
 <script src="/js/modulos/alertas-swift.js"></script>
-<script src="/js/modulos/reportes.js"></script>
+<script src="/js/modulos/reportes/administrativos/reportes-ingreso-madera.js"></script>
+<script src="/js/modulos/reportes/administrativos/reportes-cubicajes.js"></script>
 
 @endsection

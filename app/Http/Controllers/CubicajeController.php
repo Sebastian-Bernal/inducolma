@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cubicaje;
 use App\Models\EntradaMadera;
+use App\Models\EntradasMaderaMaderas;
 use Illuminate\Http\Request;
 use App\Repositories\RegistroCubicajes;
 
@@ -41,14 +42,17 @@ class CubicajeController extends Controller
     {
 
         $this->authorize('cubicaje');
-        $entrada = EntradaMadera::where('id', (integer)$request->entrada)
-                                ->where('estado', 'PENDIENTE')
+        $entrada = EntradasMaderaMaderas::where('id', (integer)$request->entrada)
+                                //->where('estado', 'PENDIENTE')
                             ->get();
         //return $entrada;
         if(count($entrada)==0){
-            return redirect()->route('cubicaje.index')->with('status', 'No se encontró ninguna entrada pendiente con ese número');
+            return redirect()->route('cubicaje.index')->with('status', 'No se encontró ninguna entrada con ese número');
         } else {
-            $entrada = EntradaMadera::find($request->entrada)->load('entradas_madera_maderas');
+            $entrada = EntradasMaderaMaderas::find($request->entrada);
+            if ($entrada->condicion_madera == 'TROZA') {
+                return back()->with('status', 'La condicion de la madera es TROZA por favor haga el cubicaje con el boton Cubicar madera en troza');
+            }
             return view('modulos.operaciones.cubicaje.create', compact('entrada'));
         }
 
@@ -60,13 +64,13 @@ class CubicajeController extends Controller
      */
     public function cubicajeTroza(Request $request)
     {
-        $entrada = EntradaMadera::find((integer)$request->entrada);
+        $entrada = EntradasMaderaMaderas::find((integer)$request->entrada);
         if ($entrada == null) {
             return back()->with('status', "No se encontro la entrada de madera  $request->entrada");
         }
 
-        $contiene_troza = $entrada->entradas_madera_maderas->contains('condicion_madera', 'TROZA');
-        if ($contiene_troza == false) {
+        $contiene_troza = $entrada->condicion_madera;
+        if ($contiene_troza != 'TROZA') {
             return back()->with('status',"La entrada de madera $request->entrada, no contiene maderas en troza");
         }
 

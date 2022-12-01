@@ -42,8 +42,8 @@ class ReporteController extends Controller
                     ->with('status','No se encontraron datos para el reporte ingreso de madera en los filtros seleccionados.');
         } else {
             if ($generar == '1') {
-                $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data', 'encabezado'));
-                $pdf->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('modulos.reportes.administrativos.ingresos-madera.ingreso-madera-pdf', compact('data', 'encabezado'));
+                $pdf->setPaper('a4');
                 return $pdf->stream($encabezado.'-'.$desde.'-'.$hasta.'.pdf');
 
             } elseif ($generar == '2') {
@@ -53,7 +53,7 @@ class ReporteController extends Controller
                 return Excel::download(new EntradaMaderaExport($data), "$encabezado-$desde-$hasta.csv");
 
             }else{
-                return view('modulos.reportes.administrativos.ingreso-madera',
+                return view('modulos.reportes.administrativos.ingresos-madera.ingreso-madera',
                 compact('data', 'encabezado', 'desde', 'hasta', 'tipoReporte','especifico'));
             }
         }
@@ -86,80 +86,4 @@ class ReporteController extends Controller
         $disenos->toJson();
         return response()->json($disenos);
     }
-
-    /**
-     * funcion ingresoCubicaje
-     * @param $desde [date]
-     * @param $hasta [date]
-     * @return Pdf
-     */
-    public function ingresoCubicajes()
-    {
-        $data = EntradaMadera::all();
-
-        $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data'));
-        return $pdf->stream('pdf_file.pdf');
-    }
-
-    /**
-     * funcion ingresoPersonal
-     * @param $desde [date]
-     * @param $hasta [date]
-     * @return Pdf
-     */
-
-    public function ingresoPersonal()
-    {
-        $data = EntradaMadera::all();
-
-        $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data'));
-        return $pdf->stream('pdf_file.pdf');
-    }
-
-    /**
-     * funcion horasTrabajoPersonal
-     * @param $desde [date]
-     * @param $hasta [date]
-     * @return Pdf
-     */
-
-    public function horasTrabajoPersonal()
-    {
-        $data = EntradaMadera::all();
-
-        $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data'));
-        return $pdf->stream('pdf_file.pdf');
-    }
-
-    /**
-     * funcion inventarioMaderasAlmacen
-     * @param $desde [date]
-     * @param $hasta [date]
-     * @return Pdf
-     */
-
-    public function inventarioMaderasAlmacen()
-    {
-        $data = EntradaMadera::all();
-
-        $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data'));
-        return $pdf->stream('pdf_file.pdf');
-    }
-
-    /**
-     * funcion pedidosMes
-     * @param $desde [date]
-     * @param $hasta [date]
-     * @return Pdf
-     */
-
-    public function pedidosMes()
-    {
-        $data = EntradaMadera::all();
-
-        $pdf = Pdf::loadView('modulos.reportes.administrativos.ingreso-madera-pdf', compact('data'));
-        return $pdf->stream('pdf_file.pdf');
-    }
-
-
 }
