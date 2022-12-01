@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Reportes\Administrativos;
 
+use App\Exports\CalificacionesViajeExport;
 use App\Exports\CubicajesExport;
+use App\Exports\TransformacionesExport;
 use App\Http\Controllers\Controller;
 use App\Models\EntradaMadera;
 use App\Repositories\Reportes\ConsultasCubicajes;
@@ -40,6 +42,7 @@ class ReporteCubicajesController extends Controller
 
         $desde = $request->cubicajeDesde;
         $hasta = $request->cubicajeHasta;
+        $proveedor = $request->filtroCubiaje2;
         $tipoReporte = $request->tipoReporteCubicaje;
         $especifico = $request->filtroCubiaje1;
         $generar = $request->generar;
@@ -54,19 +57,51 @@ class ReporteCubicajesController extends Controller
         } else {
             if ($generar == '1') {
 
-                $pdf = Pdf::loadView('modulos.reportes.administrativos.cubicajes.pdf-cubicajes-viaje', compact('data', 'encabezado'));
+                $pdf = Pdf::loadView($datos[3], compact('data', 'encabezado'));
                 $pdf->setPaper('a4');
                 return $pdf->stream($encabezado.'pdf');
 
             } elseif ($generar == '2') {
-                return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.xlsx");
+                switch ($tipoReporte) {
+                    case '1':
+                        return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        break;
+                    case '2':
+                        return Excel::download(new TransformacionesExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        break;
+                    case '3':
+                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        break;
+                    case '4':
+                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
 
             }elseif ($generar == '3') {
-                return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.csv");
+                switch ($tipoReporte) {
+                    case '1':
+                        return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.csv");
+                        break;
+                    case '2':
+                        return Excel::download(new TransformacionesExport($data), "$encabezado-$desde-$hasta.csv");
+                        break;
+                    case '3':
+                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
+                        break;
+                    case '4':
+                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
 
             }else{
-                return view('modulos.reportes.administrativos.cubicajes.index-cubicajes',
-                compact('data', 'encabezado', 'desde', 'hasta', 'tipoReporte','especifico'));
+                return view($datos[2],
+                compact('data', 'encabezado', 'desde', 'hasta', 'tipoReporte','especifico', 'proveedor'));
             }
         }
     }
