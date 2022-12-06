@@ -29,6 +29,7 @@ use App\Http\Controllers\OrdenProduccionController;
 use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\Reportes\Administrativos\ReporteCubicajesController;
+use App\Http\Controllers\Reportes\Administrativos\ReportePersonalController;
 use App\Http\Controllers\SubprocesoController;
 use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
@@ -384,6 +385,13 @@ Route::controller(ReporteCubicajesController::class)->group(function (){
     Route::get('reporte-cubicajes', 'reporteCubicajes')->name('reporte-cubicajes')->middleware('auth');
 
 });
+
+Route::controller(ReportePersonalController::class)->group(function (){
+    Route::get('reporte-personal', 'reportePersonal')->name('reporte-personal')->middleware('auth');
+});
+
+
+
 // rutas views index reportes
 
 

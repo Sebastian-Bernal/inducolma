@@ -221,7 +221,7 @@
                         <div class="d-grid gap-2 align-content-left">
                             <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collapseIngresoPersonal" role="button" aria-expanded="false" aria-controls="collapseIngresoPersonal">
                                 <h5 class="d-flex justify-content-between mb-0 text-start">
-                                    Reporte ingreso de personal <i class="fa-solid fa-chevron-down text-end"></i>
+                                    Reportes de trabajadores <i class="fa-solid fa-chevron-down text-end"></i>
                                 </h5>
                             </button>
                         </div>
@@ -235,9 +235,9 @@
                             <div class="row g-3">
                                 <div>
                                     <div class="card card-body">
-                                        <form action="#" id="reporteIngresoMadera"
+                                        <form action="{{ route('reporte-personal') }}" id="formReportePersonal"
                                             class="row gx-3 gy-2 align-items-center"
-                                            name="reporteIngresoMadera"
+                                            name="formReportePersonal"
                                             method="GET" target="_blank"
                                             rel="noopener noreferrer"
                                             >
@@ -246,8 +246,8 @@
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Tipo reporte: </span>
                                                     <select class="form-select form-select-sm"
                                                             aria-label=".form-select-sm example"
-                                                            id=""
-                                                            name=""
+                                                            id="tipoReportePersonal"
+                                                            name="tipoReportePersonal"
                                                             required
                                                             onchange="datoEspecifico()">
                                                         <option  value="" selected>Seleccione...</option>
@@ -265,8 +265,8 @@
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Filtro: </span>
                                                     <select class="form-select form-select-sm"
                                                             aria-label=".form-select-sm example"
-                                                            id=""
-                                                            name=""
+                                                            id="filtroPersonal"
+                                                            name="filtroPersonal"
                                                             required>
                                                         <option  value="" selected></option>
 
@@ -280,8 +280,8 @@
                                                             class="form-control"
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
-                                                            id=""
-                                                            name=""
+                                                            id="personalDesde"
+                                                            name="personalDesde"
                                                             required>
                                                 </div>
                                             </div>
@@ -292,14 +292,14 @@
                                                             class="form-control"
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
-                                                            id=""
-                                                            name=""
+                                                            id="personalHasta"
+                                                            name="personalHasta"
                                                             required>
                                                 </div>
                                             </div>
 
                                             <div class="col-auto">
-                                                <button type="button"  class="btn btn-outline-success" onclick="reporteIngresoMaderas()">Generar reporte</button>
+                                                <button type="button"  class="btn btn-outline-success" onclick="reportePersonal()">Generar reporte</button>
                                             </div>
                                         </form>
                                     </div>
@@ -319,5 +319,5 @@
 <script src="/js/modulos/alertas-swift.js"></script>
 <script src="/js/modulos/reportes/administrativos/reportes-ingreso-madera.js"></script>
 <script src="/js/modulos/reportes/administrativos/reportes-cubicajes.js"></script>
-
+<script src="/js/modulos/reportes/administrativos/reportes-personal.js"></script>
 @endsection
