@@ -2,51 +2,36 @@
 
 namespace App\Http\Controllers\Reportes\Administrativos;
 
-use App\Exports\CalificacionesViajeExport;
-use App\Exports\CubicajesExport;
-use App\Exports\TransformacionesExport;
+use App\Exports\EventosPersonal;
+use App\Exports\TurnoPersonal;
 use App\Http\Controllers\Controller;
-use App\Models\EntradaMadera;
-use App\Repositories\Reportes\ConsultasCubicajes;
-use Illuminate\Http\Request;
+use App\Repositories\Reportes\ConsultasPersonal;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ReporteCubicajesController extends Controller
+class ReportePersonalController extends Controller
 {
+    protected $personal;
 
-    protected $consultaCubicaje;
-
-    public function __construct(ConsultasCubicajes $consultasCubicajes){
-        $this->consultaCubicaje = $consultasCubicajes;
-    }
-
-
-    /**
-     * get entradas maderas devuelve un json de la informacion
-     *
-     * @return json
-     */
-    public function getEntradas()
+    public function __construct( ConsultasPersonal $personal)
     {
-        $entradas = EntradaMadera::orderBy('id')->get(['id', 'id as text']);
-        $entradas->toJson();
-        return response()->json($entradas);
+        $this->personal = $personal;
     }
 
     /**
      * muestra la vista de los datos encontrados
      */
-    public function reporteCubicajes(Request  $request)
+    public function reportePersonal(Request  $request)
     {
 
-        $desde = $request->cubicajeDesde;
-        $hasta = $request->cubicajeHasta;
+        $desde = $request->personalDesde;
+        $hasta = $request->personalHasta;
         $proveedor = $request->filtroCubiaje2;
-        $tipoReporte = $request->tipoReporteCubicaje;
+        $tipoReporte = $request->tipoReportePersonal;
         $especifico = $request->filtroCubiaje1;
         $generar = $request->generar;
-        $datos = $this->consultaCubicaje->consultaDatos($request);
+        $datos = $this->personal->consultaDatos($request);
         $encabezado = $datos[1];
         $data = json_decode(json_encode($datos[0]));
 
@@ -64,16 +49,16 @@ class ReporteCubicajesController extends Controller
             } elseif ($generar == '2') {
                 switch ($tipoReporte) {
                     case '1':
-                        return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        return Excel::download(new TurnoPersonal($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     case '2':
-                        return Excel::download(new TransformacionesExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        return Excel::download(new EventosPersonal($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     case '3':
-                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        //return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     case '4':
-                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
+                       // return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     default:
                         # code...
@@ -83,16 +68,16 @@ class ReporteCubicajesController extends Controller
             }elseif ($generar == '3') {
                 switch ($tipoReporte) {
                     case '1':
-                        return Excel::download(new CubicajesExport($data), "$encabezado-$desde-$hasta.csv");
+                        return Excel::download(new TurnoPersonal($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     case '2':
-                        return Excel::download(new TransformacionesExport($data), "$encabezado-$desde-$hasta.csv");
+                        return Excel::download(new EventosPersonal($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     case '3':
-                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
+                        //return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     case '4':
-                        return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
+                        //return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     default:
                         # code...

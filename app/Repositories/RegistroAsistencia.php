@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\EstadoMaquina;
+use App\Models\EventoProceso;
 use App\Models\Subproceso;
 use App\Models\TiepoUsuarioDia;
 use App\Models\TurnoUsuario;
@@ -40,6 +41,9 @@ class RegistroAsistencia {
             try {
                 $turno->asistencia = false;
                 $turno->save();
+                $evento = EventoProceso::where('maquina_id', $turno->maquina_id)->latest()->first();
+                $evento->user_id = $turno->user_id;
+                $evento->save();
                 $usuarios = $this->usuariosDia();
                 return response()->json(array('error' => false, 'mensaje' => "Falta guardada", "usuarios" => $usuarios ));
             } catch (\Throwable $th) {
@@ -65,6 +69,7 @@ class RegistroAsistencia {
         $usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
                             ->where('asistencia', null)
                             ->where('fecha',date('Y-m-d'))
+                            ->where('maquina_id', $turno->maquina_id)
                             ->get()
                             ->load('user');
                             //->except($turno->id);
