@@ -42,7 +42,7 @@ class ConsultasPersonal {
             case '3':
                 $data = $this->horasLaboradasPersonal($desde, $hasta);
                 if (count($data)> 0) {
-                    $encabezado = "CALIFICACION DE LA MADERA VIAJE No {$data[0]->id}";
+                    $encabezado = "HORAS LABORADAS DE EMPLEADOS EN LAS FECHAS DEL {$desde} AL {$hasta}";
                     $vista = 'modulos.reportes.administrativos.personal.index-horas-trabajadores';
                     $vistaPdf = 'modulos.reportes.administrativos.personal.pdf-horas-trabajadores';
                 }else{
@@ -53,17 +53,29 @@ class ConsultasPersonal {
 
                 break;
 
-            /*case '4':
-                $data = $this->consultaCalificacionesProveedor($desde, $hasta, $request->filtroCubiaje2);
+            case '4':
+                $data = $this->consultaHorasEmpleado($desde, $hasta, $request->filtroPersonal);
                 if (count($data)> 0) {
-                    $encabezado = "CALIFICACIONES DE LA MADERA POR PROVEEDOR {$data[0]->nombre}";
-                    $vista = 'modulos.reportes.administrativos.personal.index-calificaciones-viaje';
-                    $vistaPdf = 'modulos.reportes.administrativos.personal.pdf-calificaciones-viaje';
+                    $encabezado = "HORAS LABORADAS DEL EMPLEADO: {$data[0]->name} NE LAS FECHAS DEL $desde AL $hasta";
+                    $vista = 'modulos.reportes.administrativos.personal.index-horas-empleado';
+                    $vistaPdf = 'modulos.reportes.administrativos.personal.pdf-horas-empleado';
                 }else{
                     $encabezado = 'algo';
                     $vista = '';
                     $vistaPdf = '';
-                } */
+                }
+
+            case '5':
+                $data = $this->consultaIngresoTerceros($desde, $hasta, $request->filtroPersonal);
+                if (count($data)> 0) {
+                    $encabezado = "INGRESO DE PERSONAL EXTERNO: {$data[0]->nombre} EN LAS FECHAS DEL $desde AL $hasta";
+                    $vista = 'modulos.reportes.administrativos.personal.index-ingreso-terceros';
+                    $vistaPdf = 'modulos.reportes.administrativos.personal.pdf-ingreso-terceros';
+                }else{
+                    $encabezado = 'algo';
+                    $vista = '';
+                    $vistaPdf = '';
+                }
 
         }
         return [$data, $encabezado, $vista, $vistaPdf];
@@ -118,7 +130,7 @@ class ConsultasPersonal {
 
     public function horasLaboradasPersonal($desde, $hasta)
     {
-        $horas = DB::select("select name, entrada, salida , maquina, turno_usuarios.fecha
+        $horas = DB::select("select name, entrada, salida , maquina, turno_usuarios.fecha, (salida-entrada) as horas
                             from users join tiepo_usuario_dias ON tiepo_usuario_dias.usuario_id = users.id
                             join maquinas on maquinas.id = tiepo_usuario_dias.maquina_id
                             join turno_usuarios on turno_usuarios.user_id = users.id
@@ -129,5 +141,36 @@ class ConsultasPersonal {
     }
 
 
+    /**
+     *
+     */
+
+    public function consultaHorasEmpleado($desde , $hasta, $empleado)
+    {
+        $horas = DB::select("select name, entrada, salida , maquina, turno_usuarios.fecha, (salida-entrada) as horas
+                            from users join tiepo_usuario_dias ON tiepo_usuario_dias.usuario_id = users.id
+                            join maquinas on maquinas.id = tiepo_usuario_dias.maquina_id
+                            join turno_usuarios on turno_usuarios.user_id = users.id
+                            where users.id = $empleado
+                            and turno_usuarios.fecha between '$desde' and '$hasta'"
+                        );
+
+        return $horas;
+    }
+
+    /**
+     *
+     */
+
+    public function consultaIngresoTerceros($desde, $hasta, $tercero)
+    {
+        $terceros = DB::select("select CONCAT(primer_nombre, ' ', segundo_nombre, ' ', primer_apellido, ' ', segundo_apellido) as nombre,
+                                recepcions.cc,recepcions.created_at, recepcions.deleted_at
+                                from contratistas join recepcions on contratistas.cedula = CAST(recepcions.cc as varchar)
+                                where contratistas.id = $tercero
+                                and recepcions.created_at between '$desde' and '$hasta'");
+
+        return $terceros;
+    }
 
 }

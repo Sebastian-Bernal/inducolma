@@ -388,6 +388,8 @@ Route::controller(ReporteCubicajesController::class)->group(function (){
 
 Route::controller(ReportePersonalController::class)->group(function (){
     Route::get('reporte-personal', 'reportePersonal')->name('reporte-personal')->middleware('auth');
+    Route::get('get-empleados', 'getEmpleados')->name('get-empleados')->middleware('auth');
+    Route::get('get-terceros', 'getTerceros')->name('get-terceros')->middleware('auth');
 });
 
 
