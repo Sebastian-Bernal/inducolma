@@ -221,7 +221,7 @@
                         <div class="d-grid gap-2 align-content-left">
                             <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collapseIngresoPersonal" role="button" aria-expanded="false" aria-controls="collapseIngresoPersonal">
                                 <h5 class="d-flex justify-content-between mb-0 text-start">
-                                    Reportes de trabajadores <i class="fa-solid fa-chevron-down text-end"></i>
+                                    Reportes de trabajadores y personal externo <i class="fa-solid fa-chevron-down text-end"></i>
                                 </h5>
                             </button>
                         </div>
@@ -249,20 +249,20 @@
                                                             id="tipoReportePersonal"
                                                             name="tipoReportePersonal"
                                                             required
-                                                            onchange="datoEspecifico()">
+                                                            onchange="datoEspecificoPersonal()">
                                                         <option  value="" selected>Seleccione...</option>
                                                         <option value="1">Turno por empleado</option>
                                                         <option value="2">Eventos de empleados</option>
-                                                        <option value="3">Horas laboradas</option>
-                                                        <option value="4">Ingreso de empleados</option>
+                                                        <option value="3">Horas laboradas por fecha</option>
+                                                        <option value="4">Horas laboradas por empleado</option>
                                                         <option value="5">ingreso de terceros</option>
 
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                <div class="input-group " id="divEspecifico" style="display:none;">
-                                                    <span class="input-group-text" id="inputGroup-sizing-default">Filtro: </span>
+                                                <div class="input-group " id="divEspecificoEmpleado" style="display:none;">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">filtro: </span>
                                                     <select class="form-select form-select-sm"
                                                             aria-label=".form-select-sm example"
                                                             id="filtroPersonal"

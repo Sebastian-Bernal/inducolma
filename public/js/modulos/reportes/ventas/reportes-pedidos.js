@@ -2,22 +2,31 @@
  * valida los datos para generar los reportes
  */
 
-function reportePersonal() {
 
-    let desde = $('#personalDesde');
-    let hasta = $('#personalHasta');
-    let especifico = $('#filtroPersonal');
-    let reporte = $('#tipoReportePersonal');
 
-    if (reporte.val() == "" || desde.val() == "" || hasta.val() == "" ) {
-        alertaErrorSimple('Seleccione un tipo de reporte trabajadores, y un rango de fechas!', 'error');
+function reportePedidos() {
+
+    let desde = $('#pedidoDesde');
+    let hasta = $('#pedidoHasta');
+    let cliente = $('#filtroPedido1');
+    let pedido = $('#nPedido');
+    let reporte = $('#tipoReportePedidos');
+
+    if (reporte.val() == "" ) {
+        alertaErrorSimple('Seleccione un tipo de reporte de pedidos!', 'error');
     }
     else {
-        if ((reporte.val() == '4' || reporte.val() == '5') && (especifico.val() == "" || desde.val() == "" || hasta.val() == "")) {
-            alertaErrorSimple('Seleccione el filtro de busqueda y el rango de fechas ', 'error');
-            especifico.click();
+        if ((Array('2', '3', '5').includes(reporte.val())) && (cliente.val() == "")) {
+            alertaErrorSimple('Seleccione el cliente ', 'error');
+            cliente.click();
+        } else if((reporte.val() == '1') && (desde.val() == "" || hasta.val() == "")){
+            alertaErrorSimple('Seleccione el cliente y los rangos de fechas');
+        } else if((reporte.val() == '4' && s(desde.val() == "" || hasta.val() == ""))){
+            alertaErrorSimple('Seleccioneun rango de fehcas ');
+        } else if((Array('6','7').includes(reporte.val())) && pedido.val() == ""){
+            alertaErrorSimple('Ingrese el numero de pedido ');
         } else {
-            $('#formReportePersonal').submit();
+            $('#formReportePedidos').submit();
             desde.val('');
             hasta.val('');
             reporte.val('');
@@ -31,17 +40,20 @@ function reportePersonal() {
  *
  * @returns {void}
  */
-function datoEspecificoPersonal() {
+function datoEspecificoPedidos() {
 
-    let reporte = $('#tipoReportePersonal');
+    let reporte = $('#tipoReportePedidos');
+
     let especifico = $('#filtroPersonal');
-    if (reporte.val() == '4') {
-        dataSelect('/get-empleados');
-    }else if (reporte.val() == '5' ){
-        dataSelect('/get-terceros');
+    if (reporte.val() == '1' || reporte.val() == '2' || reporte.val() == '3' || reporte.val() == '5'){
+        dataSelect('/get-clientes');
+    }else if (reporte.val() == '6' || reporte.val() == '7'){
+        $('#divEspecifico2').show(300);
+        $('#divEspecifico').hide(300);
     }
     else {
-        $('#divEspecificoEmpleado').hide(300);
+        $('#divEspecifico').hide(300);
+        $('#divEspecifico2').hide(300);
     }
 }
 
@@ -81,9 +93,11 @@ function generarReportePersonal(tipo_reporte) {
  * @returns {void}
  */
 function dataSelect(ruta) {
-    $('#filtroPersonal').val('')
-    $('#divEspecificoEmpleado').show(300);
-    $('#filtroPersonal').select2({
+
+    $('#divEspecifico2').hide(300);
+    $('#filtroPedido1').val('')
+    $('#divEspecifico').show(300);
+    $('#filtroPedido1').select2({
         width: 'aut',
         placeholder: 'Seleccione...',
         theme: "bootstrap-5",

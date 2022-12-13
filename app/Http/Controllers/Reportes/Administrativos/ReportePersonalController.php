@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Reportes\Administrativos;
 
 use App\Exports\EventosPersonal;
+use App\Exports\HorasTrabajadas;
+use App\Exports\HorasTrabajadasEmpleado;
+use App\Exports\IngresoTerceros;
 use App\Exports\TurnoPersonal;
 use App\Http\Controllers\Controller;
+use App\Models\Contratista;
+use App\Models\User;
 use App\Repositories\Reportes\ConsultasPersonal;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -29,7 +34,7 @@ class ReportePersonalController extends Controller
         $hasta = $request->personalHasta;
         $proveedor = $request->filtroCubiaje2;
         $tipoReporte = $request->tipoReportePersonal;
-        $especifico = $request->filtroCubiaje1;
+        $especifico = $request->filtroPersonal;
         $generar = $request->generar;
         $datos = $this->personal->consultaDatos($request);
         $encabezado = $datos[1];
@@ -55,13 +60,13 @@ class ReportePersonalController extends Controller
                         return Excel::download(new EventosPersonal($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     case '3':
-                        //return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        return Excel::download(new HorasTrabajadas($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     case '4':
-                       // return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.xlsx");
+                        return Excel::download(new HorasTrabajadasEmpleado($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
-                    default:
-                        # code...
+                    case '5':
+                        return Excel::download(new IngresoTerceros($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                 }
 
@@ -74,14 +79,15 @@ class ReportePersonalController extends Controller
                         return Excel::download(new EventosPersonal($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     case '3':
-                        //return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
+                        return Excel::download(new HorasTrabajadas($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     case '4':
-                        //return Excel::download(new CalificacionesViajeExport($data), "$encabezado-$desde-$hasta.csv");
+                        return Excel::download(new HorasTrabajadasEmpleado($data), "$encabezado-$desde-$hasta.csv");
                         break;
-                    default:
-                        # code...
+                    case '5':
+                        return Excel::download(new IngresoTerceros($data), "$encabezado-$desde-$hasta.csv");
                         break;
+
                 }
 
             }else{
@@ -90,4 +96,30 @@ class ReportePersonalController extends Controller
             }
         }
     }
+
+    /**
+     * retorna JSON con los datos de los empleados. id, nombre
+     * @param Request $request [palabra de busqueda]
+     * @return Response JSON [datos del proveedor id, nombre]
+     *
+     */
+    public function getEmpleados(Request $request)
+    {
+        $empleados = User::where('name', 'like', '%'.strtoupper($request->descripcion).'%')
+                        ->whereBetween('rol_id', [1,2])
+                        ->get(['id','name as text']);
+        $empleados->toJson();
+        return response()->json($empleados);
+    }
+
+
+    public function getTerceros(Request $request)
+    {
+        $empleados = Contratista::where('cedula', 'like', '%'.strtoupper($request->descripcion).'%')
+                        ->withTrashed()
+                        ->get(['id','cedula as text']);
+        $empleados->toJson();
+        return response()->json($empleados);
+    }
+
 }

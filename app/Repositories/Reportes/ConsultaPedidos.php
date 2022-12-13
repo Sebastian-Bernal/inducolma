@@ -2,24 +2,27 @@
 
 namespace App\Repositories\Reportes;
 
+use App\Models\Cliente;
+use App\Models\Pedido;
 use Illuminate\Support\Facades\DB;
 
-class ConsultasPersonal {
+class ConsultaPedidos {
 
     public function consultaDatos($request)
     {
-        //return $request->all();
-        $desde = $request->personalDesde;
-        $hasta = $request->personalHasta;
-        $tipoReporte = $request->tipoReportePersonal;
-
+        ///return $request->all();
+        $desde = $request->pedidoDesde;
+        $hasta = $request->pedidoHasta;
+        $tipoReporte = $request->tipoReportePedidos;
+        $cliente = Cliente::where('id', $request->filtroPedido1)->first();
         switch ($tipoReporte) {
             case '1':
-                $data = $this->consultaTurnosEmpleado($desde, $hasta);
+                $data = $this->consultaPedidoFechaCliente($request->filtroPedido1, $desde, $hasta);
                 if (count($data) > 0) {
-                    $encabezado = "TURNOS DEL PERSONAL EN LAS FECHAS DESDE: $desde -- HASTA: $hasta" ;
-                    $vista = 'modulos.reportes.administrativos.personal.index-turno-empleado';
-                    $vistaPdf = 'modulos.reportes.administrativos.personal.pdf-turno-empleado';
+                    $encabezado = "PEDIDOS PENDIENTES PARA EL CLIENTE: $request->filtroPedido1" ;
+                    $vista = 'modulos.reportes.ventas.index-pendientes-cliente';
+                    $vistaPdf = 'modulos.reportes.ventas.pdf-pendientes-cliente';
+
                 }else{
                     $encabezado = '';
                     $vista = '';
@@ -78,7 +81,7 @@ class ConsultasPersonal {
                 }
 
         }
-        return [$data, $encabezado, $vista, $vistaPdf];
+        return [$data, $encabezado, $vista, $vistaPdf, $cliente];
     }
 
     /**
@@ -90,16 +93,21 @@ class ConsultasPersonal {
      *@return Array
      */
 
-    public function consultaTurnosEmpleado($desde, $hasta)
+    public function consultaPedidoFechaCliente($cliente, $desde, $hasta)
     {
-        $turnos = DB::select("select name, maquinas.maquina, turno_usuarios.fecha, turnos.turno
-                            from turno_usuarios join users ON users.id = turno_usuarios.user_id
-                            join maquinas on maquinas.id = turno_usuarios.maquina_id
-                            join turnos ON turnos.id = turno_usuarios.turno_id
-                            where turno_usuarios.fecha between '$desde' and '$hasta'
-                            order by fecha");
+        $pedidos = Pedido::join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
+                        ->join('users', 'users.id','=','pedidos.user_id')
+                        ->where('cliente_id', $cliente)
+                        ->whereBetween('pedidos.created_at',[$desde,$hasta])
+                        ->get([
+                            'pedidos.id',
+                            'diseno_producto_finales.descripcion',
+                            'pedidos.cantidad',
+                            'pedidos.fecha_entrega',
+                            'users.name'
+                        ]);
 
-        return $turnos;
+        return $pedidos;
     }
 
     /**

@@ -30,7 +30,7 @@ class ConsultasCubicajes {
             case '2':
                 $data = $this->consultaTransfromacionesViaje($request->filtroCubiaje1, $request->generar);
                 if (count($data)> 0) {
-                    $encabezado = "TRANSFORMACION DE LA MADERA VIAJE No {$data[0]->entrada_madera_id}";
+                    $encabezado = "TRANSFORMACION DE LA MADERA VIAJE No {$data[0]->entrada}";
                     $vista = 'modulos.reportes.administrativos.cubicajes.index-transformaciones';
                     $vistaPdf = 'modulos.reportes.administrativos.cubicajes.pdf-transformaciones-viaje';
                 }else{
@@ -78,7 +78,7 @@ class ConsultasCubicajes {
                             ->join('proveedores', 'proveedores.id', '=','entrada_maderas.proveedor_id')
                             ->join('maderas', 'maderas.id', '=', 'entradas_madera_maderas.madera_id')
                             ->join('tipo_maderas', 'tipo_maderas.id' , '=', 'maderas.tipo_madera_id')
-                            ->where('entradas_madera_maderas.id', (integer)$viaje)
+                            ->where('entrada_maderas.id', (integer)$viaje)
                             ->orderBy('paqueta', 'asc')
                             ->orderBy('bloque', 'asc')
                             ->get([
@@ -90,6 +90,7 @@ class ConsultasCubicajes {
                                 'cubicajes.ancho',
                                 'cubicajes.created_at',
                                 'cubicajes.pulgadas_cuadradas',
+                                'cubicajes.cm3',
                                 'entradas_madera_maderas.entrada_madera_id',
                                 'tipo_maderas.descripcion',
 
@@ -112,17 +113,19 @@ class ConsultasCubicajes {
     {
         $tranformaciones = DB::select("select  cubicajes.entrada_madera_id, cubicajes.id, paqueta, bloque, descripcion as tipo_madera, cubicajes.alto, cubicajes.largo, cubicajes.ancho, cubicajes.created_at,
                                         transformaciones.trnasformacion_final, sum(transformaciones.cantidad) as cantidad, orden_produccion_id,
-                                        pedido_id, nombre
+                                        pedido_id, nombre,cubicajes.cm3, entrada_maderas.id as entrada
                                         from cubicajes
                                         join transformaciones on cubicajes.id = transformaciones.cubicaje_id
+                                        join entradas_madera_maderas on entradas_madera_maderas.id = cubicajes.entrada_madera_id
+                                        join entrada_maderas ON entrada_maderas.id = entradas_madera_maderas.entrada_madera_id
                                         join maderas on maderas.id = transformaciones.madera_id
                                         join tipo_maderas ON tipo_maderas.id = maderas.tipo_madera_id
                                         join ordenes_produccion on ordenes_produccion.id = transformaciones.orden_produccion_id
                                         join pedidos on pedidos.id = ordenes_produccion.pedido_id
                                         join clientes on clientes.id = pedidos.cliente_id
-                                        where transformaciones.tipo_corte= 'FINAL'and cubicajes.entrada_madera_id  = $viaje
+                                        where transformaciones.tipo_corte= 'FINAL'and entrada_maderas.id  = $viaje
                                         group by (cubicajes.entrada_madera_id,cubicajes.id, paqueta, bloque, tipo_madera, cubicajes.alto, cubicajes.largo, cubicajes.ancho, cubicajes.created_at,
-                                        transformaciones.trnasformacion_final, orden_produccion_id, pedido_id, nombre)
+                                        transformaciones.trnasformacion_final, orden_produccion_id, pedido_id, nombre,cubicajes.cm3, entrada_maderas.id)
                                         order by 3,4 asc");
         if ($generar != '1') {
             $data = json_decode(json_encode($tranformaciones));
@@ -143,14 +146,14 @@ class ConsultasCubicajes {
     public function consultaCalificacionesViaje($viaje)
     {
         $calificaciones = DB::select("select entrada_maderas.id, cubicajes.paqueta, total, longitud_madera, cantonera, hongos, rajadura, bichos, organizacion,
-                        areas_transversal_max_min, areas_no_conveniente, nombre
+                        areas_transversal_max_min, areas_no_conveniente, nombre,cubicajes.cm3
                         from cubicajes join calificacion_maderas on calificacion_maderas.entrada_madera_id = cubicajes.entrada_madera_id
                         join entradas_madera_maderas on entradas_madera_maderas.id = cubicajes.entrada_madera_id
                         join entrada_maderas on entrada_maderas.id = entradas_madera_maderas.entrada_madera_id
                         join proveedores on proveedores.id = entrada_maderas.proveedor_id
                         where entrada_maderas.id= $viaje
                         group by (cubicajes.paqueta, total, longitud_madera, cantonera, hongos, rajadura, bichos, organizacion,
-                        areas_transversal_max_min, areas_no_conveniente, nombre, entrada_maderas.id)
+                        areas_transversal_max_min, areas_no_conveniente, nombre, entrada_maderas.id, cubicajes.cm3)
                         order by paqueta asc");
 
         $data = json_decode(json_encode($calificaciones));
@@ -161,14 +164,14 @@ class ConsultasCubicajes {
     public function consultaCalificacionesProveedor($desde, $hasta, $proveedor)
     {
         $calificaciones = DB::select("select entrada_maderas.id, cubicajes.paqueta, total, longitud_madera, cantonera, hongos, rajadura, bichos, organizacion,
-                        areas_transversal_max_min, areas_no_conveniente, nombre
+                        areas_transversal_max_min, areas_no_conveniente, nombre,cubicajes.cm3
                         from cubicajes join calificacion_maderas on calificacion_maderas.entrada_madera_id = cubicajes.entrada_madera_id
                         join entradas_madera_maderas on entradas_madera_maderas.id = cubicajes.entrada_madera_id
                         join entrada_maderas on entrada_maderas.id = entradas_madera_maderas.entrada_madera_id
                         join proveedores on proveedores.id = entrada_maderas.proveedor_id
                         where proveedores.id = $proveedor and entrada_maderas.created_at between '$desde' AND '$hasta'
                         group by (cubicajes.paqueta, total, longitud_madera, cantonera, hongos, rajadura, bichos, organizacion,
-                        areas_transversal_max_min, areas_no_conveniente, nombre, entrada_maderas.id)
+                        areas_transversal_max_min, areas_no_conveniente, nombre, entrada_maderas.id, cubicajes.cm3)
                         order by paqueta asc");
 
         $data = json_decode(json_encode($calificaciones));
