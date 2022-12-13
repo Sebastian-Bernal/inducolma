@@ -21,6 +21,7 @@
                             <th>Numero del proceso</th>
                             <th>Estado del proceso</th>
                             <th>Maquina</th>
+                            <th>Usuario</th>
 
                         </tr>
                     </thead>
@@ -35,6 +36,7 @@
                                 <td>{{ $pedido->id_proceso }}</td>
                                 <td>{{ $pedido->estado_proceso }}</td>
                                 <td>{{ $pedido->maquina }}</td>
+                                <td>{{ $pedido->name }}</td>
                             </tr>
                         @endforeach
                     </tbody>

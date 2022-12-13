@@ -98,8 +98,8 @@ class ConsultaPedidos {
                 $data = $this->consultaUsuariosProceso($request->nPedido);
                 if (count($data)> 0) {
                     $encabezado = "USUARIOS EN EL PEDIDO: {$request->nPedido} DEL CLIENTE: {$data[0]->cliente}";
-                    $vista = 'modulos.reportes.ventas.index-usuarios-pedido';
-                    $vistaPdf = 'modulos.reportes.ventas.pdf-usuarios-pedido';
+                    $vista = 'modulos.reportes.ventas.index-usuarios-procesos';
+                    $vistaPdf = 'modulos.reportes.ventas.pdf-usuarios-procesos';
                 }else{
                     $encabezado = 'algo';
                     $vista = '';
@@ -282,26 +282,24 @@ class ConsultaPedidos {
 
     public function consultaUsuariosProceso($pedido)
     {
-        $procesosPedido = Pedido::join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
-                        ->join('ordenes_produccion', 'ordenes_produccion.pedido_id','=','pedidos.id')
-                        ->join('items', 'items.id', '=','ordenes_produccion.item_id')
-                        ->join('procesos','procesos.orden_produccion_id','=','ordenes_produccion.id')
-                        ->join('clientes','clientes.id','=','pedidos.cliente_id')
-                        ->join('maquinas','maquinas.id','=','procesos.maquina_id')
-                        ->where('pedidos.id',(integer)$pedido)
-                        ->get([
-                            'pedidos.id as pedido_id',
-                            'clientes.nombre as cliente',
-                            'ordenes_produccion.id as orden_id',
-                            'ordenes_produccion.estado as estado_orden',
-                            'items.descripcion as item',
-                            'procesos.id as id_proceso',
-                            'procesos.estado as estado_proceso',
-                            'maquinas.maquina',
-                            'diseno_producto_finales.descripcion as producto',
-                        ]);
+        $usuariosPedido = DB::select(" select distinct pedidos.id as pedido_id, ordenes_produccion.id as orden_id, ordenes_produccion.estado as estado_orden,
+                        procesos.id as id_proceso, procesos.estado as estado_proceso, clientes.nombre as cliente,
+                        items.descripcion as item, maquinas.maquina, diseno_producto_finales.descripcion as producto,
+                        users.name
+                        from pedidos
+                        join diseno_producto_finales on diseno_producto_finales.id = pedidos.diseno_producto_final_id
+                        join ordenes_produccion ON ordenes_produccion.pedido_id = pedidos.id
+                        join items on items.id = ordenes_produccion.item_id
+                        join procesos ON procesos.orden_produccion_id = ordenes_produccion.id
+                        join clientes on clientes.id = pedidos.cliente_id
+                        join maquinas on maquinas.id = procesos.maquina_id
+                        join turno_usuarios on turno_usuarios.fecha = procesos.fecha_ejecucion and turno_usuarios.maquina_id = procesos.maquina_id
+                        join users on users.id = turno_usuarios.user_id
+                        where pedidos.id = 22
 
-        return $procesosPedido;
+                    ");
+
+        return $usuariosPedido;
     }
 
 }

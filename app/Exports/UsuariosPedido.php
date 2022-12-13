@@ -8,14 +8,13 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProcesosPedido implements FromView, WithStyles, ShouldAutoSize
+class UsuariosPedido implements FromView, WithStyles, ShouldAutoSize
 {
+    protected $usuariosPedido;
 
-    protected $procesosPedido;
-
-    public function __construct($procesosPedido)
+    public function __construct($usuariosPedido)
     {
-        $this->procesosPedido = $procesosPedido;
+        $this->usuariosPedido = $usuariosPedido;
     }
 
     /**
@@ -23,8 +22,8 @@ class ProcesosPedido implements FromView, WithStyles, ShouldAutoSize
     */
     public function view(): View
     {
-        return view('modulos.reportes.ventas.xls-procesos-pedido',[
-            'data' => $this->procesosPedido,
+        return view('modulos.reportes.ventas.xls-usuarios-procesos',[
+            'data' => $this->usuariosPedido,
         ]);
     }
 

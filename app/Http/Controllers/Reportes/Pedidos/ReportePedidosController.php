@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reportes\Pedidos;
 
 use App\Exports\PedidosCliente;
 use App\Exports\ProcesosPedido;
+use App\Exports\UsuariosPedido;
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Repositories\Reportes\ConsultaPedidos;
@@ -67,7 +68,7 @@ class ReportePedidosController extends Controller
                         return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     case '7':
-                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.xlsx");
+                        return Excel::download(new UsuariosPedido($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                     default :
                         return Excel::download(new PedidosCliente($data), "$encabezado-$desde-$hasta.xlsx");
@@ -80,7 +81,7 @@ class ReportePedidosController extends Controller
                         return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     case '7':
-                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.csv");
+                        return Excel::download(new UsuariosPedido($data), "$encabezado-$desde-$hasta.csv");
                         break;
                     default :
                         return Excel::download(new PedidosCliente($data), "$encabezado-$desde-$hasta.csv");
