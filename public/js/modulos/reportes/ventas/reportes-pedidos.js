@@ -1,9 +1,6 @@
 /**
  * valida los datos para generar los reportes
  */
-
-
-
 function reportePedidos() {
 
     let desde = $('#pedidoDesde');
@@ -21,7 +18,7 @@ function reportePedidos() {
             cliente.click();
         } else if((reporte.val() == '1') && (desde.val() == "" || hasta.val() == "")){
             alertaErrorSimple('Seleccione el cliente y los rangos de fechas');
-        } else if((reporte.val() == '4' && s(desde.val() == "" || hasta.val() == ""))){
+        } else if(reporte.val() == '4' && (desde.val() == "" || hasta.val() == "")){
             alertaErrorSimple('Seleccioneun rango de fehcas ');
         } else if((Array('6','7').includes(reporte.val())) && pedido.val() == ""){
             alertaErrorSimple('Ingrese el numero de pedido ');

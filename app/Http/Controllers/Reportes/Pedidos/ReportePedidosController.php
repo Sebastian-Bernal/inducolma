@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Reportes\Pedidos;
 
+use App\Exports\PedidosCliente;
+use App\Exports\ProcesosPedido;
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Repositories\Reportes\ConsultaPedidos;
@@ -39,7 +41,7 @@ class ReportePedidosController extends Controller
         $desde = $request->pedidoDesde;
         $hasta = $request->pedidoHasta;
 
-        $tipoReporte = $request->tipoReportepedido;
+        $tipoReporte = $request->tipoReportePedidos;
         $especifico = $request->filtroPedido1;
         $numeroP = $request->nPedido;
 
@@ -61,41 +63,28 @@ class ReportePedidosController extends Controller
 
             } elseif ($generar == '2') {
                 switch ($tipoReporte) {
-                    case '1':
-                       // return Excel::download(new Turnopedido($data), "$encabezado-$desde-$hasta.xlsx");
+                    case '6':
+                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
-                    case '2':
-                        //return Excel::download(new Eventospedido($data), "$encabezado-$desde-$hasta.xlsx");
+                    case '7':
+                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
-                    case '3':
-                        ////return Excel::download(new HorasTrabajadas($data), "$encabezado-$desde-$hasta.xlsx");
-                        break;
-                    case '4':
-                        ////return Excel::download(new HorasTrabajadasEmpleado($data), "$encabezado-$desde-$hasta.xlsx");
-                        break;
-                    case '5':
-                        ////return Excel::download(new IngresoTerceros($data), "$encabezado-$desde-$hasta.xlsx");
+                    default :
+                        return Excel::download(new PedidosCliente($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
                 }
 
             }elseif ($generar == '3') {
                 switch ($tipoReporte) {
-                    case '1':
-                        //return Excel::download(new Turnopedido($data), "$encabezado-$desde-$hasta.csv");
+                    case '6':
+                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.csv");
                         break;
-                    case '2':
-                        //return Excel::download(new Eventospedido($data), "$encabezado-$desde-$hasta.csv");
+                    case '7':
+                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.csv");
                         break;
-                    case '3':
-                        //return Excel::download(new HorasTrabajadas($data), "$encabezado-$desde-$hasta.csv");
+                    default :
+                        return Excel::download(new PedidosCliente($data), "$encabezado-$desde-$hasta.csv");
                         break;
-                    case '4':
-                        //return Excel::download(new HorasTrabajadasEmpleado($data), "$encabezado-$desde-$hasta.csv");
-                        break;
-                    case '5':
-                        //return Excel::download(new IngresoTerceros($data), "$encabezado-$desde-$hasta.csv");
-                        break;
-
                 }
 
             }else{

@@ -36,19 +36,19 @@
 
                 </table>
             </div>
-            <form action="{{ route('reporte-personal') }}" method="GET" target="_blank"
+            <form action="{{ route('reporte-pedidos') }}" method="GET" target="_blank"
                     rel="noopener noreferrer"
                     id="formGenerarReportePersonal">
                 <div hidden>
-                    <input type="text" readonly name="tipoReportePersonal" id="tipoReportePersonal" value="{{ $tipoReporte }}">
+                    <input type="text" readonly name="tipoReportePedidos" id="tipoReportePedidos" value="{{ $tipoReporte }}">
 
-                    <input type="text" name="personalDesde" id="personalDesde" value="{{ $desde }}">
-                    <input type="text" name="personalHasta" id="personalHasta" value="{{ $hasta }}">
-                    <input type="text" name="filtroPersonal" id="filtroPersonal" value="{{ $especifico }}">
+                    <input type="text" name="pedidoDesde" id="pedidoDesde" value="{{ $desde }}">
+                    <input type="text" name="pedidoHasta" id="pedidoHasta" value="{{ $hasta }}">
+                    <input type="text" name="filtroPedido1" id="filtroPedido1" value="{{ $especifico }}">
                     <input type="text" readonly name="generar" id="generar" value="">
                 </div>
                 <div class="d-flex justify-content-end mb-5 mt-2" >
-                    <a href="{{ route('reportes-administrativos') }}" class=" btn btn-secondary">volver</a>
+                    <a href="{{ route('reportes-ventas') }}" class=" btn btn-secondary">volver</a>
                     <button type="button" class="btn mx-1 btn-outline-danger" onclick="generarReportePersonal('1')"><i class="fa-regular fa-file-pdf"></i> PDF</button>
                     <button type="button" class="btn mx-1 btn-outline-success" onclick="generarReportePersonal('2')"><i class="fa-regular fa-file-excel"></i> EXCEL</button>
                     <button type="button" class="btn mx-1 btn-outline-success" onclick="generarReportePersonal('3')"><i class="fa-solid fa-file-csv"></i> CSV</button>
