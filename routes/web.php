@@ -30,6 +30,7 @@ use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\Reportes\Administrativos\ReporteCubicajesController;
 use App\Http\Controllers\Reportes\Administrativos\ReportePersonalController;
+use App\Http\Controllers\Reportes\Pedidos\ReportePedidosController;
 use App\Http\Controllers\SubprocesoController;
 use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
@@ -392,6 +393,11 @@ Route::controller(ReportePersonalController::class)->group(function (){
     Route::get('get-terceros', 'getTerceros')->name('get-terceros')->middleware('auth');
 });
 
+
+Route::controller(ReportePedidosController::class)->group(function (){
+        Route::get('get-clientes', 'getClientes')->name('get-clientes')->middleware('auth');
+        Route::get('reporte-pedidos', 'reportePedidos')->name('reporte-pedidos')->middleware('auth');
+});
 
 
 // rutas views index reportes

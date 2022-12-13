@@ -241,7 +241,7 @@
                         </p>
                         <p>
                             <a class="btn btn-primary seleccionado" href="{{ route('reportes-ventas') }}">
-                                Reportes ventas
+                                Reportes pedidos
                             </a>
                         </p>
                         <p>
