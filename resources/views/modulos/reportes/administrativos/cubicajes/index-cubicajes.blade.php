@@ -8,21 +8,24 @@
 
     <div class="div container h-content ">
         <div class="row">
-            <h5>{{ $encabezado }}</h5>
+            <h5 class="text-center text-primary"><strong>{{ $encabezado }}</strong></h5>
+          
+                    <p class="text-center">Tipo de madera: {{ $data[0]->descripcion }} - Proveedor: {{ $data[0]->nombre }}</p>
+               
             <div style=" height: 30rem; overflow-y: scroll;">
                 <table class="table table-striped table-bordered align-middle mt-5" >
                     <thead>
-                        <tr>
+                        <tr class="text-white bg-warning">
                             <th>Paqueta</th>
                             <th>Bloque</th>
                             <th>Alto</th>
                             <th>Largo</th>
                             <th>Ancho</th>
-                            <th>Fecha de creacion</th>
                             <th>Pulgadas cuadradas</th>
-                            <th>Tipo de madera</th>
-                            <th>Viaje</th>
-                            <th>Proveedor</th>
+                            {{--  <th>Centimetros cubicos</th>  --}}
+                            <th>Fecha de creacion</th>
+                            
+                           
                         </tr>
                     </thead>
                     <tbody>
@@ -33,11 +36,11 @@
                                 <td>{{ $entrada->alto }}</td>
                                 <td>{{ $entrada->largo }}</td>
                                 <td>{{ $entrada->ancho }}</td>
-                                <td>{{ $entrada->created_at }}</td>
                                 <td>{{ $entrada->pulgadas_cuadradas }}</td>
-                                <td>{{ $entrada->descripcion }}</td>
-                                <td>{{ $entrada->entrada_madera_id }}</td>
-                                <td>{{ $entrada->nombre }}</td>
+                                {{--  <td>{{ $entrada->cm3}}</td>  --}}
+                                <td>{{ $entrada->created_at }}</td>
+                              
+                                
 
                             </tr>
                         @endforeach
