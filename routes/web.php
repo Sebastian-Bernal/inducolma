@@ -402,6 +402,8 @@ Route::controller(ReportePedidosController::class)->group(function (){
 
 Route::controller(ProcesoConstruccionController::class)->group(function(){
         Route::get('get-maquinas', 'getMaquinas')->name('get-maquinas')->middleware('auth');
+        Route::get('get-items', 'getItems')->name('get-items')->middleware('auth');
+        Route::get('reporte-proceso', 'reportesProcesos')->name('reporte-proceso')->middleware('auth');
 });
 
 

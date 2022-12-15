@@ -36,9 +36,9 @@
                             <div class="row g-3">
                                 <div>
                                     <div class="card card-body">
-                                        <form action="{{ route('ingreso-maderas') }}" id="reporteIngresoMadera"
+                                        <form action="{{ route('reporte-proceso') }}" id="formReporteProceso"
                                             class="row gx-3 gy-2 align-items-center"
-                                            name="reporteIngresoMadera"
+                                            name="formReporteProceso"
                                             method="GET" >
                                             <div class="col-auto">
                                                 <div class="input-group ">
@@ -68,10 +68,23 @@
                                                             name="maquina"
                                                             required>
                                                         <option  value="" selected></option>
-
                                                     </select>
                                                 </div>
                                             </div>
+
+                                            <div class="col-auto">
+                                                <div class="input-group " id="divEspecifico1" style="display:none;">
+                                                    <span class="input-group-text" id="inputGroup-sizing-default">Item: </span>
+                                                    <select class="form-select form-select-sm"
+                                                            aria-label=".form-select-sm example"
+                                                            id="item"
+                                                            name="item"
+                                                            required>
+                                                        <option  value="" selected></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
                                             <div class="col-auto">
                                                 <div class="input-group ">
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
@@ -79,8 +92,8 @@
                                                             class="form-control"
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
-                                                            id="maquinaDesde"
-                                                            name="maquinaDesde"
+                                                            id="procesoDesde"
+                                                            name="procesoDesde"
                                                             required>
                                                 </div>
                                             </div>
@@ -91,8 +104,8 @@
                                                             class="form-control"
                                                             aria-label="Sizing example input"
                                                             aria-describedby="inputGroup-sizing-default"
-                                                            id="maquinaHasta"
-                                                            name="maquinaHasta"
+                                                            id="procesoHasta"
+                                                            name="procesoHasta"
                                                             required>
                                                 </div>
                                             </div>

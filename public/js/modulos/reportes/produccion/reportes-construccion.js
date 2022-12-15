@@ -3,27 +3,25 @@
  */
 function reporteConstruccion() {
 
-    let desde = $('#pedidoDesde');
-    let hasta = $('#pedidoHasta');
-    let cliente = $('#filtroPedido1');
-    let pedido = $('#nPedido');
-    let reporte = $('#tipoReportePedidos');
+    let desde = $('#procesoDesde');
+    let hasta = $('#procesoHasta');
+    let maquina = $('#maquina');
+    let item = $('#item');
+    let reporte = $('#tipoReporteConstruccion');
 
     if (reporte.val() == "" ) {
-        alertaErrorSimple('Seleccione un tipo de reporte de pedidos!', 'error');
+        alertaErrorSimple('Seleccione un tipo de reporte!', 'error');
     }
     else {
-        if ((Array('2', '3', '5').includes(reporte.val())) && (cliente.val() == "")) {
-            alertaErrorSimple('Seleccione el cliente ', 'error');
-            cliente.click();
-        } else if((reporte.val() == '1') && (desde.val() == "" || hasta.val() == "")){
-            alertaErrorSimple('Seleccione el cliente y los rangos de fechas');
-        } else if(reporte.val() == '4' && (desde.val() == "" || hasta.val() == "")){
+        if ((Array('1','3','4','5').includes(reporte.val())) && (maquina.val() == "" || desde.val() == "" || hasta.val() == "" )) {
+            alertaErrorSimple('Seleccione la maquina y el rango de fechas', 'warning');
+            maquina.focus();
+        } else if((reporte.val() == '2') && (desde.val() == "" || hasta.val() == "" || item.val() == "" || maquina.val() == "")){
+            alertaErrorSimple('Seleccione la maquina, el item y el rango de fechas', 'warning');
+        } else if(reporte.val() == '5' && (desde.val() == "" || hasta.val() == "")){
             alertaErrorSimple('Seleccioneun rango de fehcas ');
-        } else if((Array('6','7').includes(reporte.val())) && pedido.val() == ""){
-            alertaErrorSimple('Ingrese el numero de pedido ');
-        } else {
-            $('#formReportePedidos').submit();
+        }  else {
+            $('#formReporteProceso').submit();
             desde.val('');
             hasta.val('');
             reporte.val('');
@@ -40,17 +38,20 @@ function reporteConstruccion() {
 function datoEspecificoConstruccion() {
 
     let reporte = $('#tipoReporteConstruccion');
-    let especifico = $('#filtroPersonal');
 
     if (Array('1','3','4','5').includes(reporte.val())){
-        dataSelect('/get-maquinas');
-    }else if (reporte.val() == '6' || reporte.val() == '7'){
-        $('#divEspecifico2').show(300);
-        $('#divEspecifico').hide(300);
+        $('#divEspecifico').show(300);
+        $('#divEspecifico1').hide(300);
+        dataSelect('/get-maquinas','#maquina');
+    }else if (reporte.val() == '2'){
+        $('#divEspecifico').show(300);
+        $('#divEspecifico1').show(300);
+        dataSelect('/get-maquinas', '#maquina');
+        dataSelect('/get-items', '#item');
     }
     else {
         $('#divEspecifico').hide(300);
-        $('#divEspecifico2').hide(300);
+        $('#divEspecifico1').hide(300);
     }
 }
 
@@ -61,20 +62,20 @@ function datoEspecificoConstruccion() {
  * @param {String} tipo_reporte [ numero del tipo de reporte ]
  */
 
-function generarReportePersonal(tipo_reporte) {
+function generarReporteProceso(tipo_reporte) {
     console.log(tipo_reporte);
     switch (tipo_reporte) {
         case '1':
             $('#generar').val('1');
-            $('#formGenerarReportePersonal').submit();
+            $('#formReporteProceso').submit();
             break;
         case '2':
             $('#generar').val('2');
-            $('#formGenerarReportePersonal').submit();
+            $('#formReporteProceso').submit();
             break;
         case '3':
             $('#generar').val('3');
-            $('#formGenerarReportePersonal').submit();
+            $('#formReporteProceso').submit();
             break;
         default:
             alertaErrorSimple('opcion invalida al generar reporte', 'error');
@@ -89,12 +90,9 @@ function generarReportePersonal(tipo_reporte) {
  *
  * @returns {void}
  */
-function dataSelect(ruta) {
-
-    //$('#divEspecifico2').hide(300);
-    $('#maquina').val('')
-    $('#divEspecifico').show(300);
-    $('#maquina').select2({
+function dataSelect(ruta, input) {
+    $(input).val('')
+    $(input).select2({
         width: 'aut',
         placeholder: 'Seleccione...',
         theme: "bootstrap-5",
