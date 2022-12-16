@@ -3,6 +3,8 @@
 namespace App\Repositories\Reportes;
 
 use App\Models\Cliente;
+use App\Models\EstadoMaquina;
+use App\Models\EventoProceso;
 use App\Models\Pedido;
 use App\Models\Proceso;
 use App\Models\Subproceso;
@@ -47,12 +49,12 @@ class ConsultaProcesos {
                 }
 
                 break;
-            /*case '3':
-                $data = $this->pedidosVencidosCliente($cliente->id);
+            case '3':
+                $data = $this->eventosProcesos($maquina,$desde, $hasta);
                 if (count($data)> 0) {
-                    $encabezado = "PEDIDOS VENCIDOS DEL CLIENTE {$cliente->nombre}";
-                    $vista = 'modulos.reportes.procesos.index-reporte-cliente';
-                    $vistaPdf = 'modulos.reportes.procesos.pdf-reporte-cliente';
+                    $encabezado = "EVENTOS DE LA MAQUINA {$data[0]->maquina} EN LAS FECHAS $desde - $hasta";
+                    $vista = 'modulos.reportes.procesos.index-eventos-maquina';
+                    $vistaPdf = 'modulos.reportes.procesos.pdf-eventos-maquina';
                 }else{
                     $encabezado = 'algo';
                     $vista = '';
@@ -62,11 +64,11 @@ class ConsultaProcesos {
                 break;
 
             case '4':
-                $data = $this->pedidosTerminadosFecha($desde, $hasta);
+                $data = $this->estadosProceso( $maquina, $desde, $hasta);
                 if (count($data)> 0) {
-                    $encabezado = "PEDIDOS TERMINADOS DESDE: $desde AL $hasta";
-                    $vista = 'modulos.reportes.procesos.index-reporte-cliente';
-                    $vistaPdf = 'modulos.reportes.procesos.pdf-reporte-cliente';
+                    $encabezado = "ESTADOS DE LA MAQUINA {$data[0]->maquina} EN LAS FECHAS $desde - $hasta";
+                    $vista = 'modulos.reportes.procesos.index-estados-maquina';
+                    $vistaPdf = 'modulos.reportes.procesos.pdf-estados-maquina';
                 }else{
                     $encabezado = 'algo';
                     $vista = '';
@@ -74,25 +76,25 @@ class ConsultaProcesos {
                 }
                 break;
             case '5':
-                $data = $this->consultaPedidosTerminadosCliente($cliente->id);
+                $data = $this->ordenesProduccion($desde, $hasta);
                 if (count($data)> 0) {
-                    $encabezado = "PEDIDOS TERMINADOS DEL CLIENTE: {$cliente->nombre}";
-                    $vista = 'modulos.reportes.procesos.index-reporte-cliente';
-                    $vistaPdf = 'modulos.reportes.procesos.pdf-reporte-cliente';
+                    $encabezado = "ORDENES DE PRODUCCION EN LAS FECHAS $desde -- $hasta";
+                    $vista = 'modulos.reportes.procesos.index-ordenes-fecha';
+                    $vistaPdf = 'modulos.reportes.procesos.pdf-ordenes-fecha';
                 }else{
                     $encabezado = 'algo';
                     $vista = '';
                     $vistaPdf = '';
                 }
-                break; */
+                break;
 
             case '6':
 
-                $data = $this->consultaProceosPedido($request->nPedido);
+                $data = $this->ordenesPendientes();
                 if (count($data)> 0) {
-                    $encabezado = "PROCESOS DEL PEDIDO: {$request->nPedido} DEL CLIENTE: {$data[0]->cliente}";
-                    $vista = 'modulos.reportes.procesos.index-procesos-pedido';
-                    $vistaPdf = 'modulos.reportes.procesos.pdf-procesos-pedido';
+                    $encabezado = "ORDENES DE PRODUCCION PENDIENTES";
+                    $vista = 'modulos.reportes.procesos.index-ordenes-fecha';
+                    $vistaPdf = 'modulos.reportes.procesos.pdf-ordenes-fecha';
                 }else{
                     $encabezado = 'algo';
                     $vista = '';
@@ -100,11 +102,11 @@ class ConsultaProcesos {
                 }
                 break;
             case '7':
-                $data = $this->consultaUsuariosProceso($request->nPedido);
+                $data = $this->itemsEnProductos($request->item, $desde, $hasta);
                 if (count($data)> 0) {
-                    $encabezado = "USUARIOS EN EL PEDIDO: {$request->nPedido} DEL CLIENTE: {$data[0]->cliente}";
-                    $vista = 'modulos.reportes.procesos.index-usuarios-procesos';
-                    $vistaPdf = 'modulos.reportes.procesos.pdf-usuarios-procesos';
+                    $encabezado = "ITEMS USADOS EN EL PRODUCTO: {$data[0]->producto}";
+                    $vista = 'modulos.reportes.procesos.index-items-ensamblados';
+                    $vistaPdf = 'modulos.reportes.procesos.pdf-items-ensamblados';
                 }else{
                     $encabezado = 'algo';
                     $vista = '';
@@ -230,142 +232,150 @@ class ConsultaProcesos {
     }
 
     /**
-     * consulta los pedidos pendientes de un cliente
+     * consulta los eventos de la maquina
      *
-     * @param String $cliente [id del cliente]
+     * @param String $maquina [id de la maquina]
+     * @param String $desde
+     * @param String $hasta
      *
      * @return Array
      */
 
-    public function pedidosVencidosCliente($cliente)
+    public function eventosProcesos($maquina, $desde, $hasta)
     {
-        $pendientes = Pedido::join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
-                        ->join('users', 'users.id','=','pedidos.user_id')
-                        ->where('cliente_id', $cliente)
-                        ->where('pedidos.estado','PENDIENTE')
-                        ->where('pedidos.fecha_entrega','<', now())
-                        ->get([
-                            'pedidos.id',
-                            'diseno_producto_finales.descripcion',
-                            'pedidos.cantidad',
-                            'pedidos.fecha_entrega',
-                            'users.name'
-                        ]);
-
-        return $pendientes;
+        $eventos = EventoProceso::join('eventos', 'eventos.id','=','evento_procesos.evento_id')
+                                ->join('users','users.id', '=','evento_procesos.user_id')
+                                ->join('maquinas','maquinas.id', '=','evento_procesos.maquina_id')
+                                ->where('evento_procesos.maquina_id', $maquina)
+                                ->whereBetween('evento_procesos.created_at', [$desde, $hasta])
+                                ->get([
+                                    'eventos.descripcion',
+                                    'users.name',
+                                    'evento_procesos.created_at',
+                                    'maquinas.maquina'
+                                ]);
+        return $eventos;
     }
 
 
     /**
-     * consulta los pedidos terminado en un rango de fechas
-     *
-     * @param string $desde, $hasta
+     * consulta los estados de la maquina en un rango de fechas
+     * @param String $maquina
+     * @param String $desde, $hasta
      *
      * @return Array
      */
 
-    public function pedidosTerminadosFecha($desde , $hasta)
+    public function estadosProceso( $maquina, $desde , $hasta)
     {
-        $terminados = Pedido::join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
-                        ->join('users', 'users.id','=','pedidos.user_id')
-                        ->where('pedidos.estado','TERMINADO')
-                        ->whereBetween('pedidos.fecha_solicitud', [$desde, $hasta])
-                        ->get([
-                            'pedidos.id',
-                            'diseno_producto_finales.descripcion',
-                            'pedidos.cantidad',
-                            'pedidos.fecha_entrega',
-                            'users.name'
-                        ]);
-
-        return $terminados;
+        $estados = EstadoMaquina::join('estados', 'estados.id', '=', 'estado_maquinas.estado_id')
+                                ->join('users','users.id', '=','estado_maquinas.user_id')
+                                ->join('maquinas','maquinas.id', '=','estado_maquinas.maquina_id')
+                                ->where('estado_maquinas.maquina_id', $maquina)
+                                ->whereBetween('estado_maquinas.created_at', [$desde, $hasta])
+                                ->get([
+                                    'estados.descripcion',
+                                    'users.name',
+                                    'estado_maquinas.created_at',
+                                    'maquinas.maquina'
+                                ]);
+        return $estados;
     }
 
     /**
-     * consulta los pedidos terminados de un cliente
+     * consulta las ordenes de produccion en un rango de fechas
      *
-     * @param String $cliente
+     * @param String $desde, $hasta
      *
      * @return Array
      */
 
-    public function consultaPedidosTerminadosCliente($cliente)
+    public function ordenesProduccion($desde, $hasta)
     {
-        $terminadosCliente = Pedido::join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
+        $ordenes = Pedido::join('ordenes_produccion','pedidos.id', '=', 'ordenes_produccion.pedido_id')
+                        ->join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
+                        ->join('items', 'items.id', '=', 'ordenes_produccion.item_id')
+                        ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
                         ->join('users', 'users.id','=','pedidos.user_id')
-                        ->where('pedidos.estado','TERMINADO')
-                        ->where('pedidos.cliente_id',$cliente)
+                        ->whereBetween('ordenes_produccion.created_at',[$desde, $hasta])
                         ->get([
-                            'pedidos.id',
-                            'diseno_producto_finales.descripcion',
-                            'pedidos.cantidad',
-                            'pedidos.fecha_entrega',
-                            'users.name'
-                        ]);
-
-        return $terminadosCliente;
-    }
-
-    /**
-     * consulta los pedidos terminados de un cliente
-     *
-     * @param String $cliente
-     *
-     * @return Array
-     */
-
-    public function consultaProceosPedido($pedido)
-    {
-        $procesosPedido = Pedido::join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
-                        ->join('ordenes_produccion', 'ordenes_produccion.pedido_id','=','pedidos.id')
-                        ->join('items', 'items.id', '=','ordenes_produccion.item_id')
-                        ->join('procesos','procesos.orden_produccion_id','=','ordenes_produccion.id')
-                        ->join('clientes','clientes.id','=','pedidos.cliente_id')
-                        ->join('maquinas','maquinas.id','=','procesos.maquina_id')
-                        ->where('pedidos.id',(integer)$pedido)
-                        ->get([
-                            'pedidos.id as pedido_id',
-                            'clientes.nombre as cliente',
-                            'ordenes_produccion.id as orden_id',
-                            'ordenes_produccion.estado as estado_orden',
-                            'items.descripcion as item',
-                            'procesos.id as id_proceso',
-                            'procesos.estado as estado_proceso',
-                            'maquinas.maquina',
+                            'ordenes_produccion.id',
+                            'clientes.nombre',
                             'diseno_producto_finales.descripcion as producto',
+                            'items.descripcion as item',
+                            'ordenes_produccion.created_at',
+                            'users.name',
+                            'ordenes_produccion.estado'
                         ]);
 
-        return $procesosPedido;
+        return $ordenes;
     }
 
     /**
-     * consulta los pedidos terminados de un cliente
-     * consultar
+     * consulta las ordenes pendientes
+     *
      * @param String $cliente
      *
      * @return Array
      */
 
-    public function consultaUsuariosProceso($pedido)
+    public function ordenesPendientes()
     {
-        $usuariosPedido = DB::select(" select distinct pedidos.id as pedido_id, ordenes_produccion.id as orden_id, ordenes_produccion.estado as estado_orden,
-                        procesos.id as id_proceso, procesos.estado as estado_proceso, clientes.nombre as cliente,
-                        items.descripcion as item, maquinas.maquina, diseno_producto_finales.descripcion as producto,
-                        users.name
-                        from pedidos
-                        join diseno_producto_finales on diseno_producto_finales.id = pedidos.diseno_producto_final_id
-                        join ordenes_produccion ON ordenes_produccion.pedido_id = pedidos.id
-                        join items on items.id = ordenes_produccion.item_id
-                        join procesos ON procesos.orden_produccion_id = ordenes_produccion.id
-                        join clientes on clientes.id = pedidos.cliente_id
-                        join maquinas on maquinas.id = procesos.maquina_id
-                        join turno_usuarios on turno_usuarios.fecha = procesos.fecha_ejecucion and turno_usuarios.maquina_id = procesos.maquina_id
-                        join users on users.id = turno_usuarios.user_id
-                        where pedidos.id = 22
+        $ordenes = Pedido::join('ordenes_produccion','pedidos.id', '=', 'ordenes_produccion.pedido_id')
+                ->join('diseno_producto_finales', 'diseno_producto_finales.id','=','pedidos.diseno_producto_final_id')
+                ->join('items', 'items.id', '=', 'ordenes_produccion.item_id')
+                ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+                ->join('users', 'users.id','=','pedidos.user_id')
+                ->where('ordenes_produccion.created_at', '<', now())
+                ->where('ordenes_produccion.estado', 'PENDIENTE')
+                ->get([
+                    'ordenes_produccion.id',
+                    'clientes.nombre',
+                    'diseno_producto_finales.descripcion as producto',
+                    'items.descripcion as item',
+                    'ordenes_produccion.created_at',
+                    'users.name',
+                    'ordenes_produccion.estado'
+                ]);
+        return $ordenes;
+    }
 
+    /**
+     * consulta los items usados en un producto
+     * consultar
+     * @param String $producto
+     *
+     * @return Array
+     */
+
+    public function itemsEnProductos($producto, $desde, $hasta)
+    {
+        $itemsProducto = DB::select("
+                        select diseno_producto_finales.descripcion as producto, items.descripcion as item,
+                        sum(diseno_items.cantidad * pedido_producto.cantidad_producida ) as cantidad
+                        from
+                        pedido_producto join diseno_items on diseno_items.diseno_producto_final_id = pedido_producto.diseno_producto_final_id
+                        join diseno_producto_finales on diseno_producto_finales.id = diseno_items.diseno_producto_final_id
+                        join items on items.id = diseno_items.item_id
+                        where diseno_producto_finales.id = $producto and
+                        pedido_producto.created_at between '$desde' and '$hasta'
+                        group by (diseno_producto_finales.descripcion, items.descripcion)
                     ");
 
-        return $usuariosPedido;
+        return $itemsProducto;
+    }
+
+    /**
+     * consulta los items usados en un producto
+     * consultar
+     * @param String $desde, $hasta
+     *
+     * @return Array
+     */
+
+    public function procesosEnsambleFecha($maquina, $desde, $hasta)
+    {
+
     }
 
 }

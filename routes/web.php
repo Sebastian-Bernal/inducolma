@@ -404,6 +404,8 @@ Route::controller(ProcesoConstruccionController::class)->group(function(){
         Route::get('get-maquinas', 'getMaquinas')->name('get-maquinas')->middleware('auth');
         Route::get('get-items', 'getItems')->name('get-items')->middleware('auth');
         Route::get('reporte-proceso', 'reportesProcesos')->name('reporte-proceso')->middleware('auth');
+        Route::get('get-maquinas-ensamble', 'getMaquinasEnsamble')->name('get-maquinas-ensamble')->middleware('auth');
+        Route::get('get-productos', 'getProductos')->name('get-productos')->middleware('auth');
 });
 
 

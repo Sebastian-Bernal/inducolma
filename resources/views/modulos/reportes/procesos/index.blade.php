@@ -15,13 +15,13 @@
                     </div>
 
                 @endif
-                {{-- REPORTE PROCESOS CONSTRUCCION --}}
+                {{-- REPORTE PROCESOS  --}}
                 <div class="card mb-3 shadow-sm">
                     <h5 class="card-header bg-primary text-white">
                         <div class="d-grid gap-2 align-content-left ">
                             <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collpaseConstruccion" role="button" aria-expanded="false" aria-controls="collpaseConstruccion">
                                 <h5 class="d-flex justify-content-between mb-0">
-                                    Reportes Construcción  <i class="fa-solid fa-chevron-down text-end"></i>
+                                    Reportes Procesos  <i class="fa-solid fa-chevron-down text-end"></i>
                                 </h5>
 
                             </button>
@@ -56,6 +56,8 @@
                                                         <option value="4">Reporte estados de maquina</option>
                                                         <option value="5">Ordenes produccion por fecha</option>
                                                         <option value="6">Ordenes de produccion pendientes</option>
+                                                        <option value="7">Items usados en ensamble</option>
+                                                        <option value="8">Procesos en maquinas de ensamble por fecha</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -123,7 +125,7 @@
 
                 <hr>
                 {{-- REPORTE CUBICAJES --}}
-                <div class="card mb-3 shadow-sm">
+                {{--  <div class="card mb-3 shadow-sm">
                     <h5 class="card-header bg-warning text-white">
                         <div class="d-grid gap-2 align-content-left">
                             <button class="btn text-white px-0 py-0" data-bs-toggle="collapse" href="#collapseCubicajes" role="button" aria-expanded="false" aria-controls="collapseCubicajes">
@@ -222,9 +224,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <hr>
 
         </div>
     </div>

@@ -13,14 +13,19 @@ function reporteConstruccion() {
         alertaErrorSimple('Seleccione un tipo de reporte!', 'error');
     }
     else {
-        if ((Array('1','3','4','5').includes(reporte.val())) && (maquina.val() == "" || desde.val() == "" || hasta.val() == "" )) {
+        if ((Array('1','3','4').includes(reporte.val())) && (maquina.val() == "" || desde.val() == "" || hasta.val() == "" )) {
             alertaErrorSimple('Seleccione la maquina y el rango de fechas', 'warning');
             maquina.focus();
-        } else if((reporte.val() == '2') && (desde.val() == "" || hasta.val() == "" || item.val() == "" || maquina.val() == "")){
+
+        } else if((Array('2').includes(reporte.val())) && (desde.val() == "" || hasta.val() == "" || item.val() == "" || maquina.val() == "")){
             alertaErrorSimple('Seleccione la maquina, el item y el rango de fechas', 'warning');
-        } else if(reporte.val() == '5' && (desde.val() == "" || hasta.val() == "")){
+
+        } else if((Array('5','8').includes(reporte.val())) && (desde.val() == "" || hasta.val() == "")){
             alertaErrorSimple('Seleccioneun rango de fehcas ');
-        }  else {
+        } else if((reporte.val() == '7') && (item.val() == "" || desde.val() == "" || hasta.val() == "" )){
+            alertaErrorSimple('seleccione el producto y el rango de fechas');
+        }
+        else {
             $('#formReporteProceso').submit();
             desde.val('');
             hasta.val('');
@@ -39,7 +44,7 @@ function datoEspecificoConstruccion() {
 
     let reporte = $('#tipoReporteConstruccion');
 
-    if (Array('1','3','4','5').includes(reporte.val())){
+    if (Array('1','3','4').includes(reporte.val())){
         $('#divEspecifico').show(300);
         $('#divEspecifico1').hide(300);
         dataSelect('/get-maquinas','#maquina');
@@ -48,6 +53,14 @@ function datoEspecificoConstruccion() {
         $('#divEspecifico1').show(300);
         dataSelect('/get-maquinas', '#maquina');
         dataSelect('/get-items', '#item');
+    }else if(reporte.val() == '7'){
+        $('#divEspecifico').hide(300);
+        $('#divEspecifico1').show(300);
+        dataSelect('/get-productos', '#item');
+    } else if(reporte.val() == '8'){
+        $('#divEspecifico').show(300);
+        $('#divEspecifico1').hide(300);
+        dataSelect('/get-maquinas-ensamble','#maquina');
     }
     else {
         $('#divEspecifico').hide(300);
