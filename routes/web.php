@@ -31,6 +31,7 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\Reportes\Administrativos\ReporteCubicajesController;
 use App\Http\Controllers\Reportes\Administrativos\ReportePersonalController;
 use App\Http\Controllers\Reportes\Pedidos\ReportePedidosController;
+use App\Http\Controllers\Reportes\Procesos\ProcesoConstruccionController;
 use App\Http\Controllers\SubprocesoController;
 use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
@@ -397,6 +398,14 @@ Route::controller(ReportePersonalController::class)->group(function (){
 Route::controller(ReportePedidosController::class)->group(function (){
         Route::get('get-clientes', 'getClientes')->name('get-clientes')->middleware('auth');
         Route::get('reporte-pedidos', 'reportePedidos')->name('reporte-pedidos')->middleware('auth');
+});
+
+Route::controller(ProcesoConstruccionController::class)->group(function(){
+        Route::get('get-maquinas', 'getMaquinas')->name('get-maquinas')->middleware('auth');
+        Route::get('get-items', 'getItems')->name('get-items')->middleware('auth');
+        Route::get('reporte-proceso', 'reportesProcesos')->name('reporte-proceso')->middleware('auth');
+        Route::get('get-maquinas-ensamble', 'getMaquinasEnsamble')->name('get-maquinas-ensamble')->middleware('auth');
+        Route::get('get-productos', 'getProductos')->name('get-productos')->middleware('auth');
 });
 
 

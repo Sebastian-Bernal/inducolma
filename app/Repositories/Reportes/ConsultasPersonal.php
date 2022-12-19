@@ -64,7 +64,7 @@ class ConsultasPersonal {
                     $vista = '';
                     $vistaPdf = '';
                 }
-
+                break;
             case '5':
                 $data = $this->consultaIngresoTerceros($desde, $hasta, $request->filtroPersonal);
                 if (count($data)> 0) {
@@ -76,6 +76,7 @@ class ConsultasPersonal {
                     $vista = '';
                     $vistaPdf = '';
                 }
+                break;
 
         }
         return [$data, $encabezado, $vista, $vistaPdf];

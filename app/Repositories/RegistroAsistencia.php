@@ -86,6 +86,7 @@ class RegistroAsistencia {
         $estado = new EstadoMaquina();
         $estado->maquina_id = $request->maquina_id;
         $estado->estado_id = $request->estado_id;
+        $estado->user_id = Auth::user()->id;
         $estado->fecha = now();
         //$estado->save();
         try {
@@ -105,6 +106,7 @@ class RegistroAsistencia {
         $estado = new EstadoMaquina();
         $estado->maquina_id = $request->maquina_id;
         $estado->estado_id = 2;
+        $estado->user_id = Auth::user()->id;
         $estado->fecha = now();//$ultimo_subproceso->created_at;
         try {
             $estado->save();

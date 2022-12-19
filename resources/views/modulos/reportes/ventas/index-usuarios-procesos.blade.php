@@ -14,41 +14,48 @@
                     <thead>
                         <tr>
                             <th>Numero de pedido</th>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Fecha de entrega</th>
-                            <th>Realizado por</th>
+                            <th>Producto a fabricar</th>
+                            <th>Numero de orden</th>
+                            <th>Estado de la orden</th>
+                            <th>Item a fabricar</th>
+                            <th>Numero del proceso</th>
+                            <th>Estado del proceso</th>
+                            <th>Maquina</th>
+                            <th>Usuario</th>
 
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($data as $pedido)
                             <tr>
-                                <td>{{ $pedido->id }}</td>
-                                <td>{{ $pedido->descripcion }}</td>
-                                <td>{{ $pedido->cantidad }}</td>
-                                <td>{{ $pedido->fecha_entrega }}</td>
+                                <td>{{ $pedido->pedido_id }}</td>
+                                <td>{{ $pedido->producto }}</td>
+                                <td>{{ $pedido->orden_id }}</td>
+                                <td>{{ $pedido->estado_orden }}</td>
+                                <td>{{ $pedido->item }}</td>
+                                <td>{{ $pedido->id_proceso }}</td>
+                                <td>{{ $pedido->estado_proceso }}</td>
+                                <td>{{ $pedido->maquina }}</td>
                                 <td>{{ $pedido->name }}</td>
-
                             </tr>
                         @endforeach
                     </tbody>
 
                 </table>
             </div>
-            <form action="{{ route('reporte-personal') }}" method="GET" target="_blank"
+            <form action="{{ route('reporte-pedidos') }}" method="GET" target="_blank"
                     rel="noopener noreferrer"
                     id="formGenerarReportePersonal">
                 <div hidden>
-                    <input type="text" readonly name="tipoReportePersonal" id="tipoReportePersonal" value="{{ $tipoReporte }}">
+                    <input type="text" readonly name="tipoReportePedidos" id="tipoReportePedidos" value="{{ $tipoReporte }}">
 
-                    <input type="text" name="personalDesde" id="personalDesde" value="{{ $desde }}">
-                    <input type="text" name="personalHasta" id="personalHasta" value="{{ $hasta }}">
-                    <input type="text" name="filtroPersonal" id="filtroPersonal" value="{{ $especifico }}">
+                    <input type="text" name="pedidoDesde" id="pedidoDesde" value="{{ $desde }}">
+                    <input type="text" name="pedidoHasta" id="pedidoHasta" value="{{ $hasta }}">
+                    <input type="text" name="nPedido" id="nPedido" value="{{ $data[0]->pedido_id }}">
                     <input type="text" readonly name="generar" id="generar" value="">
                 </div>
                 <div class="d-flex justify-content-end mb-5 mt-2" >
-                    <a href="{{ route('reportes-administrativos') }}" class=" btn btn-secondary">volver</a>
+                    <a href="{{ route('reportes-ventas') }}" class=" btn btn-secondary">volver</a>
                     <button type="button" class="btn mx-1 btn-outline-danger" onclick="generarReportePersonal('1')"><i class="fa-regular fa-file-pdf"></i> PDF</button>
                     <button type="button" class="btn mx-1 btn-outline-success" onclick="generarReportePersonal('2')"><i class="fa-regular fa-file-excel"></i> EXCEL</button>
                     <button type="button" class="btn mx-1 btn-outline-success" onclick="generarReportePersonal('3')"><i class="fa-solid fa-file-csv"></i> CSV</button>

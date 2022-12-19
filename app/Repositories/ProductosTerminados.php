@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Item;
 use App\Models\Pedido;
+use App\Models\TurnoUsuario;
+use App\Models\ProductoMaquina;
 use Illuminate\Support\Facades\Auth;
 
 class ProductosTerminados {
@@ -43,7 +45,15 @@ class ProductosTerminados {
             $created_at = $pedido->pedido_producto->first()->created_at;
         }
 
-        return $this->actualizaPedido($pedido);
+        try {
+            $this->registrarProductoMaquina(Auth::user()->id);
+        } catch (\Throwable $th) {
+            return redirect()->route('trabajo-ensamble', $pedido)->with('status',
+                "<p class='text-danger'>
+                    El producto no pudo ser agregado...
+                    <i class='fa-solid fa-triangle-exclamation'></i>
+                </p>");
+        }
 
         try {
             $this->actualizaExistenciasItems($pedido);
@@ -120,6 +130,37 @@ class ProductosTerminados {
                 Error al actualizar el pedido
                 <i class='fa-solid fa-triangle-exclamation'></i>
             </p>");
+        }
+
+    }
+
+    /**
+     *
+     */
+
+    public function registrarProductoMaquina($usuario)
+    {
+        $turno = TurnoUsuario::where('user_id', $usuario)
+                            ->where('fecha', now())
+                            ->first();
+
+        $registros = ProductoMaquina::where('user_id', $turno->user_id)
+                                    ->where('maquina', $turno->maquina_id)
+                                    ->where('created_at', now())
+                                    ->first();
+        if ($registros == '') {
+            $productoMaquina = new ProductoMaquina();
+            $productoMaquina->user_id = $turno->user_id;
+            $productoMaquina->maquina_id = $turno->maquina_id;
+            $productoMaquina->cantida = 1;
+            $productoMaquina->save();
+        }else{
+            $productoMaquina = ProductoMaquina::where('id', $registros->id)->first();
+            $productoMaquina->user_id = $turno->user_id;
+            $productoMaquina->maquina_id = $turno->maquina_id;
+            $productoMaquina->cantida = $registros->cantidad + 1;
+            $productoMaquina->updated_at = now();
+            $productoMaquina->save();
         }
 
     }
