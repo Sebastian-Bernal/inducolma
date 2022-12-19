@@ -72,9 +72,9 @@
                                 <th class="text-center" style="font-size: 8px;">Bic.</th>
                                 <th class="text-center" style="font-size: 8px;">Org.</th>
                                 <th class="text-center" style="font-size: 8px;">A. tran.</th>
-                                <th class="text-center" style="font-size: 8px;">no conv.</th>
-
-
+                                <th style="font-size: 8px;">no conv.</th>
+                                
+                            
                             </tr>
                         </thead>
                         <tbody>
