@@ -114,6 +114,19 @@ class ConsultaProcesos {
                 }
                 break;
 
+            case '8':
+                $data = $this->procesosEnsambleFecha((integer)$request->maquina, $desde, $hasta);
+                if (count($data)> 0) {
+                    $encabezado = "PRODUCTOS ENSAMBADOS POR LA MAQUINA: {$data[0]->maquina} EN LAS FECHAS $desde - $hasta";
+                    $vista = 'modulos.reportes.procesos.index-productos-maquinas-ensamble';
+                    $vistaPdf = 'modulos.reportes.procesos.pdf-productos-maquinas-ensamble';
+                }else{
+                    $encabezado = 'algo';
+                    $vista = '';
+                    $vistaPdf = '';
+                }
+                break;
+
         }
         return [$data, $encabezado, $vista, $vistaPdf];
     }
@@ -358,7 +371,7 @@ class ConsultaProcesos {
                         join diseno_producto_finales on diseno_producto_finales.id = diseno_items.diseno_producto_final_id
                         join items on items.id = diseno_items.item_id
                         where diseno_producto_finales.id = $producto and
-                        pedido_producto.created_at between '$desde' and '$hasta'
+                        pedido_producto.created_at between to_date('$desde', 'YYYY-MM-DD') and to_date('$hasta', 'YYYY-MM-DD')
                         group by (diseno_producto_finales.descripcion, items.descripcion)
                     ");
 
@@ -376,6 +389,26 @@ class ConsultaProcesos {
     public function procesosEnsambleFecha($maquina, $desde, $hasta)
     {
 
+        $procesos = DB::select("select diseno_producto_finales.descripcion as producto, items.descripcion as item,
+                    sum(diseno_items.cantidad * productos_maquina.cantidad ) as cantidad, productos_maquina.created_at,
+                    maquinas.maquina, users.name, productos_maquina.updated_at
+                    from
+                    productos_maquina join diseno_items on diseno_items.diseno_producto_final_id = productos_maquina.diseno_producto_final_id
+                    join diseno_producto_finales on diseno_producto_finales.id = diseno_items.diseno_producto_final_id
+                    join items on items.id = diseno_items.item_id
+                    join maquinas on maquinas.id = productos_maquina.maquina_id
+                    join users on users.id = productos_maquina.user_id
+                    join turno_usuarios on turno_usuarios.user_id = users.id
+                    where productos_maquina.maquina_id = $maquina and
+                    productos_maquina.created_at between to_date('$desde', 'YYYY-MM-DD') and to_date('$hasta', 'YYYY-MM-DD')
+                    group by (diseno_producto_finales.descripcion,
+                    items.descripcion,productos_maquina.created_at,
+                    maquinas.maquina,
+                    users.name,
+                    productos_maquina.updated_at
+                )");
+
+        return $procesos;
     }
 
 }

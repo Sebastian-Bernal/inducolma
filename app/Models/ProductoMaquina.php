@@ -11,9 +11,10 @@ class ProductoMaquina extends Model
     protected $table = 'productos_maquina';
 
     protected $fillable = [
-        'user_ud',
+        'user_id',
         'maquina_id',
         'cantidad',
+        'created_at',
     ];
 
 }

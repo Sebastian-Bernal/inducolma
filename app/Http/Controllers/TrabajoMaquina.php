@@ -109,7 +109,7 @@ class TrabajoMaquina extends Controller
             if ($pedido->ordenes_produccion->all() != []) {
                 $guardar = true;
                 foreach ($pedido->ordenes_produccion as $orden) {
-                    if ($orden->estado != 'TERMINADO') {
+                    if ($orden->estado != 'PENDIENTE') {
                         $guardar = false;
                         break ;
                     }
