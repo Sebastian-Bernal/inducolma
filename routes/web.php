@@ -21,6 +21,7 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\TipoEventoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\ContratistaController;
+use App\Http\Controllers\Costos\ReporteCostosController;
 use App\Http\Controllers\DisenoProductoFinalController;
 use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
@@ -408,6 +409,10 @@ Route::controller(ProcesoConstruccionController::class)->group(function(){
         Route::get('get-productos', 'getProductos')->name('get-productos')->middleware('auth');
 });
 
+Route::controller(ReporteCostosController::class)->group( function () {
+    Route::get('reporte-costos', 'reporte-costos')->name('reporte-costos')->middleware('auth');
+});
+
 
 // rutas views index reportes
 
@@ -423,6 +428,13 @@ Route::view('reportes-ventas','modulos.reportes.ventas.index')
 Route::view('reportes-procesos','modulos.reportes.procesos.index')
     ->name('reportes-procesos')
     ->middleware('auth');
+
+Route::view('reportes-costos','modulos.reportes.costos.index')
+    ->name('reportes-costos')
+    ->middleware('auth');
+
+
+
 
 
 Auth::routes([

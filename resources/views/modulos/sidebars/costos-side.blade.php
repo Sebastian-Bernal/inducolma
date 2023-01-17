@@ -250,6 +250,12 @@
                             </a>
                         </p>
 
+                        <p>
+                            <a class="btn btn-primary seleccionado" href="{{ route('reportes-costos') }}">
+                                Reportes costos
+                            </a>
+                        </p>
+
                     </div>
                 </div>
             </div>
