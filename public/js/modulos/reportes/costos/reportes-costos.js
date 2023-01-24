@@ -29,7 +29,7 @@ function reporteCostos() {
             alertaErrorSimple('seleccione el item y el rango de fechas', 'warning');
         }
         else {
-            $('#formReporteProceso').submit();
+            $('#formReporteCostos').submit();
             desde.val('');
             hasta.val('');
             reporte.val('');
@@ -89,7 +89,7 @@ function datoEspecificoCostos() {
  * @param {String} tipo_reporte [ numero del tipo de reporte ]
  */
 
-function generarReporteProceso(tipo_reporte) {
+function generarReporteCostos(tipo_reporte) {
     console.log(tipo_reporte);
     switch (tipo_reporte) {
         case '1':

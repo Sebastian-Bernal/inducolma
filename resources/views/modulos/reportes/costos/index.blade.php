@@ -37,9 +37,9 @@
                             <div class="row g-3">
                                 <div>
                                     <div class="card card-body">
-                                        <form action="{{ route('reporte-costos') }}" id="formReportePedidos"
+                                        <form action="{{ route('reporte-costos') }}" id="formReporteCostos"
                                             class="row gx-3 gy-2 align-items-center"
-                                            name="formReportePedidos"
+                                            name="formReporteCostos"
                                             method="GET" >
                                             <div class="col-auto">
                                                 <div class="input-group ">

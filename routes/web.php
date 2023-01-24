@@ -21,7 +21,7 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\TipoEventoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\ContratistaController;
-use App\Http\Controllers\Costos\ReporteCostosController;
+
 use App\Http\Controllers\DisenoProductoFinalController;
 use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
@@ -31,6 +31,7 @@ use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\Reportes\Administrativos\ReporteCubicajesController;
 use App\Http\Controllers\Reportes\Administrativos\ReportePersonalController;
+use App\Http\Controllers\Reportes\Costos\ReporteCostosController;
 use App\Http\Controllers\Reportes\Pedidos\ReportePedidosController;
 use App\Http\Controllers\Reportes\Procesos\ProcesoConstruccionController;
 use App\Http\Controllers\SubprocesoController;
@@ -410,7 +411,7 @@ Route::controller(ProcesoConstruccionController::class)->group(function(){
 });
 
 Route::controller(ReporteCostosController::class)->group( function () {
-    Route::get('reporte-costos', 'reporte-costos')->name('reporte-costos')->middleware('auth');
+    Route::get('reporte-costos', 'reporteCostos')->name('reporte-costos')->middleware('auth');
 });
 
 
