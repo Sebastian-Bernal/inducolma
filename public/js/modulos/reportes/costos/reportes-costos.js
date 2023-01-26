@@ -19,7 +19,7 @@ function reporteCostos() {
             alertaErrorSimple('Seleccione la maquina y el rango de fechas', 'warning');
             maquina.focus();
 
-        } else if((Array('2').includes(reporte.val())) && (desde.val() == "" || hasta.val() == "" || item.val() == "" || usuario.val() == "")){
+        } else if((Array('2').includes(reporte.val())) && (desde.val() == "" || hasta.val() == "" || usuario.val() == "")){
             alertaErrorSimple('Seleccione el usuario y el rango de fechas', 'warning');
 
         } else if((Array('3').includes(reporte.val())) && (desde.val() == "" || hasta.val() == "" ||pedido.val() == ""  )){

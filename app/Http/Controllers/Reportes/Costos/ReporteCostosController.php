@@ -19,24 +19,25 @@ class ReporteCostosController extends Controller
 
     public function reporteCostos(Request $request)
     {
-        return $request->all();
+        //return $request->all();
 
-        $desde = $request->pedidoDesde;
-        $hasta = $request->pedidoHasta;
-
-        $tipoReporte = $request->tipoReportePedidos;
-        $especifico = $request->filtroPedido1;
-        $numeroP = $request->nPedido;
+        $desde = $request->costoDesde;
+        $hasta = $request->costoHasta;
+        $tipoReporte = $request->tipoReporteCosotos;
+        $maquina = $request->maquina;
+        $pedido = $request->pedido;
+        $usuario = $request->usuario;
+        $item = $request->item;
 
         $generar = $request->generar;
         $datos = $this->costos->consultaDatos($request);
         $encabezado = $datos[1];
         $data = json_decode(json_encode($datos[0]));
-        $cliente = $datos[4];
+
         if (count($data) == 0 ) {
             return redirect()
                     ->back()
-                    ->with('status','No se encontraron datos de cubicajes en los filtros seleccionados.');
+                    ->with('status','No se encontraron datos en los filtros seleccionados.');
         } else {
             if ($generar == '1') {
 
@@ -73,7 +74,17 @@ class ReporteCostosController extends Controller
             }
             else{
                 return view($datos[2],
-                compact('data', 'encabezado', 'desde', 'hasta', 'tipoReporte','especifico', 'cliente'));
+                compact('data',
+                'encabezado',
+                'desde',
+                'hasta',
+                'tipoReporte',
+                'maquina',
+                'usuario',
+                'item',
+                'pedido'
+
+            ));
             }
         }
     }
