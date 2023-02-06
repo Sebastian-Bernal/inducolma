@@ -26,7 +26,7 @@ class RenameOrdenIdToTransformacionesTable extends Migration
     public function down()
     {
         Schema::table('transformaciones', function (Blueprint $table) {
-            //
+            $table->renameColumn('orden_produccion_id', 'orden_id');
         });
     }
 }

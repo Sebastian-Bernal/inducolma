@@ -15,7 +15,7 @@ class AddCondicionMaderaToEntradaMaderasMaderasTable extends Migration
     {
         Schema::table('entradas_madera_maderas', function (Blueprint $table) {
             $table->string('condicion_madera');
-        
+
         });
     }
 
@@ -26,7 +26,7 @@ class AddCondicionMaderaToEntradaMaderasMaderasTable extends Migration
      */
     public function down()
     {
-        Schema::table('entrada_maderas_maderas', function (Blueprint $table) {
+        Schema::table('entradas_madera_maderas', function (Blueprint $table) {
             $table->dropColumn('condicion_madera');
         });
     }
