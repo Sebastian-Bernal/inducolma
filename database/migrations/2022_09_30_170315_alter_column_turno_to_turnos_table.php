@@ -26,7 +26,7 @@ class AlterColumnTurnoToTurnosTable extends Migration
     public function down()
     {
         Schema::table('turnos', function (Blueprint $table) {
-            $table->integer('turno')->change();
+            $table->string('turno')->change();
         });
     }
 }
