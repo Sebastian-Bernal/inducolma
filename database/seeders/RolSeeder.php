@@ -27,23 +27,25 @@ class RolSeeder extends Seeder
             'descripcion' => 'descripcion del rol es editable',
 
         ]);
-        DB::table('rols')->insert([
+      /*   DB::table('rols')->insert([
             'id' => 3 ,
             'nombre' => 'Auxiliar administrativo contable',
             'descripcion' => 'descripcion del rol es editable',
 
-        ]);
+        ]); */
 
-        DB::table('rols')->insert([
+       /*  DB::table('rols')->insert([
             'id' => 4 ,
             'nombre' => 'ventas',
             'descripcion' => 'descripcion del rol es editable',
-        ]);
-        DB::table('rols')->insert([
+        ]); */
+
+        /* DB::table('rols')->insert([
             'id' => 5 ,
             'nombre' => 'Maderas',
             'descripcion' => 'descripcion del rol es editable',
-        ]);
+        ]); */
+
         DB::table('rols')->insert([
             'id' => 6 ,
             'nombre' => 'Administracion',

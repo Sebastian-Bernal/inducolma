@@ -30,6 +30,10 @@ class DatabaseSeeder extends Seeder
         Pedido::factory(50)->create(); */
 
 
+        $this->call(RolSeeder::class);
+        $this->call(DefaultUserSeeder::class);
+
+
 
 
 

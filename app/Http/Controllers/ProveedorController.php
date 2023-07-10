@@ -27,7 +27,7 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -38,20 +38,21 @@ class ProveedorController extends Controller
      */
     public function store( ProveedorRequest $request)
     {
-        
+
         //return request()->all();
         $this->authorize('admin');
         $proveedor = new Proveedor();
         $proveedor->identificacion = $request->identificacion;
         $proveedor->nombre =   strtoupper($request->nombre);  ;
-        $proveedor->direccion = strtoupper($request->direccion); 
+        $proveedor->direccion = strtoupper($request->direccion);
         $proveedor->telefono = $request->telefono;
         $proveedor->email = $request->email;
         $proveedor->razon_social = strtoupper($request->razon_social);
         $proveedor->user_id = auth()->user()->id;
+        $proveedor->calificacion = 0;
         $proveedor->save();
         return redirect()->route('proveedores.index')->with('status', "Proveedor $proveedor->nombre creado correctamente");
-     
+
     }
 
     /**
@@ -89,7 +90,7 @@ class ProveedorController extends Controller
         $this->authorize('admin');
         $proveedor->identificacion = $request->identificacion;
         $proveedor->nombre =   strtoupper($request->nombre);  ;
-        $proveedor->direccion = strtoupper($request->direccion); 
+        $proveedor->direccion = strtoupper($request->direccion);
         $proveedor->telefono = $request->telefono;
         $proveedor->email = $request->email;
         $proveedor->razon_social = strtoupper($request->razon_social);
