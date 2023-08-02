@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Rol;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUsuariosRequest;
+use Illuminate\Http\Response;
 
 class UsuarioController extends Controller
 {
@@ -17,7 +18,11 @@ class UsuarioController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $usuarios = User::all('id', 'name', 'email', 'rol_id', 'identificacion')->load('roll')->except(1);
+        $usuarios = User::withTrashed()
+                                    ->select('id', 'name', 'email', 'rol_id', 'identificacion', 'deleted_at')
+                                    ->with('roll')
+                                    ->where('id', '!=', 1)
+                                    ->get();
         $roles = Rol::all();
 
         return view('modulos.administrativo.usuarios.index', compact('usuarios', 'roles'));
@@ -120,4 +125,16 @@ class UsuarioController extends Controller
         return response()->json(['success'=>'Usuario eliminado correctamente']);
         //return redirect()->route('usuarios.index');
     }
+
+    /**
+     * restore the specified user
+     */
+    public function restore($id) : Response {
+
+        $user_delete = User::onlyTrashed()->where('id', $id)->restore();
+
+
+        return new Response(['success' => 'Usuario restaurado con éxito'], Response::HTTP_OK);
+    }
+
 }

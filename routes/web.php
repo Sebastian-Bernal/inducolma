@@ -150,6 +150,12 @@ Route::controller(EntradaMaderaController::class)->group(function () {
             ->middleware('auth');
 });
 
+Route::controller(UsuarioController::class)->group(function (){
+    Route::put('restore-user/{id}', 'restore')
+            ->name('restore-user')
+            ->middleware('auth');
+});
+
 
 Route::resource('cubicaje',CubicajeController::class)
                 ->parameters(['cubicaje'=> 'cubicaje'])
