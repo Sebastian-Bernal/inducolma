@@ -32,6 +32,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolSeeder::class);
         $this->call(DefaultUserSeeder::class);
+        $this->call(DefaultClientSeeder::class);
+        $this->call(EstadosSeeder::class);
+        $this->call(TipoEventosDefecto::class);
 
 
 

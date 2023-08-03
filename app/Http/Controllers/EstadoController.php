@@ -38,10 +38,17 @@ class EstadoController extends Controller
     public function store( StoreEstadoRequest $request)
     {
         //return $request->all();
-        $estado = new Estado();
-        $estado->descripcion = strtoupper($request->descripcion);
-        $estado->user_id = auth()->user()->id;
-        $estado->save();
+        if (Estado::where('id',2)->exists()) {
+            Estado::firstOrCreate([
+                'id' => 3,
+                'descripcion' => strtoupper($request->descripcion),
+                'user_id' => auth()->user()->id,
+            ]);
+        }
+        Estado::firstOrCreate([
+            'descripcion' => strtoupper($request->descripcion),
+            'user_id' => auth()->user()->id,
+        ]);
         return redirect()->route('estados.index')->with('status', 'El estado fue creado con éxito.');
     }
 
