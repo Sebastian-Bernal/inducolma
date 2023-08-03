@@ -104,6 +104,12 @@ Route::resource('proveedores', ProveedorController::class)
             ->names('proveedores')
             ->middleware('auth');
 
+Route::controller(ProveedorController::class)->group(function (){
+        Route::put('restore-proveedor/{id}', 'restore')
+            ->name('restore-proveedor')
+            ->middleware('auth');
+});
+
 Route::resource('roles',RolController::class)
             ->parameters(['roles' => 'rol'])
             ->names('roles')
@@ -140,14 +146,14 @@ Route::controller(EntradaMaderaController::class)->group(function () {
             ->name('costo-madera')
             ->middleware('auth');
     Route::get('editar-costo/{entrada}', 'editEntrada')
-            ->name('editar-costo')
-            ->middleware('auth');
+        ->name('editar-costo')
+        ->middleware('auth');
     Route::put('actualizar-costo/{entrada}', 'updateEntrada')
-            ->name('actualizar-costo')
-            ->middleware('auth');
+        ->name('actualizar-costo')
+        ->middleware('auth');
     Route::get('entradas-madera-reporte', 'showEntradas')
-            ->name('entradas-madera-reporte')
-            ->middleware('auth');
+        ->name('entradas-madera-reporte')
+        ->middleware('auth');
 });
 
 Route::controller(UsuarioController::class)->group(function (){
@@ -178,10 +184,22 @@ Route::resource('clientes',ClienteController::class)
                 ->names('clientes')
                 ->middleware('auth');
 
+Route::controller(ClienteController::class)->group(function (){
+        Route::put('restore-cliente/{id}', 'restore')
+            ->name('restore-cliente')
+            ->middleware('auth');
+});
+
 Route::resource('eventos',EventoController::class)
                 ->parameters(['eventos'=> 'evento'])
                 ->names('eventos')
                 ->middleware('auth');
+
+Route::controller(EventoController::class)->group(function (){
+    Route::put('restore-evento/{id}', 'restore')
+            ->name('restore-evento')
+            ->middleware('auth');
+});
 
 Route::resource('estados',EstadoController::class)
                 ->parameters(['estados'=> 'estado'])
@@ -192,6 +210,12 @@ Route::resource('insumos-almacen', InsumosAlmacenController::class)
                 ->parameters(['insumos-almacen'=> 'insumo_almacen'])
                 ->names('insumos-almacen')
                 ->middleware('auth');
+
+Route::controller(InsumosAlmacenController::class)->group(function (){
+    Route::put('restore-insumo/{id}', 'restore')
+            ->name('restore-insumo')
+            ->middleware('auth');
+});
 
 Route::resource('items', ItemController::class)
                 ->parameters(['items'=> 'item'])
@@ -261,6 +285,12 @@ Route::resource('tipos-maderas', TipoMaderaController::class)
                 ->parameters(['tipos-maderas'=> 'tipo_madera'])
                 ->names('tipos-maderas')
                 ->middleware('auth');
+
+Route::controller(TipoMaderaController::class)->group(function(){
+    Route::put('restore-tipomadera/{id}','restore')
+                ->name('restore-tipomadera')
+                ->middleware('auth');
+});
 
 Route::resource('diseno-items', DisenoItemController::class)
                 ->parameters(['diseno-items'=> 'disenoItem'])

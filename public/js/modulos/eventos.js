@@ -5,53 +5,53 @@ $(document).ready(function() {
                 "url": "/DataTables/Spanish.json"
                 },
         "responsive": true
-        
+
     });
-    
+
 });
 
-// funcion mayusculas descripcion 
+// funcion mayusculas descripcion
 function mayusculas() {
     var x = document.getElementById("descripcion");
     x.value = x.value.toUpperCase();
 }
 
-// funcion para eliminar un usuario
+/**
+ * Funcion que permite enviar un request para eliminar evento
+ * @param {object} evento
+ * @returns {void}
+ */
 function eliminarEvento(evento) {
-    Swal.fire({
-        title: `¿Está seguro de eliminar el evento:
-                ${evento.descripcion}, de tipo:   ${evento.tipo_evento}?`,       
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#597504',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-        if (result.isConfirmed) {
-           $.ajax({
-                url: `/eventos/${evento.id}`,
-                type: "DELETE",
-                dataType: "JSON",
-                data: {
-                    _token: $('input[name="_token"]').val()
-                },
-                success: function (e) {
-                   // console.log(e);
-                    Swal.fire({
-                        title: 'Eliminado!',
-                        text: e.success,
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();                            
-                        }
-                    })
-                    
-                },
-          })
-        }
-    })
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de eliminar el evento ${evento.descripcion}?`;
+    var confirmButtonText = 'Si, eliminarl!';
+    var url =  `/eventos/${evento.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token  };
+    var titulo =  'Eliminado!';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
+}
+
+/**
+ * Funcion que permite enviar un request para restaurar evento
+ * @param {object} evento
+ * @returns {void}
+ */
+function restaurarEvento(evento) {
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de restaurar el evento ${evento.descripcion} ?`;
+    var confirmButtonText = 'Si, restaurar';
+    var url =  `/restore-evento/${evento.id}`;
+    var tipo = "PUT";
+    var datos = { _token: token  };
+    var titulo =  'Restaurado';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
 }

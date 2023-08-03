@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TipoMadera;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreTipoMaderaRequest;
 use App\Http\Requests\UpdateTipoMaderaRequest;
 
@@ -15,7 +16,7 @@ class TipoMaderaController extends Controller
      */
     public function index()
     {
-        $tiposMadera = TipoMadera::all();
+        $tiposMadera = TipoMadera::withTrashed()->get();
         return view('modulos.administrativo.tipo_madera.index', compact('tiposMadera'));
     }
 
@@ -93,5 +94,22 @@ class TipoMaderaController extends Controller
         //$tipoMadera->items()->delete();
         $tipoMadera->delete();
         return response()->json(['success' => 'Tipo de madera eliminado correctamente']);
+    }
+
+
+    /**
+     * Restore resource from BD
+     * @param int id
+     * @return Response
+     */
+    public function restore($id) :Response {
+
+        try {
+            $resourceDelete = TipoMadera::onlyTrashed()->where('id', $id)->restore();
+            return new Response(['success' => 'El tipo de madera fue restaurado con éxito'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new Response(['errors' => "El tipo de madera no pudo ser restaurado"], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

@@ -63,6 +63,8 @@
     {{-- <footer class="bg-white text-center text-black-50 py-3 shadow">
         Inducolma | Copyright @ {{ date('Y') }}
     </footer> --}}
+    <script src="/js/helpers/AlertSimpleRequestManager.js"></script>
+    <script src="/js/helpers/RequestAjax.js"></script>
     @yield('js')
 
     <script>

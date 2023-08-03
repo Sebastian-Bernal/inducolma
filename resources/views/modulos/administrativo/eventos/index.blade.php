@@ -4,12 +4,12 @@
 @section('submenu')
     @include('modulos.sidebars.costos-side')
 @endsection
-@section('content') 
-    <div class="div container h-content ">        
-        <div class="row">            
+@section('content')
+    <div class="div container h-content ">
+        <div class="row">
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
-                
-            
+
+
                 <h1 class="display-6" >Eventos</h1>
                 <hr>
                 <!-- Button trigger modal -->
@@ -22,7 +22,7 @@
                             - {{ $error }} <br>
                         @endforeach
                     </div>
-                    
+
                 @endif
                 <!-- Modal Crea maquina-->
                 <form action="{{ route('eventos.store') }}" method="POST">
@@ -35,22 +35,22 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                
-                                <div class="card-body">                                                
-                                                    
+
+                                <div class="card-body">
+
                                     <div class="row mb-3">
                                         <label for="descripcion" class="col-md-4 col-form-label text-md-end">{{ __('Descripción') }}</label>
-            
+
                                         <div class="col-md-6">
-                                            <input id="descripcion" 
-                                                type="text" 
-                                                class="form-control @error('descripcion') is-invalid @enderror text-uppercase" 
-                                                name="descripcion" 
-                                                value="{{ old('descripcion') }}" 
-                                                required autocomplete="descripcion" 
+                                            <input id="descripcion"
+                                                type="text"
+                                                class="form-control @error('descripcion') is-invalid @enderror text-uppercase"
+                                                name="descripcion"
+                                                value="{{ old('descripcion') }}"
+                                                required autocomplete="descripcion"
                                                 autofocus
                                                 onkeyup="mayusculas()">
-            
+
                                             @error('descripcion')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -61,14 +61,14 @@
 
                                     <div class="row mb-3">
                                         <label for="tipoEvento" class="col-md-4 col-form-label text-md-end">{{ __('Tipo Evento') }}</label>
-            
+
                                         <div class="col-md-6">
-                                            <select id="tipoEvento" 
-                                                    
-                                                    class="form-control @error('tipoEvento') is-invalid @enderror" 
-                                                    name="tipoEvento" 
-                                                    required 
-                                                    autocomplete="tipoEvento" 
+                                            <select id="tipoEvento"
+
+                                                    class="form-control @error('tipoEvento') is-invalid @enderror"
+                                                    name="tipoEvento"
+                                                    required
+                                                    autocomplete="tipoEvento"
                                                     autofocus>
                                                 <option value="" selected>Seleccione un tipo de evento</option>
                                                     @foreach ($tipo_eventos as $tipo_evento)
@@ -82,10 +82,10 @@
                                             @enderror
                                         </div>
                                     </div>
-                                                   
+
                             </div>
-                                    
-                                
+
+
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -93,8 +93,8 @@
                             </div>
                         </div>
                         </div>
-                    </div>   
-                </form>               
+                    </div>
+                </form>
             </div>
             <!-- Tabla -->
 
@@ -102,8 +102,9 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Descripci&oacute;n</th>   
-                        <th>Tipo de evento</th>      
+                        <th>Descripci&oacute;n</th>
+                        <th>Tipo de evento</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -112,25 +113,31 @@
                     @foreach ($eventos as $evento)
                         <tr>
                             <td>{{ $evento->id }}</td>
-                            <td>{{ $evento->descripcion }}</td>                      
+                            <td>{{ $evento->descripcion }}</td>
                             <td>{{ $evento->tipo_evento->tipo_evento }}</td>
-                            
-                            
+                            <td>{!! $evento->deleted_at == '' ? '<span class="badge bg-primary">Activo</span>'  : '<span class="badge bg-secondary">Inactivo</span>' !!}</td>
+
                             <td>
                                 <div class="d-flex align-items-center ">
-                                    
+
+                                    @if ($evento->deleted_at == '')
                                     <button class="btn btn-sm btn-danger" onclick="eliminarEvento({{ $evento }})">
                                         <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
-                                    </button>
-                                    <a href="{{ route('eventos.show',$evento) }}" class="btn btn-sm btn-warning">
-                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
-                                    </a>
-                                
+                                        </button>
+                                        <a href="{{ route('eventos.show',$evento) }}" class="btn btn-sm btn-warning">
+                                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                        </a>
+                                    @else
+                                        <button class="btn btn-sm btn-secondary" onclick="restaurarEvento({{ $evento }})">
+                                            <i class="fa-solid fa-trash-can-arrow-up" style="color: black"></i>
+                                        </button>
+                                    @endif
+
                                 </div>
                             </td>
-                        </tr> 
+                        </tr>
                     @endforeach
-                    
+
                 </tbody>
             </table>
         </div>

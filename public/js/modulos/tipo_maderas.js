@@ -5,55 +5,57 @@ $(document).ready(function() {
                 "url": "/DataTables/Spanish.json"
                 },
         "responsive": true
-        
+
     });
-    
+
 });
 
-// funcion mayusculas descripcion 
+// funcion mayusculas descripcion
 function mayusculas() {
-   
+
     var x = document.getElementById("descripcion");
     x.value = x.value.toUpperCase();
-    
+
 }
 
-// funcion para eliminar un usuario
-function eliminarTipoMadera(madera) {
-    Swal.fire({
-        title: `¿Está seguro de eliminar el madera:
-                   ${madera.descripcion}?`,       
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#597504',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-        if (result.isConfirmed) {
-           $.ajax({
-                url: `/tipos-maderas/${madera.id}`,
-                type: "DELETE",
-                dataType: "JSON",
-                data: {
-                    _token: $('input[name="_token"]').val()
-                },
-                success: function (e) {
-                   // console.log(e);
-                    Swal.fire({
-                        title: 'Eliminado!',
-                        text: e.success,
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();                            
-                        }
-                    })
-                    
-                },
-          })
-        }
-    })
+
+/**
+ * Funcion que permite enviar un request para eliminar tipoMadera
+ * @param {object} tipoMadera
+ * @returns {void}
+ */
+function eliminarTipoMadera(tipoMadera) {
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de eliminar el tipo Madera ${tipoMadera.descripcion}?`;
+    var confirmButtonText = 'Si, eliminarl!';
+    var url =  `/tipos-maderas/${tipoMadera.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token  };
+    var titulo =  'Eliminado!';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
+}
+
+
+/**
+ * Funcion que permite enviar un request para restaurar tipoMadera
+ * @param {object} tipoMadera
+ * @returns {void}
+ */
+function restaurarTipoMadera(tipoMadera) {
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de restaurar el tipo Madera ${tipoMadera.name} ?`;
+    var confirmButtonText = 'Si, restaurar';
+    var url =  `/restore-tipomadera/${tipoMadera.id}`;
+    var tipo = "PUT";
+    var datos = { _token: token  };
+    var titulo =  'Restaurado';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
 }
