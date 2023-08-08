@@ -263,6 +263,11 @@ Route::resource('contratistas', ContratistaController::class)
                 ->names('contratistas')
                 ->middleware('auth');
 
+Route::controller(ContratistaController::class)->group(function (){
+    Route::put('restore-contratista/{id}', 'restore')
+            ->name('restore-contratista')
+            ->middleware('auth');
+});
 
 Route::controller(PedidoController::class)->group(function () {
         Route::get('pedidos-cliente/{cliente}','consultaPedidoCliente')

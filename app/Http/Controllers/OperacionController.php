@@ -69,7 +69,7 @@ class OperacionController extends Controller
         $operacion = Operacion::findOrFail($operacion->id);
         return view('modulos.administrativo.costos.operaciones-edit',[
             'operacion'   => $operacion,
-                      
+
         ]);
     }
 
@@ -98,6 +98,10 @@ class OperacionController extends Controller
     public function destroy(Operacion $operacion)
     {
         $this->authorize('admin');
+        $countDescripciones = $operacion->descripciones->count();
+        if ( $countDescripciones > 0 ) {
+            return back()->withErrors( "La operación no se puede eliminar porque tiene $countDescripciones descripciones asociadas. debe eliminar las descripciones o solo actualizar la operacion. ");
+        }
         $operacion->delete();
         return redirect()->route('operaciones.index');
     }

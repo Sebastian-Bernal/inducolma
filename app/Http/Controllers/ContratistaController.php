@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contratista;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreContratistaRequest;
 use App\Http\Requests\UpdateContratistaRequest;
 
@@ -16,8 +17,8 @@ class ContratistaController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $contratistas = Contratista::paginate(1);   
-        
+        $contratistas = Contratista::withTrashed()->get();
+
         return view('modulos.administrativo.contratistas.index', compact('contratistas'));
     }
 
@@ -115,7 +116,29 @@ class ContratistaController extends Controller
      */
     public function destroy(Contratista $contratista)
     {
+
+        $contratista->update([
+            'acceso' => false
+        ]);
         $contratista->delete();
         return response()->json(['success' => "Contratista $contratista->primer_nombre $contratista->primer_apellido eliminado"]);
+    }
+
+
+    /**
+     * Restore resource from BD
+     * @param int id
+     * @return Response
+     */
+    public function restore($id) :Response {
+
+        try {
+            $resourceDelete = Contratista::onlyTrashed()->where('id', $id)->restore();
+
+            return new Response(['success' => 'El resource fue restaurado con éxito'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new Response(['errors' => "El resource no pudo ser restaurado"], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

@@ -10,6 +10,7 @@ class Contratista extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['acceso'];
     /**
      * Funcion nombre_completo que concatena los nombres y apellidos
      * @return string
@@ -19,5 +20,5 @@ class Contratista extends Model
     {
         return $this->primer_nombre . ' ' .$this->segundo_nombre.' '. $this->primer_apellido. ' ' . $this->segundo_apellido;
     }
-    
+
 }
