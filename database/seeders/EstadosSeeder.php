@@ -15,14 +15,14 @@ class EstadosSeeder extends Seeder
     public function run()
     {
         Estado::firstOrCreate([
-            'id' => 1 ,
+
             'descripcion' => 'ENCENDIDA',
             'user_id' => 1,
 
         ]);
 
         Estado::firstOrCreate([
-            'id' => 2 ,
+
             'descripcion' => 'APAGADA',
             'user_id' => 1,
 
