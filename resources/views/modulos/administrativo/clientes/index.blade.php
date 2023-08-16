@@ -191,6 +191,7 @@
                 <tbody>
                     @foreach ($clientes as $cliente)
                         <tr>
+
                             <td>{{ $cliente->nit }}</td>
                             <td>{{ $cliente->nombre }}</td>
                             <td>{{ $cliente->razon_social }}</td>
@@ -210,9 +211,11 @@
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
 
-                                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente({{ $cliente }})">
-                                            <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
-                                        </button>
+                                        @if ($cliente->id != '1')
+                                            <button class="btn btn-sm btn-danger" onclick="eliminarCliente({{ $cliente }})">
+                                                <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
+                                            </button>
+                                        @endif
 
                                         <a href="{{ route('clientes.edit',$cliente) }}" class="btn btn-sm btn-warning">
                                             <i class="fa-solid fa-pen-to-square fa-lg"></i>

@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Madera;
 use App\Models\TipoMadera;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreMaderaRequest;
 use App\Http\Requests\UpdateMaderaRequest;
-use Illuminate\Http\Request;
 
 class MaderaController extends Controller
 {
@@ -103,6 +104,9 @@ class MaderaController extends Controller
     public function destroy(Madera $madera)
     {
         $this->authorize('admin');
+        if ($madera->hasAnyRelatedData(['entradas_madera_maderas','costos_infraestructura', 'items', ])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $madera->delete();
         return response()->json(['success'=>'Madera eliminada correctamente']);
     }

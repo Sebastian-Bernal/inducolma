@@ -123,6 +123,9 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         $this->authorize('admin');
+        if ($cliente->hasAnyRelatedData(['pedidos', 'disenos'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $cliente->delete();
         return response()->json(['success'=>'Cliente eliminado correctamente']);
     }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CheckRelations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Madera extends Model
 {
-    use HasFactory;
+    use HasFactory, CheckRelations;
     protected $fillable = ['nombre', 'nombre_cientifico', 'densidad'];
 
 
@@ -28,7 +30,7 @@ class Madera extends Model
 
     /**
      * relacion entradas_madera_maderas hasMany maderas
-     * 
+     *
      */
     public function entradas_madera_maderas()
     {
@@ -43,7 +45,7 @@ class Madera extends Model
     {
         return $this->hasMany(CostosInfraestructura::class, 'tipo_madera');
     }
-    
+
     /**
      * relacion maderas hasMany items
      */

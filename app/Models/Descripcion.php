@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CheckRelations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Descripcion extends Model
 {
     protected $table = 'descripciones';
-    use HasFactory;
+    use HasFactory, CheckRelations;
     public function operacion()
     {
         return $this->belongsTo(Operacion::class);
@@ -19,5 +20,5 @@ class Descripcion extends Model
     {
         return $this->hasMany(CostosOperacion::class);
     }
-    
+
 }

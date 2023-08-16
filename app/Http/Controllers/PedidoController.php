@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
 use App\Models\Pedido;
-use App\Models\DisenoProductoFinal;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\DisenoProductoFinal;
+use Illuminate\Support\Facades\Route;
 use App\Http\Requests\StorePedidoRequest;
 use Illuminate\Support\Facades\Request as FacadesRequest;
-use Illuminate\Support\Facades\Route;
 
 class PedidoController extends Controller
 {
@@ -21,7 +22,7 @@ class PedidoController extends Controller
     {
         $pedidos = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
                          ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
-                        ->get([ 
+                        ->get([
                                 'pedidos.id',
                                 'pedidos.cantidad',
                                 'pedidos.created_at',
@@ -31,7 +32,7 @@ class PedidoController extends Controller
                                 'diseno_producto_finales.descripcion',
                             ]);
         $clientes = Cliente::select('id', 'nombre')->get();
-        
+
         return view('modulos.administrativo.pedidos.index', compact('pedidos', 'clientes'));
     }
 
@@ -53,7 +54,7 @@ class PedidoController extends Controller
      */
     public function store( StorePedidoRequest $request)
     {
-        
+
         $pedido = new Pedido();
         $pedido->diseno_producto_final_id = $request->items;
         $pedido->cantidad = $request->cantidad;
@@ -64,7 +65,7 @@ class PedidoController extends Controller
         $pedido->cliente_id = $request->cliente;
         $pedido->save();
 
-        //obtener la url anterior 
+        //obtener la url anterior
 
 
         if (Route::current()->getName() == 'pedidos.store') {
@@ -72,9 +73,9 @@ class PedidoController extends Controller
         } else{
             return redirect()->route('programaciones.index')->with('status', "El pedido # $pedido->id, para el cliente {$pedido->cliente->nombre} ha sido editado");
         }
-       
-        
-        
+
+
+
     }
 
     /**
@@ -130,6 +131,9 @@ class PedidoController extends Controller
     public function destroy(Pedido $pedido)
     {
         $pedido->delete();
+        if ($pedido->hasAnyRelatedData(['ordenes_produccion','pedido_producto'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         return response()->json(['success' => 'Pedido eliminado correctamente']);
     }
 

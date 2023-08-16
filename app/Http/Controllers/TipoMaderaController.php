@@ -90,8 +90,9 @@ class TipoMaderaController extends Controller
      */
     public function destroy(TipoMadera $tipoMadera)
     {
-        //$tipoMadera->maderas()->delete();
-        //$tipoMadera->items()->delete();
+        if ($tipoMadera->hasAnyRelatedData(['maderas','items','disenos'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $tipoMadera->delete();
         return response()->json(['success' => 'Tipo de madera eliminado correctamente']);
     }

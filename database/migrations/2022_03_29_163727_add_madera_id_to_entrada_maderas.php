@@ -14,8 +14,8 @@ class AddMaderaIdToEntradaMaderas extends Migration
     public function up()
     {
         Schema::table('entrada_maderas', function (Blueprint $table) {
-            $table->unsignedBigInteger('madera_id');
-            $table->foreign('madera_id')->references('id')->on('maderas');
+            //$table->unsignedBigInteger('madera_id');
+            //$table->foreign('madera_id')->references('id')->on('maderas');
         });
     }
 
@@ -27,8 +27,8 @@ class AddMaderaIdToEntradaMaderas extends Migration
     public function down()
     {
         Schema::table('entrada_maderas', function (Blueprint $table) {
-            $table->dropForeign(['madera_id']);
-            $table->dropColumn('madera_id');
+            //$table->dropForeign(['madera_id']);
+            //$table->dropColumn('madera_id');
         });
     }
 }

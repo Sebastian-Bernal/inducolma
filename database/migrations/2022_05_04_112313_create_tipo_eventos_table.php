@@ -17,6 +17,7 @@ class CreateTipoEventosTable extends Migration
             $table->id();
             $table->string('tipo_evento');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

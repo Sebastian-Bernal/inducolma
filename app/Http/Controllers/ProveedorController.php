@@ -109,6 +109,9 @@ class ProveedorController extends Controller
     public function destroy(Proveedor $proveedor)
     {
         $this->authorize('admin');
+        if ($proveedor->hasAnyRelatedData(['entradasMadera'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $proveedor->delete();
         return response()->json(['success' => 'Proveedor eliminado correctamente']);
     }

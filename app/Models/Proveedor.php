@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CheckRelations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Proveedor extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CheckRelations;
     protected $table = 'proveedores';
 
     //relacion proveedor hasMany EntradaMadera

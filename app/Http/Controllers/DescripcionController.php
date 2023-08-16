@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Operacion;
 use App\Models\Descripcion;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreDescripcionRequest;
 use App\Http\Requests\UpdateDescripcionRequest;
-use App\Models\Operacion;
 
 class DescripcionController extends Controller
 {
@@ -73,7 +74,7 @@ class DescripcionController extends Controller
         return view('modulos.administrativo.costos.descripciones-edit',[
             'descripcion'   => $descripcion,
             'operaciones'    => $operaciones
-                      
+
         ]);
     }
 
@@ -103,7 +104,11 @@ class DescripcionController extends Controller
     public function destroy(Descripcion $descripcion)
     {
         $this->authorize('admin');
-        $descripcion = Descripcion::findOrFail($descripcion->id);
+
+        if ($descripcion->hasAnyRelatedData(['costos_operacion'])) {
+            return back()->withErrors("No se pudo eliminar el recurso porque tiene datos asociados");
+        }
+
         $descripcion->delete();
         return redirect()->route('descripciones.index');
     }

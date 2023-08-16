@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DisenoProductoFinal;
-use App\Models\TipoMadera;
-use App\Models\Cliente;
 use App\Models\Item;
-use App\Models\InsumosAlmacen;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\DisenoCliente;
-use App\Models\DisenoInsumo;
+use App\Models\Cliente;
 use App\Models\DisenoItem;
+use App\Models\TipoMadera;
+use App\Models\DisenoInsumo;
+use Illuminate\Http\Request;
+use App\Models\DisenoCliente;
+use Illuminate\Http\Response;
+use App\Models\InsumosAlmacen;
+use App\Models\DisenoProductoFinal;
+use Illuminate\Support\Facades\Auth;
 
 class DisenoProductoFinalController extends Controller
 {
@@ -99,7 +100,7 @@ class DisenoProductoFinalController extends Controller
      */
     public function update(Request $request, DisenoProductoFinal $diseno)
     {
-        
+
         $this->authorize('admin');
         $diseno->descripcion = strtoupper($request->descripcion);
         $diseno->tipo_madera_id = $request->madera_id;
@@ -116,6 +117,9 @@ class DisenoProductoFinalController extends Controller
     public function destroy(DisenoProductoFinal $diseno)
     {
         $diseno->delete();
+        if ($diseno->hasAnyRelatedData(['clientes', 'items','insumos', 'pedidos'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         return response()->json(['success' => 'Diseño eliminado con éxito']);
     }
 
@@ -127,15 +131,15 @@ class DisenoProductoFinalController extends Controller
     public function asignarDisenoCliente(Request $request)
     {
         //return $diseno = DisenoProductoFinal::find($request->diseno_id)->clientes()->attach($request->cliente_id);
-        
-        $this->authorize('admin'); 
+
+        $this->authorize('admin');
         $existe  = DisenoCliente::where('diseno_producto_final_id', $request->diseno_id)
                                 ->where('cliente_id', $request->cliente_id)->first();
-        
+
         if($existe){
             return response()->json(['error' => true, 'message' => 'El diseño ya esta asignado al cliente']);
         } else{
-            
+
             $diseno_cliente = new DisenoCliente();
             $diseno_cliente->diseno_producto_final_id = $request->diseno_id;
             $diseno_cliente->cliente_id = $request->cliente_id;
@@ -144,7 +148,7 @@ class DisenoProductoFinalController extends Controller
                 return response()->json(['error'=>false, 'message'=>'Diseño asignado con éxito']);
             }else{
                 return response()->json(['error'=>true, 'message'=>'Error al asignar diseño']);
-            }       
+            }
         }
     }
 

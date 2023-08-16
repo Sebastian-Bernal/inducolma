@@ -7,43 +7,22 @@ $(document).ready(function() {
     });
 } );
 
-
-// funcion para eliminar un proveedor
+/**
+ * Funcion que permite enviar un request para eliminar madera
+ * @param {object} madera
+ * @returns {void}
+ */
 function eliminarMadera(madera) {
-       
-        Swal.fire({
-        title: `¿Está seguro de eliminar la madera ${madera.tipo_madera.descripcion}, ${madera.nombre_cientifico}?`,       
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#597504',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-        if (result.isConfirmed) {
-           $.ajax({
-                url: `/maderas/${madera.id}`,
-                type: "DELETE",
-                dataType: "JSON",
-                data: {
-                    _token: $('input[name="_token"]').val()
-                },
-                success: function (e) {
-                   
-                    Swal.fire({
-                        title: 'Eliminado!',
-                        text: e.success,
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();                            
-                        }
-                    })
-                    
-                },
-          })
-        }
-    })
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de eliminar el madera ${madera.nombre_cientifico}  ?`;
+    var confirmButtonText = 'Si, eliminarl!';
+    var url =  `/maderas/${madera.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token  };
+    var titulo =  'Eliminado!';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\TipoMadera;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreItemsRequest;
 
 class ItemController extends Controller
@@ -15,7 +16,7 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $items = Item::all();
         $tipos_maderas = TipoMadera::withTrashed()->get(['id','descripcion']);
         return view('modulos.administrativo.items.index', compact('items', 'tipos_maderas'));
@@ -55,7 +56,7 @@ class ItemController extends Controller
         $item->save();
         return redirect()->route('items.index')->with('status', "Item: $request->descripcion  creado correctamente");
 
-        
+
     }
 
     /**
@@ -90,7 +91,7 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-       
+
         $this->authorize('admin');
         $item->descripcion = $request->descripcion;
         $item->alto = $request->alto;
@@ -114,9 +115,13 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-      
+
         $this->authorize('admin');
-        
+
+        if ($item->hasAnyRelatedData(['costos_infraestructura','orden_produccion'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
+
         if($item->delete()){
             return response()->json(['success' => 'Item eliminado correctamente']);
         } else {

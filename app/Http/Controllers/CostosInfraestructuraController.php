@@ -23,7 +23,7 @@ class CostosInfraestructuraController extends Controller
         $maquinas = Maquina::all();
         $maderas = Madera::all();
         $items = Item::all();
-        return view('modulos.administrativo.costos.costos-infraestructura', 
+        return view('modulos.administrativo.costos.costos-infraestructura',
                     compact('costosIinfraestructura', 'maquinas', 'maderas', 'items'));
     }
 
@@ -50,13 +50,13 @@ class CostosInfraestructuraController extends Controller
         $costosInfraestructura->valor_operativo = $request->valorOperativo;
         $costosInfraestructura->tipo_material = $request->tipoMaterial;
         $costosInfraestructura->tipo_madera = $request->tipoMadera;
-        $costosInfraestructura->proceso_madera = $request->procesoMadera;
+
         $costosInfraestructura->promedio_piezas = $request->promedioPiezas;
         $costosInfraestructura->minimo_piezas = $request->minimoPiezas;
         $costosInfraestructura->maximo_piezas = $request->maximoPiezas;
         $costosInfraestructura->maquina_id = $request->idMaquina;
         $costosInfraestructura->save();
-        
+
         return back()->with('status', 'Costo de Infraestructura creado con éxito');
     }
 
@@ -84,7 +84,7 @@ class CostosInfraestructuraController extends Controller
         $items = Item::all();
         $maderas = Madera::all();
         return view('modulos.administrativo.costos.costos-infraestructura-edit',
-                     compact('costosInfraestructura', 'maquinas', 'items', 'maderas'));
+                    compact('costosInfraestructura', 'maquinas', 'items', 'maderas'));
     }
 
     /**
@@ -100,13 +100,13 @@ class CostosInfraestructuraController extends Controller
         $costosInfraestructura->valor_operativo = $request->valorOperativo;
         $costosInfraestructura->tipo_material = $request->tipoMaterial;
         $costosInfraestructura->tipo_madera = $request->tipoMadera;
-        $costosInfraestructura->proceso_madera = $request->procesoMadera;
+
         $costosInfraestructura->promedio_piezas = $request->promedioPiezas;
         $costosInfraestructura->minimo_piezas = $request->minimoPiezas;
         $costosInfraestructura->maximo_piezas = $request->maximoPiezas;
         $costosInfraestructura->maquina_id = $request->idMaquina;
         $costosInfraestructura->save();
-        
+
         return redirect()->route('costos-de-infraestructura.index')->with('status', 'Costo de Infraestructura actualizado con éxito');
     }
 

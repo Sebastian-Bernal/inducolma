@@ -98,9 +98,9 @@ class OperacionController extends Controller
     public function destroy(Operacion $operacion)
     {
         $this->authorize('admin');
-        $countDescripciones = $operacion->descripciones->count();
-        if ( $countDescripciones > 0 ) {
-            return back()->withErrors( "La operación no se puede eliminar porque tiene $countDescripciones descripciones asociadas. debe eliminar las descripciones o solo actualizar la operacion. ");
+
+        if ( $operacion->hasAnyRelatedData(['descripciones'])) {
+            return back()->withErrors( "No se puede eliminar el recurso porque tiene datos asociados. ");
         }
         $operacion->delete();
         return redirect()->route('operaciones.index');

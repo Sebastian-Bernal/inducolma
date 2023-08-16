@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTurnoRequest;
-use App\Http\Requests\UpdateTurnoRequest;
 use App\Models\Turno;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Requests\StoreTurnoRequest;
+use App\Http\Requests\UpdateTurnoRequest;
 
 class TurnoController extends Controller
 {
@@ -92,6 +93,9 @@ class TurnoController extends Controller
     public function destroy(Turno $turno)
     {
         $this->authorize('admin');
+        if ($turno->hasAnyRelatedData(['users','maquinas'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $turno->delete();
         return response()->json(array('success' => "turno eliminado"));
     }
