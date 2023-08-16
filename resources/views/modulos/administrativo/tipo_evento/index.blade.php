@@ -4,12 +4,12 @@
 @section('submenu')
     @include('modulos.sidebars.costos-side')
 @endsection
-@section('content') 
-    <div class="div container h-content ">        
-        <div class="row">            
+@section('content')
+    <div class="div container h-content ">
+        <div class="row">
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
-                
-            
+
+
                 <h1 class="display-6" >Tipo Evento</h1>
                 <hr>
                 <!-- Button trigger modal -->
@@ -22,7 +22,7 @@
                             - {{ $error }} <br>
                         @endforeach
                     </div>
-                    
+
                 @endif
                 <!-- Modal Crea maquina-->
                 <form action="{{ route('tipo-eventos.store') }}" method="POST">
@@ -35,22 +35,22 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                
-                                <div class="card-body">                                                
-                                                    
+
+                                <div class="card-body">
+
                                     <div class="row mb-3">
                                         <label for="tipo_evento" class="col-md-4 col-form-label text-md-end">{{ __('Descripción') }}</label>
-            
+
                                         <div class="col-md-6">
-                                            <input id="tipo_evento" 
-                                                type="text" 
-                                                class="form-control @error('tipo_evento') is-invalid @enderror text-uppercase" 
-                                                name="tipo_evento" 
-                                                value="{{ old('tipo_evento') }}" 
-                                                required autocomplete="tipo_evento" 
+                                            <input id="tipo_evento"
+                                                type="text"
+                                                class="form-control @error('tipo_evento') is-invalid @enderror text-uppercase"
+                                                name="tipo_evento"
+                                                value="{{ old('tipo_evento') }}"
+                                                required autocomplete="tipo_evento"
                                                 autofocus
                                                 onkeyup="mayusculas()">
-            
+
                                             @error('tipo_evento')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -58,7 +58,7 @@
                                             @enderror
                                         </div>
                                 </div>
-                                
+
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -66,8 +66,8 @@
                             </div>
                         </div>
                         </div>
-                    </div>   
-                </form>               
+                    </div>
+                </form>
             </div>
             <!-- Tabla -->
 
@@ -75,7 +75,7 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Descripci&oacute;n</th>   
+                        <th>Descripci&oacute;n</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -84,25 +84,27 @@
                     @foreach ($tipo_eventos as $tipo_evento)
                         <tr>
                             <td>{{ $tipo_evento->id }}</td>
-                            <td>{{ $tipo_evento->tipo_evento }}</td>                      
-                            
-                            
-                            
+                            <td>{{ $tipo_evento->tipo_evento }}</td>
+
+
+
                             <td>
                                 <div class="d-flex align-items-center ">
-                                    
-                                    <button class="btn btn-sm btn-danger" onclick="eliminarTipoEvento({{ $tipo_evento }})">
-                                        <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
-                                    </button>
+
+                                    @if (!in_array($tipo_evento->id, [1,2]))
+                                        <button class="btn btn-sm btn-danger" onclick="eliminarTipoEvento({{ $tipo_evento }})">
+                                            <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
+                                        </button>
+                                    @endif
                                     <a href="{{ route('tipo-eventos.show',$tipo_evento) }}" class="btn btn-sm btn-warning">
                                         <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                     </a>
-                                
+
                                 </div>
                             </td>
-                        </tr> 
+                        </tr>
                     @endforeach
-                    
+
                 </tbody>
             </table>
         </div>

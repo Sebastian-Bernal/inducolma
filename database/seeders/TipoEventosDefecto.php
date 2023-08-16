@@ -14,14 +14,14 @@ class TipoEventosDefecto extends Seeder
      */
     public function run()
     {
-        TipoEvento::insert([
-            'id' => 1 ,
+        TipoEvento::firstOrCreate([
+
             'tipo_evento' => 'USUARIO',
 
         ]);
 
-        TipoEvento::insert([
-            'id' => 2 ,
+        TipoEvento::firstOrCreate([
+
             'tipo_evento' => 'MAQUINA',
 
         ]);
