@@ -233,7 +233,7 @@
                                                     required autocomplete="proveedor" autofocus>
                                                     <option value="" selected>Seleccione...</option>
                                                     @foreach ($proveedores as $proveedor)
-                                                    <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}
+                                                    <option value="{{ $proveedor->id }}">{{ $proveedor->razon_social }}
                                                     </option>
                                                     @endforeach
                                                 </select>

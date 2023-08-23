@@ -67,17 +67,20 @@ class ConsultasReportes {
                                 ->where($where, $termino)
                                 ->whereBetween('entrada_maderas.created_at',[$desde, $hasta])
                                 ->get([
-                                    'entrada_maderas.id',
+
                                     'entrada_maderas.mes',
                                     'entrada_maderas.ano',
                                     'entrada_maderas.acto_administrativo',
                                     'entrada_maderas.fecha',
+                                    'entrada_maderas.created_at',
                                     'entrada_maderas.salvoconducto_remision',
                                     'entrada_maderas.titular_salvoconducto',
                                     'entrada_maderas.procedencia_madera',
                                     'entrada_maderas.entidad_vigilante',
                                     'proveedores.nombre',
                                     'entradas_madera_maderas.m3entrada',
+                                    'entradas_madera_maderas.id',
+                                    'maderas.densidad',
                                     'maderas.nombre_cientifico',
                                     'tipo_maderas.descripcion',
 
