@@ -20,7 +20,7 @@ class CreateEntradaMaderasTable extends Migration
             $table->time('hora');
             $table->date('fecha');
             $table->string('acto_administrativo');
-            $table->integer('salvoconducto_remision');
+            $table->string('salvoconducto_remision');
             $table->string('titular_salvoconducto');
             $table->string('procedencia_madera');
             $table->string('entidad_vigilante');

@@ -24,9 +24,9 @@ class CreateCubicajesTable extends Migration
             $table->decimal('pulgadas_cuadradas_x3_metros');
             $table->decimal('diametro');
             $table->decimal('bloque');
-            $table->decimal('pulgadas_ancho');
-            $table->decimal('pulgadas_alto');
-            $table->string('estado');
+            $table->decimal('pulgadas_ancho')->nullable();
+            $table->decimal('pulgadas_alto')->nullable();
+            $table->string('estado')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
