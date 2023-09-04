@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css"/> 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css"/>
 
 @endsection
 
@@ -11,11 +11,11 @@
     @include('modulos.sidebars.costos-side')
 @endsection
 @section('content')
-    <div class="div container h-content">        
-        <div class="row">            
+    <div class="div container h-content">
+        <div class="row">
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
-                
-               
+
+
                 <h1 class="display-6" >Crear desripci&oacute;n</h1>
                 <hr>
                 <!-- Button trigger modal -->
@@ -28,7 +28,7 @@
                             - {{ $error }} <br>
                         @endforeach
                     </div>
-                    
+
                 @endif
                 <!-- Modal Crea maquina-->
                 <form action="{{ route('descripciones.store') }}" method="POST">
@@ -41,17 +41,17 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="input-group mb-3"> 
-                                    <span class="input-group-text">Descripci&oacute;n:</span>                                   
-                                    <input type="text" 
-                                            class="form-control text-uppercase" 
-                                            placeholder="Nombre descripcion" 
-                                            name="descripcion" 
-                                            id="descripcion" 
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Descripci&oacute;n:</span>
+                                    <input type="text"
+                                            class="form-control text-uppercase"
+                                            placeholder="Nombre descripcion"
+                                            name="descripcion"
+                                            id="descripcion"
                                             required>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text">Operaci&oacute;n:</span>                               
+                                    <span class="input-group-text">Operaci&oacute;n:</span>
                                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idOperacion" id="idOperacion">
                                         @foreach ($operaciones as $operacion)
                                             <option value="{{ $operacion->id }}">{{ $operacion->operacion }}</option>
@@ -65,8 +65,8 @@
                             </div>
                         </div>
                         </div>
-                    </div>   
-                </form>               
+                    </div>
+                </form>
             </div>
             <!-- Tabla -->
 
@@ -74,8 +74,8 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>desripci&oacute;n</th>
-                        <th>Operaci&oacute;n</th>                            
+                        <th>descripci&oacute;n</th>
+                        <th>Operaci&oacute;n</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -92,9 +92,9 @@
                                         @method('DELETE')
                                         @csrf
 
-                                        <input 
-                                            type="submit" 
-                                            value="Elminar" 
+                                        <input
+                                            type="submit"
+                                            value="Elminar"
                                             class="btn btn-sm btn-danger "
                                             onclick="return confirm('¿desea eliminar la descripcion: {{ $descripcion->descripcion }}?')">
                                     </form>
@@ -102,9 +102,9 @@
                                     <a href="{{ route('descripciones.edit', $descripcion) }}" class="btn btn-sm btn-warning"> Editar</a>
                                 </div>
                             </td>
-                        </tr> 
+                        </tr>
                     @endforeach
-                    
+
                 </tbody>
             </table>
         </div>
@@ -120,6 +120,6 @@
                 },
         "responsive": true
     });
-} );   
+} );
 </script>
 @endsection

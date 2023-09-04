@@ -206,7 +206,7 @@
                                         @foreach ($proveedores as $proveedor)
                                             <option value="{{ $proveedor->id }}"
                                                 {{ $entrada->proveedor->pluck('id')->contains($proveedor->id) ? 'selected' : ''}}>
-                                                {{ $proveedor->nombre }}
+                                                {{ $proveedor->razon_social }}
                                             </option>
                                         @endforeach
                                     </select>

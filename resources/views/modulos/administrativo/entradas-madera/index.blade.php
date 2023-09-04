@@ -389,7 +389,7 @@
                     <td>{{ $entrada->salvoconducto_remision }}</td>
                     <td>{{ $entrada->titular_salvoconducto }}</td>
                     <td>{{ $entrada->procedencia_madera }}</td>
-                    <td>{{ $entrada->proveedor->nombre }}</td>
+                    <td>{{ $entrada->proveedor->razon_social }}</td>
                     <td>{{ $entrada->entidad_vigilante }}</td>
                     {{-- <td>
                         @foreach ($entrada->entradas_madera_maderas as $entrada_madera)

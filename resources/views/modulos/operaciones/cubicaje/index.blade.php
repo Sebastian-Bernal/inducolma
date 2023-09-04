@@ -110,10 +110,12 @@
                     <th>Id</th>
                     <th>Numero de entrada</th>
                     <th>Paqueta</th>
-                    <th>BLoque</th>
+                    <th>Bloque</th>
                     <th>Largo</th>
                     <th>Ancho</th>
                     <th>Alto</th>
+                    <th>Diametro mayor</th>
+                    <th>Diametro menor</th>
                     {{-- <th>cm3</th>
                     <th>Pulgadas cuadradas</th> --}}
                     <th>Fecha creaci&oacute;n</th>
@@ -131,6 +133,8 @@
                     <td>{{ $cubicaje->largo }}</td>
                     <td>{{ $cubicaje->ancho }}</td>
                     <td>{{ $cubicaje->alto }}</td>
+                    <td>{{ $cubicaje->diametro_mayor }}</td>
+                    <td>{{ $cubicaje->diametro_menor }}</td>
                     {{-- <td>{{ $cubicaje->cm3 }}</td>
                     <td>{{ $cubicaje->pulgadas_cuadradas }}</td> --}}
                     <td>{{ $cubicaje->created_at }}</td>

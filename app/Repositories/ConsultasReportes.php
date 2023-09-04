@@ -78,6 +78,7 @@ class ConsultasReportes {
                                     'entrada_maderas.procedencia_madera',
                                     'entrada_maderas.entidad_vigilante',
                                     'proveedores.nombre',
+                                    'proveedores.razon_social',
                                     'entradas_madera_maderas.m3entrada',
                                     'entradas_madera_maderas.id',
                                     'maderas.densidad',
@@ -122,6 +123,7 @@ class ConsultasReportes {
                     'procedencia_madera' => $t->procedencia_madera,
                     'entidad_vigilante' => $t->entidad_vigilante,
                     'proveedor' => $t->nombre,
+                    'razon_social' => $t->razon_social,
                     'maderas' => array(
                         array(
                             'nobre_comun' => $t->descripcion,

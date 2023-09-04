@@ -33,7 +33,7 @@
         <td>{{ $madera->titular_salvoconducto }}</td>
         <td>{{ $madera->m3entrada }}</td>
         <td>{{ $madera->procedencia_madera }}</td>
-        <td>{{ $madera->nombre }}</td>
+        <td>{{ $madera->razon_social }}</td>
         <td>{{ $madera->descripcion }}</td>
         <td>{{ $madera->nombre_cientifico }}</td>
         <td>{{ $madera->densidad }}</td>
