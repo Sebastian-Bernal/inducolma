@@ -213,7 +213,7 @@
                         <div class="card ">
                         <div class="card-header {{ $pedido->dias < 5 ? 'bg-danger' : 'bg-warning ' }}"><strong>Pedido #{{ $pedido->id }}</strong> </div>
                         <div class="card-body " >
-                            <h5 class="card-title">{{ $pedido->nombre }}</h5>
+                            <h5 class="card-title">{{ $pedido->razon_social }}</h5>
                             <p class="card-text mb-1">
                                 Producto: {{ $pedido->descripcion }} <br>
                                 Cantidad: {{ $pedido->cantidad }} <br>

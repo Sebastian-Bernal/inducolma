@@ -95,7 +95,7 @@
                                                 name="cliente" required onchange="cargarProductos();">
                                                 <option value="">Seleccione un cliente</option>
                                                 @foreach ($clientes as $cliente)
-                                                <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                                                <option value="{{ $cliente->id }}">{{ $cliente->razon_social }}</option>
                                                 @endforeach
                                             </select>
 

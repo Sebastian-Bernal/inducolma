@@ -16,13 +16,13 @@
                 <h5>
                     @if (count($ordenes) > 0)
                         #:  {{ $ordenes[0]->pedido_id }} <br>
-                        Cliente: {{ $ordenes[0]->pedido->cliente->nombre }} <br>
+                        Cliente: {{ $ordenes[0]->pedido->cliente->razon_social }} <br>
                         Producto: {{ $ordenes[0]->pedido->diseno_producto_final->descripcion }}
                     @else
                         No se encontraron ordenes de producción para el pedido: {{ $pedido }}
                     @endif
                 </h5>
-                <a href="{{ route('programaciones.show', $pedido) }}" class="btn btn-outline-secondary">volver</a>
+                <a href="{{ route('programaciones.show', $pedido) }}" class="btn btn-outline-secondary">volver a items del pedido</a>
                 <hr>
 
                 <br><br>

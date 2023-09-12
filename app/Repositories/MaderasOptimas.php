@@ -552,9 +552,9 @@ class MaderasOptimas
      */
     public function datosCubicaje($request, $item_diseno)
     {
-        $maderas = Cubicaje::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'cubicajes.entrada_madera_id')
+        $maderas = Cubicaje::join('entradas_madera_maderas', 'entradas_madera_maderas.id', '=', 'cubicajes.entrada_madera_id')
             ->join('maderas', 'maderas.id', '=', 'entradas_madera_maderas.madera_id')
-            ->join('calificacion_maderas', 'calificacion_maderas.entrada_madera_id', '=', 'entradas_madera_maderas.entrada_madera_id')
+            ->join('calificacion_maderas', 'calificacion_maderas.entrada_madera_id', '=', 'entradas_madera_maderas.id')
             ->where('cubicajes.paqueta', (int)$request->paqueta)
             ->where('cubicajes.entrada_madera_id', (int)$request->entrada_madera_id)
             ->where('largo', '>=', $item_diseno->largo)

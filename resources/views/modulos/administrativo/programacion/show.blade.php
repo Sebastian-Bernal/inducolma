@@ -14,10 +14,10 @@
                     Items del pedido:
                 </h4>
                 <h5>
-                    #{{ $pedido->id }} - {{ $pedido->nombre }} - {{ $pedido->descripcion }} - {{ $pedido->cantidad }}
+                    #{{ $pedido->id }} - {{ $pedido->razon_social }} - {{ $pedido->descripcion }} - {{ $pedido->cantidad }}
                 </h5>
                 <hr>
-
+                <a href="{{ route('programaciones.index') }}" class="btn btn-outline-secondary btn-sm">volver a ordenes de produccion</a>
                 <br><br>
 
                 @if ($errors->any())

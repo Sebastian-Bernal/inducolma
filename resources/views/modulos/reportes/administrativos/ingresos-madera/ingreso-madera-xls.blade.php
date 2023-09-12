@@ -18,6 +18,7 @@
             <th>NOMBRE TÉCNICO</th>
             <th>TIPO DE MADERA</th>
             <th>ENTIDAD  DE EXPEDICIÓN DCTO</th>
+            <th>CONDICION DE LA MADERA</th>
         </tr>
     </thead>
     @foreach ($data as $madera)
@@ -38,6 +39,7 @@
         <td>{{ $madera->nombre_cientifico }}</td>
         <td>{{ $madera->densidad }}</td>
         <td>{{ $madera->entidad_vigilante }}</td>
+        <td>{{ $madera->condicion_madera }}</td>
     </tr>
     @endforeach
 

@@ -57,6 +57,7 @@
                                 <th class="pl-2 border border-secondary" style="font-size:10px;">Nombre Común</th>
                                 <th class="pl-2 border border-secondary" style="font-size:10px;">Nombre Cientifico</th>
                                 <th class="pl-2 border border-secondary" style="font-size:10px;">Metros Cubicos</th>
+                                <th class="pl-2 border border-secondary" style="font-size:10px;">Condic&oacute;n de la madera</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -65,6 +66,7 @@
                                 <td class="text-center border border-secondary" style="font-size:10px;">{{ "$item->nobre_comun" }}</td>
                                 <td class="text-center border border-secondary" style="font-size:10px;">{{ "$item->nombre_cientifico" }}</td>
                                 <td class="text-center border border-secondary" style="font-size:10px;">{{ "$item->m3entrada" }}</td>
+                                <td class="text-center border border-secondary" style="font-size:10px;">{{ "$item->condicion_madera" }}</td>
                                 @endforeach
 
                             </tbody>

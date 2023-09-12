@@ -80,6 +80,7 @@ class ConsultasReportes {
                                     'proveedores.nombre',
                                     'proveedores.razon_social',
                                     'entradas_madera_maderas.m3entrada',
+                                    'entradas_madera_maderas.condicion_madera',
                                     'entradas_madera_maderas.id',
                                     'maderas.densidad',
                                     'maderas.nombre_cientifico',
@@ -105,6 +106,7 @@ class ConsultasReportes {
                         'nobre_comun' => $t->descripcion,
                         'nombre_cientifico' => $t->nombre_cientifico,
                         'm3entrada' => $t->m3entrada,
+                        'condicion_madera' => $t->condicion_madera
                     );
                     array_push($result[$i]['maderas'],$madera);
                     $repetir = true;
@@ -129,6 +131,7 @@ class ConsultasReportes {
                             'nobre_comun' => $t->descripcion,
                             'nombre_cientifico' => $t->nombre_cientifico,
                             'm3entrada' => $t->m3entrada,
+                            'condicion_madera' => $t->condicion_madera
                         )
                     )
                 );

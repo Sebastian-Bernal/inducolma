@@ -10,12 +10,13 @@
         <h2 class="text-center text-primary"><strong>Ruta de Programación</strong></h2>
         <h4>
             <p class="text-center m-1">
-                <strong>Item a realizar: {{ $orden->item->descripcion }} / Cliente: {{ $orden->pedido->cliente->nombre
-                    }}</strong></br>
+                <strong>Item a realizar: {{ $orden->item->descripcion }} / Cliente: {{ $orden->pedido->cliente->razon_social
+                    }}</strong><br>
                 <label>Orden de pedido No.: {{ $orden->pedido->id }} / Tipo de Madera: {{
                     $orden->item->tipo_madera->descripcion }}</label>
             </p>
         </h4>
+        <a class="btn btn-outline-secondary" href="{{ route('programaciones.show', $orden->pedido->id) }}">Volver a items del pedido</a>
         {{-- INPUTS HIDDEN --}}
         <input type="hidden" name="cubicaje_id" value="{{ $cubicaje_id }}" id="cubicaje_id" readonly>
         <input type="hidden" name="orden_id" value="{{ $orden->id }}" id="orden_id" readonly>
@@ -65,14 +66,16 @@
 
                             <label class="input-group-text" for="maquinaInicial">Maquina</label>
                             <select class="form-select" id="maquinaInicial">
-                                <option value="0">Seleccionar...</option>
-                                @forelse ($maquinas['INICIAL'] as $inicial)
-                                <option value="{{ $inicial->id }}" name="{{ $inicial->maquina }}">{{ $inicial->maquina
-                                    }}</option>
+                                @isset($maquinas['INICIAL'])
+                                    <option value="0">Seleccionar...</option>
+                                    @foreach ($maquinas['INICIAL'] as $inicial)
 
-                                @empty
-                                <option>No existen maquinas creadas</option>
-                                @endforelse
+                                        <option value="{{ $inicial->id }}" name="{{ $inicial->maquina }}">{{ $inicial->maquina}}</option>
+
+                                    @endforeach
+                                @else
+                                    <option value="0">No existen maquinas de corte inicial</option>
+                                @endisset
                             </select>
                         </div>
                         <div class="mb-3">
@@ -127,14 +130,16 @@
 
                             <label class="input-group-text" for="maquinaIntermedia">Maquina</label>
                             <select class="form-select" id="maquinaIntermedia">
-                                <option value="0">Seleccionar...</option>
-                                @forelse ($maquinas['INTERMEDIO'] as $intermedio)
-                                <option value="{{ $intermedio->id }}" name="{{ $intermedio->maquina }}">{{
-                                    $intermedio->maquina }}</option>
+                                @isset($maquinas['INTERMEDIO'])
+                                    <option value="0">Seleccionar...</option>
+                                    @foreach ($maquinas['INTERMEDIO'] as $intermedio)
 
-                                @empty
-                                <option>No existen maquinas creadas</option>
-                                @endforelse
+                                        <option value="{{ $intermedio->id }}" name="{{ $intermedio->maquina }}">{{$intermedio->maquina }}</option>
+
+                                    @endforeach
+                                @else
+                                <option value="0">No existen maquinas de corte intermedio</option>
+                                @endisset
                             </select>
                         </div>
                         <div class="mb-3">
@@ -191,14 +196,18 @@
 
                             <label class="input-group-text" for="maquinaFinal">Maquina</label>
                             <select class="form-select" id="maquinaFinal">
-                                <option value="0">Seleccionar...</option>
-                                @forelse ($maquinas['FINAL'] as $final)
-                                <option value="{{ $final->id }}" name="{{ $final->maquina }}">{{ $final->maquina }}
-                                </option>
 
-                                @empty
-                                <option>No existen maquinas creadas</option>
-                                @endforelse
+                                @isset($maquinas['FINAL'])
+                                    <option value="0">Seleccionar...</option>
+                                    @foreach ($maquinas['FINAL'] as $final)
+
+                                        <option value="{{ $final->id }}" name="{{ $final->maquina }}">{{ $final->maquina }}</option>
+
+                                    @endforeach
+                                @else
+
+                                <option value="0">No existen maquinas de corte final</option>
+                                @endisset
                             </select>
                         </div>
                         <div class="mb-3">
@@ -256,13 +265,16 @@
                             <label class="input-group-text" for="maquinaAcabados">Maquina</label>
                             <select class="form-select" id="maquinaAcabados">
                                 <option value="0">Seleccionar...</option>
-                                @forelse ($maquinas['ACABADOS'] as $acabados)
-                                <option value="{{ $acabados->id }}" name="{{ $acabados->maquina }}">{{
-                                    $acabados->maquina }}</option>
+                                @isset($maquinas['ACABADOS'])
 
-                                @empty
-                                <option>No existen maquinas creadas</option>
-                                @endforelse
+                                    @foreach ($maquinas['ACABADOS'] as $acabados)
+
+                                        <option value="{{ $acabados->id }}" name="{{ $acabados->maquina }}">{{$acabados->maquina }}</option>
+
+                                    @endforeach
+                                @else
+                                    <option value="0">No existen maquinas de acabados</option>
+                                @endisset
                             </select>
                         </div>
                         <div class="mb-3">

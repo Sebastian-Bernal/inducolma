@@ -21,7 +21,7 @@ class PedidoController extends Controller
     public function index()
     {
         $pedidos = Pedido::join('clientes','pedidos.cliente_id','=','clientes.id')
-                         ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
+                        ->join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
                         ->get([
                                 'pedidos.id',
                                 'pedidos.cantidad',
@@ -31,7 +31,7 @@ class PedidoController extends Controller
                                 'clientes.nombre',
                                 'diseno_producto_finales.descripcion',
                             ]);
-        $clientes = Cliente::select('id', 'nombre')->get();
+        $clientes = Cliente::select('id', 'nombre','razon_social')->get();
 
         return view('modulos.administrativo.pedidos.index', compact('pedidos', 'clientes'));
     }
