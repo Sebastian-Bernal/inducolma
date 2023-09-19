@@ -195,7 +195,7 @@
             <tbody>
                 @foreach ($pedidos as $pedido)
                 <tr>
-                    <td>{{ $pedido->nombre }}</td>
+                    <td>{{ $pedido->razon_social }}</td>
                     <td>{{ $pedido->descripcion }}</td>
                     <td>{{ $pedido->cantidad }}</td>
                     <td>{{ $pedido->created_at->diffForHumans() }}</td>

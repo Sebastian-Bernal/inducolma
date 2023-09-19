@@ -152,6 +152,7 @@ class TrabajoMaquina extends Controller
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
         $turno_usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
+                                ->where('maquina_id', $turno->maquina_id)
                                 ->where('asistencia', true)
                                 ->where('fecha',date('Y-m-d'))
                                 ->get()
@@ -208,6 +209,7 @@ class TrabajoMaquina extends Controller
                                 ->where('fecha', date('Y-m-d'))
                                 ->first();
         $turno_usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
+                                ->where('maquina_id', $turno->maquina_id)
                                 ->where('asistencia', true)
                                 ->where('fecha',date('Y-m-d'))
                                 ->get()

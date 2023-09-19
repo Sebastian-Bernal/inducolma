@@ -313,7 +313,7 @@ class ConsultaProcesos {
                         ->whereBetween('ordenes_produccion.created_at',[$desde, $hasta])
                         ->get([
                             'ordenes_produccion.id',
-                            'clientes.nombre',
+                            'clientes.razon_social',
                             'diseno_producto_finales.descripcion as producto',
                             'items.descripcion as item',
                             'ordenes_produccion.created_at',
@@ -343,7 +343,7 @@ class ConsultaProcesos {
                 ->where('ordenes_produccion.estado', 'PENDIENTE')
                 ->get([
                     'ordenes_produccion.id',
-                    'clientes.nombre',
+                    'clientes.razon_social',
                     'diseno_producto_finales.descripcion as producto',
                     'items.descripcion as item',
                     'ordenes_produccion.created_at',

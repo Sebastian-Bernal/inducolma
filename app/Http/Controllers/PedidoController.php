@@ -29,6 +29,7 @@ class PedidoController extends Controller
                                 'pedidos.fecha_entrega',
                                 'pedidos.estado',
                                 'clientes.nombre',
+                                'clientes.razon_social',
                                 'diseno_producto_finales.descripcion',
                             ]);
         $clientes = Cliente::select('id', 'nombre','razon_social')->get();
@@ -97,7 +98,7 @@ class PedidoController extends Controller
      */
     public function edit(Pedido $pedido)
     {
-        $clientes = Cliente::select('id', 'nombre')->get();
+        $clientes = Cliente::select('id', 'nombre','razon_social')->get();
         $disenos_cliente = Cliente::find($pedido->cliente_id)->disenos()->get(['diseno_producto_final_id as id','descripcion']);
         return view('modulos.administrativo.pedidos.show', compact('pedido', 'clientes', 'disenos_cliente'));
     }
@@ -130,10 +131,11 @@ class PedidoController extends Controller
      */
     public function destroy(Pedido $pedido)
     {
-        $pedido->delete();
+
         if ($pedido->hasAnyRelatedData(['ordenes_produccion','pedido_producto'])) {
             return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
         }
+        $pedido->delete();
         return response()->json(['success' => 'Pedido eliminado correctamente']);
     }
 

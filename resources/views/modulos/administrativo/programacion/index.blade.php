@@ -65,7 +65,7 @@
                                             @forelse ($ordenes as $orden)
                                                 <tr>
                                                     <td>{{ $orden->id }}</td>
-                                                    <td>{{ $orden->pedido->cliente->nombre }}</td>
+                                                    <td>{{ $orden->pedido->cliente->razon_social }}</td>
                                                     <td>{{ $orden->pedido->diseno_producto_final->descripcion }}</td>
                                                     <td>{{ $orden->item->descripcion }}</td>
                                                     <td>{{ $orden->cantidad }}</td>

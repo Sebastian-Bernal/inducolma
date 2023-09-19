@@ -107,9 +107,9 @@ function validaAncho() {
 // y se hace focus en el input hasta que se ingrese un valor valido
 function validaAlto() {
     var alto = $("#alto").val();
-    if (alto < 10 || alto > 50) {
+    if (alto < 2 || alto > 50) {
         Swal.fire({
-            title: "¡Ingrese un valor de alto entre 10 y 50!",
+            title: "¡Ingrese un valor de alto entre 2 y 50!",
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",

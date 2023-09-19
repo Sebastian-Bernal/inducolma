@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrdenProduccion extends Model
 {
-    use HasFactory, SoftDeletes, CheckRelations;
+    use HasFactory,  CheckRelations;
     protected $table = 'ordenes_produccion';
     protected $fillable = [
         'user_id',

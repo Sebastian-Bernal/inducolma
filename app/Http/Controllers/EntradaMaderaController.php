@@ -126,7 +126,7 @@ class EntradaMaderaController extends Controller
      */
     public function verificarRegistro(Request $request)
     {
-        //return $request->all();
+        return response()->json(['error' => false]);
         $entrada = EntradaMadera::where(trim('acto_administrativo'), trim($request->acto));
         if ($entrada->count() > 0) {
             return response()->json(['error' => true]);
@@ -135,7 +135,7 @@ class EntradaMaderaController extends Controller
         }
     }
 
-    // retorna un json con los datos de la ultima entrada
+    // retorna un json con los datos de la ultima entrada adrian.duqueicm@gmail.com 1143878756
     public function ultimaEntrada(Request $request)
     {
         $ultimaEntrada = EntradaMadera::findOrFail($request->id)

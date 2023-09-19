@@ -9,9 +9,9 @@
     <div class="div container h-content ">
         <div class="row">
             <h5 class="text-center text-primary"><strong>{{ $encabezado }}</strong></h5>
-          
-                    <p class="text-center">Tipo de madera: {{ $data[0]->descripcion }} - Proveedor: {{ $data[0]->nombre }}</p>
-               
+
+                    <p class="text-center">Tipo de madera: {{ $data[0]->descripcion }} - Proveedor: {{ $data[0]->razon_social }}</p>
+
             <div style=" height: 30rem; overflow-y: scroll;">
                 <table class="table table-striped table-bordered align-middle mt-5" >
                     <thead>
@@ -24,8 +24,8 @@
                             <th>Pulgadas cuadradas</th>
                             {{--  <th>Centimetros cubicos</th>  --}}
                             <th>Fecha de creacion</th>
-                            
-                           
+
+
                         </tr>
                     </thead>
                     <tbody>
@@ -39,8 +39,8 @@
                                 <td>{{ $entrada->pulgadas_cuadradas }}</td>
                                 {{--  <td>{{ $entrada->cm3}}</td>  --}}
                                 <td>{{ $entrada->created_at }}</td>
-                              
-                                
+
+
 
                             </tr>
                         @endforeach

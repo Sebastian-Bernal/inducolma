@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CheckRelations;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pedido extends Model
 {
-    use HasFactory;
+    use HasFactory, CheckRelations;
 
     //relacion de pedido pertenece a un cliente
     public function cliente()
@@ -125,7 +126,7 @@ class Pedido extends Model
 
     public function ordenes_produccion()
     {
-        return $this->hasMany(OrdenProduccion::class);
+        return $this->hasMany(OrdenProduccion::class, 'pedido_id', 'id');
     }
 
     /**

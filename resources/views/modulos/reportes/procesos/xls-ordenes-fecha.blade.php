@@ -15,7 +15,7 @@
         @foreach ($data as $orden)
             <tr>
                 <td>{{ $orden->id }}</td>
-                <td>{{ $orden->nombre }}</td>
+                <td>{{ $orden->razon_social }}</td>
                 <td>{{ $orden->producto }}</td>
                 <td>{{ $orden->item }}</td>
                 <td>{{ $orden->created_at }}</td>

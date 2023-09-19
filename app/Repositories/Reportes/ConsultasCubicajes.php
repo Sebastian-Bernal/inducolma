@@ -82,7 +82,7 @@ class ConsultasCubicajes {
                             ->orderBy('paqueta', 'asc')
                             ->orderBy('bloque', 'asc')
                             ->get([
-                                'proveedores.nombre',
+                                'proveedores.razon_social',
                                 'cubicajes.paqueta',
                                 'cubicajes.bloque',
                                 'cubicajes.largo',
