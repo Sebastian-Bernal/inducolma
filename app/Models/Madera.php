@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Madera extends Model
 {
     use HasFactory, CheckRelations;
-    protected $fillable = ['nombre', 'nombre_cientifico', 'densidad'];
+    protected $fillable = ['nombre_cientifico', 'densidad', 'nombre_comun'];
 
 
     /**

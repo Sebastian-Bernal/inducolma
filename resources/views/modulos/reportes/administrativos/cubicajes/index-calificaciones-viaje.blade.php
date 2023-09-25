@@ -30,7 +30,7 @@
                         @foreach ($data as $calificacion)
                             <tr>
                                 <td>{{ $calificacion->paqueta }}</td>
-                                <td>{{ $calificacion->nombre }}</td>
+                                <td>{{ $calificacion->razon_social }}</td>
                                 <td>{{ $calificacion->total }}</td>
                                 <td>{{ $calificacion->longitud_madera }}</td>
                                 <td>{{ $calificacion->cantonera }}</td>

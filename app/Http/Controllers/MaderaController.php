@@ -47,7 +47,8 @@ class MaderaController extends Controller
         $this->authorize('admin');
         $madera = new Madera();
         $madera->tipo_madera_id = $request->tipo_madera_id;
-        $madera->nombre_cientifico = strtoupper($request->nombre_cientifico);
+        $madera->nombre_cientifico = trim(strtoupper($request->nombre_cientifico));
+        $madera->nombre_comun = trim(strtoupper($request->nombre_comun));
         $madera->densidad = $request->densidad;
         $madera->save();
         return redirect()->route('maderas.index')->with('status', 'Madera creada con éxito');
@@ -89,7 +90,8 @@ class MaderaController extends Controller
         //return request()->all();
         $this->authorize('admin');
         $madera->tipo_madera_id = $request->tipo_madera_id;
-        $madera->nombre_cientifico = strtoupper($request->nombre_cientifico);
+        $madera->nombre_cientifico = trim(strtoupper($request->nombre_cientifico));
+        $madera->nombre_comun = trim(strtoupper($request->nombre_comun));
         $madera->densidad = $request->densidad;
         $madera->save();
         return redirect()->route('maderas.index')->with('status', 'Madera actualizada con éxito');

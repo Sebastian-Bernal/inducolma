@@ -35,7 +35,7 @@
         <td>{{ $madera->m3entrada }}</td>
         <td>{{ $madera->procedencia_madera }}</td>
         <td>{{ $madera->razon_social }}</td>
-        <td>{{ $madera->descripcion }}</td>
+        <td>{{ $madera->nombre_comun }}</td>
         <td>{{ $madera->nombre_cientifico }}</td>
         <td>{{ $madera->densidad }}</td>
         <td>{{ $madera->entidad_vigilante }}</td>

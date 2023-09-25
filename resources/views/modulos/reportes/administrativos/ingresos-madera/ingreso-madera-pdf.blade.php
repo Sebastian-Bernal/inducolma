@@ -52,13 +52,13 @@
                         <p class="text-center" style="color:#fb8c00; min-height:2px;">Maderas en esta entrada</p>
                         <table class="border border-light mx-auto col-10">
                             <thead style="background-color:#bbbbbb">
-                              <tr>
+                            <tr>
 
                                 <th class="pl-2 border border-secondary" style="font-size:10px;">Nombre Común</th>
                                 <th class="pl-2 border border-secondary" style="font-size:10px;">Nombre Cientifico</th>
                                 <th class="pl-2 border border-secondary" style="font-size:10px;">Metros Cubicos</th>
                                 <th class="pl-2 border border-secondary" style="font-size:10px;">Condic&oacute;n de la madera</th>
-                              </tr>
+                            </tr>
                             </thead>
                             <tbody>
                                 @foreach ($madera->maderas as $item)

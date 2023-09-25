@@ -38,11 +38,11 @@
     <body>
         <div class="div container-fluid col-12 h-content m-auto ">
             <div class="row">
-                
+
                        <table>
                         <tbody>
                             <td class="col-4">
-                                <p class="text-left"><img src="{{ public_path('img/logo.png') }}" style="width:80%"></p> 
+                                <p class="text-left"><img src="{{ public_path('img/logo.png') }}" style="width:80%"></p>
                             </td>
                             <td class="col-7">
                                <h5 class="text-center" style="color:#649f21;"><strong>{{ $encabezado }}</strong></h5>
@@ -50,14 +50,14 @@
                                <p class="text-center">Proveedor: {{ $data[0]->nombre }}</p>  --}}
                             </td>
                         </tbody>
-                        
+
                        </table>
-                            
-                            
-                            
-                        
-                        
-                
+
+
+
+
+
+
                 <div class="mx-auto">
                     <table class="table table-striped table-bordered align-middle container-fluid" style="page-break-after:auto" >
                         <thead>
@@ -73,15 +73,15 @@
                                 <th class="text-center" style="font-size: 8px;">Org.</th>
                                 <th class="text-center" style="font-size: 8px;">A. tran.</th>
                                 <th class="text-center" style="font-size: 8px;">no conv.</th>
-                                
-                            
+
+
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $calificacion)
                             <tr>
                                 <td style="font-size:10px;">{{ $calificacion->paqueta }}</td>
-                                <td style="font-size:10px;">{{ $calificacion->nombre }}</td>
+                                <td style="font-size:10px;">{{ $calificacion->razon_social }}</td>
                                 <td style="font-size:10px;">{{ $calificacion->total }}</td>
                                 <td style="font-size:10px;">{{ $calificacion->longitud_madera }}</td>
                                 <td style="font-size:10px;">{{ $calificacion->cantonera }}</td>
@@ -91,14 +91,14 @@
                                 <td style="font-size:10px;">{{ $calificacion->organizacion }}</td>
                                 <td style="font-size:10px;">{{ $calificacion->areas_transversal_max_min }}</td>
                                 <td style="font-size:10px;">{{ $calificacion->areas_no_conveniente }}</td>
-                
+
                             </tr>
                         @endforeach
                         </tbody>
 
                     </table>
                 </div>
-            
+
             </div>
         </div>
         <script type="text/php">

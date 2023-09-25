@@ -25,7 +25,7 @@
                 <td>{{ $entrada->pulgadas_cuadradas }}</td>
                 <td>{{ $entrada->descripcion }}</td>
                 <td>{{ $entrada->entrada_madera_id }}</td>
-                <td>{{ $entrada->nombre }}</td>
+                <td>{{ $entrada->razon_social }}</td>
 
             </tr>
         @endforeach
