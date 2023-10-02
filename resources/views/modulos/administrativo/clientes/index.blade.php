@@ -179,9 +179,8 @@
                         <th>Nit</th>
                         <th>Nombre</th>
                         <th>Razón social</th>
-                        <th>Direcci&oacute;n</th>
                         <th>Tel&eacute;fono</th>
-                        <th>direccion</th>
+                        <th>Direcci&oacute;n</th>
                         <th>Correo electr&oacute;nico</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -195,7 +194,6 @@
                             <td>{{ $cliente->nit }}</td>
                             <td>{{ $cliente->nombre }}</td>
                             <td>{{ $cliente->razon_social }}</td>
-                            <td>{{ $cliente->direccion }}</td>
                             <td>{{ $cliente->telefono }}</td>
                             <td>{{ $cliente->direccion }}</td>
                             <td>{{ $cliente->email }}</td>

@@ -6,6 +6,7 @@
             <th>Alto</th>
             <th>Largo</th>
             <th>Ancho</th>
+            <th>Centrimetros cubicos</th>
             <th>Fecha de creacion</th>
             <th>Pulgadas cuadradas</th>
             <th>Tipo de madera</th>
@@ -21,6 +22,7 @@
                 <td>{{ $entrada->alto }}</td>
                 <td>{{ $entrada->largo }}</td>
                 <td>{{ $entrada->ancho }}</td>
+                <td>{{ $entrada->cm3 }}</td>
                 <td>{{ $entrada->created_at }}</td>
                 <td>{{ $entrada->pulgadas_cuadradas }}</td>
                 <td>{{ $entrada->descripcion }}</td>

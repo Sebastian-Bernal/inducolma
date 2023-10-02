@@ -61,7 +61,7 @@
                                 <th style="font-size: 10px;">Largo</th>
                                 <th style="font-size: 10px;">Ancho</th>
                                 <th style="font-size: 10px;">Pulgadas*2</th>
-                                {{--  <th style="font-size: 10px;">Centimetros cubicos</th>  --}}
+                                <th style="font-size: 10px;">Centimetros cubicos</th>
                                 <th style="font-size: 10px;">Fecha de creación</th>
 
 
@@ -76,7 +76,7 @@
                                     <td style="font-size: 10px;">{{ $entrada->largo }}</td>
                                     <td style="font-size: 10px;">{{ $entrada->ancho }}</td>
                                     <td style="font-size: 10px;">{{ $entrada->pulgadas_cuadradas }}</td>
-                                    {{--  <td style="font-size: 10px;">{{ $entrada->cm3}}</td>  --}}
+                                    <td style="font-size: 10px;">{{ $entrada->cm3}}</td>
                                     <td style="font-size: 10px;">{{ $entrada->created_at }}</td>
                                 </tr>
                             @endforeach

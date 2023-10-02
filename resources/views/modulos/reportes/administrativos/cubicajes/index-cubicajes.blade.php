@@ -22,7 +22,7 @@
                             <th>Largo</th>
                             <th>Ancho</th>
                             <th>Pulgadas cuadradas</th>
-                            {{--  <th>Centimetros cubicos</th>  --}}
+                            <th>Centimetros cubicos</th>
                             <th>Fecha de creacion</th>
 
 
@@ -37,7 +37,7 @@
                                 <td>{{ $entrada->largo }}</td>
                                 <td>{{ $entrada->ancho }}</td>
                                 <td>{{ $entrada->pulgadas_cuadradas }}</td>
-                                {{--  <td>{{ $entrada->cm3}}</td>  --}}
+                                <td>{{ $entrada->cm3}}</td>
                                 <td>{{ $entrada->created_at }}</td>
 
 

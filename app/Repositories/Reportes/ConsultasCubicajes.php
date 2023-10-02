@@ -96,6 +96,8 @@ class ConsultasCubicajes {
 
                             ]);
 
+
+
         return $cubicajes;
 
     }

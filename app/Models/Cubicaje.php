@@ -24,4 +24,9 @@ class Cubicaje extends Model
     {
         $this->hasMany(Transformacion::class);
     }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s');
+    }
 }

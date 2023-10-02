@@ -89,9 +89,9 @@ function validaLargo() {
 // y se hace focus en el input hasta que se ingrese un valor valido
 function validaAncho() {
     var ancho = $("#ancho").val();
-    if (ancho < 10 || ancho > 50) {
+    if (ancho < 2 || ancho > 50) {
         Swal.fire({
-            title: "¡Ingrese un valor de ancho entre 10 y 50!",
+            title: "¡Ingrese un valor de ancho entre 2 y 50!",
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
