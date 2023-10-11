@@ -29,15 +29,17 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         @foreach ($data as $proceso)
                             <tr>
+
                                 <td>{{ $proceso->id }}</td>
                                 <td>{{ $proceso->fecha_ejecucion }}</td>
                                 <td>{{ $proceso->hora_inicio }}</td>
                                 <td>{{ $proceso->hora_fin }}</td>
                                 <td>{{ $proceso->sub_paqueta }}</td>
                                 <td>{{ $proceso->costo }}</td>
-                                <td>{{ $procesos->salida }}</td>
+                                <td>{{ $proceso->salida }}</td>
                                 <td>{{ $proceso->descripcion}}</td>
                                 <td>{{ $proceso->name }}</td>
                                 <td>{{ $proceso->entrada_madera_id }}</td>
@@ -81,6 +83,6 @@
 
 @section('js')
 <script src="/js/modulos/alertas-swift.js"></script>
-<script src="/js/modulos/reportes/produccion/reportes-construccion.js"></script>
+<script src="/js/modulos/reportes/costos/reportes-costos.js"></script>
 
 @endsection

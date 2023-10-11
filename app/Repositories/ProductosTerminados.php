@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Item;
 use App\Models\Pedido;
 use App\Models\TurnoUsuario;
+use App\Models\InsumosAlmacen;
 use App\Models\ProductoMaquina;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,6 +58,7 @@ class ProductosTerminados {
 
         try {
             $this->actualizaExistenciasItems($pedido);
+            $this->updateInsumosAlmacen($pedido);
             $pedido->pedido_producto()->sync([
                     $request->diseno => [
                         'cantidad_producida' => $cantidad,
@@ -66,7 +68,7 @@ class ProductosTerminados {
                     ]
                 ]);
             if($request->terminar == 2){
-                return $this->actualizaPedido($pedido);
+                $this->actualizaPedido($pedido);
                 return redirect()->route('trabajo-maquina.create')->with('status',
                     "El pedido se termino con éxito");
             }
@@ -91,6 +93,19 @@ class ProductosTerminados {
             $item_guardar = Item::find($item->id);
             $item_guardar->existencias -= $item->cantidad;
             $item_guardar->save();
+        }
+    }
+
+    /**
+     * actualiza la cantidad de insumos del almacen cuando un producto ha sido creado
+     * @param Pedido $pedido
+     */
+    public function updateInsumosAlmacen($pedido)
+    {
+        foreach ($pedido->diseno_producto_final->insumos as $insumo) {
+            $insumo_guardar = InsumosAlmacen::find($insumo->id);
+            $insumo_guardar->cantidad -= $insumo->cantidad;
+            $insumo_guardar->save();
         }
     }
 

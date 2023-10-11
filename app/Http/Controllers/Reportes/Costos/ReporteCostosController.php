@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Reportes\Costos;
 
+use App\Exports\CostosExport;
 use App\Http\Controllers\Controller;
 use App\Repositories\Reportes\ConsultaCostos;
 use Illuminate\Http\Request;
@@ -46,30 +47,10 @@ class ReporteCostosController extends Controller
                 return $pdf->stream($encabezado.'pdf');
 
             } elseif ($generar == '2') {
-                switch ($tipoReporte) {
-                   /*  case '6':
-                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.xlsx");
-                        break;
-                    case '7':
-                        return Excel::download(new UsuariosPedido($data), "$encabezado-$desde-$hasta.xlsx");
-                        break;
-                    default :
-                        return Excel::download(new PedidosCliente($data), "$encabezado-$desde-$hasta.xlsx");
-                        break; */
-                }
+                return Excel::download(new CostosExport($data), "$encabezado-$desde-$hasta.xlsx");
 
             }elseif ($generar == '3') {
-                switch ($tipoReporte) {
-                   /*  case '6':
-                        return Excel::download(new ProcesosPedido($data), "$encabezado-$desde-$hasta.csv");
-                        break;
-                    case '7':
-                        return Excel::download(new UsuariosPedido($data), "$encabezado-$desde-$hasta.csv");
-                        break;
-                    default :
-                        return Excel::download(new PedidosCliente($data), "$encabezado-$desde-$hasta.csv");
-                        break; */
-                }
+                return Excel::download(new CostosExport($data), "$encabezado-$desde-$hasta.csv");
 
             }
             else{
