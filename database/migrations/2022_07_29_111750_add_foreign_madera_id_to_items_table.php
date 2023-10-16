@@ -14,7 +14,7 @@ class AddForeignMaderaIdToItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            //$table->unsignedBigInteger('madera_id');
+            $table->unsignedBigInteger('madera_id');
             $table->foreign('madera_id')->references('id')->on('tipo_maderas')->onUpdate('cascade');
         });
     }

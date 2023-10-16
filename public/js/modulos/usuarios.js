@@ -7,9 +7,9 @@ $(document).ready(function () {
     });
 });
 // funcion para eliminar un usuario
-function eliminarUsuario(id) {
+function eliminarUsuario(id, name) {
     Swal.fire({
-        title: '¿Está seguro de eliminar el usuario con id ' + id + '?',
+        title: '¿Está seguro de eliminar el usuario con id ' + name + '?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#597504',
@@ -66,5 +66,47 @@ function editarUsuario(id) {
             $("#estado").val(e.estado);
             $("#modalEditarUsuario").modal("show");
         },
+    })
+}
+
+
+// funcion para eliminar un usuario
+function restaurarUsuario(id, name) {
+    console.log(id)
+    Swal.fire({
+        title: '¿Está seguro de restaurar el usuario con id ' + name + '?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#597504',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, restaurar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/restore-user/" + id,
+                type: "PUT",
+                dataType: "JSON",
+                data: {
+                    _token: $('input[name="_token"]').val()
+                },
+                success: function (e) {
+                    // console.log(e);
+                    Swal.fire({
+                        title: 'Restaurado!',
+                        text: e.success,
+                        icon: 'success',
+                        confirmButtonColor: '#597504',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    })
+
+                },
+
+            })
+        }
     })
 }

@@ -89,9 +89,9 @@ function validaLargo() {
 // y se hace focus en el input hasta que se ingrese un valor valido
 function validaAncho() {
     var ancho = $("#ancho").val();
-    if (ancho < 10 || ancho > 50) {
+    if (ancho < 1 || ancho > 50) {
         Swal.fire({
-            title: "¡Ingrese un valor de ancho entre 10 y 50!",
+            title: "¡Ingrese un valor de diametro mayor entre 1 y 50!",
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
@@ -107,9 +107,9 @@ function validaAncho() {
 // y se hace focus en el input hasta que se ingrese un valor valido
 function validaAlto() {
     var alto = $("#alto").val();
-    if (alto < 10 || alto > 50) {
+    if (alto < 1 || alto > 50) {
         Swal.fire({
-            title: "¡Ingrese un valor de alto entre 10 y 50!",
+            title: "¡Ingrese un valor de diametro menor entre 1 y 50!",
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",

@@ -27,7 +27,7 @@
                     </thead>
                     @foreach ($data as $madera)
                     <tr>
-                        <td >{{ $madera->proveedor }}</td>
+                        <td >{{ $madera->razon_social }}</td>
                         <td>{{ $madera->entidad_vigilante }}</td>
                         <td>{{ $madera->mes }}</td>
                         <td>{{ $madera->ano }}</td>

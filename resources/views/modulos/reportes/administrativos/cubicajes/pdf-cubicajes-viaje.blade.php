@@ -31,26 +31,26 @@
     <body>
         <div class="div container-fluid col-12 h-content m-auto ">
             <div class="row">
-                
-                       <table>
+
+                        <table>
                         <tbody>
                             <td class="col-4">
-                                <p class="text-left"><img src="{{ public_path('img/logo.png') }}" style="width:80%"></p> 
+                                <p class="text-left"><img src="{{ public_path('img/logo.png') }}" style="width:80%"></p>
                             </td>
                             <td class="col-7">
-                               <h5 class="text-center" style="color:#649f21;"><strong>{{ $encabezado }}</strong></h5>
-                               <p class="text-center"> Tipo de madera: {{ $data[0]->descripcion }}</p>
-                               <p class="text-center">Proveedor: {{ $data[0]->nombre }}</p>
+                                <h5 class="text-center" style="color:#649f21;"><strong>{{ $encabezado }}</strong></h5>
+                                <p class="text-center"> Tipo de madera: {{ $data[0]->descripcion }}</p>
+                                <p class="text-center">Proveedor: {{ $data[0]->razon_social }}</p>
                             </td>
                         </tbody>
-                        
-                       </table>
-                            
-                            
-                            
-                        
-                        
-                
+
+                        </table>
+
+
+
+
+
+
                 <div class="mx-auto">
                     <table class="table table-striped table-bordered align-middle mt-2" style="page-break-after:auto" >
                         <thead>
@@ -61,10 +61,10 @@
                                 <th style="font-size: 10px;">Largo</th>
                                 <th style="font-size: 10px;">Ancho</th>
                                 <th style="font-size: 10px;">Pulgadas*2</th>
-                                {{--  <th style="font-size: 10px;">Centimetros cubicos</th>  --}}
+                                <th style="font-size: 10px;">Centimetros cubicos</th>
                                 <th style="font-size: 10px;">Fecha de creación</th>
-                                
-                            
+
+
                             </tr>
                         </thead>
                         <tbody>
@@ -76,7 +76,7 @@
                                     <td style="font-size: 10px;">{{ $entrada->largo }}</td>
                                     <td style="font-size: 10px;">{{ $entrada->ancho }}</td>
                                     <td style="font-size: 10px;">{{ $entrada->pulgadas_cuadradas }}</td>
-                                    {{--  <td style="font-size: 10px;">{{ $entrada->cm3}}</td>  --}}
+                                    <td style="font-size: 10px;">{{ $entrada->cm3}}</td>
                                     <td style="font-size: 10px;">{{ $entrada->created_at }}</td>
                                 </tr>
                             @endforeach
@@ -84,7 +84,7 @@
 
                     </table>
                 </div>
-            
+
             </div>
         </div>
         <script type="text/php">

@@ -1,3 +1,5 @@
+
+
 // variables globales
 var maderas = [];
 var solicitud = 0;
@@ -8,7 +10,7 @@ $(document).ready(function() {
         "language": {
                 "url": "/DataTables/Spanish.json"
                 },
-        "responsive": true, 
+        "responsive": true,
         "pageLength": 5,
     });
 
@@ -20,14 +22,14 @@ $(document).ready(function() {
         console.log('ultimo');
         $('#editarUltimo').attr('href', 'entradas-maderas/'+localStorage.getItem('ultimo'));
     }
-    
+
 } );
 
 // funcion confirmarEnvio, se encarga de confirmar el envio de la entrada de madera y envia el formulario entradaMaderas
 function confirmarEnvio() {
     //comprobar si todos los campos del formulario formEntradaMaderas estan llenos
 
-    
+
         Swal.fire({
             title: '¿Está seguro de guardar la entrada de madera?',
             icon: 'warning',
@@ -38,7 +40,7 @@ function confirmarEnvio() {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-               
+
                 let entrada = new Object();
                 entrada.mes = document.getElementById('mes').value;
                 entrada.ano = document.getElementById('ano').value;
@@ -50,18 +52,18 @@ function confirmarEnvio() {
                 entrada.procedencia = document.getElementById('procedencia').value;
                 entrada.entidadVigilante = document.getElementById('entidadVigilante').value;
                 entrada.proveedor = document.getElementById('proveedor').value;
-                
+
                 entrada.id_ultima = localStorage.getItem('ultimo');
                 if (solicitud == 0) {
                     verificarActoAdministrativo(entrada);
                 } else {
                     guardarEntradaMadera(entrada);
                 }
-                
-                
+
+
             }
         })
-    
+
 }
 
 // funcion validar campos, se encarga de validar que los campos del formulario formEntradaMaderas esten llenos
@@ -137,7 +139,7 @@ function eliminarMadera(id, idMadera) {
     Swal.fire({
         title: '¿Está seguro de eliminar la madera?',
         icon: 'warning',
-        showCancelButton: true, 
+        showCancelButton: true,
         confirmButtonColor: '#597504',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Si, eliminarla!',
@@ -164,7 +166,7 @@ function eliminarMaderaBD(idMadera) {
             id: idMadera,
             _token: $('input[name="_token"]').val()
         },
-        type: 'post',       
+        type: 'post',
         success: function(data) {
             console.log(data);
         }
@@ -179,10 +181,10 @@ function comprobarLocalStorage() {
         maderas = [];
     } else {
         maderas = JSON.parse(localStorage.getItem('maderas'));
-        listarMaderas(maderas);    
+        listarMaderas(maderas);
     }
 
-    
+
 }
 
 // funcion listarMaderas, se encarga de listar las maderas en la tabla listaMaderas
@@ -196,8 +198,8 @@ function listarMaderas(maderas) {
         }else{
             id = madera.entrada_id;
         }
-            
-        
+
+
         let fila = `<tr id ="${trid}">
                         <td>${madera.nombre}</td>
                         <td>${madera.condicion}</td>
@@ -224,7 +226,7 @@ function guardarEntradaMadera(datosEntrada) {
             entrada: registro,
             _token: $('input[name="_token"]').val()
         },
-        type: 'post', 
+        type: 'post',
         success: function(guardado) {
             if(guardado.error == false) {
                 Swal.fire({
@@ -239,7 +241,7 @@ function guardarEntradaMadera(datosEntrada) {
                     window.location.href = '/entradas-maderas';
                     //$('#editarUltimo').show();
                     localStorage.setItem('ultimo', guardado.id);
-                    
+
                 })
             } else {
                 Swal.fire({
@@ -277,14 +279,20 @@ function verificarActoAdministrativo(entrada) {
             }
         }
     })
-    
+
 }
 
 //funcion editarUltimo, se encarga de editar el ultimo registro con el id guardado en localStorage como id
 function editarUltimo() {
     solicitud = 1;
-    localStorage.removeItem('maderas');    
+    localStorage.removeItem('maderas');
     let id = localStorage.getItem('ultimo');
+
+    if (id == null) {
+        alertaErrorSimple('No hay una ultima entrada registrada para la fecha: '+new Date().toISOString().split('T')[0], 'error')
+        return;
+    }
+
     $.ajax({
         url: 'ultima-entrada',
         data: {
@@ -294,7 +302,7 @@ function editarUltimo() {
         type: 'post',
         success: function(respuesta) {
             //console.log(respuesta.mes);
-            
+
             $('select[name="mes"]').val(respuesta.ultimaEntrada.mes);
             $('select[name="ano"]').val(respuesta.ultimaEntrada.ano);
             $('input[name="hora"]').val(respuesta.ultimaEntrada.hora);
@@ -305,13 +313,13 @@ function editarUltimo() {
             $('input[name="procedencia"]').val(respuesta.ultimaEntrada.procedencia_madera);
             $('input[name="entidadVigilante"]').val(respuesta.ultimaEntrada.entidad_vigilante);
             $('select[name="proveedor"]').val(respuesta.ultimaEntrada.proveedor_id);
-            
+
             localStorage.removeItem('maderas');
             maderas = [];
             respuesta.maderas.forEach(madera => {
                 //console.log(madera.condicion_madera);
                 let id = madera.madera_id;
-                let nombre = madera.nombre;
+                let nombre = madera.nombre_cientifico;
                 let condicion = madera.condicion_madera;
                 let metrosCubicos = madera.m3entrada;
                 let entrada_id = madera.id;
@@ -321,15 +329,15 @@ function editarUltimo() {
                 localStorage.setItem('maderas', JSON.stringify(maderas));
                 let maderasLocal = JSON.parse(localStorage.getItem('maderas'));
                 listarMaderas(maderasLocal);
-                
+
             })
             $('#registrar').click();
             // cargar maderas en localStorage
-           
+
         }
     })
 }
- 
+
 // funcion borrarMaderas, se encarga de vaciar el localStorage de maderas
 function borrarMaderas() {
     //console.log('borrar maderas');

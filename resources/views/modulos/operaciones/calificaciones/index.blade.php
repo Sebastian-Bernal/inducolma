@@ -46,7 +46,7 @@
                                 {!! '<span class="badge bg-danger">NO APROBADA</span>'  !!}
                             @endif
                         </td>
-                        <td>{{ $calificacion->entrada_madera_madera->entrada_madera->proveedor->nombre }}</td>
+                        <td>{{ $calificacion->entrada_madera_madera->entrada_madera->proveedor->razon_social }}</td>
                         <td>
 
                             <div class="d-flex align-items-center ">

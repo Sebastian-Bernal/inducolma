@@ -21,9 +21,8 @@ class CreateProveedorsTable extends Migration
             $table->string('telefono');
             $table->string('email');
             $table->string('razon_social');
-            $table->decimal('calificacion');
+            $table->decimal('calificacion')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->string('estado');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();

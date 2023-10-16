@@ -45,6 +45,7 @@ class OrdenProduccionController extends Controller
                 'pedidos.fecha_entrega',
                 'pedidos.estado',
                 'clientes.nombre',
+                'clientes.razon_social',
                 'diseno_producto_finales.descripcion',
                 'diseno_producto_finales.id as diseno_id',
             ]);

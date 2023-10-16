@@ -2,10 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class DropColumnIdToClientesTable extends Migration
+class AddDisenoProductoFinalIdToProductosMaquinaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +13,8 @@ class DropColumnIdToClientesTable extends Migration
      */
     public function up()
     {
-        Schema::table('clientes', function (Blueprint $table) {
-        
-            $table->increments('id')->change();
-            //$table->id();
+        Schema::table('productos_maquina', function (Blueprint $table) {
+            $table->unsignedBigInteger('diseno_producto_final_id')->nullable();
         });
     }
 
@@ -28,8 +25,8 @@ class DropColumnIdToClientesTable extends Migration
      */
     public function down()
     {
-        Schema::table('clientes', function (Blueprint $table) {
-            //
+        Schema::table('productos_maquina', function (Blueprint $table) {
+            $table->dropColumn('diseno_producto_final_id');
         });
     }
 }

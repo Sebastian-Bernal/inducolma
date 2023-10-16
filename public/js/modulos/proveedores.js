@@ -1,3 +1,6 @@
+
+
+
 $(document).ready(function () {
     $('#listaUsuarios').DataTable({
         "language": {
@@ -10,40 +13,41 @@ $(document).ready(function () {
 
 // funcion para eliminar un proveedor
 function eliminarUsuario(proveedor) {
-    console.log(proveedor.identificacion);
-    Swal.fire({
-        title: `¿Está seguro de eliminar el proveedor ${proveedor.nombre} con id ${proveedor.identificacion}?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#597504',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: `/proveedores/${proveedor.id}`,
-                type: "DELETE",
-                dataType: "JSON",
-                data: {
-                    _token: $('input[name="_token"]').val()
-                },
-                success: function (e) {
 
-                    Swal.fire({
-                        title: 'Eliminado!',
-                        text: e.success,
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    })
+    var token = $('input[name="_token"]').val();
 
-                },
-            })
-        }
-    })
+    var principalTitle =  `¿Está seguro de eliminar el proveedor ${proveedor.nombre} con id ${proveedor.identificacion}?`;
+    var confirmButtonText = 'Si, eliminar';
+    var url = `/proveedores/${proveedor.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token };
+    var titulo = 'Eliminado';
+
+    var alertProveedor = AlertSimpleRequestManager.getInstance();
+    alertProveedor.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
+
+}
+
+
+/**
+ * Funcion permite enviar request para restaurar un proveedor eliminado
+ * @param proveedor [ objeto proveedor ]
+ * @returns void
+ */
+
+
+function restaurarProveedor(proveedor) {
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle = `¿Está seguro de restaurar el proveedor ${proveedor.nombre} con id ${proveedor.identificacion}?`;
+    var confirmButtonText = 'Si, restaurar!';
+    var url = `/restore-proveedor/${proveedor.id}`;
+    var tipo = "PUT";
+    var datos = { _token: token };
+    var titulo = 'Restaurado';
+
+    var alertProveedor = AlertSimpleRequestManager.getInstance();
+    alertProveedor.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
+
 }

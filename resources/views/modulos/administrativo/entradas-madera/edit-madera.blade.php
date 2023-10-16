@@ -27,7 +27,7 @@
                                 <p>
                                     <span class="fw-bolder">Id:</span> {{ $entrada->id }} <br>
                                     <span class="fw-bolder">Viaje:</span> {{ $entrada->entrada_madera_id }} <br>
-                                    <span class="fw-bolder">Proveedor:</span> {{ $entrada->entrada_madera->proveedor->nombre }} <br>
+                                    <span class="fw-bolder">Proveedor:</span> {{ $entrada->entrada_madera->proveedor->razon_social }} <br>
                                     <span class="fw-bolder">Tipo de madera:</span> {{ $entrada->madera->tipo_madera->descripcion }} <br>
                                     <span class="fw-bolder">Condicion:</span> {{ $entrada->condicion_madera }} <br>
                                     <span class="fw-bolder">m3:</span> {{ $entrada->m3entrada }} <br>

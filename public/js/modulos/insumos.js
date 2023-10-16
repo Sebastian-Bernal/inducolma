@@ -5,9 +5,9 @@ $(document).ready(function() {
                 "url": "/DataTables/Spanish.json"
                 },
         "responsive": true
-        
+
     });
-    
+
 });
 
 // funcion cambia a mayusculas el input descripcion
@@ -16,42 +16,43 @@ function mayusculas() {
     x.value = x.value.toUpperCase();
 }
 
-// funcion para eliminar un Insumo
+/**
+ * Funcion que permite enviar un request para eliminar insumo
+ * @param {object} insumo
+ * @returns {void}
+ */
 function eliminarInsumo(insumo) {
-    Swal.fire({
-        title: `¿Está seguro de eliminar el insumo:
-                ${insumo.descripcion}?`,       
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#597504',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-        if (result.isConfirmed) {
-           $.ajax({
-                url: `/insumos-almacen/${insumo.id}`,
-                type: "DELETE",
-                dataType: "JSON",
-                data: {
-                    _token: $('input[name="_token"]').val()
-                },
-                success: function (e) {
-                   // console.log(e);
-                    Swal.fire({
-                        title: 'Eliminado!',
-                        text: e.success,
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();                            
-                        }
-                    })
-                    
-                },
-          })
-        }
-    })
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de eliminar el insumo ${insumo.descripcion}?`;
+    var confirmButtonText = 'Si, eliminarl!';
+    var url =  `/insumos-almacen/${insumo.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token  };
+    var titulo =  'Eliminado!';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
+}
+
+
+/**
+ * Funcion que permite enviar un request para restaurar insumo
+ * @param {object} insumo
+ * @returns {void}
+ */
+function restaurarInsumo(insumo) {
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de restaurar el insumo ${insumo.descripcion}?`;
+    var confirmButtonText = 'Si, restaurar';
+    var url =  `/restore-insumo/${insumo.id}`;
+    var tipo = "PUT";
+    var datos = { _token: token  };
+    var titulo =  'Restaurado';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignMaderaIdToEntradasMaderaMaderasTable extends Migration
+class DropColumnEstadoFromEstados extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddForeignMaderaIdToEntradasMaderaMaderasTable extends Migration
      */
     public function up()
     {
-        Schema::table('entradas_madera_maderas', function (Blueprint $table) {
-            $table->foreign('madera_id')->references('id')->on('maderas')->onUpdate('CASCADE');        
+        Schema::table('estados', function (Blueprint $table) {
+            $table->dropColumn('estado');
         });
     }
 
@@ -25,7 +25,7 @@ class AddForeignMaderaIdToEntradasMaderaMaderasTable extends Migration
      */
     public function down()
     {
-        Schema::table('entradas_madera_maderas', function (Blueprint $table) {
+        Schema::table('estados', function (Blueprint $table) {
             //
         });
     }

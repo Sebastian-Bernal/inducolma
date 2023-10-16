@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Madera;
 use App\Models\TipoMadera;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreMaderaRequest;
 use App\Http\Requests\UpdateMaderaRequest;
-use Illuminate\Http\Request;
 
 class MaderaController extends Controller
 {
@@ -46,7 +47,8 @@ class MaderaController extends Controller
         $this->authorize('admin');
         $madera = new Madera();
         $madera->tipo_madera_id = $request->tipo_madera_id;
-        $madera->nombre_cientifico = strtoupper($request->nombre_cientifico);
+        $madera->nombre_cientifico = trim(strtoupper($request->nombre_cientifico));
+        $madera->nombre_comun = trim(strtoupper($request->nombre_comun));
         $madera->densidad = $request->densidad;
         $madera->save();
         return redirect()->route('maderas.index')->with('status', 'Madera creada con éxito');
@@ -88,7 +90,8 @@ class MaderaController extends Controller
         //return request()->all();
         $this->authorize('admin');
         $madera->tipo_madera_id = $request->tipo_madera_id;
-        $madera->nombre_cientifico = strtoupper($request->nombre_cientifico);
+        $madera->nombre_cientifico = trim(strtoupper($request->nombre_cientifico));
+        $madera->nombre_comun = trim(strtoupper($request->nombre_comun));
         $madera->densidad = $request->densidad;
         $madera->save();
         return redirect()->route('maderas.index')->with('status', 'Madera actualizada con éxito');
@@ -103,6 +106,9 @@ class MaderaController extends Controller
     public function destroy(Madera $madera)
     {
         $this->authorize('admin');
+        if ($madera->hasAnyRelatedData(['entradas_madera_maderas','costos_infraestructura', 'items', ])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $madera->delete();
         return response()->json(['success'=>'Madera eliminada correctamente']);
     }

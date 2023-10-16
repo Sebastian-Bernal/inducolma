@@ -21,6 +21,7 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\TipoEventoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\ContratistaController;
+
 use App\Http\Controllers\DisenoProductoFinalController;
 use App\Http\Controllers\TipoMaderaController;
 use App\Http\Controllers\DisenoItemController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\Reportes\Administrativos\ReporteCubicajesController;
 use App\Http\Controllers\Reportes\Administrativos\ReportePersonalController;
+use App\Http\Controllers\Reportes\Costos\ReporteCostosController;
 use App\Http\Controllers\Reportes\Pedidos\ReportePedidosController;
 use App\Http\Controllers\Reportes\Procesos\ProcesoConstruccionController;
 use App\Http\Controllers\SubprocesoController;
@@ -55,381 +57,424 @@ DB::listen(function($query){
 |
 */
 
-Route::view('/','auth.login');
+Route::view('/', 'auth.login');
 
-Route::view('costos-maquina','modulos.maquinas')->name('maquinas')->middleware('auth');
+Route::view('costos-maquina', 'modulos.maquinas')->name('maquinas')->middleware('auth');
 
 Route::get('/costos-maquina', [MaquinaController::class, 'index'])->name('maquinas.index')->middleware('auth');
-Route::post('/costos-maquina', [MaquinaController::class,'store'] )->name('maquinas.store')->middleware('auth');
-Route::delete('/costos-maquina/{maquina}', [MaquinaController::class,'destroy'])->name('maquinas.destroy')->middleware('auth');
-Route::get('/costos-maquina/{maquina}/edit', [MaquinaController::class,'edit'])->name('maquinas.edit')->middleware('auth');
-Route::patch('/costos-maquina/{maquina}', [MaquinaController::class,'update'])->name('maquinas.update')->middleware('auth');
+Route::post('/costos-maquina', [MaquinaController::class, 'store'])->name('maquinas.store')->middleware('auth');
+Route::delete('/costos-maquina/{maquina}', [MaquinaController::class, 'destroy'])->name('maquinas.destroy')->middleware('auth');
+Route::get('/costos-maquina/{maquina}/edit', [MaquinaController::class, 'edit'])->name('maquinas.edit')->middleware('auth');
+Route::patch('/costos-maquina/{maquina}', [MaquinaController::class, 'update'])->name('maquinas.update')->middleware('auth');
 
 Route::get('/costos-operacion', [OperacionController::class, 'index'])->name('operaciones.index')->middleware('auth');
-Route::post('/costos-operacion', [OperacionController::class,'store'] )->name('operaciones.store')->middleware('auth');
-Route::delete('/costos-operacion/{operacion}', [OperacionController::class,'destroy'])->name('operaciones.destroy')->middleware('auth');
-Route::get('/costos-operacion/{operacion}/edit', [OperacionController::class,'edit'])->name('operaciones.edit')->middleware('auth');
-Route::patch('/costos-operacion/{operacion}', [OperacionController::class,'update'])->name('operaciones.update')->middleware('auth');
+Route::post('/costos-operacion', [OperacionController::class, 'store'])->name('operaciones.store')->middleware('auth');
+Route::delete('/costos-operacion/{operacion}', [OperacionController::class, 'destroy'])->name('operaciones.destroy')->middleware('auth');
+Route::get('/costos-operacion/{operacion}/edit', [OperacionController::class, 'edit'])->name('operaciones.edit')->middleware('auth');
+Route::patch('/costos-operacion/{operacion}', [OperacionController::class, 'update'])->name('operaciones.update')->middleware('auth');
 
 
 Route::get('/costos-descripcion', [DescripcionController::class, 'index'])->name('descripciones.index')->middleware('auth');
-Route::post('/costos-descripcion', [DescripcionController::class,'store'] )->name('descripciones.store')->middleware('auth');
-Route::delete('/costos-descripcion/{descripcion}', [DescripcionController::class,'destroy'])->name('descripciones.destroy')->middleware('auth');
-Route::get('/costos-descripcion/{descripcion}/edit', [DescripcionController::class,'edit'])->name('descripciones.edit')->middleware('auth');
-Route::patch('/costos-descripcion/{descripcion}', [DescripcionController::class,'update'])->name('descripciones.update')->middleware('auth');
+Route::post('/costos-descripcion', [DescripcionController::class, 'store'])->name('descripciones.store')->middleware('auth');
+Route::delete('/costos-descripcion/{descripcion}', [DescripcionController::class, 'destroy'])->name('descripciones.destroy')->middleware('auth');
+Route::get('/costos-descripcion/{descripcion}/edit', [DescripcionController::class, 'edit'])->name('descripciones.edit')->middleware('auth');
+Route::patch('/costos-descripcion/{descripcion}', [DescripcionController::class, 'update'])->name('descripciones.update')->middleware('auth');
 
 
 Route::resource('costos-de-operacion', CostosOperacionController::class)
-            ->parameters(['costos-de-operacion' => 'costos-operacion'])
-            ->names('costos-de-operacion')
-            ->middleware('auth');
+    ->parameters(['costos-de-operacion' => 'costos-operacion'])
+    ->names('costos-de-operacion')
+    ->middleware('auth');
 
 Route::resource('costos-de-infraestructura', CostosInfraestructuraController::class)
-            ->parameters(['costos-de-infraestructura' => 'costos-infraestructura'])
-            ->names('costos-de-infraestructura')
-            ->middleware('auth');
+    ->parameters(['costos-de-infraestructura' => 'costos-infraestructura'])
+    ->names('costos-de-infraestructura')
+    ->middleware('auth');
 
 Route::post('descripciones', [CostosOperacionController::class, 'descripciones'])
-        ->name('descripciones');
+    ->name('descripciones');
 
 Route::resource('usuarios', UsuarioController::class)
-            ->parameters(['usuarios' => 'usuario'])
-            ->names('usuarios')
-            ->middleware('auth');
+    ->parameters(['usuarios' => 'usuario'])
+    ->names('usuarios')
+    ->middleware('auth');
 
 Route::resource('proveedores', ProveedorController::class)
-            ->parameters(['proveedores' => 'proveedor'])
-            ->names('proveedores')
-            ->middleware('auth');
+    ->parameters(['proveedores' => 'proveedor'])
+    ->names('proveedores')
+    ->middleware('auth');
 
-Route::resource('roles',RolController::class)
-            ->parameters(['roles' => 'rol'])
-            ->names('roles')
-            ->middleware('auth');
+Route::controller(ProveedorController::class)->group(function () {
+    Route::put('restore-proveedor/{id}', 'restore')
+        ->name('restore-proveedor')
+        ->middleware('auth');
+});
+
+Route::resource('roles', RolController::class)
+    ->parameters(['roles' => 'rol'])
+    ->names('roles')
+    ->middleware('auth');
 
 
 Route::resource('maderas', MaderaController::class)
-            ->parameters(['maderas' => 'madera'])
-            ->names('maderas')
-            ->middleware('auth');
+    ->parameters(['maderas' => 'madera'])
+    ->names('maderas')
+    ->middleware('auth');
 
 Route::resource('entradas-maderas', EntradaMaderaController::class)
-            ->parameters(['entradas-maderas' => 'entrada'])
-            ->names('entradas-maderas')
-            ->middleware('auth');
+    ->parameters(['entradas-maderas' => 'entrada'])
+    ->names('entradas-maderas')
+    ->middleware('auth');
 
 
 
 Route::post('revisa-acto', [EntradaMaderaController::class, 'verificarRegistro'])
-        ->name('revisa-acto')
-        ->middleware('auth');
+    ->name('revisa-acto')
+    ->middleware('auth');
 
 
 Route::post('ultima-entrada', [EntradaMaderaController::class, 'ultimaEntrada'])
-        ->name('ultima-entrada')
-        ->middleware('auth');
+    ->name('ultima-entrada')
+    ->middleware('auth');
 
 Route::post('elimina-madera', [EntradaMaderaController::class, 'eliminarMadera'])
-        ->name('elimina-madera')
-        ->middleware('auth');
+    ->name('elimina-madera')
+    ->middleware('auth');
 
 Route::controller(EntradaMaderaController::class)->group(function () {
     Route::get('costo-madera', 'indexEntradas')
-            ->name('costo-madera')
-            ->middleware('auth');
+        ->name('costo-madera')
+        ->middleware('auth');
     Route::get('editar-costo/{entrada}', 'editEntrada')
-            ->name('editar-costo')
-            ->middleware('auth');
+        ->name('editar-costo')
+        ->middleware('auth');
     Route::put('actualizar-costo/{entrada}', 'updateEntrada')
-            ->name('actualizar-costo')
-            ->middleware('auth');
+        ->name('actualizar-costo')
+        ->middleware('auth');
     Route::get('entradas-madera-reporte', 'showEntradas')
-            ->name('entradas-madera-reporte')
-            ->middleware('auth');
+        ->name('entradas-madera-reporte')
+        ->middleware('auth');
+});
+
+Route::controller(UsuarioController::class)->group(function () {
+    Route::put('restore-user/{id}', 'restore')
+        ->name('restore-user')
+        ->middleware('auth');
 });
 
 
-Route::resource('cubicaje',CubicajeController::class)
-                ->parameters(['cubicaje'=> 'cubicaje'])
-                ->names('cubicaje')
-                ->middleware('auth');
+Route::resource('cubicaje', CubicajeController::class)
+    ->parameters(['cubicaje' => 'cubicaje'])
+    ->names('cubicaje')
+    ->middleware('auth');
 
-Route::controller(CubicajeController::class)->group(function (){
+Route::controller(CubicajeController::class)->group(function () {
 
-        Route::get('cubicaje-troza', 'cubicajeTroza')
-                ->name('cubicaje-troza')
-                ->middleware('auth');
-
-        Route::post('cubicaje-transformacion', 'cubicajeTransformacion')
-                ->name('cubicaje-transformacion')
-                ->middleware('auth');
-});
-
-Route::resource('clientes',ClienteController::class)
-                ->parameters(['clientes'=> 'cliente'])
-                ->names('clientes')
-                ->middleware('auth');
-
-Route::resource('eventos',EventoController::class)
-                ->parameters(['eventos'=> 'evento'])
-                ->names('eventos')
-                ->middleware('auth');
-
-Route::resource('estados',EstadoController::class)
-                ->parameters(['estados'=> 'estado'])
-                ->names('estados')
-                ->middleware('auth');
-
-Route::resource('insumos-almacen', InsumosAlmacenController::class)
-                ->parameters(['insumos-almacen'=> 'insumo_almacen'])
-                ->names('insumos-almacen')
-                ->middleware('auth');
-
-Route::resource('items', ItemController::class)
-                ->parameters(['items'=> 'item'])
-                ->names('items')
-                ->middleware('auth');
-
-Route::resource('pedidos', PedidoController::class)
-                ->parameters(['pedidos'=> 'pedido'])
-                ->names('pedidos')
-                ->middleware('auth');
-
-Route::controller(PedidoController::class)->group(function () {
-        Route::get('items-cliente','itemsCliente')->name('items-cliente')->middleware('auth');
-        Route::post('disenos-buscar','disenoBuscar')->name('diseno-buscar')->middleware('auth');
-});
-Route::resource('tipo-eventos', TipoEventoController::class)
-                ->parameters(['tipo-eventos'=> 'tipo_evento'])
-                ->names('tipo-eventos')
-                ->middleware('auth');
-
-Route::resource('recepcion', RecepcionController::class)
-                ->parameters(['recepcion'=> 'recepcion'])
-                ->names('recepcion')
-                ->middleware('auth');
-
-Route::post('recepcion-usuraio', [RecepcionController::class, 'consultaUsuario'])
-        ->name('recepcion-usuraio')
+    Route::get('cubicaje-troza', 'cubicajeTroza')
+        ->name('cubicaje-troza')
         ->middleware('auth');
 
+    Route::post('cubicaje-transformacion', 'cubicajeTransformacion')
+        ->name('cubicaje-transformacion')
+        ->middleware('auth');
+});
+
+Route::resource('clientes', ClienteController::class)
+    ->parameters(['clientes' => 'cliente'])
+    ->names('clientes')
+    ->middleware('auth');
+
+Route::controller(ClienteController::class)->group(function () {
+    Route::put('restore-cliente/{id}', 'restore')
+        ->name('restore-cliente')
+        ->middleware('auth');
+});
+
+Route::resource('eventos', EventoController::class)
+    ->parameters(['eventos' => 'evento'])
+    ->names('eventos')
+    ->middleware('auth');
+
+Route::controller(EventoController::class)->group(function () {
+    Route::put('restore-evento/{id}', 'restore')
+        ->name('restore-evento')
+        ->middleware('auth');
+});
+
+Route::resource('estados', EstadoController::class)
+    ->parameters(['estados' => 'estado'])
+    ->names('estados')
+    ->middleware('auth');
+
+Route::resource('insumos-almacen', InsumosAlmacenController::class)
+    ->parameters(['insumos-almacen' => 'insumo_almacen'])
+    ->names('insumos-almacen')
+    ->middleware('auth');
+
+Route::controller(InsumosAlmacenController::class)->group(function () {
+    Route::put('restore-insumo/{id}', 'restore')
+        ->name('restore-insumo')
+        ->middleware('auth');
+});
+
+Route::resource('items', ItemController::class)
+    ->parameters(['items' => 'item'])
+    ->names('items')
+    ->middleware('auth');
+
+Route::resource('pedidos', PedidoController::class)
+    ->parameters(['pedidos' => 'pedido'])
+    ->names('pedidos')
+    ->middleware('auth');
+
+Route::controller(PedidoController::class)->group(function () {
+    Route::get('items-cliente', 'itemsCliente')->name('items-cliente')->middleware('auth');
+    Route::post('disenos-buscar', 'disenoBuscar')->name('diseno-buscar')->middleware('auth');
+});
+Route::resource('tipo-eventos', TipoEventoController::class)
+    ->parameters(['tipo-eventos' => 'tipo_evento'])
+    ->names('tipo-eventos')
+    ->middleware('auth');
+
+Route::resource('recepcion', RecepcionController::class)
+    ->parameters(['recepcion' => 'recepcion'])
+    ->names('recepcion')
+    ->middleware('auth');
+
+Route::post('recepcion-usuraio', [RecepcionController::class, 'consultaUsuario'])
+    ->name('recepcion-usuraio')
+    ->middleware('auth');
+
 Route::controller(RecepcionController::class)->group(function () {
-       // Route::post('recepcion-usuario','consultaUsuario')->name('recepcion-usuario')->middleware('auth');
-        Route::get('recepcion-reporte','reporteRecepcion')->name('recepcion-reporte')->middleware('auth');
-        Route::post('recepcion-consulta','reporteRecepcion')->name('recepcion-consulta')->middleware('auth');
-        Route::post('recepcion-empleado','recepcionEmpleado')->name('recepcion-empleado')->middleware('auth');
-        Route::post('recepcion-contratista','recepcionContratista')->name('recepcion-contratista')->middleware('auth');
+    // Route::post('recepcion-usuario','consultaUsuario')->name('recepcion-usuario')->middleware('auth');
+    Route::get('recepcion-reporte', 'reporteRecepcion')->name('recepcion-reporte')->middleware('auth');
+    Route::post('recepcion-consulta', 'reporteRecepcion')->name('recepcion-consulta')->middleware('auth');
+    Route::post('recepcion-empleado', 'recepcionEmpleado')->name('recepcion-empleado')->middleware('auth');
+    Route::post('recepcion-contratista', 'recepcionContratista')->name('recepcion-contratista')->middleware('auth');
 });
 
 Route::resource('calificaciones', CalificacionMaderaController::class)
-                ->parameters(['calificaciones'=> 'calificacion'])
-                ->names('calificaciones')
-                ->middleware('auth');
+    ->parameters(['calificaciones' => 'calificacion'])
+    ->names('calificaciones')
+    ->middleware('auth');
 
 Route::resource('contratistas', ContratistaController::class)
-                ->parameters(['contratistas'=> 'contratista'])
-                ->names('contratistas')
-                ->middleware('auth');
+    ->parameters(['contratistas' => 'contratista'])
+    ->names('contratistas')
+    ->middleware('auth');
 
-
-Route::controller(PedidoController::class)->group(function () {
-        Route::get('pedidos-cliente/{cliente}','consultaPedidoCliente')
-                ->name('pedidos-cliente')
-                ->middleware('auth');
+Route::controller(ContratistaController::class)->group(function () {
+    Route::put('restore-contratista/{id}', 'restore')
+        ->name('restore-contratista')
+        ->middleware('auth');
 });
 
-Route::resource('disenos',DisenoProductoFinalController::class)
-                ->parameters(['disenos'=> 'diseno'])
-                ->names('disenos')
-                ->middleware('auth');
+Route::controller(PedidoController::class)->group(function () {
+    Route::get('pedidos-cliente/{cliente}', 'consultaPedidoCliente')
+        ->name('pedidos-cliente')
+        ->middleware('auth');
+});
+
+Route::resource('disenos', DisenoProductoFinalController::class)
+    ->parameters(['disenos' => 'diseno'])
+    ->names('disenos')
+    ->middleware('auth');
 
 Route::controller(DisenoProductoFinalController::class)->group(function () {
-        Route::post('disenos-cliente','asignarDisenoCliente')
-                ->name('disenos-cliente')
-                ->middleware('auth');
+    Route::post('disenos-cliente', 'asignarDisenoCliente')
+        ->name('disenos-cliente')
+        ->middleware('auth');
 });
 
 Route::resource('tipos-maderas', TipoMaderaController::class)
-                ->parameters(['tipos-maderas'=> 'tipo_madera'])
-                ->names('tipos-maderas')
-                ->middleware('auth');
+    ->parameters(['tipos-maderas' => 'tipo_madera'])
+    ->names('tipos-maderas')
+    ->middleware('auth');
+
+Route::controller(TipoMaderaController::class)->group(function () {
+    Route::put('restore-tipomadera/{id}', 'restore')
+        ->name('restore-tipomadera')
+        ->middleware('auth');
+});
 
 Route::resource('diseno-items', DisenoItemController::class)
-                ->parameters(['diseno-items'=> 'disenoItem'])
-                ->names('diseno-items')
-                ->middleware('auth');
+    ->parameters(['diseno-items' => 'disenoItem'])
+    ->names('diseno-items')
+    ->middleware('auth');
 
 Route::resource('diseno-insumos', DisenoInsumoController::class)
-                ->parameters(['diseno-insumos'=> 'disenoInsumo'])
-                ->names('diseno-insumos')
-                ->middleware('auth');
+    ->parameters(['diseno-insumos' => 'disenoInsumo'])
+    ->names('diseno-insumos')
+    ->middleware('auth');
 
 Route::controller(DisenoProductoFinalController::class)->group(function () {
-                Route::post('disenos-items-insumos','consultarItemsInsumos')
-                ->name('diseno-items-cliente')
-                ->middleware('auth');
+    Route::post('disenos-items-insumos', 'consultarItemsInsumos')
+        ->name('diseno-items-cliente')
+        ->middleware('auth');
 });
 
 
 Route::resource('programaciones', OrdenProduccionController::class)
-                ->parameters(['programaciones'=> 'ordenProduccion'])
-                ->names('programaciones')
-                ->middleware('auth');
+    ->parameters(['programaciones' => 'ordenProduccion'])
+    ->names('programaciones')
+    ->middleware('auth');
 
 Route::controller(OrdenProduccionController::class)->group(function () {
-        Route::post('programaciones-construccion','maderasOptimas')
-                ->name('contruccion')
-                ->middleware('auth');
-        Route::post('orden-items-inventario','crearOrdenItemsInventario')
-                ->name('orden-items-inventario')
-                ->middleware('auth');
-        Route::post('paqueta','verPaqueta')
-                ->name('paqueta')
-                ->middleware('auth');
-        Route::post('dividir-paqueta','dividirPaqueta')
-                ->name('dividir-paqueta')
-                ->middleware('auth');
-        Route::get('programaciones/{pedido}/{item_id}', 'showMaderas')
-                ->name('getMaderas')
-                ->middleware('auth');
-        Route::get('odenes-produccion/{pedido}/{item_id}', 'showOrden')
-                ->name('odenes-produccion')
-                ->middleware('auth');
-        Route::post('seleccionar-madera', 'seleccionar')
-                ->name('seleccionar')
-                ->middleware('auth');
-        Route::get('rutas-procesos/{pedido}/{item}', 'rutaProcesos')
-                ->name('rutas-procesos')
-                ->middleware('auth');
-
-
+    Route::post('programaciones-construccion', 'maderasOptimas')
+        ->name('contruccion')
+        ->middleware('auth');
+    Route::post('orden-items-inventario', 'crearOrdenItemsInventario')
+        ->name('orden-items-inventario')
+        ->middleware('auth');
+    Route::post('paqueta', 'verPaqueta')
+        ->name('paqueta')
+        ->middleware('auth');
+    Route::post('dividir-paqueta', 'dividirPaqueta')
+        ->name('dividir-paqueta')
+        ->middleware('auth');
+    Route::get('programaciones/{pedido}/{item_id}', 'showMaderas')
+        ->name('getMaderas')
+        ->middleware('auth');
+    Route::get('odenes-produccion/{pedido}/{item_id}', 'showOrden')
+        ->name('odenes-produccion')
+        ->middleware('auth');
+    Route::post('seleccionar-madera', 'seleccionar')
+        ->name('seleccionar')
+        ->middleware('auth');
+    Route::get('rutas-procesos/{pedido}/{item}', 'rutaProcesos')
+        ->name('rutas-procesos')
+        ->middleware('auth');
 });
 
 Route::resource('procesos', ProcesoController::class)
-    ->parameters(['procesos'=> 'proceso'])
+    ->parameters(['procesos' => 'proceso'])
     ->names('procesos')
     ->middleware('auth');
 
 
-Route::resource('turnos',TurnoController::class)
-        ->parameters(['turnos'=> 'turno'])
-        ->names('turnos');
+Route::resource('turnos', TurnoController::class)
+    ->parameters(['turnos' => 'turno'])
+    ->names('turnos');
 
 Route::resource('asignar-turnos', TurnoUsuarioController::class)
-        ->parameters(['turnoUsuario'=> 'turnoUsuario'])
-        ->names('asignar-turnos')
-        ->middleware('auth');
-Route::controller(TurnoUsuarioController::class)->group(function (){
+    ->parameters(['turnoUsuario' => 'turnoUsuario'])
+    ->names('asignar-turnos')
+    ->middleware('auth');
+Route::controller(TurnoUsuarioController::class)->group(function () {
     Route::post('turnos-usuario', 'TurnosUsuario')
         ->name('turnos-usuario')
         ->middleware('auth');
-
 });
 
 Route::resource('trabajo-maquina', TrabajoMaquina::class)
-        ->parameters(['trabajo_maquina' => 'trabajo_maquina'])
-        ->names('trabajo-maquina')
+    ->parameters(['trabajo_maquina' => 'trabajo_maquina'])
+    ->names('trabajo-maquina')
+    ->middleware('auth');
+
+Route::controller(TrabajoMaquina::class)->group(function () {
+    Route::post('guardar-asistencia', 'guardaAsistencia')
+        ->name('guardar-asistencia')
         ->middleware('auth');
 
-Route::controller(TrabajoMaquina::class)->group(function(){
-        Route::post('guardar-asistencia', 'guardaAsistencia')
-            ->name('guardar-asistencia')
-            ->middleware('auth');
+    Route::post('guardar-eventualidad', 'guardaEventualidad')
+        ->name('guardar-eventualidad')
+        ->middleware('auth');
 
-        Route::post('guardar-eventualidad','guardaEventualidad')
-            ->name('guardar-eventualidad')
-            ->middleware('auth');
+    Route::post('guardar-estado', 'guardaEstado')
+        ->name('guardar-estado')
+        ->middleware('auth');
 
-        Route::post('guardar-estado','guardaEstado')
-            ->name('guardar-estado')
-            ->middleware('auth');
+    Route::post('apagar-maquina', 'apagarMaquina')
+        ->name('apagar-maquina')
+        ->middleware('auth');
 
-        Route::post('apagar-maquina','apagarMaquina')
-            ->name('apagar-maquina')
-            ->middleware('auth');
+    Route::get('trabajo-ensamble/{pedido}', 'trabajoEnsamble')
+        ->name('trabajo-ensamble')
+        ->middleware('auth');
 
-        Route::get('trabajo-ensamble/{pedido}', 'trabajoEnsamble')
-                ->name('trabajo-ensamble')
-                ->middleware('auth');
-
-        Route::get('trabajo-troza/{entrada}', 'trabajoTroza')
-                ->name('trabajo-troza')
-                ->middleware('auth');
-
+    Route::get('trabajo-troza/{entrada}', 'trabajoTroza')
+        ->name('trabajo-troza')
+        ->middleware('auth');
 });
 
 Route::resource('subprocesos', SubprocesoController::class)
-        ->parameters(['subproceso' => 'subproceso'])
-        ->names('subprocesos')
-        ->middleware('auth');
+    ->parameters(['subproceso' => 'subproceso'])
+    ->names('subprocesos')
+    ->middleware('auth');
 
 
 //rutas reportes
 
-Route::controller(ReporteController::class)->group(function(){
-        Route::get('ingreso-maderas', 'ingresoMaderas' )
+Route::controller(ReporteController::class)->group(function () {
+    Route::get('ingreso-maderas', 'ingresoMaderas')
         ->name('ingreso-maderas')
         ->middleware('auth');
 
-        Route::get('get-proveedores', 'getProveedores')
-                ->name('get-proveedores')
-                ->middleware('auth');
+    Route::get('get-proveedores', 'getProveedores')
+        ->name('get-proveedores')
+        ->middleware('auth');
 
-        Route::get('get-tipo-maderas', 'getTipoMadera')
-                ->name('get-tipo-maderas')
-                ->middleware('auth');
-
-
+    Route::get('get-tipo-maderas', 'getTipoMadera')
+        ->name('get-tipo-maderas')
+        ->middleware('auth');
 });
 
-Route::controller(ReporteCubicajesController::class)->group(function (){
+Route::controller(ReporteCubicajesController::class)->group(function () {
     Route::get('get-entradas/{proveedor}', 'getEntradas')->name('get-entradas')->middleware('auth');
     Route::get('reporte-cubicajes', 'reporteCubicajes')->name('reporte-cubicajes')->middleware('auth');
-
 });
 
-Route::controller(ReportePersonalController::class)->group(function (){
+Route::controller(ReportePersonalController::class)->group(function () {
     Route::get('reporte-personal', 'reportePersonal')->name('reporte-personal')->middleware('auth');
     Route::get('get-empleados', 'getEmpleados')->name('get-empleados')->middleware('auth');
     Route::get('get-terceros', 'getTerceros')->name('get-terceros')->middleware('auth');
 });
 
 
-Route::controller(ReportePedidosController::class)->group(function (){
-        Route::get('get-clientes', 'getClientes')->name('get-clientes')->middleware('auth');
-        Route::get('reporte-pedidos', 'reportePedidos')->name('reporte-pedidos')->middleware('auth');
+Route::controller(ReportePedidosController::class)->group(function () {
+    Route::get('get-clientes', 'getClientes')->name('get-clientes')->middleware('auth');
+    Route::get('reporte-pedidos', 'reportePedidos')->name('reporte-pedidos')->middleware('auth');
 });
 
-Route::controller(ProcesoConstruccionController::class)->group(function(){
-        Route::get('get-maquinas', 'getMaquinas')->name('get-maquinas')->middleware('auth');
-        Route::get('get-items', 'getItems')->name('get-items')->middleware('auth');
-        Route::get('reporte-proceso', 'reportesProcesos')->name('reporte-proceso')->middleware('auth');
-        Route::get('get-maquinas-ensamble', 'getMaquinasEnsamble')->name('get-maquinas-ensamble')->middleware('auth');
-        Route::get('get-productos', 'getProductos')->name('get-productos')->middleware('auth');
+Route::controller(ProcesoConstruccionController::class)->group(function () {
+    Route::get('get-maquinas', 'getMaquinas')->name('get-maquinas')->middleware('auth');
+    Route::get('get-items', 'getItems')->name('get-items')->middleware('auth');
+    Route::get('reporte-proceso', 'reportesProcesos')->name('reporte-proceso')->middleware('auth');
+    Route::get('get-maquinas-ensamble', 'getMaquinasEnsamble')->name('get-maquinas-ensamble')->middleware('auth');
+    Route::get('get-productos', 'getProductos')->name('get-productos')->middleware('auth');
+});
+
+Route::controller(ReporteCostosController::class)->group(function () {
+    Route::get('reporte-costos', 'reporteCostos')->name('reporte-costos')->middleware('auth');
 });
 
 
 // rutas views index reportes
 
 
-Route::view('reportes-administrativos','modulos.reportes.administrativos.index')
+Route::view('reportes-administrativos', 'modulos.reportes.administrativos.index')
     ->name('reportes-administrativos')
     ->middleware('auth');
 
-Route::view('reportes-ventas','modulos.reportes.ventas.index')
+Route::view('reportes-ventas', 'modulos.reportes.ventas.index')
     ->name('reportes-ventas')
     ->middleware('auth');
 
-Route::view('reportes-procesos','modulos.reportes.procesos.index')
+Route::view('reportes-procesos', 'modulos.reportes.procesos.index')
     ->name('reportes-procesos')
     ->middleware('auth');
 
+Route::view('reportes-costos', 'modulos.reportes.costos.index')
+    ->name('reportes-costos')
+    ->middleware('auth');
+
+
+
+
 
 Auth::routes([
-        'register' => false,
+    'register' => false,
 
-        ]);
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TipoMadera;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreTipoMaderaRequest;
 use App\Http\Requests\UpdateTipoMaderaRequest;
 
@@ -15,7 +16,7 @@ class TipoMaderaController extends Controller
      */
     public function index()
     {
-        $tiposMadera = TipoMadera::all();
+        $tiposMadera = TipoMadera::withTrashed()->get();
         return view('modulos.administrativo.tipo_madera.index', compact('tiposMadera'));
     }
 
@@ -89,9 +90,27 @@ class TipoMaderaController extends Controller
      */
     public function destroy(TipoMadera $tipoMadera)
     {
-        //$tipoMadera->maderas()->delete();
-        //$tipoMadera->items()->delete();
+        if ($tipoMadera->hasAnyRelatedData(['maderas','items','disenos'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $tipoMadera->delete();
         return response()->json(['success' => 'Tipo de madera eliminado correctamente']);
+    }
+
+
+    /**
+     * Restore resource from BD
+     * @param int id
+     * @return Response
+     */
+    public function restore($id) :Response {
+
+        try {
+            $resourceDelete = TipoMadera::onlyTrashed()->where('id', $id)->restore();
+            return new Response(['success' => 'El tipo de madera fue restaurado con éxito'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new Response(['errors' => "El tipo de madera no pudo ser restaurado"], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

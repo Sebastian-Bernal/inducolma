@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\CheckRelations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Cubicaje extends Model
 {
-    use HasFactory;
+    use HasFactory, CheckRelations;
 
     /**
      * relacion hasMany procesos
@@ -22,5 +23,10 @@ class Cubicaje extends Model
     public function transformaciones()
     {
         $this->hasMany(Transformacion::class);
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 }

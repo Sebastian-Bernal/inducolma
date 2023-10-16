@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TipoEvento;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreTipoEventoRequest;
 
 class TipoEventoController extends Controller
@@ -63,7 +64,7 @@ class TipoEventoController extends Controller
      */
     public function edit(TipoEvento $tipoEvento)
     {
-        
+
     }
 
     /**
@@ -90,6 +91,9 @@ class TipoEventoController extends Controller
     public function destroy(TipoEvento $tipo_evento)
     {
         $this->authorize('admin');
+        if ($tipo_evento->hasAnyRelatedData(['eventos'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $tipo_evento->delete();
         return response()->json(['success' => 'Tipo de evento eliminado con éxito']);
     }

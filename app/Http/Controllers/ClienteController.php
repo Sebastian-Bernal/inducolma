@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreClienteRequest;
-use App\Models\Cliente;
+use Exception;
 use App\Models\Pedido;
-use App\Models\DisenoProductoFinal;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\DisenoProductoFinal;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreClienteRequest;
 
 class ClienteController extends Controller
 {
@@ -18,7 +20,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::withTrashed()->get();
         return view('modulos.administrativo.clientes.index', compact('clientes'));
     }
 
@@ -62,7 +64,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-       
+
         $pedidos = Pedido::join('diseno_producto_finales','pedidos.diseno_producto_final_id','=','diseno_producto_finales.id')
                                 ->where('cliente_id', $cliente->id)
                                 ->orderBy('pedidos.created_at', 'desc')
@@ -75,9 +77,9 @@ class ClienteController extends Controller
                                     'pedidos.estado',
                                     'diseno_producto_finales.descripcion',
                                 ]);
-        
+
         return view('modulos.administrativo.clientes.show', compact('cliente', 'pedidos'));
-       
+
     }
 
     /**
@@ -121,7 +123,27 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         $this->authorize('admin');
+        if ($cliente->hasAnyRelatedData(['pedidos', 'disenos'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $cliente->delete();
         return response()->json(['success'=>'Cliente eliminado correctamente']);
+    }
+
+
+    /**
+     * Restore cliente from BD
+     * @param int id
+     * @return Response
+     */
+    public function restore($id) :Response {
+
+        try {
+            $clienteDelete = Cliente::onlyTrashed()->where('id', $id)->restore();
+            return new Response(['success' => 'El cliente fue restaurado con éxito'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new Response(['errors' => "El cliente no pudo ser restaurado"], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

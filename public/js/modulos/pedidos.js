@@ -124,7 +124,7 @@ function mayusculas() {
 }
 
 // funcion para eliminar un Insumo
-function eliminarPedido(pedido) {
+/*function eliminarPedido(pedido) {
 
     Swal.fire({
         title: `¿Está seguro de eliminar el pedido ?`,
@@ -162,8 +162,26 @@ function eliminarPedido(pedido) {
             })
         }
     })
-}
+}*/
+/**
+ * Funcion que permite enviar un request para eliminar Pedido
+ * @param {object} pedido
+ * @returns {void}
+ */
+function eliminarPedido(pedido) {
 
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de eliminar el Pedido ${pedido.nombre} - ${pedido.descripcion} - ${pedido.cantidad}`;
+    var confirmButtonText = 'Si, eliminarl!';
+    var url =  `/pedidos/${pedido.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token  };
+    var titulo =  'Eliminado!';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
+}
 //funcion volverAPedido, da un click al boton btnpedido
 function volverAPedido() {
     $('#btnpedido').click();

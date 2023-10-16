@@ -35,7 +35,7 @@ class EntradaMaderaController extends Controller
             ->where('user_id', auth()->user()->id)
             ->get();
 
-        $proveedores = Proveedor::select('id', 'nombre')->get();
+        $proveedores = Proveedor::select('id', 'nombre', 'razon_social')->get();
         $maderas = Madera::select('id', 'nombre_cientifico')->get();
         return view('modulos.administrativo.entradas-madera.index', compact('entradas', 'proveedores', 'maderas'));
     }
@@ -79,8 +79,8 @@ class EntradaMaderaController extends Controller
 
         $entrada = EntradaMadera::find($entrada->id)->load('proveedor', 'maderas', 'entradas_madera_maderas');
         //return $entrada;
-        $proveedores = Proveedor::select('id', 'nombre')->get();
-        $maderas = Madera::select('id', 'nombre')->get();
+        $proveedores = Proveedor::select('id', 'nombre', 'razon_social')->get();
+        $maderas = Madera::select('id', 'nombre_cientifico')->get();
         return view(
             'modulos.administrativo.entradas-madera.show',
             compact('entrada', 'proveedores', 'maderas')
@@ -126,7 +126,7 @@ class EntradaMaderaController extends Controller
      */
     public function verificarRegistro(Request $request)
     {
-        //return $request->all();
+        return response()->json(['error' => false]);
         $entrada = EntradaMadera::where(trim('acto_administrativo'), trim($request->acto));
         if ($entrada->count() > 0) {
             return response()->json(['error' => true]);
@@ -135,7 +135,7 @@ class EntradaMaderaController extends Controller
         }
     }
 
-    // retorna un json con los datos de la ultima entrada
+    // retorna un json con los datos de la ultima entrada adrian.duqueicm@gmail.com 1143878756
     public function ultimaEntrada(Request $request)
     {
         $ultimaEntrada = EntradaMadera::findOrFail($request->id)
@@ -144,7 +144,7 @@ class EntradaMaderaController extends Controller
             ->join('maderas', 'entradas_madera_maderas.madera_id', '=', 'maderas.id')
             ->select(
                 'entradas_madera_maderas.id',
-                'maderas.nombre',
+                'maderas.nombre_cientifico',
                 'entradas_madera_maderas.condicion_madera',
                 'entradas_madera_maderas.m3entrada',
                 'entradas_madera_maderas.madera_id',

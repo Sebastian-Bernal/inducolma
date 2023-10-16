@@ -5,10 +5,10 @@ $(document).ready(function() {
                 "url": "/DataTables/Spanish.json"
                 },
         "responsive": true
-        
+
     });
-   
-    
+
+
 });
 
 // funcion cambia a mayusculas el input descripcion
@@ -21,7 +21,7 @@ function mayusculas() {
 function eliminarRecepcion(recepcion) {
     Swal.fire({
         title: `¿Está seguro de eliminar el recepcion:
-                ${recepcion.nombre_completo}?`,       
+                ${recepcion.nombre_completo}?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#597504',
@@ -47,20 +47,20 @@ function eliminarRecepcion(recepcion) {
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            location.reload();                            
+                            location.reload();
                         }
                     })
-                    
+
                 },
           })
         }
     })
 }
 
-// funcion consultaUsuario, para verificar si el usuario existe en la base de datos, si existe, se permite el registro 
+// funcion consultaUsuario, para verificar si el usuario existe en la base de datos, si existe, se permite el registro
 // como visitante o como usuario registrado, si no existe se permite registrar como visitante
 function ingersoVisitante() {
-   
+
     var usuario = $('#cc').val();
     var primer_nombre = $('#primer_nombre').val();
     var primer_apellido = $('#primer_apellido').val();
@@ -102,17 +102,27 @@ function ingersoVisitante() {
                         confirmButtonColor: '#597504',
                         confirmButtonText: 'OK'
                     })
-                } 
-                
-            } 
+                }
+
+            },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+            Swal.fire({
+                title: jqXHR.responseJSON.errors.cc,
+                text: errorThrown,
+                icon: 'error',
+                confirmButtonColor: '#597504',
+                confirmButtonText: 'OK'
+            })
+            }
         })
     }
-    
+
 
 }
 
 /**
- * Funcion horaSalida, actualiza la hora de salida de la persona. 
+ * Funcion horaSalida, actualiza la hora de salida de la persona.
  * redirecciona al index
  */
 
@@ -134,7 +144,7 @@ function horaSalida(recepcion) {
                 type: "DELETE",
                 dataType: "JSON",
                 data: {
-                    _token: $('input[name="_token"]').val(),                    
+                    _token: $('input[name="_token"]').val(),
                 },
                 success: function (e) {
                     if (e.error == false) {
@@ -154,7 +164,7 @@ function horaSalida(recepcion) {
                             confirmButtonColor: '#597504',
                             confirmButtonText: 'OK'
                         })
-                    } 
+                    }
                 }
             })
 
@@ -173,23 +183,23 @@ function limpiarForm() {
 }
 
 /**
- * Funcion cedula extrae la cedula de ua cadena de 
+ * Funcion cedula extrae la cedula de ua cadena de
  */
  function cedula(){
     //validar el keypress
-    var key = window.event.keyCode;    
+    var key = window.event.keyCode;
     if (key == 13 || key ==9){
         var cedula = $('#cc_empleado').val();
         var cedula = cedula.substring(0,10);
         $('#cc_empleado').val(cedula);
-        
+
         guardarIngresoEmpleado(cedula);
-        
+
     }
-    
+
  }
 //  $('#cc_empleado').blur(function(){
-    
+
 //     var cedula = $('#cc_empleado').val();
 //     if (cedula != '') {
 //         var cedula = cedula.substring(0,10);
@@ -201,7 +211,7 @@ function limpiarForm() {
 //     }
 // })
 
-/** 
+/**
   * Funcion guardarIngresoEmpleado, guarda el ingreso de un empleado
 */
 
@@ -218,7 +228,7 @@ function guardarIngresoEmpleado(cedula){
         success: function (e) {
             if (e.error == false) {
                 $('#cc_empleado').focus();
-                
+
                 Swal.fire({
                     position: 'top-end',
                     title: e.title,
@@ -227,7 +237,7 @@ function guardarIngresoEmpleado(cedula){
                     showConfirmButton: false,
                     timer: 3000
                 })
-                
+
             } else {
                 $('#cc_empleado').focus();
                 $('#cc_empleado').val('');
@@ -238,29 +248,29 @@ function guardarIngresoEmpleado(cedula){
                     confirmButtonColor: '#597504',
                     confirmButtonText: 'OK'
                 })
-            } 
+            }
         }
     })
 }
 
-/** 
+/**
   * Funcion guardarIngresoContratista, guarda el ingreso de un contratista
 */
 /**
- * Funcion cedula extrae la cedula de ua cadena de 
+ * Funcion cedula extrae la cedula de ua cadena de
  */
  function cedulaContratista(){
     //validar el keypress
-    var key = window.event.keyCode;    
+    var key = window.event.keyCode;
     if (key == 13 || key ==9){
         var cedula = $('#cc_contratista').val();
         var cedula = cedula.substring(0,10);
         $('#cc_contratista').val(cedula);
 
         guardarIngresoContratista(cedula);
-        
+
     }
-    
+
  }
 
 function guardarIngresoContratista(cedula){
@@ -276,7 +286,7 @@ function guardarIngresoContratista(cedula){
         success: function (e) {
             if (e.error == false) {
                 $('#cc_contratista').focus();
-                
+
                 Swal.fire({
                     position: 'top-end',
                     title: '¡Ingreso registrado!',
@@ -285,7 +295,7 @@ function guardarIngresoContratista(cedula){
                     showConfirmButton: false,
                     timer: 3000
                 })
-                
+
             } else {
                 $('#cc_contratista').focus();
                 $('#cc_contratista').val('');
@@ -296,7 +306,7 @@ function guardarIngresoContratista(cedula){
                     confirmButtonColor: '#597504',
                     confirmButtonText: 'OK'
                 })
-            } 
+            }
         }
     })
 }

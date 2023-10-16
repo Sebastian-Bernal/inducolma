@@ -18,53 +18,22 @@ function mayusculas() {
 }
 
 /**
- * eliina el turno indicado, devuele la respuesta de confirmacion
+ * Funcion que permite enviar un request para eliminar turno
  * @param {object} turno
+ * @returns {void}
  */
 function eliminarTurno(turno) {
-    Swal.fire({
-        title: '¿Está seguro de eliminar el turno: '+ turno.turno+ '?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#597504',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "/turnos/" + turno.id,
-                type: "DELETE",
-                dataType: "JSON",
-                data: {
-                    _token: $('input[name="_token"]').val()
-                },
-                success: function (e) {
-                    // console.log(e);
-                    Swal.fire({
-                        title: 'Eliminado!',
-                        text: e.success,
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    })
 
-                },
-                error: function (e) {
-                    // console.log(e);
-                    Swal.fire({
-                        title: 'No pudo ser eliminado!',
-                        text: "El turno no pudo ser eliminado, contacte al administrador de la aplicación",
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    })
-                }
-            })
-        }
-    })
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de eliminar el turno ${turno.turno}  ?`;
+    var confirmButtonText = 'Si, eliminarl!';
+    var url =  `/turnos/${turno.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token  };
+    var titulo =  'Eliminado!';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
 }
+

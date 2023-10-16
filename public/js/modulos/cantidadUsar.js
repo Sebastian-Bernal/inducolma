@@ -49,7 +49,7 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                             }
                             return 0;
                         })
-                        //console.log(e)
+
                         let primero
                         let ultimo
                         primero = e.shift()
@@ -133,6 +133,7 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                             showCloseButton: true,
                         }).then((result) => {
                             if (result.isConfirmed) {
+
                                 Swal.fire({
                                     title: 'Esta Seguro de usar esta mitad No. 1',
                                     confirmButtonColor: '#597504',
@@ -142,9 +143,19 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                                     showDenyButton: true,
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        let prueba = e.cubicajes[0]
-                                        let primero = prueba.shift()
-                                        let ultimo = prueba.pop()
+
+                                        let prueba;
+                                        let primero;
+                                        let ultimo;
+                                        if (e.cubicajes[0].length == 1) {
+                                            primero = e.cubicajes[0][0];
+                                            ultimo = e.cubicajes[0][0];
+                                        } else{
+                                            prueba = e.cubicajes[0];
+                                            primero = prueba.shift()
+                                            ultimo = prueba.pop()
+                                        }
+
                                         $.ajax({
                                             url: `/seleccionar-madera`,
                                             type: "POST",
@@ -184,9 +195,17 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                                     showDenyButton: true,
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        let prueba = e.cubicajes[1]
-                                        let primero = prueba.shift()
-                                        let ultimo = prueba.pop()
+                                        let prueba;
+                                        let primero;
+                                        let ultimo;
+                                        if (e.cubicajes[1].length == 1) {
+                                            primero = e.cubicajes[1][0];
+                                            ultimo = e.cubicajes[1][0];
+                                        } else{
+                                            prueba = e.cubicajes[0];
+                                            primero = prueba.shift()
+                                            ultimo = prueba.pop()
+                                        }
                                         $.ajax({
                                             url: `/seleccionar-madera`,
                                             type: "POST",
@@ -253,11 +272,18 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                             }
                             return 0;
                         })
-                        //console.log(e)
-                        let primero
-                        let ultimo
-                        primero = e.shift()
-                        ultimo = e.pop()
+                        console.log(e)
+                        let prueba;
+                        let primero;
+                        let ultimo;
+                        if (e.length == 1) {
+                            primero = e[0];
+                            ultimo = e[0]
+                        } else{
+                            prueba = e;
+                            primero = prueba.shift()
+                            ultimo = prueba.pop()
+                        }
 
                         $.ajax({
                             url: `/seleccionar-madera`,

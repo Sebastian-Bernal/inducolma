@@ -15,44 +15,46 @@ class RolSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('rols')->insert([
-            'id' => 1 ,
+        Rol::firstOrCreate([
+
             'nombre' => 'Recepcionista madera',
-            'descripcion' => 'descripcion del rol es editable',
+            'descripcion' => 'Permite usar el módulo de recepción de maderas en portería, también permite la recepción de personal, contratistas y visitantes.',
 
         ]);
-        DB::table('rols')->insert([
-            'id' => 2 ,
+        Rol::firstOrCreate([
+
             'nombre' => 'Operario maquinas',
-            'descripcion' => 'descripcion del rol es editable',
+            'descripcion' => 'Permite el trabajo en máquinas o en cubicaje dependiendo de la programación a la que han asignado al usuario.',
 
         ]);
-        DB::table('rols')->insert([
-            'id' => 3 ,
+      /*   Rol::firstOrCreate([
+
             'nombre' => 'Auxiliar administrativo contable',
             'descripcion' => 'descripcion del rol es editable',
 
-        ]);
+        ]); */
 
-        DB::table('rols')->insert([
-            'id' => 4 ,
+       /*  Rol::firstOrCreate([
+
             'nombre' => 'ventas',
             'descripcion' => 'descripcion del rol es editable',
-        ]);
-        DB::table('rols')->insert([
-            'id' => 5 ,
+        ]); */
+
+        /* Rol::firstOrCreate([
+
             'nombre' => 'Maderas',
             'descripcion' => 'descripcion del rol es editable',
-        ]);
-        DB::table('rols')->insert([
-            'id' => 6 ,
+        ]); */
+
+        Rol::firstOrCreate([
+
             'nombre' => 'Administracion',
-            'descripcion' => 'descripcion del rol es editable',
+            'descripcion' => 'Permite el manejo de toda la gestión administrativa y sus módulos.',
         ]);
-        DB::table('rols')->insert([
-            'id' => 7 ,
+        Rol::firstOrCreate([
+
             'nombre' => 'Gerencia',
-            'descripcion' => 'descripcion del rol es editable',
+            'descripcion' => 'Permite el manejo de toda la gestión administrativa y sus módulos.',
         ]);
     }
 }

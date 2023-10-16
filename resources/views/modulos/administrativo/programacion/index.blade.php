@@ -65,7 +65,7 @@
                                             @forelse ($ordenes as $orden)
                                                 <tr>
                                                     <td>{{ $orden->id }}</td>
-                                                    <td>{{ $orden->pedido->cliente->nombre }}</td>
+                                                    <td>{{ $orden->pedido->cliente->razon_social }}</td>
                                                     <td>{{ $orden->pedido->diseno_producto_final->descripcion }}</td>
                                                     <td>{{ $orden->item->descripcion }}</td>
                                                     <td>{{ $orden->cantidad }}</td>
@@ -213,7 +213,7 @@
                         <div class="card ">
                         <div class="card-header {{ $pedido->dias < 5 ? 'bg-danger' : 'bg-warning ' }}"><strong>Pedido #{{ $pedido->id }}</strong> </div>
                         <div class="card-body " >
-                            <h5 class="card-title">{{ $pedido->nombre }}</h5>
+                            <h5 class="card-title">{{ $pedido->razon_social }}</h5>
                             <p class="card-text mb-1">
                                 Producto: {{ $pedido->descripcion }} <br>
                                 Cantidad: {{ $pedido->cantidad }} <br>

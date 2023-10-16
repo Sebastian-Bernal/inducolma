@@ -16,9 +16,9 @@ class UpdateContratistaRequest extends FormRequest
         return [
             'cedula' => 'required',
             'primer_nombre' => 'required|string|max:255',
-            'segundo_nombre' => 'string|max:255',
+            //'segundo_nombre' => 'string|max:255',
             'primer_apellido' => 'required|string|max:255',
-            'segundo_apellido' => 'string|max:255',
+            //'segundo_apellido' => 'string|max:255',
            // 'acceso' => 'boolean',
             'empresa_contratista'=> 'required|string|max:255',
         ];
@@ -26,7 +26,7 @@ class UpdateContratistaRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages()

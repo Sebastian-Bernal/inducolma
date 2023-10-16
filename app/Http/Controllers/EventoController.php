@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEventoRequest;
 use App\Models\Evento;
 use App\Models\TipoEvento;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use PhpParser\Node\Stmt\Return_;
+use App\Http\Requests\StoreEventoRequest;
 
 class EventoController extends Controller
 {
@@ -17,7 +18,7 @@ class EventoController extends Controller
      */
     public function index()
     {
-        $eventos = Evento::all();
+        $eventos = Evento::withTrashed()->get();
         $tipo_eventos = TipoEvento::all();
         return view('modulos.administrativo.eventos.index', compact('eventos', 'tipo_eventos'));
     }
@@ -96,10 +97,26 @@ class EventoController extends Controller
      */
     public function destroy(Evento $evento)
     {
-        
+
         $this->authorize('admin');
         $evento->delete();
         return response()->json(['success'=>'Evento eliminado correctamente']);
+
+    }
+
+    /**
+     * Restore resource from BD
+     * @param int id
+     * @return Response
+     */
+    public function restore($id) :Response {
+
+        try {
+            $eventoDelete = Evento::onlyTrashed()->where('id', $id)->restore();
+            return new Response(['success' => 'El evento fue restaurado con éxito'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new Response(['errors' => "El evento no pudo ser restaurado"], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
     }
 

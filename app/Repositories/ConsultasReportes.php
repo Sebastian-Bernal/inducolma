@@ -67,18 +67,24 @@ class ConsultasReportes {
                                 ->where($where, $termino)
                                 ->whereBetween('entrada_maderas.created_at',[$desde, $hasta])
                                 ->get([
-                                    'entrada_maderas.id',
+
                                     'entrada_maderas.mes',
                                     'entrada_maderas.ano',
                                     'entrada_maderas.acto_administrativo',
                                     'entrada_maderas.fecha',
+                                    'entrada_maderas.created_at',
                                     'entrada_maderas.salvoconducto_remision',
                                     'entrada_maderas.titular_salvoconducto',
                                     'entrada_maderas.procedencia_madera',
                                     'entrada_maderas.entidad_vigilante',
                                     'proveedores.nombre',
+                                    'proveedores.razon_social',
                                     'entradas_madera_maderas.m3entrada',
+                                    'entradas_madera_maderas.condicion_madera',
+                                    'entradas_madera_maderas.id',
+                                    'maderas.densidad',
                                     'maderas.nombre_cientifico',
+                                    'maderas.nombre_comun',
                                     'tipo_maderas.descripcion',
 
                                 ]);
@@ -98,9 +104,10 @@ class ConsultasReportes {
             for ($i = 0; $i < count($result); $i++) {
                 if($result[$i]['entrada_madera_id'] == $t->id){
                     $madera = array(
-                        'nobre_comun' => $t->descripcion,
+                        'nobre_comun' => $t->nombre_comun,
                         'nombre_cientifico' => $t->nombre_cientifico,
                         'm3entrada' => $t->m3entrada,
+                        'condicion_madera' => $t->condicion_madera
                     );
                     array_push($result[$i]['maderas'],$madera);
                     $repetir = true;
@@ -119,11 +126,13 @@ class ConsultasReportes {
                     'procedencia_madera' => $t->procedencia_madera,
                     'entidad_vigilante' => $t->entidad_vigilante,
                     'proveedor' => $t->nombre,
+                    'razon_social' => $t->razon_social,
                     'maderas' => array(
                         array(
-                            'nobre_comun' => $t->descripcion,
+                            'nobre_comun' => $t->nombre_comun,
                             'nombre_cientifico' => $t->nombre_cientifico,
                             'm3entrada' => $t->m3entrada,
+                            'condicion_madera' => $t->condicion_madera
                         )
                     )
                 );

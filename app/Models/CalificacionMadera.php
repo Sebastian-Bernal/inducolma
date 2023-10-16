@@ -25,4 +25,9 @@ class CalificacionMadera extends Model
     {
         return $this->belongsTo(EntradasMaderaMaderas::class, 'entrada_madera_id', 'id', );
     }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s');
+    }
 }

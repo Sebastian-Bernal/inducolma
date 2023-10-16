@@ -24,9 +24,9 @@ class CreateItemsTable extends Migration
             $table->integer('codigo_cg');
             $table->boolean('preprocesado')->default(false);
             $table->integer('carretos');
-            $table->datetime('fecha_ingreso');
-            $table->datetime('fecha_uso');
-            $table->string('estado');
+            $table->datetime('fecha_ingreso')->nullable();
+            $table->datetime('fecha_uso')->nullable();
+            $table->string('estado')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

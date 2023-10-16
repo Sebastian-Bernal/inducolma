@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DisenoProductoFinal;
-use App\Models\TipoMadera;
-use App\Models\Cliente;
 use App\Models\Item;
-use App\Models\InsumosAlmacen;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\DisenoCliente;
-use App\Models\DisenoInsumo;
+use App\Models\Cliente;
 use App\Models\DisenoItem;
+use App\Models\TipoMadera;
+use App\Models\DisenoInsumo;
+use Illuminate\Http\Request;
+use App\Models\DisenoCliente;
+use Illuminate\Http\Response;
+use App\Models\InsumosAlmacen;
+use App\Models\DisenoProductoFinal;
+use Illuminate\Support\Facades\Auth;
 
 class DisenoProductoFinalController extends Controller
 {
@@ -53,7 +54,7 @@ class DisenoProductoFinalController extends Controller
         $diseno->estado = 'EN USO';
         $diseno->user_id = Auth::user()->id;
         $diseno->save();
-        return redirect()->route('disenos.show',$diseno->id)->with('status', 'Diseño creado con éxito, ahora puede agregar los Items e insumos');
+        return redirect()->route('disenos.show', $diseno->id)->with('status', 'Diseño creado con éxito, ahora puede agregar los Items e insumos');
     }
 
     /**
@@ -64,17 +65,19 @@ class DisenoProductoFinalController extends Controller
      */
     public function show(DisenoProductoFinal $diseno)
     {
-        $clientes = Cliente::get(['id','nombre']);
-        $diseno_items = DisenoItem::join('items','items.id','=','diseno_items.item_id')
-                                   ->where('diseno_producto_final_id', $diseno->id)
-                                   ->get(['diseno_items.id','items.descripcion','diseno_items.cantidad']);
-        $diseno_insumos = DisenoInsumo::join('insumos_almacen','insumos_almacen.id','=','diseno_insumos.insumo_almacen_id')
-                                       ->where('diseno_producto_final_id', $diseno->id)
-                                       ->get(['diseno_insumos.id','insumos_almacen.descripcion','diseno_insumos.cantidad']);
+        $clientes = Cliente::get(['id', 'nombre']);
+        $diseno_items = DisenoItem::join('items', 'items.id', '=', 'diseno_items.item_id')
+            ->where('diseno_producto_final_id', $diseno->id)
+            ->get(['diseno_items.id', 'items.descripcion', 'diseno_items.cantidad']);
+        $diseno_insumos = DisenoInsumo::join('insumos_almacen', 'insumos_almacen.id', '=', 'diseno_insumos.insumo_almacen_id')
+            ->where('diseno_producto_final_id', $diseno->id)
+            ->get(['diseno_insumos.id', 'insumos_almacen.descripcion', 'diseno_insumos.cantidad']);
         $items = Item::where('madera_id', $diseno->tipo_madera->id)->get(['id', 'descripcion']);
-        $insumos = InsumosAlmacen::get(['id','descripcion']);
-        return view('modulos.administrativo.disenos.show',
-                compact('diseno', 'clientes', 'items', 'insumos', 'diseno_items', 'diseno_insumos'));
+        $insumos = InsumosAlmacen::get(['id', 'descripcion']);
+        return view(
+            'modulos.administrativo.disenos.show',
+            compact('diseno', 'clientes', 'items', 'insumos', 'diseno_items', 'diseno_insumos')
+        );
     }
 
     /**
@@ -85,7 +88,7 @@ class DisenoProductoFinalController extends Controller
      */
     public function edit(DisenoProductoFinal $diseno)
     {
-        $clientes = Cliente::get(['id','nombre']);
+        $clientes = Cliente::get(['id', 'nombre']);
         $tipos_maderas = TipoMadera::all();
         return view('modulos.administrativo.disenos.edit', compact('diseno', 'clientes', 'tipos_maderas'));
     }
@@ -99,12 +102,12 @@ class DisenoProductoFinalController extends Controller
      */
     public function update(Request $request, DisenoProductoFinal $diseno)
     {
-        
+
         $this->authorize('admin');
         $diseno->descripcion = strtoupper($request->descripcion);
         $diseno->tipo_madera_id = $request->madera_id;
         $diseno->save();
-        return redirect()->route('disenos.show',$diseno->id)->with('status', 'Diseño actualizado con éxito');
+        return redirect()->route('disenos.show', $diseno->id)->with('status', 'Diseño actualizado con éxito');
     }
 
     /**
@@ -116,6 +119,9 @@ class DisenoProductoFinalController extends Controller
     public function destroy(DisenoProductoFinal $diseno)
     {
         $diseno->delete();
+        if ($diseno->hasAnyRelatedData(['clientes', 'items', 'insumos', 'pedidos'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         return response()->json(['success' => 'Diseño eliminado con éxito']);
     }
 
@@ -127,24 +133,24 @@ class DisenoProductoFinalController extends Controller
     public function asignarDisenoCliente(Request $request)
     {
         //return $diseno = DisenoProductoFinal::find($request->diseno_id)->clientes()->attach($request->cliente_id);
-        
-        $this->authorize('admin'); 
+
+        $this->authorize('admin');
         $existe  = DisenoCliente::where('diseno_producto_final_id', $request->diseno_id)
-                                ->where('cliente_id', $request->cliente_id)->first();
-        
-        if($existe){
+            ->where('cliente_id', $request->cliente_id)->first();
+
+        if ($existe) {
             return response()->json(['error' => true, 'message' => 'El diseño ya esta asignado al cliente']);
-        } else{
-            
+        } else {
+
             $diseno_cliente = new DisenoCliente();
             $diseno_cliente->diseno_producto_final_id = $request->diseno_id;
             $diseno_cliente->cliente_id = $request->cliente_id;
             $diseno_cliente->user_id = Auth::user()->id;
-            if($diseno_cliente->save()){
-                return response()->json(['error'=>false, 'message'=>'Diseño asignado con éxito']);
-            }else{
-                return response()->json(['error'=>true, 'message'=>'Error al asignar diseño']);
-            }       
+            if ($diseno_cliente->save()) {
+                return response()->json(['error' => false, 'message' => 'Diseño asignado con éxito']);
+            } else {
+                return response()->json(['error' => true, 'message' => 'Error al asignar diseño']);
+            }
         }
     }
 
@@ -156,10 +162,10 @@ class DisenoProductoFinalController extends Controller
     public function consultarItemsInsumos(Request $request)
     {
         $diseno = DisenoProductoFinal::find($request->diseno_id);
-        if($diseno->items->count() == 0 || $diseno->insumos->count() == 0){
-           return response()->json(['error'=>true, 'message'=>'No hay items o insumos suficientes para el diseño']);
-        } else{
-            return response()->json(['error'=>false]);
+        if ($diseno->items->count() == 0 || $diseno->insumos->count() == 0) {
+            return response()->json(['error' => true, 'message' => 'No hay items o insumos suficientes para el diseño']);
+        } else {
+            return response()->json(['error' => false]);
         }
     }
 }

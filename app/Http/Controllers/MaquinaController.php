@@ -106,6 +106,9 @@ class MaquinaController extends Controller
     public function destroy(Maquina $maquina)
     {
         $this->authorize('admin');
+        if ($maquina->hasAnyRelatedData(['costos_operacion'])) {
+            return back()->withErrors("No se pudo eliminar el recurso porque tiene datos asociados");
+        }
         $maquina->delete();
         return back();
     }

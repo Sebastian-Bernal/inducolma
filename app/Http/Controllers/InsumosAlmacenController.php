@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InsumosAlmacen;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\InsumosAlmacen;
 use App\Http\Requests\StoreInsumosRequest;
 use App\Http\Requests\UpdateInsumosRequest;
 
@@ -16,7 +17,7 @@ class InsumosAlmacenController extends Controller
      */
     public function index()
     {
-        $insumos = InsumosAlmacen::all();
+        $insumos = InsumosAlmacen::withTrashed()->get();
         return view('modulos.administrativo.insumos-almacen.index', compact('insumos'));
     }
 
@@ -101,5 +102,22 @@ class InsumosAlmacenController extends Controller
         $this->authorize('admin');
         $insumo_almacen->delete();
         return response()->json(['success' => 'Insumo eliminado correctamente']);
+    }
+
+
+    /**
+     * Restore resource from BD
+     * @param int id
+     * @return Response
+     */
+    public function restore($id) :Response {
+
+        try {
+            $resourceDelete = InsumosAlmacen::onlyTrashed()->where('id', $id)->restore();
+            return new Response(['success' => 'El insumo de almacen fue restaurado con éxito'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new Response(['errors' => "El insumo de almacen no pudo ser restaurado"], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

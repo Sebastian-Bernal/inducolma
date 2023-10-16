@@ -69,7 +69,7 @@ class OperacionController extends Controller
         $operacion = Operacion::findOrFail($operacion->id);
         return view('modulos.administrativo.costos.operaciones-edit',[
             'operacion'   => $operacion,
-                      
+
         ]);
     }
 
@@ -98,6 +98,10 @@ class OperacionController extends Controller
     public function destroy(Operacion $operacion)
     {
         $this->authorize('admin');
+
+        if ( $operacion->hasAnyRelatedData(['descripciones'])) {
+            return back()->withErrors( "No se puede eliminar el recurso porque tiene datos asociados. ");
+        }
         $operacion->delete();
         return redirect()->route('operaciones.index');
     }

@@ -259,7 +259,7 @@ class ConsultaPedidos {
                         ->where('pedidos.id',(integer)$pedido)
                         ->get([
                             'pedidos.id as pedido_id',
-                            'clientes.nombre as cliente',
+                            'clientes.razon_social as cliente',
                             'ordenes_produccion.id as orden_id',
                             'ordenes_produccion.estado as estado_orden',
                             'items.descripcion as item',

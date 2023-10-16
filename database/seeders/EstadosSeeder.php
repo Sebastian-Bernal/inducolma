@@ -14,18 +14,18 @@ class EstadosSeeder extends Seeder
      */
     public function run()
     {
-        Estado::insert([
-            'id' => 1 ,
+        Estado::firstOrCreate([
+
             'descripcion' => 'ENCENDIDA',
             'user_id' => 1,
-            'estado' => 'ENCENDIDA',
+
         ]);
 
-        Estado::insert([
-            'id' => 2 ,
+        Estado::firstOrCreate([
+
             'descripcion' => 'APAGADA',
             'user_id' => 1,
-            'estado' => 'APAGADA',
+
         ]);
     }
 }

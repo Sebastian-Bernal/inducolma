@@ -180,6 +180,7 @@
                     <th>Nombres</th>
                     <th>{{ __('Email') }}</th>
                     <th>Rol</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -191,15 +192,23 @@
                         <td>{{ $usuario->name }}</td>
                         <td>{{ $usuario->email }}</td>
                         <td>{{ isset($usuario->roll->nombre) ? $usuario->roll->nombre : 'sin rol asignado' }}</td>
+                        <td>{!! $usuario->deleted_at == '' ? '<span class="badge bg-primary">Activo</span>' : '<span class="badge bg-secondary">Inactivo</span>' !!}</td>
                         <td>
                             <div class="d-flex align-items-center ">
 
-                                <button class="btn btn-sm btn-danger" onclick="eliminarUsuario({{ $usuario->id }})">
-                                    <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
-                                </button>
-                                <a href="{{ route('usuarios.show',$usuario) }}" class="btn btn-sm btn-warning">
-                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
-                                </a>
+                                @if ($usuario->deleted_at == '')
+                                    <button class="btn btn-sm btn-danger" onclick="eliminarUsuario({{ $usuario->id }},'{{ $usuario->name }}')">
+                                        <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
+                                    </button>
+                                    <a href="{{ route('usuarios.show',$usuario) }}" class="btn btn-sm btn-warning">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a>
+                                @else
+                                    <button class="btn btn-sm btn-secondary" onclick="restaurarUsuario({{ $usuario->id}},'{{ $usuario->name }}')">
+                                        <i class="fa-solid fa-trash-can-arrow-up" style="color: black"></i>
+                                    </button>
+                                @endif
+
 
                             </div>
                         </td>

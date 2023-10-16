@@ -16,7 +16,8 @@ class CreateRecepcionsTable extends Migration
         Schema::create('recepcions', function (Blueprint $table) {
             $table->id();
             $table->integer('cc');
-            $table->string('nombre_completo');                       
+            $table->string('nombre_completo');
+            $table->string('type');
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
         });

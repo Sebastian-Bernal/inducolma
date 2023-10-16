@@ -20,25 +20,19 @@ class CreateEntradaMaderasTable extends Migration
             $table->time('hora');
             $table->date('fecha');
             $table->string('acto_administrativo');
-            $table->integer('salvoconducto_remision');
-            $table->string('titular_salvoconducto');            
+            $table->string('salvoconducto_remision');
+            $table->string('titular_salvoconducto');
             $table->string('procedencia_madera');
-            $table->string('nombre_madera');
-            $table->string('nombre_cientifico');
-            $table->string('entidad_vigilante');           
-            //$table->string('tipo_madera');
-            //$table->string('vitacora');
-            $table->string('condicion_madera');
-            $table->decimal('m3_entrada');
+            $table->string('entidad_vigilante');
             $table->string('estado');
             $table->timestamps();
             $table->softDeletes();
             $table->unsignedBigInteger('proveedor_id');
             $table->unsignedBigInteger('user_id');
             //relaciones con tablas user y proveedores
-            
+
             $table->foreign('user_id')->references('id')->on('users');
-            
+
             $table->foreign('proveedor_id')->references('id')->on('proveedores');
         });
     }

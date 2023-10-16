@@ -42,7 +42,7 @@
                 <tr>
                     <td>{{ $entrada->id }}</td>
                     <td>{{ $entrada->entrada_madera_id }}</td>
-                    <td>{{ $entrada->entrada_madera->proveedor->nombre }}</td>
+                    <td>{{ $entrada->entrada_madera->proveedor->razon_social }}</td>
                     <td>{{ $entrada->madera->tipo_madera->descripcion }}</td>
                     <td>{{ $entrada->condicion_madera }}</td>
                     <td>{{ $entrada->m3entrada }}</td>

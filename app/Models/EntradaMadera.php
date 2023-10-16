@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\CheckRelations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EntradaMadera extends Model
 {
-    use HasFactory;
+    use HasFactory, CheckRelations;
     protected $table = 'entrada_maderas';
 
     //relacion EntradaMadera belongsTo Proveedor

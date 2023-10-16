@@ -25,10 +25,10 @@ class ReportePedidosController extends Controller
 
     public function getClientes(Request $request)
     {
-        $empleados = Cliente::where('nombre', 'like', '%'.strtoupper($request->descripcion).'%')
+        $empleados = Cliente::where('razon_social', 'like', '%'.strtoupper($request->descripcion).'%')
                         ->orWhere('nit', 'like', '%'.$request->descripcion.'%')
                         ->withTrashed()
-                        ->get(['id','nombre as text']);
+                        ->get(['id','razon_social as text']);
         $empleados->toJson();
         return response()->json($empleados);
     }

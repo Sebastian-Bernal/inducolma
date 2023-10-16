@@ -5,53 +5,34 @@ $(document).ready(function() {
                 "url": "/DataTables/Spanish.json"
                 },
         "responsive": true
-        
+
     });
-    
+
 });
 
-// funcion mayusculas descripcion 
+// funcion mayusculas descripcion
 function mayusculas() {
     var x = document.getElementById("tipo_evento");
     x.value = x.value.toUpperCase();
 }
 
-// funcion para eliminar un usuario
+
+/**
+ * Funcion que permite enviar un request para eliminar tipo_evento
+ * @param {object} tipo_evento
+ * @returns {void}
+ */
 function eliminarTipoEvento(tipo_evento) {
-    Swal.fire({
-        title: `¿Está seguro de eliminar el tipo_evento:
-                   ${tipo_evento.tipo_evento}?`,       
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#597504',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminarlo!',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-        if (result.isConfirmed) {
-           $.ajax({
-                url: `/tipo-eventos/${tipo_evento.id}`,
-                type: "DELETE",
-                dataType: "JSON",
-                data: {
-                    _token: $('input[name="_token"]').val()
-                },
-                success: function (e) {
-                   // console.log(e);
-                    Swal.fire({
-                        title: 'Eliminado!',
-                        text: e.success,
-                        icon: 'success',
-                        confirmButtonColor: '#597504',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();                            
-                        }
-                    })
-                    
-                },
-          })
-        }
-    })
+
+    var token = $('input[name="_token"]').val();
+
+    var principalTitle =  `¿Está seguro de eliminar el tipo evento ${tipo_evento.tipo_evento}  ?`;
+    var confirmButtonText = 'Si, eliminarl!';
+    var url =  `/tipo-eventos/${tipo_evento.id}`;
+    var tipo = "DELETE";
+    var datos = { _token: token  };
+    var titulo =  'Eliminado!';
+
+    var alertName= AlertSimpleRequestManager.getInstance();
+    alertName.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo);
 }

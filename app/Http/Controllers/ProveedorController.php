@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Requests\ProveedorRequest;
 
 class ProveedorController extends Controller
@@ -16,7 +17,7 @@ class ProveedorController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $proveedores = Proveedor::all();
+        $proveedores = Proveedor::withTrashed()->get();
         return view('modulos.administrativo.proveedores.index', compact('proveedores'));
     }
 
@@ -27,7 +28,7 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -38,20 +39,21 @@ class ProveedorController extends Controller
      */
     public function store( ProveedorRequest $request)
     {
-        
+
         //return request()->all();
         $this->authorize('admin');
         $proveedor = new Proveedor();
         $proveedor->identificacion = $request->identificacion;
         $proveedor->nombre =   strtoupper($request->nombre);  ;
-        $proveedor->direccion = strtoupper($request->direccion); 
+        $proveedor->direccion = strtoupper($request->direccion);
         $proveedor->telefono = $request->telefono;
         $proveedor->email = $request->email;
         $proveedor->razon_social = strtoupper($request->razon_social);
         $proveedor->user_id = auth()->user()->id;
+        $proveedor->calificacion = 0;
         $proveedor->save();
         return redirect()->route('proveedores.index')->with('status', "Proveedor $proveedor->nombre creado correctamente");
-     
+
     }
 
     /**
@@ -89,7 +91,7 @@ class ProveedorController extends Controller
         $this->authorize('admin');
         $proveedor->identificacion = $request->identificacion;
         $proveedor->nombre =   strtoupper($request->nombre);  ;
-        $proveedor->direccion = strtoupper($request->direccion); 
+        $proveedor->direccion = strtoupper($request->direccion);
         $proveedor->telefono = $request->telefono;
         $proveedor->email = $request->email;
         $proveedor->razon_social = strtoupper($request->razon_social);
@@ -107,7 +109,26 @@ class ProveedorController extends Controller
     public function destroy(Proveedor $proveedor)
     {
         $this->authorize('admin');
+        if ($proveedor->hasAnyRelatedData(['entradasMadera'])) {
+            return new Response(['errors' => "No se pudo eliminar el recurso porque tiene datos asociados"], Response::HTTP_CONFLICT);
+        }
         $proveedor->delete();
         return response()->json(['success' => 'Proveedor eliminado correctamente']);
+    }
+
+    /**
+     * Restore proveedor from BD
+     * @param int $id
+     * @return Response
+     */
+    public function restore($id) :Response {
+
+        try {
+            $proveedor_deleted = Proveedor::onlyTrashed()->where('id', $id)->restore();
+            return new Response(['success' => 'El proveedor fue restaurado con éxito'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new Response(['errors' => "El usuario no pudo ser restaurado"], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

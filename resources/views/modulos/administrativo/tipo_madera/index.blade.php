@@ -71,6 +71,7 @@
                 <tr>
                     <th>Id</th>
                     <th>Tipo de madera </th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -80,15 +81,24 @@
                 <tr>
                     <td>{{ $madera->id }}</td>
                     <td>{{ $madera->descripcion }}</td>
+                    <td>{!! $madera->deleted_at == '' ? '<span class="badge bg-primary">Activo</span>'  : '<span class="badge bg-secondary">Inactivo</span>' !!}</td>
                     <td>
                         <div class="d-flex align-items-center ">
 
-                            <button class="btn btn-sm btn-danger" onclick="eliminarTipoMadera({{ $madera}})">
-                                <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
-                            </button>
-                            <a href="{{ route('tipos-maderas.edit',$madera) }}" class="btn btn-sm btn-warning">
-                                <i class="fa-solid fa-pen-to-square fa-lg"></i>
-                            </a>
+
+
+                            @if ($madera->deleted_at == '')
+                                <button class="btn btn-sm btn-danger" onclick="eliminarTipoMadera({{ $madera}})">
+                                    <i class="fa-regular fa-trash-can fa-lg" style="color: black"></i>
+                                </button>
+                                <a href="{{ route('tipos-maderas.edit',$madera) }}" class="btn btn-sm btn-warning">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                </a>
+                            @else
+                                <button class="btn btn-sm btn-secondary" onclick="restaurarTipoMadera({{ $madera }})">
+                                    <i class="fa-solid fa-trash-can-arrow-up" style="color: black"></i>
+                                </button>
+                            @endif
 
                         </div>
                     </td>

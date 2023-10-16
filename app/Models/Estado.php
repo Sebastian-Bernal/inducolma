@@ -9,4 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Estado extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $fillable = ['id','descripcion', 'user_id'];
 }

@@ -68,8 +68,8 @@ class ReporteController extends Controller
      */
     public function getProveedores(Request $request)
     {
-        $disenos = Proveedor::where('nombre', 'like', '%'.strtoupper($request->descripcion).'%')
-        ->get(['id','nombre as text']);
+        $disenos = Proveedor::where('razon_social', 'like', '%'.strtoupper($request->descripcion).'%')
+        ->get(['id','razon_social as text']);
         $disenos->toJson();
         return response()->json($disenos);
     }

@@ -22,8 +22,9 @@
                         <h4 class="  ">{{ 'Numero de entrada: '. $entrada->id }}</h4>
                     </div>
                     <div class="card-body">
+                        <h6 class="card-title">{{ 'Numero de viaje: '. $entrada->entrada_madera->id }}</h6>
                         <h6 class="card-title">{{ 'Acto administrativo: '. $entrada->entrada_madera->acto_administrativo }}</h6>
-                        <h6 class="card-title">{{ 'Proveedor: '. $entrada->entrada_madera->proveedor->nombre }}</h6>
+                        <h6 class="card-title">{{ 'Proveedor: '. $entrada->entrada_madera->proveedor->razon_social }}</h6>
                         <hr>
                         <a href="{{ route('cubicaje.index') }}" class="btn btn-secondary">volver al inicio</a>
                     </div>

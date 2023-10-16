@@ -33,7 +33,7 @@
                         @foreach ($entradas as $entrada)
                         <tr>
                             <td>{{ $entrada->entrada_madera_id }}</td>
-                            <td>{{ $entrada->proveedor->nombre }}</td>
+                            <td>{{ $entrada->proveedor->razon_social }}</td>
                             <td>{{ $entrada->fecha }}</td>
                             <td>
                                 <div class="d-flex align-items-center ">

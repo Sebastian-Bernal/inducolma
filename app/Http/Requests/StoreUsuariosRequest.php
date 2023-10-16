@@ -15,8 +15,8 @@ class StoreUsuariosRequest extends FormRequest
     public function authorize()
     {
         return true;
-        
-       
+
+
 
     }
 
@@ -30,15 +30,15 @@ class StoreUsuariosRequest extends FormRequest
         return [
             'identificacionUsuario' => 'required|unique:users,identificacion',
             'primer_nombre' => 'required|string|max:255',
-            'segundo_nombre' => 'string|max:255',
+            'segundo_nombre' => 'max:255',
             'primer_apellido' => 'required|string|max:255',
-            'segundo_apellido' => 'string|max:255',
+            'segundo_apellido' => 'max:255',
             'email' => 'required|email|unique:users,email',
-           
-            
+
+
         ];
 
-        
+
     }
 
     public function messages()
@@ -61,5 +61,5 @@ class StoreUsuariosRequest extends FormRequest
         ];
     }
 
-    
+
 }

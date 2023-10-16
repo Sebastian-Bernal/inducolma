@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reportes\Procesos;
 use App\Exports\EstadosProceso;
 use App\Exports\EventosProceso;
 use App\Exports\ItemsEnsamblados;
+use App\Exports\MaquinasEnsambleProductos;
 use App\Exports\OrdenesFecha;
 use App\Exports\ProcesoItemFecha;
 use App\Exports\ProcesosFecha;
@@ -104,6 +105,7 @@ class ProcesoConstruccionController extends Controller
 
     public function reportesProcesos(Request $request)
     {
+        //return $request->all();
         $desde = $request->procesoDesde;
         $hasta = $request->procesoHasta;
         $tipoReporte = $request->tipoReporteConstruccion;
@@ -147,6 +149,9 @@ class ProcesoConstruccionController extends Controller
                     case '7' :
                         return Excel::download(new ItemsEnsamblados($data), "$encabezado-$desde-$hasta.xlsx");
                         break;
+                    case '8' :
+                        return Excel::download(new MaquinasEnsambleProductos($data), "$encabezado-$desde-$hasta.xlsx");
+                        break;
                 }
 
             }elseif ($generar == '3') {
@@ -171,6 +176,9 @@ class ProcesoConstruccionController extends Controller
                         break;
                     case '7' :
                         return Excel::download(new ItemsEnsamblados($data), "$encabezado-$desde-$hasta.csv");
+                        break;
+                    case '8' :
+                        return Excel::download(new MaquinasEnsambleProductos($data), "$encabezado-$desde-$hasta.csv");
                         break;
                 }
 
