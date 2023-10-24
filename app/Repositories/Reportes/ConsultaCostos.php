@@ -2,13 +2,15 @@
 
 namespace App\Repositories\Reportes;
 
+use DateTime;
 use App\Models\Pedido;
 use App\Models\Cliente;
 use App\Models\Maquina;
+use App\Models\Proceso;
 use App\Models\EstadoMaquina;
 use App\Models\CostosOperacion;
 use App\Models\OrdenProduccion;
-use App\Models\Proceso;
+use App\Models\Subproceso;
 use Illuminate\Support\Facades\DB;
 
 class ConsultaCostos {
@@ -22,7 +24,7 @@ class ConsultaCostos {
 
         switch ($tipoReporte) {
             case '1':
-                $data = $this->costosFechaMaquina($request->maquina, $desde, $hasta);
+                $data = $this->costosProcesosFechasMaquina($request->maquina, $desde, $hasta);
 
                 if (count($data) > 0) {
                     $maquina = Maquina::find($request->maquina);
@@ -36,7 +38,7 @@ class ConsultaCostos {
                     $vistaPdf = '';
                 }
                 break;
-            case '2':
+          /*  case '2':
                 $data = $this->costoFiltroEspecifico($request->usuario, $desde, $hasta, 'users.id');
                 if (count($data)> 0) {
                     $encabezado = "COSTOS EN LAS FECHAS $desde - $hasta ";
@@ -74,7 +76,7 @@ class ConsultaCostos {
                     $vista = '';
                     $vistaPdf = '';
                 }
-                break;
+                break;*/
 
 
         }
@@ -118,13 +120,13 @@ class ConsultaCostos {
 
         ");
 
-        $costo_segundos_maquina = $this->valorSegundosMaquina($maquina, $desde, $hasta);
-        $valor_segundos = $costo_segundos_maquina['costo_segudo'];
+        //$costo_segundos_maquina = $this->valorSegundosMaquina($maquina, $desde, $hasta);
+        //$valor_segundos = $costo_segundos_maquina['costo_segudo'];
 
         $datos = collect($costos);
 
-        $costos_maquina = $this->calcularAgregarCosto($datos, $valor_segundos);
-        return json_decode(json_encode($costos_maquina));
+        //$costos_maquina = $this->calcularAgregarCosto($datos, $valor_segundos);
+        //return json_decode(json_encode($costos_maquina));
     }
 
 
@@ -138,146 +140,130 @@ class ConsultaCostos {
      * @return array
      */
 
-    public function costoFiltroEspecifico($filtro, $desde, $hasta, $where)
+    public function costosProcesosFechasMaquina($maquina = null, $desde, $hasta)
     {
-        $costos = DB::select("
-                    select distinct procesos.id, procesos.fecha_ejecucion, procesos.hora_inicio, procesos.hora_fin, procesos.sub_paqueta,
-                    procesos.maquina_id,
-                    estado_maquinas.created_at, costos_operacion.valor_dia, costos_operacion.costo_kwh,
-                    procesos.salida, items.descripcion, users.name, cubicajes.entrada_madera_id, cubicajes.paqueta,
-                    (procesos.cm3_salida + sum(subprocesos.sobrante)) as cm3_salida,
-                    ((cubicajes.cm3 * entradas_madera_maderas.costo) / (procesos.cm3_salida + sum(subprocesos.sobrante))) as costo_cm3
+        $procesos = Proceso::whereDate('fecha_ejecucion', '>=', '2023-09-1')
+                    ->whereDate('fecha_ejecucion', '<=', '2023-10-31')
+                    ->when($maquina !== null, function($query) use ($maquina) {
+                        return $query->where('maquina_id', $maquina);
+                    })
+                    ->get();
 
-                    from
-                    ordenes_produccion join procesos on ordenes_produccion.id  = procesos.orden_produccion_id
-                    JOIN subprocesos ON subprocesos.proceso_id = procesos.id
-                    join estado_maquinas on estado_maquinas.maquina_id = subprocesos.maquina_id
-                    join costos_operacion on costos_operacion.maquina_id = procesos.maquina_id
-                    join cubicajes on cubicajes.id = procesos.cubicaje_id
-                    join entradas_madera_maderas on entradas_madera_maderas.id = cubicajes.entrada_madera_id
-                    join items on items.id = procesos.item_id
-                    join turno_usuarios on turno_usuarios.maquina_id = procesos.maquina_id
-                    join users on users.id = turno_usuarios.user_id
+        $maquinasIds = Maquina::whereIn('id', $procesos->pluck('maquina_id')->toArray())->get()->pluck('id')->toArray();
 
-                    where $where = $filtro and procesos.fecha_ejecucion between '$desde' and '$hasta'
+        $valorMinutoEnergia = CostosOperacion::whereIn('maquina_id', $maquinasIds )
+                                            ->where('costo_kwh', '>', 0)
+                                            ->get()
+                                            ->map(function ($costo) {
+                                                return [
+                                                    'maquina_id' => $costo->maquina_id,
+                                                    'valor_minuto_energia' => $costo->costo_kwh/60
+                                                ];
 
-                    GROUP by (procesos.id, procesos.fecha_ejecucion, procesos.hora_inicio, procesos.hora_fin,
-                    estado_maquinas.created_at, costos_operacion.valor_dia, costos_operacion.costo_kwh,
-                    procesos.salida, items.descripcion, users.name, cubicajes.entrada_madera_id, cubicajes.paqueta,
-                    cubicajes.cm3,  entradas_madera_maderas.costo)
+                                            });
+        $minutosTotalesMaquina = $this->minutosTotalesEnergia($maquinasIds, $desde, $hasta);
 
-        ");
-/*
-        $ordenesProduccion = OrdenProduccion::where($where, $filtro)->get()->pluck('id')->toArray();
-        $procesos = Proceso::whereIn('orden_produccion_id', $ordenesProduccion)->get();
-        $maquinas = Maquina::whereIn('id', $procesos->pluck('maquina_id')->toArray())->get();
-        $costosOperacion = CostosOperacion::whereIn('maquina_id', $maquinas->pluck('id')->toArray())->get();
-        $estados = EstadoMaquina::whereIn('maquina_id', $maquinas->pluck('id')->toArray())
-                                ->whereDate('created_at','>=',$desde)
+        $valorTotalDiaMaquina = $this->valorTotalDiaMaquina($maquinasIds);
+
+        $numDias = (new DateTime($hasta))->diff(new DateTime($desde))->days;
+
+        $cmCubicosMaderaProcesados = $this->cmCubicosMaderaProcesados($procesos);
+
+        $costosMaquina = $valorMinutoEnergia->map(function ($item) use ($minutosTotalesMaquina, $valorTotalDiaMaquina, $cmCubicosMaderaProcesados) {
+            $minutosItem = $minutosTotalesMaquina->where('maquina_id', $item['maquina_id'])->first();
+            $valorDiaItem = $valorTotalDiaMaquina->where('maquina_id', $item['maquina_id'])->first();
+            $cm3Item = $cmCubicosMaderaProcesados->where('maquina_id', $item['maquina_id'])->first();
+
+            return [
+                'maquina_id' => $item['maquina_id'],
+                'valor_minuto_energia' => $item['valor_minuto_energia'],
+                'minutos' => $minutosItem ? $minutosItem['minutos'] : 0,
+                'sum_valor_dia' => $valorDiaItem ? $valorDiaItem['sum_valor_dia'] : 0,
+                'sum_cm3' => $cm3Item ? $cm3Item['sum_cm3'] : 0,
+            ];
+        });
+
+        return $costosMaquina;
+
+
+
+    }
+
+    public function minutosTotalesEnergia($maquinas, $desde, $hasta)
+    {
+        $estadosMaquina = EstadoMaquina::whereIn('maquina_id', $maquinas)
+                                ->whereIn('estado_id', [1,2])
+                                ->whereDate('created_at','>=', $desde)
                                 ->whereDate('created_at','<=',$hasta)
                                 ->orderBy('maquina_id')
                                 ->orderBy('estado_id')
-                                ->distinct('maquina_id', 'estado_id')
                                 ->get();
-*/
-        //print_r($ordenesProduccion);
-        if (empty($costos)) {
-            return array();
+
+        if($estadosMaquina->isEmpty()) {
+            return 0;
         }
 
-        $costos_agrupados = collect($costos)->groupBy('maquina_id');
-        $array_costos = array();
+        $estadosMaquinaGroup = $estadosMaquina->groupBy('maquina_id');
 
-        foreach ($costos_agrupados as $costo) {
-            $costo_segundos_maquina = $this->valorSegundosMaquina($costo->first()->maquina_id, $desde, $hasta);
-            //print_r($hasta);
-            $valor_segundos = $costo_segundos_maquina['costo_segudo'];
-            //print_r($valor_segundos);
-            $array_costos += [$this->calcularAgregarCosto($costo, $valor_segundos)];
-        }
-        //($array_costos[0]);
-        return json_decode(json_encode($array_costos[0]));
-    }
+        $minutosTotalesMaquina = $estadosMaquinaGroup->map(function ($maquina) {
+            $estadosGroup = collect($maquina)->sortBy('id')->groupBy('estado_id');
+            $onStates = $estadosGroup->get(1, []);
+            $offStates = $estadosGroup->get(2, []);
 
+            $minutos = 0;
 
-    /**
-     * obtiene el valor del costo de segundos de la maquina
-     *
-     * @param Integer   $maquina
-     * @param String    $desde
-     * @param String    $hasta
-     *
-     *@return Array
-     */
+            foreach ($onStates as $on) {
+                $matchingOffState = collect($offStates)->first(function ($off) use ($on) {
+                    return $off->id > $on->id;
+                });
 
-    public function valorSegundosMaquina($maquina, $desde, $hasta) : array
-    {
-        $encendida = EstadoMaquina::where('maquina_id', $maquina)
-                                ->where('estado_id', 1)
-                                ->whereDate('created_at','>=',$desde)
-                                ->whereDate('created_at','<=',$hasta)
-                                ->orderBy('id')
-                                ->get();
-        $apagada = EstadoMaquina::where('maquina_id', $maquina)
-                                ->where('estado_id', 2)
-                                ->whereDate('created_at','>=',$desde)
-                                ->whereDate('created_at','<=',$hasta)
-                                ->orderBy('id')
-                                ->get();
-
-        $costos = CostosOperacion::where('maquina_id', $maquina)->first();
-
-        $segundos_totales = 0 ;
-
-
-        foreach ($encendida as $key => $enc) {
-            if (isset($apagada[$key])) {
-
-                $segundos_totales += (strtotime($apagada[$key]->created_at) - strtotime($enc->created_at)  );
-
+                if ($matchingOffState) {
+                    $minutos += strtotime($matchingOffState->created_at) - strtotime($on->created_at);
+                }
             }
 
-        }
+            return [
+                'maquina_id' => $maquina->first()->maquina_id,
+                'minutos' => $minutos / 60
+            ];
+        })->values();
 
-        if($segundos_totales == 0) {
-            $costo_segudo = 0   ;
-        } else {
-            // valor_dias = sum(valor_dia)
-            //
-            $costo_segudo = ($costos->valor_dia/$segundos_totales) + ($costos->costo_kwh/3600);
-        }
-
-        return array('costo_segudo' => $costo_segudo, 'segundos_totales' => $segundos_totales);
+        return $minutosTotalesMaquina;
     }
 
-    /**
-     * Calcula el valor del costo y lo agrega a cada uno de los datos generados en la consulta,
-     *
-     * @param Collection $datos
-     * @param float $costo
-     *
-     * @return Collection
-     */
-
-    public function calcularAgregarCosto($datos, $costo)
+    public function valorTotalDiaMaquina($maquinas)
     {
-        foreach($datos as $dato){
-            //print_r( $costo);
-            if (is_null($dato->hora_fin) || is_null($dato->hora_inicio)) {
-                $dato->costo = 0;
-            } else {
-                $dato->costo = $costo * (strtotime($dato->hora_fin) - strtotime($dato->hora_inicio));
-            }
-        }
-        return $datos;
+        $valorTotalDiaMaquina = CostosOperacion::whereIn('maquina_id', $maquinas)
+        ->where('costo_kwh', '<=', 0)
+        ->get()
+        ->groupBy('maquina_id')
+        ->map(function ($costo) {
+            return [
+                'maquina_id' => $costo->first()->maquina_id,
+                'sum_valor_dia' => $costo->sum('valor_dia')
+            ];
+        })
+        ->values();
+
+
+        return $valorTotalDiaMaquina;
     }
 
+    public function cmCubicosMaderaProcesados($procesos)
+    {
+        $cmCubicosMaderaProcesados = Subproceso::whereIn('proceso_id', $procesos->pluck('id'))
+                                                ->whereIn('maquina_id', $procesos->pluck('maquina_id'))
+                                                ->get()
+                                                ->groupBy('maquina_id')
+                                                ->map(function ($subproceso) {
+                                                    return [
+                                                        'maquina_id' => $subproceso->first()->maquina_id,
+                                                        'sum_cm3' => $subproceso->sum('cm3_salida') + $subproceso->sum('sobrante')
+                                                    ];
 
-    /*
-        para poder agrupar la consulta es necesario crear una collection, $collect = collect(datos);
-        luego se agrupa de acuerdo a la mquina $group = $collect->groupBy('maquina_id', preserveKeys: true)
-        luego puede recorrerse con foreach y agregarle el dato
-        foreach($group as $maquina){ foreach ($maquina as $m){ $m->nuevo_dato = 1;} }
+                                                })->values();
+        return $cmCubicosMaderaProcesados;
 
-    */
-}
+    }
+
+    }

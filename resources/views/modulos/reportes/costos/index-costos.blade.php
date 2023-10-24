@@ -10,48 +10,7 @@
         <div class="row">
             <h5>{{ $encabezado }}</h5>
             <div style=" height: 30rem; overflow-y: scroll;">
-                <table class="table table-striped table-bordered align-middle mt-5" >
-                    <thead>
-                        <tr>
-                            <th>Id proceso</th>
-                            <th>Fecha ejecucion</th>
-                            <th>hora inicio</th>
-                            <th>hora fin</th>
-                            <th>Cantidad producida</th>
-                            <th>Costo</th>
-                            <th>Salida</th>
-                            <th>Item</th>
-                            <th>usuario</th>
-                            <th>Viaje</th>
-                            <th>Paqueta</th>
-                            <th>Cm3 salida</th>
-                            <th>Costo Cm3</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach ($data as $proceso)
-                            <tr>
-
-                                <td>{{ $proceso->id }}</td>
-                                <td>{{ $proceso->fecha_ejecucion }}</td>
-                                <td>{{ $proceso->hora_inicio }}</td>
-                                <td>{{ $proceso->hora_fin }}</td>
-                                <td>{{ $proceso->sub_paqueta }}</td>
-                                <td>{{ $proceso->costo }}</td>
-                                <td>{{ $proceso->salida }}</td>
-                                <td>{{ $proceso->descripcion}}</td>
-                                <td>{{ $proceso->name }}</td>
-                                <td>{{ $proceso->entrada_madera_id }}</td>
-                                <td>{{ $proceso->paqueta }}</td>
-                                <td>{{ $proceso->cm3_salida }}</td>
-                                <td>{{ $proceso->costo_cm3 }}</td>
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-
-                </table>
+                {!! print_r($data) !!}
             </div>
             <form action="{{ route('reporte-costos') }}" method="GET" target="_blank"
                     rel="noopener noreferrer"
