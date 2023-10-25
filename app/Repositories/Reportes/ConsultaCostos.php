@@ -142,8 +142,9 @@ class ConsultaCostos {
 
     public function costosProcesosFechasMaquina($maquina = null, $desde, $hasta)
     {
-        $procesos = Proceso::whereDate('fecha_ejecucion', '>=', '2023-09-1')
-                    ->whereDate('fecha_ejecucion', '<=', '2023-10-31')
+        $procesos = Proceso::with('orden_produccion')
+                    ->whereDate('fecha_ejecucion', '>=', $desde)
+                    ->whereDate('fecha_ejecucion', '<=', $hasta)
                     ->when($maquina !== null, function($query) use ($maquina) {
                         return $query->where('maquina_id', $maquina);
                     })
@@ -169,24 +170,15 @@ class ConsultaCostos {
 
         $cmCubicosMaderaProcesados = $this->cmCubicosMaderaProcesados($procesos);
 
-        $costosMaquina = $valorMinutoEnergia->map(function ($item) use ($minutosTotalesMaquina, $valorTotalDiaMaquina, $cmCubicosMaderaProcesados) {
-            $minutosItem = $minutosTotalesMaquina->where('maquina_id', $item['maquina_id'])->first();
-            $valorDiaItem = $valorTotalDiaMaquina->where('maquina_id', $item['maquina_id'])->first();
-            $cm3Item = $cmCubicosMaderaProcesados->where('maquina_id', $item['maquina_id'])->first();
+        $datosReporte = $this->mapData($minutosTotalesMaquina,
+                                        $valorMinutoEnergia,
+                                        $valorTotalDiaMaquina,
+                                        $cmCubicosMaderaProcesados,
+                                        $numDias,
+                                        $procesos
+                                        );
 
-            return [
-                'maquina_id' => $item['maquina_id'],
-                'valor_minuto_energia' => $item['valor_minuto_energia'],
-                'minutos' => $minutosItem ? $minutosItem['minutos'] : 0,
-                'sum_valor_dia' => $valorDiaItem ? $valorDiaItem['sum_valor_dia'] : 0,
-                'sum_cm3' => $cm3Item ? $cm3Item['sum_cm3'] : 0,
-            ];
-        });
-
-        return $costosMaquina;
-
-
-
+        return $datosReporte;
     }
 
     public function minutosTotalesEnergia($maquinas, $desde, $hasta)
@@ -266,4 +258,90 @@ class ConsultaCostos {
 
     }
 
+    public function mapData(
+        $minutosTotalesMaquina,
+        $valorMinutoEnergia,
+        $valorTotalDiaMaquina,
+        $cmCubicosMaderaProcesados,
+        $numDias,
+        $procesos
+    ) {
+
+        $mapData = $valorMinutoEnergia->map(function ($item) use (
+            $numDias,
+            $minutosTotalesMaquina,
+            $valorTotalDiaMaquina,
+            $cmCubicosMaderaProcesados,
+            $procesos
+        ) {
+            $minutosItem = $minutosTotalesMaquina->where('maquina_id', $item['maquina_id'])->first();
+            $valorDiaItem = $valorTotalDiaMaquina->where('maquina_id', $item['maquina_id'])->first();
+            $cm3Item = $cmCubicosMaderaProcesados->where('maquina_id', $item['maquina_id'])->first();
+
+            $procesosGroup = $procesos->groupBy('orden_produccion.pedido_id');
+            return [
+                'maquina_id' => $item['maquina_id'],
+                'valor_minuto_energia' => $item['valor_minuto_energia'],
+                'minutos' => $minutosItem ? $minutosItem['minutos'] : 0,
+                'sum_valor_dia' => $valorDiaItem ? $valorDiaItem['sum_valor_dia'] : 0,
+                'sum_cm3' => $cm3Item ? $cm3Item['sum_cm3'] : 0,
+                'numero_dias' => $numDias,
+                'procesos_pedido' => $procesosGroup->map(function ($proceso) use ($item) {
+                    return [
+                        'pedido_id' =>  $proceso->first()->orden_produccion->pedido_id,
+                        'cliente' => $proceso->first()->orden_produccion->pedido->cliente->razon_social,
+                        'producto' => $proceso->first()->orden_produccion->pedido->diseno_producto_final->descripcion,
+                        'cantidad' => $proceso->first()->orden_produccion->pedido->cantidad,
+                        'procesos' => $proceso->map(function ($proceso) use ($item) {
+                            return [
+                                'pedido_id' =>  $proceso->orden_produccion->pedido_id,
+                                'fecha_ejecucion' => $proceso->fecha_ejecucion,
+                                'hora_inicio' => $proceso->hora_inicio,
+                                'fecha_fin' => $proceso->fecha_fin,
+                                'hora_fin' => $proceso->hora_fin,
+                                'subprocesos' => $proceso->subprocesos->map(function ($subproceso, $item) {
+                                    return [
+                                        'tarjeta_entrada' => $subproceso->tarjeta_entrada,
+                                        'tarjeta_salida' => $subproceso->tarjeta_salida,
+                                        'subpaqueta' => $subproceso->sub_paqueta,
+                                        'alto' => $subproceso->alto,
+                                        'ancho' => $subproceso->ancho,
+                                        'largo' => $subproceso->largo,
+                                        'sobrante' => $subproceso->sobrante,
+                                        'lena' => $subproceso->lena,
+                                        'cm3_procesados' => $subproceso->cm3_salida
+                                    ];
+                                }),
+                                'total_cm3' => $proceso->subprocesos->sum('cm3_salida'),
+                                'total_sobrante' => $proceso->subprocesos->sum('sobrante'),
+                                'total_lena' => $proceso->subprocesos->sum('lena'),
+
+                                'consumo_energia' => round($item['valor_minuto_energia'] * (strtotime($proceso->fecha_fin . $proceso->hora_fin) - strtotime($proceso->fecha_ejecucion .$proceso->hora_inicio))/60, 2)
+                            ];
+                        }),
+                        'total_cm3_pedido' => $proceso->sum(function ($proceso) {
+                            return $proceso->subprocesos->sum('cm3_salida');
+                        }),
+                        'total_sobrante_pedido' => $proceso->sum(function ($proceso) {
+                            return $proceso->subprocesos->sum('sobrante');
+                        }),
+                        'total_lena_pedido' => $proceso->sum(function ($proceso) {
+                            return $proceso->subprocesos->sum('lena');
+                        }),
+                        'consumo_energia' => $proceso->sum(function ($proceso) use($item) {
+                            return round($item['valor_minuto_energia'] * (strtotime($proceso->fecha_fin . $proceso->hora_fin) - strtotime($proceso->fecha_ejecucion .$proceso->hora_inicio))/60, 2);
+                        })
+
+                    ];
+                })
+
+
+            ];
+        });
+
+        return $mapData;
+
+
     }
+
+}
