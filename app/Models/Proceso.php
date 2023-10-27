@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Proceso extends Model
 {
@@ -42,5 +43,12 @@ class Proceso extends Model
     public function maquina()
     {
         return $this->belongsTo(Maquina::class);
+    }
+
+    /**
+     * relation has many subprocreso::class
+     */
+    public function subprocesos() :?HasMany {
+        return $this->hasMany(Subproceso::class);
     }
 }

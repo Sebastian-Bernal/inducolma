@@ -26,7 +26,7 @@ class ReporteCostosController extends Controller
         $hasta = $request->costoHasta;
         $tipoReporte = $request->tipoReporteCosotos;
         $maquina = $request->maquina;
-        $pedido = $request->pedido;
+        $pedidoId = $request->pedido ? $request->pedido : null;
         $usuario = $request->usuario;
         $item = $request->item;
 
@@ -35,11 +35,13 @@ class ReporteCostosController extends Controller
         $encabezado = $datos[1];
         $data = json_decode(json_encode($datos[0]));
 
+
         if (count($data) == 0 ) {
             return redirect()
                     ->back()
                     ->with('status','No se encontraron datos en los filtros seleccionados.');
         } else {
+            $data = $data[0];
             if ($generar == '1') {
 
                 $pdf = Pdf::loadView($datos[3], compact('data', 'encabezado'));
@@ -63,7 +65,7 @@ class ReporteCostosController extends Controller
                 'maquina',
                 'usuario',
                 'item',
-                'pedido'
+                'pedidoId'
 
             ));
             }

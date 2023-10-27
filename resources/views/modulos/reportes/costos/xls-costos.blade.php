@@ -1,43 +1,79 @@
 
-<table>
-    <thead>
-        <tr>
-            <th>Id costo</th>
-            <th>Fecha ejecucion</th>
-            <th>hora inicio</th>
-            <th>hora fin</th>
-            <th>Cantidad producida</th>
-            <th>Costo</th>
-            <th>Salida</th>
-            <th>Item</th>
-            <th>usuario</th>
-            <th>Viaje</th>
-            <th>Paqueta</th>
-            <th>Cm3 salida</th>
-            <th>Costo Cm3</th>
-        </tr>
-    </thead>
-    <tbody>
 
-        @foreach ($data as $costo)
-            <tr>
 
-                <td>{{ $costo->id }}</td>
-                <td>{{ $costo->fecha_ejecucion }}</td>
-                <td>{{ $costo->hora_inicio }}</td>
-                <td>{{ $costo->hora_fin }}</td>
-                <td>{{ $costo->sub_paqueta }}</td>
-                <td>{{ $costo->costo }}</td>
-                <td>{{ $costo->salida }}</td>
-                <td>{{ $costo->descripcion}}</td>
-                <td>{{ $costo->name }}</td>
-                <td>{{ $costo->entrada_madera_id }}</td>
-                <td>{{ $costo->paqueta }}</td>
-                <td>{{ $costo->cm3_salida }}</td>
-                <td>{{ $costo->costo_cm3 }}</td>
+@foreach ($data->procesos_pedido as $pedido)
+        <table>
+            <thead>
+                <tr>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">Pedido No.</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">Fecha y hora de inicio</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">Fecha y hora de fin</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">tarjeta entrada</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">tarjeta salida</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">subpaqueta</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">alto</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">ancho</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">largo</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">sobrante</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">lena</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">cm3 procesados</th>
+                    <th style="border: 1px solid black; background-color: #f2f2f2; font-weight: bold;">consumo energia</th>
+                </tr>
+            </thead>
 
-            </tr>
-        @endforeach
-    </tbody>
+            @foreach ($pedido->procesos as $proceso)
+                <tbody style="border: 1px solid black;">
+                    <tr>
+                        <td rowspan=" {{ count($proceso->subprocesos) }} "> {{ $proceso->pedido_id  }}</td>
+                        <td rowspan=" {{ count($proceso->subprocesos) }} "> {{ $proceso->fecha_ejecucion. ' '.$proceso->hora_inicio }}  </td>
+                        <td rowspan=" {{ count($proceso->subprocesos) }} "> {{ $proceso->fecha_fin.' '.$proceso->hora_fin }}  </td>
 
-</table>
+                    @foreach ($proceso->subprocesos as $subproceso)
+                        @if (!$loop->first) {
+                            <tr>
+                        }
+                        @endif
+                            <td> {{ $subproceso->tarjeta_entrada }} </td>
+                            <td> {{$subproceso->tarjeta_salida}} </td>
+                            <td> {{ $subproceso->subpaqueta }} </td>
+                            <td> {{ $subproceso->alto  }}</td>
+                            <td> {{ $subproceso->ancho }} </td>
+                            <td> {{ $subproceso->largo }} </td>
+                            <td> {{ $subproceso->sobrante }} </td>
+                            <td> {{ $subproceso->lena }} </td>
+                            <td> {{ $subproceso->cm3_procesados }} </td>
+                            <td>{{ ' ' }}</td>
+                        </tr>
+                    @endforeach
+
+                    <tr>
+                        <td colspan="9" style="border: 1px solid black; background-color: #5cb5cb; font-weight: bold;"> Total del proceso</td>
+                        <td style="border: 1px solid black; background-color: #5cb5cb; font-weight: bold;"> {{ $proceso->total_sobrante }} </td>
+                        <td style="border: 1px solid black; background-color: #5cb5cb; font-weight: bold;"> {{ $proceso->total_lena }} </td>
+                        <td style="border: 1px solid black; background-color: #5cb5cb; font-weight: bold;"> {{ $proceso->total_cm3 }}</td>
+                        <td style="border: 1px solid black; background-color: #5cb5cb; font-weight: bold;"> {{ $proceso->consumo_energia }} </td>
+                    </tr>
+                </tbody>
+                @endforeach
+
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th style="border: 1px solid black; background-color: #71c085; font-weight: bold;">Total cm3 en el pedido</th>
+                    <th style="border: 1px solid black; background-color: #71c085; font-weight: bold;">Total sobrante en el pedido</th>
+                    <th style="border: 1px solid black; background-color: #71c085; font-weight: bold;">Total leña en el pedido</th>
+                    <th style="border: 1px solid black; background-color: #71c085; font-weight: bold;">Consumo de energia en el pedido</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid black; background-color: #71c085;"> {{ $pedido->total_cm3_pedido }} </td>
+                    <td style="border: 1px solid black; background-color: #71c085;"> {{ $pedido->total_sobrante_pedido }} </td>
+                    <td style="border: 1px solid black; background-color: #71c085;"> {{ $pedido->total_lena_pedido }} </td>
+                    <td style="border: 1px solid black; background-color: #71c085;"> {{ $pedido->consumo_energia }} </td>
+                </tr>
+            </tbody>
+        </table>
+@endforeach
+
