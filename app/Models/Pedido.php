@@ -67,7 +67,7 @@ class Pedido extends Model
 
         foreach ($items as $item) {
 
-            $existencia = $existencias->firstWhere('item_id',$item->item_id);
+            $existencia = $existencias->where('item_id',$item->item_id);
             if (empty($existencia)) {
                 $items_pedido->push((object)[
                     'id' => $item->id,
@@ -84,7 +84,7 @@ class Pedido extends Model
                     'descripcion' => $item->descripcion,
                     'cantidad' => $item->cantidad,
                     'existencias' => $item->existencias,
-                    'total' => $item->cantidad * $pedido->cantidad - $existencia->cantidad,
+                    'total' => $item->cantidad * $pedido->cantidad - $existencia->sum('cantidad'),
                     'item_id' => $item->item_id,
 
                 ]);
@@ -147,4 +147,18 @@ class Pedido extends Model
         return $this->belongsToMany(DisenoProductoFinal::class, 'pedido_producto')
                     ->select(['pedido_id', 'diseno_producto_final_id', 'pedido_producto.cantidad_producida']);
     }
+
+    /**
+     * get quantity of all items from items_pedido attribute if all total is 0 return true
+     */
+    public function getOrdersAreScheduledAttribute(){
+
+        $items = $this->items_pedido;
+        foreach ($items as $item) {
+            if ($item->total > 0) return false;
+        }
+        return true;
+
+    }
+
 }

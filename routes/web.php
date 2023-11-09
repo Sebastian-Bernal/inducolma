@@ -34,6 +34,7 @@ use App\Http\Controllers\Reportes\Administrativos\ReportePersonalController;
 use App\Http\Controllers\Reportes\Costos\ReporteCostosController;
 use App\Http\Controllers\Reportes\Pedidos\ReportePedidosController;
 use App\Http\Controllers\Reportes\Procesos\ProcesoConstruccionController;
+use App\Http\Controllers\RutaAcabadoProductoController;
 use App\Http\Controllers\SubprocesoController;
 use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
@@ -401,6 +402,20 @@ Route::resource('subprocesos', SubprocesoController::class)
     ->parameters(['subproceso' => 'subproceso'])
     ->names('subprocesos')
     ->middleware('auth');
+
+
+Route::resource('ruta-acabado-producto', RutaAcabadoProductoController::class )
+        ->parameters([
+            'ruta-acabado-producto' => 'pedido_id'
+        ])
+        ->names('ruta-acabado-producto')
+        ->middleware('auth');
+
+Route::controller( RutaAcabadoProductoController::class )->group(function () {
+    Route::get('crear-ruta-acabado/{pedido_id}', 'create')
+        ->name('crear-ruta-acabado')
+        ->middleware('auth');
+});
 
 
 //rutas reportes
