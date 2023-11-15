@@ -22,6 +22,7 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaMaquina">
                     Crear maquina
                 </button>
+
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)
@@ -61,9 +62,11 @@
                                         <option value="INICIAL">INICIAL</option>
                                         <option value="INTERMEDIO">INTERMEDIO</option>
                                         <option value="FINAL">FINAL</option>
-                                        <option value="ACABADOS">ACABADOS</option>
-                                        <option value="ENSAMBLE">ENSAMBLE</option>
+                                        <option value="ACABADOS">ACABADOS DE ITEM</option>
                                         <option value="ASERRIO">ASERRIO</option>
+                                        <option value="ENSAMBLE">ENSAMBLE</option>
+                                        <option value="ACABADOS_ENSAMBLE">ACAMBADOS DE ENSAMBLE</option>
+
                                     </select>
                                 </div>
                             </div>

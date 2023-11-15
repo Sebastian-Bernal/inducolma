@@ -13,7 +13,7 @@ class UpdateAcabadoProductoRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class UpdateAcabadoProductoRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'pedido_id' => 'required|integer|exists:pedidos,id',
+            'maquina_id' => 'required|integer|exists:maquinas,id',
+            'cantidad' => 'required|integer|min:1',
+            'user_id' => 'required|integer|exists:users,id',
         ];
     }
 }

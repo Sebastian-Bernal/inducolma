@@ -2,11 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAcabadoProductoRequest;
+use App\Http\Requests\UpdateAcabadoProductoRequest;
+use App\Models\Maquina;
 use App\Models\Pedido;
-use Illuminate\Http\Request;
+use App\Repositories\RutasEnsambleAcabados;
+use Illuminate\Http\Response;
 
 class RutaAcabadoProductoController extends Controller
 {
+
+
+    protected $rutas;
+
+    public function __construct(RutasEnsambleAcabados $rutas) {
+        $this->rutas = $rutas;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +37,8 @@ class RutaAcabadoProductoController extends Controller
     public function create($pedido_id)
     {
         $pedido = Pedido::find($pedido_id);
-        return view('modulos.administrativo.ruta-acabado-producto.create', compact('pedido'));
+        $maquinas = Maquina::whereIn('corte', ['ENSAMBLE', 'ACABADO_ENSAMBLE'])->get()->groupBy('corte')->toArray();
+        return view('modulos.administrativo.ruta-acabado-producto.create', compact('pedido', 'maquinas'));
     }
 
     /**
@@ -34,9 +47,14 @@ class RutaAcabadoProductoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAcabadoProductoRequest $request)
     {
-        //
+        $crearRutas = $this->rutas->crearRutas($request);
+        if ($crearRutas) {
+            return new Response(['success' => true], Response::HTTP_OK);
+        }
+
+        return new Response(['success' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -68,9 +86,15 @@ class RutaAcabadoProductoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAcabadoProductoRequest $request, $id)
     {
-        //
+        $updateRuta = $this->rutas->updateRuta($request, $id);
+
+        if ($updateRuta) {
+            return new Response(['success' => true], Response::HTTP_OK);
+        }
+        return new Response(['success' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
+
     }
 
     /**
@@ -81,6 +105,13 @@ class RutaAcabadoProductoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $deleteRuta = $this->rutas->deleteRuta($id);
+        if($deleteRuta = 'not found'){
+            return new Response(['success' => false], Response::HTTP_NOT_FOUND);
+        }
+        elseif ($deleteRuta) {
+            return new Response(['success' => true], Response::HTTP_OK);
+        }
+        return new Response(['success' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

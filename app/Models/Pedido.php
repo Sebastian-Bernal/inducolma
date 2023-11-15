@@ -161,4 +161,12 @@ class Pedido extends Model
 
     }
 
+    /**
+     * relation hasMany with ensambles_acabados
+     */
+    public function ensambles_acabados()
+    {
+        return $this->hasMany(EnsambleAcabado::class, 'pedido_id', 'id');
+    }
+
 }
