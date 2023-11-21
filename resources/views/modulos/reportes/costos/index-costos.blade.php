@@ -5,32 +5,20 @@
     @include('modulos.sidebars.costos-side')
 @endsection
 @section('content')
-
     <div class="div container h-content ">
         <div class="row">
-            <h5>{{ $encabezado }}</h5>
+            <h5 class="text-center text-primary"><strong>{{ $encabezado }}</strong></h5>
+
             <div style=" height: 30rem; overflow-y: scroll;">
-                <p>
-                    maquina_id : {{ $data->maquina_id }} <br>
-                    valor_minuto_energia : {{ $data->valor_minuto_energia }} <br>
-                    minutos : {{ $data->minutos }} <br>
-                    suma_valor_dia : {{ $data->sum_valor_dia }} <br>
-                    sum_cm3 : {{ $data->sum_cm3 }} <br>
-                    numero_dias : {{ $data->numero_dias }} <br>
-                </p>
-                <h4>datos de Pedidos Procesos y subprocesos:</h4> <br>
+                          
+                <h4 class="text-center text-secondary">Reporte de proceso por pedido</h4> <br>
 
                 @forelse ($data->procesos_pedido as $pedido)
-                    <p>
-                        Pedido Id : {{ $pedido->pedido_id }} <br>
-                        Clinete : {{ $pedido->cliente }} <br>
-                        Producto : {{ $pedido->producto }} <br>
-                        Cantidad : {{ $pedido->cantidad }} <br>
 
-                        <p>
                             <table class="table table-striped table-bordered align-middle mb-0 caption-top" >
-                                <caption>Procesos y subprocesos:</caption>
-                                <head>
+                               
+                                <thead>
+                                    <tr class="text-white bg-warning">
                                     <th>Pedido No.</th>
                                     <th>Fecha y hora de inicio</th>
                                     <th>Fecha y hora de fin</th>
@@ -44,7 +32,8 @@
                                     <th>lena</th>
                                     <th>cm3 procesados</th>
                                     <th>consumo energia</th>
-                                </head>
+                                    </tr>
+                                </thead>
                             @forelse ($pedido->procesos as $proceso)
                                 <tbody>
                                     <tr>
@@ -70,7 +59,7 @@
                                         <span>No se encontraron subprocesos</span>
                                     @endforelse
 
-                                    <tr class="table-info">
+                                    <tr class="table-warning">
                                         <td colspan="9"> Total del proceso</td>
                                         <td>{{ $proceso->total_sobrante }}</td>
                                         <td>{{ $proceso->total_lena }}</td>
