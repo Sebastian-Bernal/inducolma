@@ -20,6 +20,14 @@
                 <a href="{{ route('programaciones.index') }}" class="btn btn-outline-secondary btn-sm">volver a ordenes de produccion</a>
                 <br><br>
 
+                @if ($pedido->orders_are_scheduled)
+                    <a href="{{ route('crear-ruta-acabado', $pedido->id) }}" class="btn btn-outline-primary btn-sm">
+                        Programar ruta de acabados del productto final: {{ $pedido->descripcion }}
+                    </a>
+
+                @else
+                    <span>No scheduled {{ $pedido->orders_are_schedule }}</span>
+                @endif
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)
@@ -51,7 +59,9 @@
                                 <td>{{ $items->descripcion }}</td>
                                 <td>{{ $items->cantidad}}</td>
                                 <td id="{{ 'cantidad'.$items->item_id }}">{{ $items->total > 0 ? $items->total : 0 }}</td>
-                                <td id="{{ 'existencias'.$items->item_id }}">{{ $items->existencias}}</td>
+                                <td id="{{ 'existencias'.$items->item_id }}">
+                                    {{ $items->existencias > 0 && $items->total > 0 ? $items->existencias : ' ' }}
+                                </td>
                                 <td>
 
                                     <div class="row row-cols-lg-auto g-3 align-items-center">
@@ -72,7 +82,7 @@
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
 
-                                        @if ($items->existencias > 0)
+                                        @if ($items->existencias > 0 && $items->total > 0)
                                         <input type="hidden" name="{{ 'cantidad_atual_'.$items->item_id }}"
                                                             id="{{ 'cantidad_atual_'.$items->item_id }}"
                                                             value="{{ $items->total }}">

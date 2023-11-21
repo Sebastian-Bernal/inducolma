@@ -18,13 +18,13 @@ use App\Repositories\ProductosTerminados;
 use App\Repositories\RegistroAsistencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PhpParser\Node\Stmt\Return_;
+
 
 class TrabajoMaquina extends Controller
 {
     protected $registroAsistencia, $productosTerminados;
 
-    public function __construct(RegistroAsistencia $registroAsitencia, ProductosTerminados $productosTerminados )
+    public function __construct(RegistroAsistencia $registroAsitencia, ProductosTerminados $productosTerminados)
     {
         $this->registroAsistencia = $registroAsitencia;
         $this->productosTerminados = $productosTerminados;
@@ -37,23 +37,25 @@ class TrabajoMaquina extends Controller
      */
     public function index()
     {
-        $usuario = User::select(['id','name'])->find(Auth::user()->id);
-        $turno = TurnoUsuario::where('user_id',Auth::user()->id)
-                                ->where('fecha', date('Y-m-d'))
-                                ->first();
+        $usuario = User::select(['id', 'name'])->find(Auth::user()->id);
+        $turno = TurnoUsuario::where('user_id', Auth::user()->id)
+            ->where('fecha', date('Y-m-d'))
+            ->first();
         if (!empty($turno)) {
             $turno_usuarios = $this->registroAsistencia->usuariosDia();
             if (count($turno_usuarios->toArray()) > 0) {
                 $maquinas = Maquina::get(['id', 'maquina']);
                 $eventos = Evento::get(['id', 'descripcion']);
                 $usuarios = User::where('rol_id', 2)->get(['id', 'name']);
-                return view('modulos.operaciones.trabajo-maquina.index',
-                        compact('usuario', 'turno_usuarios', 'maquinas','eventos', 'turno', 'usuarios'));
+                return view(
+                    'modulos.operaciones.trabajo-maquina.index',
+                    compact('usuario', 'turno_usuarios', 'maquinas', 'eventos', 'turno', 'usuarios')
+                );
             } else {
                 $procesos = Proceso::where('maquina_id', $turno->maquina_id)
-                                    ->where('estado', 'PENDIENTE')
-                                    ->oldest()
-                                    ->get();
+                    ->where('estado', 'PENDIENTE')
+                    ->oldest()
+                    ->get();
                 $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
                 $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
                 $estados = Estado::get(['id', 'descripcion']);
@@ -67,32 +69,32 @@ class TrabajoMaquina extends Controller
                     ]);
                 }
 
-                if ($turno->maquina->corte == 'ASERRIO'){
-                    $entradas = EntradaMadera::join('entradas_madera_maderas','entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
-                                        ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
-                                        ->get();
+                if ($turno->maquina->corte == 'ASERRIO') {
+                    $entradas = EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
+                        ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
+                        ->get();
                     return view('modulos.operaciones.trabajo-maquina.troza-index', compact('entradas'));
                 }
 
-                if ($turno->maquina->corte != 'ENSAMBLE' ) {
-                    return view('modulos.operaciones.trabajo-maquina.show',
-                    compact('procesos',
+                if ($turno->maquina->corte != 'ENSAMBLE') {
+                    return view(
+                        'modulos.operaciones.trabajo-maquina.show',
+                        compact(
+                            'procesos',
                             'tipos_evento',
                             'eventos',
                             'estados',
                             'maquina',
-                            'estado_actual'));
+                            'estado_actual'
+                        )
+                    );
                 }
 
                 return redirect()->route('trabajo-maquina.create');
-
-
-
             }
         } else {
-            return redirect()->back()->with('status', "El usuario no tiene turno asignado para la fecha: ". date('Y-m-d'));
+            return redirect()->back()->with('status', "El usuario no tiene turno asignado para la fecha: " . date('Y-m-d'));
         }
-
     }
 
     /**
@@ -111,7 +113,7 @@ class TrabajoMaquina extends Controller
                 foreach ($pedido->ordenes_produccion as $orden) {
                     if ($orden->estado != 'PENDIENTE') {
                         $guardar = false;
-                        break ;
+                        break;
                     }
                 }
                 if ($guardar) {
@@ -128,15 +130,15 @@ class TrabajoMaquina extends Controller
     public function trabajoTroza(EntradaMadera $entrada)
     {
         $trozas = Cubicaje::where('entrada_madera_id', $entrada->id)
-                            ->where('estado', 'TROZA')
-                            ->orderBy('id')
-                            ->get([
-                                'id',
-                                'entrada_madera_id',
-                                'bloque',
-                                'paqueta',
-                                'largo',
-                            ]);
+            ->where('estado', 'TROZA')
+            ->orderBy('id')
+            ->get([
+                'id',
+                'entrada_madera_id',
+                'bloque',
+                'paqueta',
+                'largo',
+            ]);
         return view('modulos.operaciones.trabajo-maquina..transformacion-troza', compact('entrada', 'trozas'));
     }
 
@@ -148,15 +150,15 @@ class TrabajoMaquina extends Controller
 
     public function trabajoEnsamble(Pedido $pedido)
     {
-        $turno = TurnoUsuario::where('user_id',Auth::user()->id)
-                                ->where('fecha', date('Y-m-d'))
-                                ->first();
+        $turno = TurnoUsuario::where('user_id', Auth::user()->id)
+            ->where('fecha', date('Y-m-d'))
+            ->first();
         $turno_usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
-                                ->where('maquina_id', $turno->maquina_id)
-                                ->where('asistencia', true)
-                                ->where('fecha',date('Y-m-d'))
-                                ->get()
-                                ->load('user');
+            ->where('maquina_id', $turno->maquina_id)
+            ->where('asistencia', true)
+            ->where('fecha', date('Y-m-d'))
+            ->get()
+            ->load('user');
         $maquina = $turno->maquina_id;
         $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
         $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
@@ -171,12 +173,16 @@ class TrabajoMaquina extends Controller
             $i++;
         }
         */
-        return view('modulos.operaciones.trabajo-maquina.trabajo-ensamble',
-                compact('pedido',
-                        'turno_usuarios',
-                        'tipos_evento',
-                        'eventos',
-                        'maquina'));
+        return view(
+            'modulos.operaciones.trabajo-maquina.trabajo-ensamble',
+            compact(
+                'pedido',
+                'turno_usuarios',
+                'tipos_evento',
+                'eventos',
+                'maquina'
+            )
+        );
     }
 
     /**
@@ -188,7 +194,6 @@ class TrabajoMaquina extends Controller
     public function store(Request $request)
     {
         return $this->productosTerminados->guardar($request);
-
     }
 
     /**
@@ -200,34 +205,37 @@ class TrabajoMaquina extends Controller
     public function show(Proceso $trabajo_maquina)
     {
         $apagado = EstadoMaquina::where('maquina_id', $trabajo_maquina->maquina_id)
-                                ->latest('id')
-                                ->first('estado_id');
+            ->latest('id')
+            ->first('estado_id');
         $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
         $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
         $maquina = $trabajo_maquina->maquina_id;
-        $turno = TurnoUsuario::where('user_id',Auth::user()->id)
-                                ->where('fecha', date('Y-m-d'))
-                                ->first();
+        $turno = TurnoUsuario::where('user_id', Auth::user()->id)
+            ->where('fecha', date('Y-m-d'))
+            ->first();
         $turno_usuarios = TurnoUsuario::where('turno_id', $turno->turno_id)
-                                ->where('maquina_id', $turno->maquina_id)
-                                ->where('asistencia', true)
-                                ->where('fecha',date('Y-m-d'))
-                                ->get()
-                                ->load('user');
+            ->where('maquina_id', $turno->maquina_id)
+            ->where('asistencia', true)
+            ->where('fecha', date('Y-m-d'))
+            ->get()
+            ->load('user');
 
-        if ($apagado->estado_id != 1){
+        if ($apagado->estado_id != 1) {
             return redirect()->back()->with('status', 'La maquina no ha sido encendida');
         }
-        if($trabajo_maquina->estado=='TERMINADO'){
+        if ($trabajo_maquina->estado == 'TERMINADO') {
             return redirect()->route('trabajo-maquina.index')->with('status', 'La orden ya fue terminada');
         }
-        return view('modulos.operaciones.trabajo-maquina.trabajo-proceso',
-        compact('trabajo_maquina',
+        return view(
+            'modulos.operaciones.trabajo-maquina.trabajo-proceso',
+            compact(
+                'trabajo_maquina',
                 'tipos_evento',
                 'eventos',
                 'maquina',
                 'turno_usuarios',
-                        ));
+            )
+        );
     }
 
     /**
@@ -285,16 +293,16 @@ class TrabajoMaquina extends Controller
     {
 
         $evento = new EventoProceso();
-        $evento->maquina_id = $request->proceso_id ;
-        $evento->evento_id = $request->evento_id ;
-        $evento->user_id = $request->user_id ;
-        $evento->observacion = $request->observaciones ;
+        $evento->maquina_id = $request->proceso_id;
+        $evento->evento_id = $request->evento_id;
+        $evento->user_id = $request->user_id;
+        $evento->observacion = $request->observaciones;
 
         try {
             $evento->save();
-            return response()->json(array('error' => false, 'mensaje' => "evento guardado" ));
+            return response()->json(array('error' => false, 'mensaje' => "evento guardado"));
         } catch (\Throwable $th) {
-            return response()->json(array('error' => true, 'mensaje' => "evento no pudo ser guardado" ));
+            return response()->json(array('error' => true, 'mensaje' => "evento no pudo ser guardado"));
         }
     }
 
@@ -306,34 +314,34 @@ class TrabajoMaquina extends Controller
 
     public function guardaEstado(Request $request)
     {
-        $estado = (integer)$request->estado_id;
-        $estado_actual = EstadoMaquina::where('maquina_id', (integer)$request->maquina_id)
-                                    ->latest('id')
-                                    ->first();
+        $estado = (int)$request->estado_id;
+        $estado_actual = EstadoMaquina::where('maquina_id', (int)$request->maquina_id)
+            ->latest('id')
+            ->first();
 
         switch ($estado) {
             case 1:
                 if ($estado_actual == '' || $estado_actual->estado_id >= 2) {
                     return $this->registroAsistencia->guardaEstado($request);
-                } else{
-                    return response()->json(array('error' => true, 'mensaje' =>'la maquina ya esta encendida'));
+                } else {
+                    return response()->json(array('error' => true, 'mensaje' => 'la maquina ya esta encendida'));
                 }
                 break;
             case 2:
                 if (isset($estado_actual->estado_id) && $estado_actual->estado_id == 1) {
                     return $this->registroAsistencia->guardaEstado($request);
-                } else{
-                    return response()->json(array('error' => true, 'mensaje' =>'La maquina ya esta apagada'));
+                } else {
+                    return response()->json(array('error' => true, 'mensaje' => 'La maquina ya esta apagada'));
                 }
                 break;
             default:
-                if ($estado_actual->estado_id !=1 && $estado_actual->estado_id != $estado) {
+                if ($estado_actual->estado_id != 1 && $estado_actual->estado_id != $estado) {
                     return $this->registroAsistencia->guardaEstado($request);
-                } else{
+                } else {
                     return response()->json(array(
-                                            'error' => true,
-                                            'mensaje' =>'La maquina debe estar apagada, o el eveto seleccionado ya fue guardado'
-                                        ));
+                        'error' => true,
+                        'mensaje' => 'La maquina debe estar apagada, o el eveto seleccionado ya fue guardado'
+                    ));
                 }
                 break;
         }
@@ -347,7 +355,5 @@ class TrabajoMaquina extends Controller
     public function apagarMaquina(Request $request)
     {
         return $this->registroAsistencia->apagarMaquina($request);
-
     }
-
 }

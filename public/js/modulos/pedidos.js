@@ -37,7 +37,7 @@ $(document).ready(function () {
 
     $('#productos').select2({
         width: 'resolve',
-        placeholder: 'Seleccione un cliente',
+        placeholder: 'Seleccione un producto',
         dropdownParent: $("#creadiseno"),
         theme: "bootstrap-5",
         ajax: {

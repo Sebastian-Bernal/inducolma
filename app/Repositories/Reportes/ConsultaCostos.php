@@ -297,7 +297,7 @@ class ConsultaCostos {
                                 'pedido_id' =>  $proceso->orden_produccion->pedido_id,
                                 'fecha_ejecucion' => $proceso->fecha_ejecucion,
                                 'hora_inicio' => $proceso->hora_inicio,
-                                'fecha_fin' => $proceso->fecha_fin,
+                                'fecha_fin' => $proceso->fecha_finalizacion,
                                 'hora_fin' => $proceso->hora_fin,
                                 'subprocesos' => $proceso->subprocesos->map(function ($subproceso, $item) {
                                     return [
@@ -316,7 +316,7 @@ class ConsultaCostos {
                                 'total_sobrante' => $proceso->subprocesos->sum('sobrante'),
                                 'total_lena' => $proceso->subprocesos->sum('lena'),
 
-                                'consumo_energia' => round($item['valor_minuto_energia'] * (strtotime($proceso->fecha_fin . $proceso->hora_fin) - strtotime($proceso->fecha_ejecucion .$proceso->hora_inicio))/60, 2)
+                                'consumo_energia' => round($item['valor_minuto_energia'] * (strtotime($proceso->fecha_finalizacion . $proceso->hora_fin) - strtotime($proceso->fecha_ejecucion .$proceso->hora_inicio))/60, 2)
                             ];
                         }),
                         'total_cm3_pedido' => $proceso->sum(function ($proceso) {
@@ -329,7 +329,7 @@ class ConsultaCostos {
                             return $proceso->subprocesos->sum('lena');
                         }),
                         'consumo_energia' => $proceso->sum(function ($proceso) use($item) {
-                            return round($item['valor_minuto_energia'] * (strtotime($proceso->fecha_fin . $proceso->hora_fin) - strtotime($proceso->fecha_ejecucion .$proceso->hora_inicio))/60, 2);
+                            return round($item['valor_minuto_energia'] * (strtotime($proceso->fecha_finalizacion . $proceso->hora_fin) - strtotime($proceso->fecha_ejecucion .$proceso->hora_inicio))/60, 2);
                         })
 
                     ];

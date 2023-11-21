@@ -65,7 +65,7 @@ class DisenoProductoFinalController extends Controller
      */
     public function show(DisenoProductoFinal $diseno)
     {
-        $clientes = Cliente::get(['id', 'nombre']);
+        $clientes = Cliente::get(['id', 'razon_social as nombre']);
         $diseno_items = DisenoItem::join('items', 'items.id', '=', 'diseno_items.item_id')
             ->where('diseno_producto_final_id', $diseno->id)
             ->get(['diseno_items.id', 'items.descripcion', 'diseno_items.cantidad']);
