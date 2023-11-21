@@ -43,6 +43,7 @@
                                 <option value="Bloque">Bloque</option>
                                 <option value="Punta">Punta</option>
                                 <option value="Troza">Troza</option>
+                                <option value="Columna">Columna</option>
                             </select>
                         </div>
                         <div class="text-center">
@@ -53,8 +54,11 @@
                             <label class="input-group-text" for="saleInicial">Salida</label>
                             <select class="form-select" id="saleInicial">
                                 <option value="0">Seleccionar...</option>
+                                <option value="Columna">Columna</option>
+                                <option value="Tabla">Tabla</option>
                                 <option value="Taco">Taco</option>
                                 <option value="Punta">Punta</option>
+                                <option value="Item Final">Item Final</option>
 
                             </select>
                         </div>
@@ -107,7 +111,10 @@
                             <label class="input-group-text" for="entraIntermedia">Entrada</label>
                             <select class="form-select" id="entraIntermedia">
                                 <option value="0">Seleccionar...</option>
-                                <option value="Punta">Bloque</option>
+                                <option value="Bloque">Bloque</option>
+                                <option value="Punta">Punta</option>
+                                <option value="Troza">Troza</option>
+                                <option value="Columna">Columna</option>
                             </select>
                         </div>
                         <div class="text-center">
@@ -118,9 +125,12 @@
                             <label class="input-group-text" for="saleIntermedia">Salida</label>
                             <select class="form-select" id="saleIntermedia">
                                 <option value="0">Seleccionar...</option>
+                                <option value="Columna">Columna</option>
+                                <option value="Tabla">Tabla</option>
                                 <option value="Taco">Taco</option>
+                                <option value="Punta">Punta</option>
                                 <option value="Item Final">Item Final</option>
-                                < </select>
+                             </select>
                         </div>
                         <div class="text-center">
                             <label> Proceso </label>
@@ -174,6 +184,7 @@
                                 <option value="Bloque">Bloque</option>
                                 <option value="Punta">Punta</option>
                                 <option value="Troza">Troza</option>
+                                <option value="Columna">Columna</option>
                             </select>
                         </div>
                         <div class="text-center">
@@ -184,9 +195,12 @@
                             <label class="input-group-text" for="saleFinal">Salida</label>
                             <select class="form-select" id="saleFinal">
                                 <option value="0">Seleccionar...</option>
+                                <option value="Columna">Columna</option>
+                                <option value="Tabla">Tabla</option>
                                 <option value="Taco">Taco</option>
                                 <option value="Punta">Punta</option>
-                                < </select>
+                                <option value="Item Final">Item Final</option>
+                             </select>
                         </div>
                         <div class="text-center">
                             <label> Proceso </label>
@@ -242,6 +256,7 @@
                                 <option value="Bloque">Bloque</option>
                                 <option value="Punta">Punta</option>
                                 <option value="Troza">Troza</option>
+                                <option value="Columna">Columna</option>
                             </select>
                         </div>
                         <div class="text-center">
@@ -252,9 +267,12 @@
                             <label class="input-group-text" for="saleAcabados">Salida</label>
                             <select class="form-select" id="saleAcabados">
                                 <option value="0">Seleccionar...</option>
+                                <option value="Columna">Columna</option>
+                                <option value="Tabla">Tabla</option>
                                 <option value="Taco">Taco</option>
                                 <option value="Punta">Punta</option>
-                                < </select>
+                                <option value="Item Final">Item Final</option>
+                            </select>
                         </div>
                         <div class="text-center">
                             <label> Proceso </label>
