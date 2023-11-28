@@ -20,7 +20,7 @@
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaDescripcion">
-                    Crear desripci&oacute;n
+                    Crear descripci&oacute;n
                 </button>
                 @if ($errors->any())
                     <div class="alert alert-danger">
