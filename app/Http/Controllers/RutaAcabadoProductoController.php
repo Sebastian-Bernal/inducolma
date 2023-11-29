@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateAcabadoProductoRequest;
 use App\Models\Maquina;
 use App\Models\Pedido;
 use App\Repositories\RutasEnsambleAcabados;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class RutaAcabadoProductoController extends Controller
@@ -49,6 +50,7 @@ class RutaAcabadoProductoController extends Controller
      */
     public function store(StoreAcabadoProductoRequest $request)
     {
+
         $crearRutas = $this->rutas->crearRutas($request);
         if ($crearRutas) {
             return new Response(['success' => true], Response::HTTP_OK);

@@ -13,7 +13,7 @@
         <input type="hidden" name="cantidad_p" value="{{ $pedido->cantidad }}" id="cantidad_p" readonly>
         <input type="hidden" name="cliente_rs" value="{{ $pedido->cliente->razon_social }}" id="cliente_rs" readonly >
         <input type="hidden" name="diseno_name" value="{{ $pedido->diseno_producto_final->descripcion }}" id="diseno_name" readonly>
-        <input type="hidden" name="User_id" value="{{ Auth::user()->name }}" id="User_id" readonly>
+        <input type="hidden" name="User_id" value="{{ Auth::user()->id }}" id="User_id" readonly>
 
             {{-- Id del ususario para enviar en json: User: {{ Auth::user()->id }} --}}
             <h2 class="text-center text-primary"><strong>Crear ruta de acabados para el producto : {{
@@ -38,9 +38,6 @@
                 </div>
                 <div class=" card-body">
 
-                    <div class="text-center">
-                        <label> Entrada de Material </label>
-                    </div>
                     <form id="agregarEnsamble">
                         <div class="input-group mb-3 mt-3">
 
@@ -67,7 +64,7 @@
                         <div class="mb-3 text-center">
                             <label for="CantidadEnsamble" class="form-label text-center">Cantidad a
                                 Construir</label>
-                            <input type="number" class="form-control" id="CantidadEnsamble" name="CantidadEnsamble"></input>
+                            <input type="number" class="form-control" id="CantidadEnsamble" name="CantidadEnsamble">
                         </div>
                         <div class="text-center">
                             <label> Proceso </label>
@@ -141,7 +138,7 @@
                         <div class="mb-3 text-center">
                             <label for="CantidadAcabadoEnsamble" class="form-label text-center">Cantidad a
                                 Construir</label>
-                            <input type="number" class="form-control" id="CantidadAcabadoEnsamble"></input>
+                            <input type="number" class="form-control" id="CantidadAcabadoEnsamble">
                         </div>
                         <div class="text-center">
                             <label> Proceso </label>
@@ -176,9 +173,9 @@
                             onClick="agregaRutaAcabadoEnsamble()">Agregar a rutas</button>
                     </div>
                 </div>
-                
+
             </div>
-            
+
         </div>
         <br>
                 <br>
@@ -197,7 +194,7 @@
                                 <th scope="col">No.</th>
                                 <th scope="col">Maquina</th>
                                 <th scope="col">Entrada</th>
-                                <th scope="col">Salida</th>
+                                <th scope="col">Cantidad</th>
                                 <th scope="col">Observacion</th>
                                 <th scope="col">Eliminar</th>
                             </tr>
@@ -208,7 +205,7 @@
                     </table>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary container-fluid" onclick="terminarRuta()">Guardar ruta
+                    <button type="button" class="btn btn-primary container-fluid" onclick="guardarRutaBD()">Guardar ruta
                         de
                         programación</button>
                 </div>

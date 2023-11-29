@@ -1,6 +1,6 @@
-var rutasAcabados = [];
+var rutas = [];
 var numProceso = 0;
-var cantidad_r = 0
+var cantidad = 0
 var pedido_id = $('#pedido_id').val();
 var cantidad_p = $('#cantidad_p').val();
 var cliente_rs = $('#cliente_rs').val();
@@ -10,17 +10,17 @@ var User_id = $('#User_id').val();
 comprobarLocalStorage()
 
 function comprobarLocalStorage() {
-    if (localStorage.getItem('rutasAcabados') == null || localStorage.getItem('rutasAcabados') == '[]') {
-        rutasAcabados = [];
+    if (localStorage.getItem('rutas') == null || localStorage.getItem('rutas') == '[]') {
+        rutas = [];
     } else {
-        rutasAcabados = JSON.parse(localStorage.getItem('rutasAcabados'));
-        listarProcesos(rutasAcabados);
+        rutas = JSON.parse(localStorage.getItem('rutas'));
+        listarProcesos(rutas);
     }
 }
 
-function guardarAcabado(entra, sale, maquina, idMaquina, observa, tipo_corte, cantidad_r) {
+function guardarAcabado(entra, sale, maquina, maquina_id, observaciones, tipo_corte, cantidad) {
 
-    let coincide = rutasAcabados.filter(rutasAcabados => rutasAcabados.maquina == maquina).length
+    let coincide = rutas.filter(rutas => rutas.maquina == maquina).length
     if (coincide > 0) {
         Swal.fire({
             title: '¡Proceso ya fue definido!',
@@ -32,10 +32,10 @@ function guardarAcabado(entra, sale, maquina, idMaquina, observa, tipo_corte, ca
     } else {
         numProceso++;
         let rutaNum = numProceso;
-        registroProceso = Object.assign({}, { rutaNum, entra, sale, maquina, idMaquina, observa, tipo_corte, pedido_id, cliente_rs, cantidad_r });
-        rutasAcabados.unshift(registroProceso);
-        localStorage.setItem('rutasAcabados', JSON.stringify(rutasAcabados));
-        listarProcesos(rutasAcabados);
+        registroProceso = Object.assign({}, { rutaNum, entra, sale, maquina, maquina_id, observaciones, tipo_corte, pedido_id, cliente_rs, cantidad });
+        rutas.unshift(registroProceso);
+        localStorage.setItem('rutas', JSON.stringify(rutas));
+        listarProcesos(rutas);
     };
 };
 // Funciones de validacion de campos en formularios
@@ -44,13 +44,14 @@ function agregaRutaEnsamble() {
     let valido, proceso = 'Ensamble', campoValor = 0;
     let campos = $('#agregarEnsamble').find('select');
     let textarea = $('#agregarEnsamble').find('textarea');
-    let entra, sale, maquina, observa, idMaquina;
+    let entra, sale, maquina, observaciones, maquina_id;
     let maquinaria = document.getElementById("maquinaensamble");
     let tipo_corte = 'ENSAMBLE';
+    let cantidadId = $('#CantidadEnsamble').val();
     entra = ''
     sale = ''
     maquina = ''
-    idMaquina = 0
+    maquina_id = 0
     $.each(campos, function (index, value) {
         campoValor = value.value
         if (campoValor == 0) {
@@ -65,20 +66,23 @@ function agregaRutaEnsamble() {
             }
             if (value.id == 'maquinaensamble') {
                 maquina = maquinaria.options[maquinaria.selectedIndex].text
-                idMaquina = value.value
+                maquina_id = value.value
             }
-            if (value.id == 'CantidadEnsamble') {
-                cantidad_r = value.value 
-            }
+
         }
     });
+
+    if (cantidadId != '' && parseInt(cantidadId) > 0 ) {
+        cantidad = cantidadId
+    }
+
     if (entra == 0 || sale == 0 || maquina == 0) {
         campoValor = 0
     }
-    let observaciones = $("#observacionEnsamble").val()
-    if (observaciones == '') {
+    let observacionesId = $("#observacionEnsamble").val()
+    if (observacionesId == '') {
         Swal.fire({
-            title: '¡No contiene observaciones, desea dejar así!',
+            title: '¡No contiene observacionesId, desea dejar así!',
             icon: 'warning',
             confirmButtonColor: '#597504',
             confirmButtonText: 'Si',
@@ -89,23 +93,23 @@ function agregaRutaEnsamble() {
             if (result.isConfirmed) {
                 if (campoValor != 0) {
                     valido = true;
-                    observa = ''
-                    validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte, cantidad_r)
+                    observaciones = ''
+                    validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte, cantidad)
                 } else {
                     camposVacios()
                     valido = false;
-                    validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte , cantidad_r)
+                    validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte , cantidad)
                 }
             } else {
                 valido = false;
-                validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte , cantidad_r)
+                validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte , cantidad)
             }
         });
     }
-    if (observaciones != '' && campoValor != 0) {
+    if (observacionesId != '' && campoValor != 0) {
         valido = true;
-        observa = observaciones
-        validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte , cantidad_r)
+        observaciones = observacionesId
+        validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte , cantidad)
     }
 
 };
@@ -114,13 +118,14 @@ function agregaRutaAcabadoEnsamble() {
     let valido, proceso = 'AcabadoEnsamble', campoValor = 0;
     let campos = $('#agregarAcabadoEnsamble').find('select');
     let textarea = $('#agregarAcabadoEnsamble').find('textarea');
-    let entra, sale, maquina, observa, idMaquina;
+    let entra, sale, maquina, observaciones, maquina_id;
     let maquinaria = document.getElementById("maquinaAcabadoensamble");
     let tipo_corte = 'ACABADO_ENSAMBLE';
+    let cantidadAcabadoId = $('#CantidadAcabadoEnsamble').val();
     entra = ''
     sale = ''
     maquina = ''
-    idMaquina = 0
+    maquina_id = 0
     $.each(campos, function (index, value) {
         campoValor = value.value
         if (campoValor == 0) {
@@ -135,20 +140,23 @@ function agregaRutaAcabadoEnsamble() {
             }
             if (value.id == 'maquinaAcabadoensamble') {
                 maquina = maquinaria.options[maquinaria.selectedIndex].text
-                idMaquina = value.value
+                maquina_id = value.value
             }
-            if (value.id == 'CantidadAcabadoEnsamble') {
-                cantidad_r = value.value 
-            }
+
         }
     });
+
+    if (cantidadAcabadoId != '' && parseInt(cantidadAcabadoId) > 0 ) {
+        cantidad = cantidadAcabadoId
+    }
+
     if (entra == 0 || sale == 0 || maquina == 0) {
         campoValor = 0
     }
-    let observaciones = $("#observacionAcabadoEnsamble").val()
-    if (observaciones == '') {
+    let observacionesId = $("#observacionAcabadoEnsamble").val()
+    if (observacionesId == '') {
         Swal.fire({
-            title: '¡No contiene observaciones, desea dejar así!',
+            title: '¡No contiene observacionesId, desea dejar así!',
             icon: 'warning',
             confirmButtonColor: '#597504',
             confirmButtonText: 'Si',
@@ -159,23 +167,23 @@ function agregaRutaAcabadoEnsamble() {
             if (result.isConfirmed) {
                 if (campoValor != 0) {
                     valido = true;
-                    observa = ''
-                    validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte, cantidad_r)
+                    observaciones = ''
+                    validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte, cantidad)
                 } else {
                     camposVacios()
                     valido = false;
-                    validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte , cantidad_r)
+                    validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte , cantidad)
                 }
             } else {
                 valido = false;
-                validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte , cantidad_r)
+                validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte , cantidad)
             }
         });
     }
-    if (observaciones != '' && campoValor != 0) {
+    if (observacionesId != '' && campoValor != 0) {
         valido = true;
-        observa = observaciones
-        validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte , cantidad_r)
+        observaciones = observacionesId
+        validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte , cantidad)
     }
 
 };
@@ -183,11 +191,11 @@ function agregaRutaAcabadoEnsamble() {
 
 
 // Validacion de datos correcta - procede a enviar a localStorage
-function validar(valido, proceso, entra, sale, maquina, idMaquina, observa, tipo_corte, cantidad_r) {
+function validar(valido, proceso, entra, sale, maquina, maquina_id, observaciones, tipo_corte, cantidad) {
     if (valido) {
         console.log("envia datos");
         procesoEjecutado(proceso)
-        guardarAcabado(entra, sale, maquina, idMaquina, observa, tipo_corte, cantidad_r)
+        guardarAcabado(entra, sale, maquina, maquina_id, observaciones, tipo_corte, cantidad)
     } else {
         console.log("no envia datos");
         procesoEjecutado(proceso)
@@ -237,16 +245,16 @@ function camposVacios() {
 }
 
 // funcion listarProcesos, recibe un array de objetos y los muestra en la tabla
-function listarProcesos(rutasAcabados) {
+function listarProcesos(rutas) {
     $('#listarProcesos').html('');
-    rutasAcabados.forEach(rutasAcabados => {
-        let fila = `<tr id ="${rutasAcabados.rutaNum}">
-                        <td>${rutasAcabados.rutaNum}</td>
-                        <td>${rutasAcabados.maquina}</td>
-                        <td>${rutasAcabados.entra}</td>
-                        <td>${rutasAcabados.sale}</td>
-                        <td>${rutasAcabados.observa}</td>
-                        <td><button type="button" class="btn btn-danger" onclick="eliminarMadera(${rutasAcabados.rutaNum})"><i class="fas fa-trash-alt"></i></button></td>
+    rutas.forEach(rutas => {
+        let fila = `<tr id ="${rutas.rutaNum}">
+                        <td>${rutas.rutaNum}</td>
+                        <td>${rutas.maquina}</td>
+                        <td>${rutas.entra}</td>
+                        <td>${rutas.cantidad}</td>
+                        <td>${rutas.observaciones}</td>
+                        <td><button type="button" class="btn btn-danger" onclick="eliminarMadera(${rutas.rutaNum})"><i class="fas fa-trash-alt"></i></button></td>
                     </tr>`;
         $('#listarProcesos').append(fila);
 
@@ -268,103 +276,35 @@ function eliminarMadera(rutaNum) {
     }).then((result) => {
         //$(`#${id}`).remove();
         if (result.isConfirmed) {
-            rutasAcabados = rutasAcabados.filter(rutasAcabados => rutasAcabados.rutaNum != rutaNum);
-            localStorage.setItem('rutasAcabados', JSON.stringify(rutasAcabados));
-            listarProcesos(rutasAcabados);
+            rutas = rutas.filter(rutas => rutas.rutaNum != rutaNum);
+            localStorage.setItem('rutas', JSON.stringify(rutas));
+            listarProcesos(rutas);
         }
     })
 }
 
+/**
+ * guardarRutaBD(), envia la ruta seleccionada para ser guardada en la base de datos
+ * @param {Object} rutas
+ * @return {Swal}, retorna un mensaje Swal con mensaje de exito o error
+ */
 function guardarRutaBD() {
+    if (rutas.length > 0) {
+        var principalTitle =  `¿Está seguro de terminar la creacion de la ruta de programación?`;
+        var confirmButtonText = 'Si, terminar';
+        var url =  `/api/crear-ruta-acabado-producto`;
+        var tipo = "POST";
+        var datos = {
+            'pedido_id': pedido_id,
+            'user_id': User_id,
+            'rutas': rutas,
+        };
+        var successTitle =  'Rutas Creadas!';
 
-    $.ajax({
-        url: '/procesos',
-        data: {
-            proceso: rutasAcabados,
-            _token: $('input[name="_token"]').val()
-        },
-        type: 'post',
-        success: function (guardado) {
-            if (guardado.error == false) {
-                Swal.fire({
-                    title: guardado.message,
-                    icon: 'success',
-                    confirmButtonColor: '#597504',
-                    confirmButtonText: 'OK'
-                })
-                    .then(() => {
-                        rutasAcabados = [];
-                        numBloque = 0;
-                        localStorage.removeItem('rutasAcabados');
-                        window.location.href = '/procesos';
+        var guardarRuta= AlertSimpleRequestManager.getInstance();
+        guardarRuta.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, successTitle);
 
-                    })
-            } else {
-                Swal.fire({
-                    title: guardado.message,
-                    icon: 'error',
-                    confirmButtonColor: '#597504',
-                    confirmButtonText: 'OK'
-                })
-            }
-        }
-    })
-
-}
-/**
- * terminarRuta(), muestra cuadro de confirmacion para que el usuario acepte o no enviar los datos
- * a la base de datos
- */
-function terminarRuta() {
-    if (cubicajes.length > 0) {
-
-        Swal.fire({
-            title: '¿Está seguro que desea terminar la ruta?',
-            text: "¡No podrá revertir esta acción!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#597504',
-            cancelButtonColor: '#ff7e00',
-            confirmButtonText: '¡Si, terminar!',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-
-                guardarRutaBD();
-            }
-        })
-    } else {
-        swal.fire({
-            title: '¡La ruta no tiene procesos agregados, no se puede terminar!',
-            icon: 'warning',
-            confirmButtonColor: '#597504',
-            confirmButtonText: 'OK'
-        })
-    }
-}
-
-/**
- * terminarRuta(), evalua si rutasAcabados contiene datos, para poder guardar en la BD
- * @returns {swal} mensaje de alerta
- */
-function terminarRuta() {
-    if (rutasAcabados.length > 0) {
-        //guardarPaquetaBD();
-        Swal.fire({
-            title: "¿Está seguro de terminar la creacion de la ruta de programación?",
-            text: "¡No podrá revertir esta acción!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#597504",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "¡Si, terminar!",
-            cancelButtonText: "Cancelar",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                guardarRutaBD();
-            }
-        });
-    } else {
+    }else {
         swal.fire({
             title: "¡No hay una ruta creada, no puede terminar!",
             icon: "warning",
@@ -372,54 +312,4 @@ function terminarRuta() {
             confirmButtonText: "OK",
         });
     }
-}
-/**
- * guardarRutaBD(), envia la ruta seleccionada para ser guardada en la base de datos
- * @param {Object} rutasAcabados
- * @return {Swal}, retorna un mensaje Swal con mensaje de exito o error
- */
-function guardarRutaBD() {
-    let RutaAcabadoFin
-    RutaAcabadoFin=object.assign({},{pedido_id,User_id,rutasAcabados})
-    console.log(RutaAcabadoFin)
-    $.ajax({
-        url: "/crear-ruta-acabado-producto",
-        data: {
-            proceso: RutaAcabadoFin,
-            _token: $('input[name="_token"]').val(),
-        },
-        type: "post",
-        success: function (guardado) {
-            console.log(guardado);
-            if (guardado.error == false) {
-                Swal.fire({
-                    title: guardado.mensaje,
-                    icon: "success",
-                    confirmButtonColor: "#597504",
-                    confirmButtonText: "OK",
-                }).then(() => {
-                    rutasAcabados = [];
-                    localStorage.removeItem("rutasAcabados");
-                    window.location.href = "/crear-ruta-acabado/"+pedido_id;
-                });
-            } else {
-                Swal.fire({
-                    title: guardado.mensaje,
-                    icon: "error",
-                    confirmButtonColor: "#597504",
-                    confirmButtonText: "OK",
-                });
-            }
-        },
-        error: function (error) {
-            console.log(error.status);
-            swal.fire({
-                title: error.statusText +' '+ error.status ,
-                text:  'Error al insertar los datos, por favor comuniquese con el admistrador de la aplicación',
-                icon: "error",
-                confirmButtonColor: "#597504",
-                confirmButtonText: "OK",
-            });
-        },
-    });
 }
