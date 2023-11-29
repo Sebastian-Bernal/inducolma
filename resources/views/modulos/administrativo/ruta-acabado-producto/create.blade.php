@@ -13,6 +13,7 @@
         <input type="hidden" name="cantidad_p" value="{{ $pedido->cantidad }}" id="cantidad_p" readonly>
         <input type="hidden" name="cliente_rs" value="{{ $pedido->cliente->razon_social }}" id="cliente_rs" readonly >
         <input type="hidden" name="diseno_name" value="{{ $pedido->diseno_producto_final->descripcion }}" id="diseno_name" readonly>
+        <input type="hidden" name="User_id" value="{{ Auth::user()->name }}" id="User_id" readonly>
 
             {{-- Id del ususario para enviar en json: User: {{ Auth::user()->id }} --}}
             <h2 class="text-center text-primary"><strong>Crear ruta de acabados para el producto : {{

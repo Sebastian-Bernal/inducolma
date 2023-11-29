@@ -5,6 +5,7 @@ var pedido_id = $('#pedido_id').val();
 var cantidad_p = $('#cantidad_p').val();
 var cliente_rs = $('#cliente_rs').val();
 var diseno_name = $('#diseno_name').val();
+var User_id = $('#User_id').val();
 // Agregar valores al local storage
 comprobarLocalStorage()
 
@@ -199,7 +200,7 @@ function procesoEjecutado(proceso) {
         limpiarEnsamble()
     }
     if (proceso == 'AcabadoEnsamble') {
-        limpiarIntermedia()
+        limpiarAcabadosEnsamble()
     }
 }
 
@@ -212,27 +213,15 @@ function limpiarEnsamble() {
     $('#CantidadEnsamble').val('0');
     $('#entraEnsamble').focus();
 };
-function limpiarIntermedia() {
-    $('#entraIntermedia').val('0');
-    $('#saleIntermedia').val('0');
-    $('#maquinaIntermedia').val('0');
-    $('#observacionIntermedia').val('');
-    $('#entraIntermedia').focus();
+function limpiarAcabadosEnsamble() {
+    $('#entraAcabadoEnsamble').val('0');
+    $('#saleAcabadoEnsamble').val('0');
+    $('#maquinaAcabadoensamble').val('0');
+    $('#observacionAcabadoEnsamble').val('');
+    $('#CantidadAcabadoEnsamble').val('0');
+    $('#entraAcabadoEnsamble').focus();
 };
-function limpiarFinal() {
-    $('#entraFinal').val('0');
-    $('#saleFinal').val('0');
-    $('#maquinaFinal').val('0');
-    $('#observacionFinal').val('');
-    $('#entraFinal').focus();
-};
-function limpiarAcabados() {
-    $('#entraAcabados').val('0');
-    $('#saleAcabados').val('0');
-    $('#maquinaAcabados').val('0');
-    $('#observacionAcabados').val('');
-    $('#entraAcabados').focus();
-};
+
 
 //Mensaje de campos vacios en select
 function camposVacios() {
@@ -390,10 +379,13 @@ function terminarRuta() {
  * @return {Swal}, retorna un mensaje Swal con mensaje de exito o error
  */
 function guardarRutaBD() {
+    let RutaAcabadoFin
+    RutaAcabadoFin=object.assign({},{pedido_id,User_id,rutasAcabados})
+    console.log(RutaAcabadoFin)
     $.ajax({
-        url: "/procesos",
+        url: "/crear-ruta-acabado-producto",
         data: {
-            proceso: rutasAcabados,
+            proceso: RutaAcabadoFin,
             _token: $('input[name="_token"]').val(),
         },
         type: "post",
@@ -408,7 +400,7 @@ function guardarRutaBD() {
                 }).then(() => {
                     rutasAcabados = [];
                     localStorage.removeItem("rutasAcabados");
-                    window.location.href = "/programaciones/"+pedido_id;
+                    window.location.href = "/crear-ruta-acabado/"+pedido_id;
                 });
             } else {
                 Swal.fire({
