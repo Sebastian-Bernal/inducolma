@@ -55,29 +55,22 @@ function agregaRutaEnsamble() {
     $.each(campos, function (index, value) {
         campoValor = value.value
         if (campoValor == 0) {
-            camposVacios()
+           
 
         } else {
-            if (value.id == 'entraEnsamble') {
-                entra = value.value
-            }
-            if (value.id == 'saleEnsamble') {
-                sale = value.value
-            }
-            if (value.id == 'maquinaensamble') {
+            if (value.id == 'maquinaAcabadoensamble') {
                 maquina = maquinaria.options[maquinaria.selectedIndex].text
                 maquina_id = value.value
             }
 
         }
     });
-
     if (cantidadId != '' && parseInt(cantidadId) > 0 ) {
         cantidad = cantidadId
     }
 
     if (entra == 0 || sale == 0 || maquina == 0) {
-        campoValor = 0
+        campoValor = 1
     }
     let observacionesId = $("#observacionEnsamble").val()
     if (observacionesId == '') {
@@ -129,15 +122,9 @@ function agregaRutaAcabadoEnsamble() {
     $.each(campos, function (index, value) {
         campoValor = value.value
         if (campoValor == 0) {
-            camposVacios()
+           
 
         } else {
-            if (value.id == 'entraAcabadoEnsamble') {
-                entra = value.value
-            }
-            if (value.id == 'saleAcabadoEnsamble') {
-                sale = value.value
-            }
             if (value.id == 'maquinaAcabadoensamble') {
                 maquina = maquinaria.options[maquinaria.selectedIndex].text
                 maquina_id = value.value
@@ -151,7 +138,7 @@ function agregaRutaAcabadoEnsamble() {
     }
 
     if (entra == 0 || sale == 0 || maquina == 0) {
-        campoValor = 0
+        campoValor = 1
     }
     let observacionesId = $("#observacionAcabadoEnsamble").val()
     if (observacionesId == '') {
@@ -214,16 +201,12 @@ function procesoEjecutado(proceso) {
 
 // Limpiar Inputs en formularios
 function limpiarEnsamble() {
-    $('#entraEnsamble').val('0');
-    $('#saleEnsamble').val('0');
     $('#maquinaensamble').val('0');
     $('#observacionEnsamble').val('');
     $('#CantidadEnsamble').val('0');
     $('#entraEnsamble').focus();
 };
 function limpiarAcabadosEnsamble() {
-    $('#entraAcabadoEnsamble').val('0');
-    $('#saleAcabadoEnsamble').val('0');
     $('#maquinaAcabadoensamble').val('0');
     $('#observacionAcabadoEnsamble').val('');
     $('#CantidadAcabadoEnsamble').val('0');
@@ -251,7 +234,6 @@ function listarProcesos(rutas) {
         let fila = `<tr id ="${rutas.rutaNum}">
                         <td>${rutas.rutaNum}</td>
                         <td>${rutas.maquina}</td>
-                        <td>${rutas.entra}</td>
                         <td>${rutas.cantidad}</td>
                         <td>${rutas.observaciones}</td>
                         <td><button type="button" class="btn btn-danger" onclick="eliminarMadera(${rutas.rutaNum})"><i class="fas fa-trash-alt"></i></button></td>

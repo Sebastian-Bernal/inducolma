@@ -39,28 +39,7 @@
                 <div class=" card-body">
 
                     <form id="agregarEnsamble">
-                        <div class="input-group mb-3 mt-3">
-
-                            <label class="input-group-text" for="entraEnsamble">Entrada</label>
-                            <select class="form-select" id="entraEnsamble">
-                                <option value="0">Seleccionar...</option>
-                                <option value="Item Diseño">Item Diseño</option>
-                            </select>
-                        </div>
-                        <div class="text-center">
-                            <label> Salida de Material </label>
-                        </div>
-                        <div class="input-group mb-3 mt-3">
-
-                            <label class="input-group-text" for="saleEnsamble">Salida</label>
-                            <select class="form-select" id="saleEnsamble">
-                                <option value="0">Seleccionar...</option>
-                                <option value="Estiba">Estiba</option>
-                                <option value="Tablero">Tablero</option>
-                                <option value="Carreto">Carreto</option>
-
-                            </select>
-                        </div>
+                     
                         <div class="mb-3 text-center">
                             <label for="CantidadEnsamble" class="form-label text-center">Cantidad a
                                 Construir</label>
@@ -111,30 +90,7 @@
                         <label> Entrada de Material </label>
                     </div>
                     <form id="agregarAcabadoEnsamble">
-                        <div class="input-group mb-3 mt-3">
-
-                            <label class="input-group-text" for="entraAcabadoEnsamble">Entrada</label>
-                            <select class="form-select" id="entraAcabadoEnsamble">
-                                <option value="0">Seleccionar...</option>
-                                <option value="Estiba">Estiba</option>
-                                <option value="Tablero">Tablero</option>
-                                <option value="Carreto">Carreto</option>
-                            </select>
-                        </div>
-                        <div class="text-center">
-                            <label> Salida de Material </label>
-                        </div>
-                        <div class="input-group mb-3 mt-3">
-
-                            <label class="input-group-text" for="saleAcabadoEnsamble">Salida</label>
-                            <select class="form-select" id="saleAcabadoEnsamble">
-                                <option value="0">Seleccionar...</option>
-                                <option value="Estiba">Estiba</option>
-                                <option value="Tablero">Tablero</option>
-                                <option value="Carreto">Carreto</option>
-
-                            </select>
-                        </div>
+                    
                         <div class="mb-3 text-center">
                             <label for="CantidadAcabadoEnsamble" class="form-label text-center">Cantidad a
                                 Construir</label>
@@ -193,7 +149,6 @@
                             <tr>
                                 <th scope="col">No.</th>
                                 <th scope="col">Maquina</th>
-                                <th scope="col">Entrada</th>
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Observacion</th>
                                 <th scope="col">Eliminar</th>
