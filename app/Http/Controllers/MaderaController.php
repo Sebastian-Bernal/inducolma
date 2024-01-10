@@ -20,7 +20,7 @@ class MaderaController extends Controller
     {
         $this->authorize('admin');
         $maderas = Madera::with('tipo_madera')->get();
-        $tipos_maderas = TipoMadera::all();
+        $tipos_maderas = TipoMadera::all()->except(1);
         return view('modulos.administrativo.maderas.index', compact('maderas', 'tipos_maderas'));
     }
 
@@ -63,7 +63,7 @@ class MaderaController extends Controller
     public function show(Madera $madera)
     {
         $this->authorize('admin');
-        $tipos_maderas = TipoMadera::all();
+        $tipos_maderas = TipoMadera::all()->except(1);
         return view('modulos.administrativo.maderas.show', compact('madera', 'tipos_maderas'));
     }
 

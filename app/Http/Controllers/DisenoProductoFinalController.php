@@ -24,7 +24,7 @@ class DisenoProductoFinalController extends Controller
     public function index()
     {
         $disenos = DisenoProductoFinal::all();
-        $tipos_maderas = TipoMadera::all();
+        $tipos_maderas = TipoMadera::all()->except(1);
         $clientes = Cliente::orderBy('nit')->get();
         return view('modulos.administrativo.disenos.index', compact('disenos', 'tipos_maderas', 'clientes'));
     }
@@ -89,7 +89,7 @@ class DisenoProductoFinalController extends Controller
     public function edit(DisenoProductoFinal $diseno)
     {
         $clientes = Cliente::get(['id', 'nombre']);
-        $tipos_maderas = TipoMadera::all();
+        $tipos_maderas = TipoMadera::all()->except(1);
         return view('modulos.administrativo.disenos.edit', compact('diseno', 'clientes', 'tipos_maderas'));
     }
 

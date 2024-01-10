@@ -82,7 +82,7 @@ class ReporteController extends Controller
     public function getTipoMadera(Request $request)
     {
         $disenos = TipoMadera::where('descripcion', 'like', '%'.strtoupper($request->descripcion).'%')
-        ->get(['id','descripcion as text']);
+        ->get(['id','descripcion as text'])->except(1);
         $disenos->toJson();
         return response()->json($disenos);
     }

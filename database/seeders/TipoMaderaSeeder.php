@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\TipoMadera;
 use Illuminate\Database\Seeder;
 
-class TiposMaderaSeeder extends Seeder
+class TipoMaderaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,11 @@ class TiposMaderaSeeder extends Seeder
      */
     public function run()
     {
-        TipoMadera::factory(9)->create();
+        TipoMadera::firstOrCreate([
+
+            'descripcion' => 'TODOS',
+            'user_id' => 1,
+
+        ]);
     }
 }

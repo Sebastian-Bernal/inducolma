@@ -65,7 +65,7 @@
                                         <option value="ACABADOS">ACABADOS DE ITEM</option>
                                         <option value="ASERRIO">ASERRIO</option>
                                         <option value="ENSAMBLE">ENSAMBLE</option>
-                                        <option value="ACABADOS_ENSAMBLE">ACAMBADOS DE ENSAMBLE</option>
+                                        <option value="ACABADO_ENSAMBLE">ACAMBADOS DE ENSAMBLE</option>
 
                                     </select>
                                 </div>

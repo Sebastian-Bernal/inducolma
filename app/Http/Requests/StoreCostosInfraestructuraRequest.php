@@ -24,7 +24,10 @@ class StoreCostosInfraestructuraRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'maquina' => 'required|integer|exists:maquinas,id',
+            'tipo_material' => 'required',
+            'tipo_madera' => 'required|integer|exists:tipo_maderas,id',
+            'unidades_minuto' => 'required|min:1',
         ];
     }
 }

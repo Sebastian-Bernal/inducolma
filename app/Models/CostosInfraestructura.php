@@ -10,14 +10,10 @@ class CostosInfraestructura extends Model
     use HasFactory;
     protected $fillable = [
             'id',
-            'valor_operativo',
             'tipo_material',
             'tipo_madera',
-            'proceso_madera',
-            'promedio_piezas',
-            'minimo_piezas',
-            'maximo_piezas',
             'maquina_id',
+            'estandar_u_minuto'
             ];
     /**
      * relacion costos_infraestructura belongsTo Maquina
@@ -26,11 +22,11 @@ class CostosInfraestructura extends Model
     {
         return $this->belongsTo(Maquina::class);
     }
-    
+
     /**
      * relacion costos_infraestructura hasOne Item
      */
-        
+
     public function item()
     {
         return $this->belongsTo(Item::class, 'tipo_material');
@@ -41,6 +37,6 @@ class CostosInfraestructura extends Model
      */
     public function madera()
     {
-        return $this->belongsTo(Madera::class, 'tipo_madera');
+        return $this->belongsTo(TipoMadera::class, 'tipo_madera');
     }
 }

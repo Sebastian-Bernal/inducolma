@@ -55,7 +55,7 @@ function agregaRutaEnsamble() {
     $.each(campos, function (index, value) {
         campoValor = value.value
         if (campoValor == 0) {
-           
+
 
         } else {
             if (value.id == 'maquinaAcabadoensamble') {
@@ -122,7 +122,7 @@ function agregaRutaAcabadoEnsamble() {
     $.each(campos, function (index, value) {
         campoValor = value.value
         if (campoValor == 0) {
-           
+
 
         } else {
             if (value.id == 'maquinaAcabadoensamble') {

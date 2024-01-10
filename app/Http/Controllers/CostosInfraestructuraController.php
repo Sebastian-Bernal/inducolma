@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCostosInfraestructuraRequest;
 use App\Models\Maquina;
 use App\Models\Madera;
 use App\Models\Item;
+use App\Models\TipoMadera;
 
 class CostosInfraestructuraController extends Controller
 {
@@ -19,12 +20,12 @@ class CostosInfraestructuraController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $costosIinfraestructura = CostosInfraestructura::all();
+        $estadaresUnidadesMinuto = CostosInfraestructura::all();
         $maquinas = Maquina::all();
-        $maderas = Madera::all();
-        $items = Item::all();
+        $maderas = TipoMadera::all();
+
         return view('modulos.administrativo.costos.costos-infraestructura',
-                    compact('costosIinfraestructura', 'maquinas', 'maderas', 'items'));
+                    compact('estadaresUnidadesMinuto', 'maquinas', 'maderas'));
     }
 
     /**
@@ -46,18 +47,19 @@ class CostosInfraestructuraController extends Controller
     public function store(StoreCostosInfraestructuraRequest $request)
     {
         $this->authorize('admin');
-        $costosInfraestructura = new CostosInfraestructura();
-        $costosInfraestructura->valor_operativo = $request->valorOperativo;
-        $costosInfraestructura->tipo_material = $request->tipoMaterial;
-        $costosInfraestructura->tipo_madera = $request->tipoMadera;
 
-        $costosInfraestructura->promedio_piezas = $request->promedioPiezas;
-        $costosInfraestructura->minimo_piezas = $request->minimoPiezas;
-        $costosInfraestructura->maximo_piezas = $request->maximoPiezas;
-        $costosInfraestructura->maquina_id = $request->idMaquina;
-        $costosInfraestructura->save();
+        $estandarUnidadesMinuto = CostosInfraestructura::create([
+                'maquina_id' => $request->maquina,
+                'tipo_material' => $request->tipo_material,
+                'tipo_madera' => $request->tipo_madera,
+                'estandar_u_minuto' => $request->unidades_minuto,
+        ]);
 
-        return back()->with('status', 'Costo de Infraestructura creado con éxito');
+        if($estandarUnidadesMinuto->wasRecentlyCreated){
+            return back()->with('status', 'Estandar de unidades por minuto creado con éxito');
+        }
+
+        return back()->with('status', 'Algo salio mal');
     }
 
     /**
@@ -81,10 +83,10 @@ class CostosInfraestructuraController extends Controller
     {
         $this->authorize('admin');
         $maquinas = Maquina::all();
-        $items = Item::all();
-        $maderas = Madera::all();
+        $maderas = TipoMadera::all();
+        $estandarUnidadesMinuto = $costosInfraestructura;
         return view('modulos.administrativo.costos.costos-infraestructura-edit',
-                    compact('costosInfraestructura', 'maquinas', 'items', 'maderas'));
+                    compact('estandarUnidadesMinuto', 'maquinas', 'maderas'));
     }
 
     /**
@@ -97,17 +99,14 @@ class CostosInfraestructuraController extends Controller
     public function update(UpdateCostosInfraestructuraRequest $request, CostosInfraestructura $costosInfraestructura)
     {
         $this->authorize('admin');
-        $costosInfraestructura->valor_operativo = $request->valorOperativo;
-        $costosInfraestructura->tipo_material = $request->tipoMaterial;
-        $costosInfraestructura->tipo_madera = $request->tipoMadera;
+        $costosInfraestructura->update([
+            'maquina_id' => $request->maquina,
+            'tipo_material' => $request->tipo_material,
+            'tipo_madera' => $request->tipo_madera,
+            'estandar_u_minuto' => $request->unidades_minuto,
+        ]);
 
-        $costosInfraestructura->promedio_piezas = $request->promedioPiezas;
-        $costosInfraestructura->minimo_piezas = $request->minimoPiezas;
-        $costosInfraestructura->maximo_piezas = $request->maximoPiezas;
-        $costosInfraestructura->maquina_id = $request->idMaquina;
-        $costosInfraestructura->save();
-
-        return redirect()->route('costos-de-infraestructura.index')->with('status', 'Costo de Infraestructura actualizado con éxito');
+        return redirect()->route('costos-de-infraestructura.index')->with('status', 'Estandar de unidades por minuto actualizado con éxito');
     }
 
     /**
@@ -120,6 +119,6 @@ class CostosInfraestructuraController extends Controller
     {
         $this->authorize('admin');
         $costosInfraestructura->delete();
-        return back()->with('status', 'Costo de Infraestructura eliminado con éxito');
+        return back()->with('status', 'Estandar de unidades por minuto eliminado con éxito');
     }
 }

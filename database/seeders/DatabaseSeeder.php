@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DefaultClientSeeder::class);
         $this->call(EstadosSeeder::class);
         $this->call(TipoEventosDefecto::class);
-
+        $this->call(TipoMaderaSeeder::class);
 
 
 

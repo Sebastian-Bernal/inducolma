@@ -18,7 +18,7 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::all();
-        $tipos_maderas = TipoMadera::withTrashed()->get(['id','descripcion']);
+        $tipos_maderas = TipoMadera::withTrashed()->get(['id','descripcion'])->except(1);
         return view('modulos.administrativo.items.index', compact('items', 'tipos_maderas'));
     }
 
@@ -67,7 +67,7 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        $tipos_maderas = TipoMadera::withTrashed()->get(['id','descripcion']);
+        $tipos_maderas = TipoMadera::withTrashed()->get(['id','descripcion'])->except(1);
         return view('modulos.administrativo.items.show', compact('item', 'tipos_maderas'));
     }
 

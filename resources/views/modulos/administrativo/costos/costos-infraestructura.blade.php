@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
 
-@section('title', ' Costos de infraestructura | inducolma')
+@section('title', 'Estandar unidades por minuto | inducolma')
 
 @section('submenu')
     @include('modulos.sidebars.costos-side')
@@ -12,11 +12,11 @@
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
 
 
-                <h1 class="display-6" >Crear costo de costo de infraestructura</h1>
+                <h1 class="display-6" >Crear tiempo estándar </h1>
                 <hr>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creaCostoInfraestructura">
-                    Crear costo de costo de infraestructura
+                    Crear tiempo estándar
                 </button>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -33,67 +33,77 @@
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Crea costo de costo de infraestructura</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Crear tiempo estándar </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text">Valor operativo:</span>
-                                    <input type="number" class="form-control" placeholder="Valor operativo" step="0.01" name="valorOperativo" id="valorOperativo" required>
-                                </div>
-
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">Item</span>
-                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="tipoMaterial" id="tipoMaterial">
-                                        <option value="" selected>Seleccione...</option>
-                                        @foreach ($items as $item)
-                                            <option value="{{ $item->id }}"
-                                                >{{ $item->descripcion }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">Tipo madera:</span>
-                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="tipoMadera" id="tipoMadera">
-                                        <option value="" selected>Seleccione una madera...</option>
-                                        @foreach ($maderas as $madera)
-                                            <option value="{{ $madera->id }}"
-
-                                                >{{ $madera->tipo_madera->descripcion }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                {{-- <div class="input-group mb-3">
-                                    <span class="input-group-text">Proceso madera:</span>
-                                    <input type="text" class="form-control" placeholder="Proceso madera"  name="procesoMadera" id="procesoMadera" required>
-                                </div> --}}
-
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">Promedio piezas:</span>
-                                    <input type="number" class="form-control" placeholder="Promedio piezas" step="0.01" name="promedioPiezas" id="promedioPiezas" required>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">Minimo piezas:</span>
-                                    <input type="number" class="form-control" placeholder="Minimo piezas" step="0.01" name="minimoPiezas" id="minimoPiezas" required>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">Maximo piezas:</span>
-                                    <input type="number" class="form-control" placeholder="Maximo piezas" step="0.01" name="maximoPiezas" id="maximoPiezas" required>
-                                </div>
-
-                                <div class="input-group mb-3">
                                     <span class="input-group-text">Maquina:</span>
-                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="idMaquina" id="idMaquina">
+                                    <select class="form-select form-select-sm"
+                                            aria-label=".form-select-sm example"
+                                            name="maquina"
+                                            id="idMaquina"
+                                            required>
+                                            <OPtion value="" selected>Seleccione una maquina...</OPtion>
                                         @foreach ($maquinas as $maquina)
                                             <option value="{{ $maquina->id }}">{{ $maquina->maquina }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Tipo material:</span>
+                                    <select
+                                        class="form-select form-select-sm"
+                                        aria-label=".form-select-sm example"
+                                        name="tipo_material"
+                                        id="tipoMaterial"
+                                        required>
+                                        <option value="" selected>Seleccione un tipo de material...</option>
+                                        <option value="BASTIDORES">BASTIDORES</option>
+                                        <option value="BLOQUES">BLOQUES</option>
+                                        <option value="TABLAS">TABLAS</option>
+                                        <option value="CUARTONES">CUARTONES</option>
+                                        <option value="TACOS">TACOS</option>
+                                        <option value="PUNTAS">PUNTAS</option>
+                                        <option value="ESTIBAS">ESTIBAS</option>
+                                        <option value="TROZA">TROZA</option>
+
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Tipo madera:</span>
+                                    <select class="form-select form-select-sm"
+                                            aria-label=".form-select-sm example"
+                                            name="tipo_madera"
+                                            id="tipoMadera"
+                                            required>
+                                        <option value="" selected>Seleccione una madera...</option>
+                                        @foreach ($maderas as $madera)
+                                            <option value="{{ $madera->id }}"
+
+                                                >{{ $madera->descripcion }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Estandar unidades por minuto:</span>
+                                    <input type="number"
+                                            class="form-control"
+                                            min="1"
+                                            step="0.1"
+                                            name="unidades_minuto"
+                                            id="estandarUnidadesMinuto"
+                                            placeholder="Ej. 10"
+                                            required>
+                                </div>
+
+
 
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Guardar costo de costo de infraestructura</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </div>
                         </div>
@@ -105,33 +115,26 @@
             <table id="listaMaquinas" class="table table-bordered table-striped dt-responsive">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Valor operativo</th>
+                        <th>Id</th>
+                        <th>Maquina</th>
                         <th>Tipo de material</th>
                         <th>Tipo de madera</th>
-                        <th>Promedio de piezas</th>
-                        <th>Minimo de piezas</th>
-                        <th>Maximo de piezas</th>
-                        <th>Maquina</th>
+                        <th>Estandar Unidades por Miuto</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($costosIinfraestructura as $costoInfraestructura)
+                    @foreach ($estadaresUnidadesMinuto as $estadarUnidadesMinuto)
                         <tr>
-                            <td>{{ $costoInfraestructura->id }}</td>
-                            <td>{{ $costoInfraestructura->valor_operativo }}</td>
-                            <td>{{ $costoInfraestructura->item->descripcion }}</td>
-                            <td>{{ $costoInfraestructura->madera->nombre }}</td>
-                            <td>{{ $costoInfraestructura->promedio_piezas }}</td>
-                            <td>{{ $costoInfraestructura->minimo_piezas }}</td>
-                            <td>{{ $costoInfraestructura->maximo_piezas }}</td>
-                            <td>{{ $costoInfraestructura->maquina->maquina }}</td>
-
+                            <td>{{ $estadarUnidadesMinuto->id }}</td>
+                            <td>{{ $estadarUnidadesMinuto->maquina->maquina }}</td>
+                            <td>{{ $estadarUnidadesMinuto->tipo_material }}</td>
+                            <td>{{ $estadarUnidadesMinuto->madera->descripcion }}</td>
+                            <td>{{ $estadarUnidadesMinuto->estandar_u_minuto }}</td>
                             <td>
                                 <div class="d-flex align-items-center ">
-                                    <form action="{{ route('costos-de-infraestructura.destroy', $costoInfraestructura) }}" method="POST">
+                                    <form action="{{ route('costos-de-infraestructura.destroy', $estadarUnidadesMinuto) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
 
@@ -142,7 +145,7 @@
                                             onclick="return confirm('¿desea eliminar el costo de infraestructura?')">
                                     </form>
 
-                                    <a href="{{ route('costos-de-infraestructura.edit', $costoInfraestructura) }}" class="btn btn-sm btn-warning"> Editar</a>
+                                    <a href="{{ route('costos-de-infraestructura.edit', $estadarUnidadesMinuto) }}" class="btn btn-sm btn-warning"> Editar</a>
                                 </div>
                             </td>
                         </tr>

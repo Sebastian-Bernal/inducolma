@@ -39,7 +39,7 @@
                         </div>
                         <div class="mt-3">
                             <a href="{{ route('costos-de-infraestructura.index') }}"
-                                class="btn btn-primary seleccionado">Costos infraestructura</a>
+                                class="btn btn-primary seleccionado">Tiempos estándar </a>
                         </div>
 
                         <div class="mt-3">

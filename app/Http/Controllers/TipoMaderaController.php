@@ -16,7 +16,7 @@ class TipoMaderaController extends Controller
      */
     public function index()
     {
-        $tiposMadera = TipoMadera::withTrashed()->get();
+        $tiposMadera = TipoMadera::withTrashed()->get()->except(1);
         return view('modulos.administrativo.tipo_madera.index', compact('tiposMadera'));
     }
 

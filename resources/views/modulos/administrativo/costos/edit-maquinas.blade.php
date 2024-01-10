@@ -40,7 +40,7 @@
                                 <option value="ACABADOS" {{ $maquina->corte == 'ACABADOS' ? 'selected' : '' }}>ACABADOS</option>
                                 <option value="ASERRIO" {{ $maquina->corte == 'ASERRIO' ? 'selected' : '' }}>ASERRIO</option>
                                 <option value="ENSAMBLE" {{ $maquina->corte == 'ENSAMBLE' ? 'selected' : '' }}>ENSAMBLE</option>
-                                <option value="ACABADOS_ENSAMBLE" {{ $maquina->corte == 'ACABADOS_ENSAMBLE' ? 'selected' : '' }}>ACAMBADOS DE ENSAMBLE</option>
+                                <option value="ACABADO_ENSAMBLE" {{ $maquina->corte == 'ACABADO_ENSAMBLE' ? 'selected' : '' }}>ACAMBADOS DE ENSAMBLE</option>
                             </select>
                         </div>
                     </div>

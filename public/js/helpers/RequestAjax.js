@@ -29,8 +29,24 @@ class RequestAjax{
     }
 
     errorCallback(jqXHR, textStatus, errorThrown) {
+
+        var message = [];
+        let errors = jqXHR.responseJSON.errors;
+        if ( typeof jqXHR.responseJSON.errors == 'object') {
+            for(var key in errors){
+                if (errors.hasOwnProperty(key)) {
+                    for (let i = 0; i < errors[key].length; i++) {
+                        message.push(errors[key][i]);
+
+                    }
+                }
+            }
+        } else{
+            message = jqXHR.responseJSON.errors;
+        }
+
         Swal.fire({
-            title: jqXHR.responseJSON.errors,
+            title: message,
             text: errorThrown,
             icon: 'error',
             confirmButtonColor: '#597504',

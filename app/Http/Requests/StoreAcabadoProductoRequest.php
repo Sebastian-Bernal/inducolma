@@ -47,4 +47,31 @@ class StoreAcabadoProductoRequest extends FormRequest
             ], Response::HTTP_UNPROCESSABLE_ENTITY)
         );
     }
+
+    /**
+     * Get messages from validations
+     */
+    public function messages()
+    {
+        return [
+            'pedido_id.required' => 'El pedido es obligatorio',
+            'pedido_id.integer' => 'El pedido debe ser un número entero',
+            'pedido_id.exists' => 'El pedido no existe',
+
+            'users_id.required' => 'El usuario es obligatorio',
+            'users_id.integer' => 'El usuario debe ser un número entero',
+            'users_id.exists' => 'El usuario no existe',
+
+            'rutas.required' => 'Las rutas son obligatorias',
+            'rutas.array' => 'Las rutas deben ser un array',
+
+            'rutas.*.cantidad.required' => 'La cantidad es obligatoria',
+            'rutas.*.cantidad.integer' => 'La cantidad debe ser un número entero',
+            'rutas.*.cantidad.min' => 'La cantidad debe ser mayor o igual a 1',
+
+            'rutas.*.maquina_id' => 'La máquina es obligatoria',
+            'rutas.*.maquina_id.integer' => 'La máquina debe ser un número entero',
+            'rutas.*.maquina_id.exists' => 'La máquina no existe',
+        ];
+    }
 }
