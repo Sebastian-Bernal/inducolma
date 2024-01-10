@@ -34,7 +34,7 @@ class StoreMaquinaRequest extends FormRequest
             'corte'=>[
                 'required',
                 'string',
-                'in:INICIAL,INTERMEDIO,FINAL,ACABADOS,ENSAMBLE,ASERRIO,ACABADOS_ENSAMBLE',
+                'in:INICIAL,INTERMEDIO,FINAL,ACABADOS,ENSAMBLE,ASERRIO,ACABADO_ENSAMBLE',
             ],
 
 
