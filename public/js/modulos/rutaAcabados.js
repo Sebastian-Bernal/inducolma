@@ -58,9 +58,11 @@ function agregaRutaEnsamble() {
 
 
         } else {
-            if (value.id == 'maquinaAcabadoensamble') {
+            if (value.id == 'maquinaensamble') {
                 maquina = maquinaria.options[maquinaria.selectedIndex].text
                 maquina_id = value.value
+
+
             }
 
         }
@@ -282,9 +284,9 @@ function guardarRutaBD() {
             'rutas': rutas,
         };
         var successTitle =  'Rutas Creadas!';
-
+        let urlRedirect = `/programaciones/${pedido_id}`;
         var guardarRuta= AlertSimpleRequestManager.getInstance();
-        guardarRuta.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, successTitle);
+        guardarRuta.showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, successTitle, urlRedirect);
 
     }else {
         swal.fire({

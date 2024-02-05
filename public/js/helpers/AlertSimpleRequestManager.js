@@ -2,7 +2,7 @@
 
 class AlertSimpleRequestManager{
 
-    showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo){
+    showAlertSimpleRequest(principalTitle, confirmButtonText, url, tipo, datos, titulo, redirectTo = null){
         return Swal.fire({
             title: principalTitle,
             icon: 'warning',
@@ -15,7 +15,7 @@ class AlertSimpleRequestManager{
             if (result.isConfirmed) {
 
                 var requestRestoreProveedor = RequestAjax.getInstance();
-                requestRestoreProveedor.sendAjax(url, tipo, datos, titulo);
+                requestRestoreProveedor.sendAjax(url, tipo, datos, titulo, redirectTo);
             }
         })
     }

@@ -1,20 +1,20 @@
 class RequestAjax{
 
-    sendAjax(url, type, data, titulo){
+    sendAjax(url, type, data, titulo, redirectTo){
         $.ajax({
             url: url,
             type: type,
             dataType: "JSON",
             data: data,
             success: function (e){
-                this.successCallback(e,titulo);
+                this.successCallback(e,titulo, redirectTo);
             }.bind(this),
             error: this.errorCallback.bind(this)
 
         });
     }
 
-    successCallback(e, title){
+    successCallback(e, title, redirectTo){
         Swal.fire({
             title: title,
             text: e.success,
@@ -23,7 +23,15 @@ class RequestAjax{
             confirmButtonText: 'OK'
         }).then((result) => {
         if (result.isConfirmed) {
-            location.reload();
+
+            if(localStorage.getItem('rutas') != "[]" && localStorage.getItem('rutas') != null ){
+                localStorage.setItem('rutas', "[]");
+            }
+
+            // redirect to
+            if(redirectTo != null){
+                window.location.href = redirectTo;
+            }
         }
         });
     }
