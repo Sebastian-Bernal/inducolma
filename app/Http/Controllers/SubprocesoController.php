@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSubprocesoReuquest;
+use App\Http\Requests\StoreTraajoMaquinaRequest;
 use App\Models\Subproceso;
 use App\Repositories\guardarSubproceso;
 use Illuminate\Http\Request;
@@ -45,9 +46,9 @@ class SubprocesoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTraajoMaquinaRequest $request)
     {
-        //
+
         $subproceso_existente = Subproceso::where('proceso_id', $request->procesoId)
                                 ->latest()
                                 ->first();

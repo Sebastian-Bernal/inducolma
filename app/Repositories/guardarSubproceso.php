@@ -7,6 +7,7 @@ use App\Models\Maquina;
 use App\Models\OrdenProduccion;
 use App\Models\Proceso;
 use App\Models\Subproceso;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class guardarSubproceso{
@@ -67,7 +68,7 @@ class guardarSubproceso{
                     $subproceso_existente = $subproceso;
                 }
                 $this->actualizaProceso($request,3, $subproceso_existente);
-                return redirect()->route('trabajo-maquina.index')->with('status','La orden se guardo con éxito');
+                return redirect()->route('trabajo-maquina.index')->with('status','El proceso se guardo con éxito');
             }
             return redirect()->route('trabajo-maquina.show',$request->procesoId)->with('status','La subpaqueta se guardo con éxito');
         } catch (\Throwable $th) {
@@ -80,45 +81,98 @@ class guardarSubproceso{
         $proceso = Proceso::find($request->procesoId);
         $item = Item::find($proceso->item_id);
         $orden = OrdenProduccion::where('id', $proceso->orden_produccion_id)->first();
-        $cantidad_preprocesados = Proceso::where('orden_produccion_id', $orden->id)->max('cantidad_items');
+        $cantidad_preprocesados = Proceso::where('orden_produccion_id', $orden->id)
+                                            ->where('salida', 'ITEM FINAL')
+                                            ->max('cantidad_items');
 
         $proceso->cm3_salida += (float)$request->cm3Salida;
-        if ($accion == 1) {
-            $item->preprocesado += (integer)$cantidad_preprocesados;
-            $item->save();
-            $proceso->estado = 'EN PRODUCION';
-            $proceso->hora_inicio = date('G:i:s');
-            $proceso->fecha_ejecucion= now();
-            $orden->estado = 'EN PRODUCION';
-            $orden->save();
-        } else if ($accion == 3){
-            $proceso->estado = 'TERMINADO';
-            $proceso->hora_fin = date('G:i:s');
-            $proceso->fecha_finalizacion = now();
-            $proceso->sub_paqueta = Subproceso::where('proceso_id', $request->procesoId)->count();
-            $maquina = Maquina::where('id',$proceso->maquina_id)->first();
 
-            if ($maquina->corte == 'ACABADOS') {
-                $item->preprocesado -= $cantidad_preprocesados;
-                $item->existencias += $cantidad_preprocesados;
-                $item->save();
-                $orden->estado = 'TERMINADO';
-                $orden->save();
-            } else{
-                $orden->estado = 'EN PRODUCION';
-                $orden->save();
-            }
-
-        }else{
-            $proceso->estado = 'EN PRODUCION';
-            $orden->estado = 'EN PRODUCION';
-            $orden->save();
-        }
         try {
-            $proceso->save();
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('status','El proceso no pudo ser actualizado, contacte al administrador');
+            if ($accion == 1) {
+
+                $this->updateProceso($proceso, 'EN PRODUCION', date('G:i:s'), now(), null, null, null, null, null);
+                $this->updateOrden($orden, 'EN PRODUCCION');
+            } else if ($accion == 3){
+
+                $sub_paqueta = Subproceso::where('proceso_id', $request->procesoId)->count();
+                $cantidadItems = Subproceso::where('proceso_id', $request->procesoId)->sum('cantidad_salida');
+                $this->updateProceso($proceso, 'TERMINADO', null, null, date( 'G:i:s'), now(), $sub_paqueta, $request->cm3Salida, $cantidadItems);
+                $this->terminarOrden($orden, $item, $cantidad_preprocesados);
+
+            }else{
+                $proceso->estado = 'EN PRODUCION';
+                $this->updateProceso($proceso, 'EN PRODUCION', null, null, null, null, null, null, null);
+                $this->updateOrden($orden, 'EN PRODUCCION');
+
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->with('status','El proceso no pudo ser actualizado, contacte al administrador'. $e->getMessage());
         }
 
+    }
+
+
+    public function updateProceso( $proceso, $estado = null, $hora_inicio = null, $fecha_ejecucion = null,$hora_fin = null,
+                    $fecha_finalizacion = null, $subpaqueta = null, $cm3_salida, $cantidad_items = null)
+    {
+        $proceso->update([
+            'estado' => $estado ?? $proceso->estado,
+            'hora_inicio' => $hora_inicio ?? $proceso->hora_inicio,
+            'fecha_ejecucion' => $fecha_ejecucion ?? $proceso->fecha_ejecucion,
+            'hora_fin' => $hora_fin ?? $proceso->hora_fin,
+            'fecha_finalizacion' => $fecha_finalizacion ?? $proceso->fecha_finalizacion,
+            'sub_paqueta' => $subpaqueta ?? $proceso->sub_paqueta,
+            'cm3_salida' => $cm3_salida ?? $proceso->cm3_salida,
+            'cantidad_items' => $cantidad_items ?? $proceso->cantidad_items,
+        ]);
+    }
+
+    public function updateOrden($orden , $estado)
+    {
+        $orden->update([
+            'estado' => $estado,
+        ]);
+    }
+
+    function terminarOrden($orden, $item, $cantidad_preprocesados)
+    {
+        $procesos = $orden->procesos;
+        $procesosPendientesOProduccion = $procesos->filter( function($proceso, $key ){
+                                                    return $proceso->estado == 'PENDIENTE' || $proceso->estado == 'EN PRODUCCION';
+                                                })->count();
+
+        if ($procesosPendientesOProduccion == 0 ) {
+            $this->updateOrden($orden, 'TERMINADO');
+            $this->analizeQuantityPedidoOrden($orden);
+        } else{
+            $this->updateOrden($orden, 'EN PRODUCCION');
+        }
+    }
+
+    public function updateItem($item, $existencias, $preprocesado)
+    {
+        $item->update([
+            'existencias' => $item->existencias + $existencias,
+            'preprocesado' => $item->preprocesado + $preprocesado,
+        ]);
+    }
+
+    public function analizeQuantityPedidoOrden($orden)
+    {
+        $pedido = $orden->pedido;
+
+        $itemPedido = $pedido->items_pedido->where('id', $orden->item_id)->first();
+
+        $cantidadItemPedido = $itemPedido->cantidad * $pedido->cantidad;
+
+        $cantidadItemOrden = $orden->procesos->where('salida', 'ITEM FINAL')->first()->cantidad_items;
+
+        $cantidadExistencias = $cantidadItemOrden - $cantidadItemPedido;
+
+        if ($cantidadExistencias > 0 ){
+            $this->updateItem($orden->item, $cantidadExistencias, $cantidadItemPedido);
+        }else{
+            throw new Exception('No hay existencias suficientes');
+        }
     }
 }

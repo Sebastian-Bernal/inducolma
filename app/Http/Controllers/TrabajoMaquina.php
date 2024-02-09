@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTraajoMaquinaRequest;
 use App\Models\Cubicaje;
 use App\Models\EntradaMadera;
 use App\Models\Estado;
@@ -104,23 +105,13 @@ class TrabajoMaquina extends Controller
      */
     public function create()
     {
-        $pedidos = Pedido::all()->load('ordenes_produccion');
-        $pedidos_ordenes = collect();
+        $pedidos = Pedido::where('estado', 'PENDIENTE')->get();
+        $pedidos_ordenes = $pedidos->filter(function ($pedido) {
+            $pedido->ordenes_produccion = $pedido->ordenes_produccion->filter(function ($orden) {
+                return $orden->estado == 'EN PRODUCCION';
+            });
+        });
 
-        foreach ($pedidos as $pedido) {
-            if ($pedido->ordenes_produccion->all() != []) {
-                $guardar = true;
-                foreach ($pedido->ordenes_produccion as $orden) {
-                    if ($orden->estado != 'PENDIENTE') {
-                        $guardar = false;
-                        break;
-                    }
-                }
-                if ($guardar) {
-                    $pedidos_ordenes->push($pedido);
-                }
-            }
-        }
 
         return view('modulos.operaciones.trabajo-maquina.ensamble', compact('pedidos_ordenes'));
     }
@@ -191,7 +182,7 @@ class TrabajoMaquina extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTraajoMaquinaRequest $request)
     {
         return $this->productosTerminados->guardar($request);
     }

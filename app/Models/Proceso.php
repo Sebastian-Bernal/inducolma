@@ -10,6 +10,22 @@ class Proceso extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['observacion',
+                            'tiempo',
+                            'entrada',
+                            'salida',
+                            'hora_inicio',
+                            'hora_fin',
+                            'cm3_entrada',
+                            'cm3_salida',
+                            'fecha_ejecucion',
+                            'cantidad_items',
+                            'subpaqueta',
+                            'fecha_finalizacion',
+                            'estado',
+
+                        ];
+
     /**
      * relacion belongsTo cubicaje
      */

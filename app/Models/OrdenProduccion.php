@@ -13,6 +13,7 @@ class OrdenProduccion extends Model
     protected $table = 'ordenes_produccion';
     protected $fillable = [
         'user_id',
+        'estado',
     ];
     /**
      * relacion belongsTo Item

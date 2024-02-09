@@ -11,6 +11,9 @@ class Item extends Model
 {
     use HasFactory, SoftDeletes, CheckRelations;
 
+
+    protected $fillable = ['existencias', 'preprocesado'];
+
     /**
      * relacion items hasMany costos_infraestructura
 

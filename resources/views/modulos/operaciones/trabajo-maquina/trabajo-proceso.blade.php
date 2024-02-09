@@ -145,16 +145,16 @@
             <div class="col-md-4">
                 <label for="alto" class="form-label">Alto subpaqueta: </label>
                 <input type="number"
-                        class="form-control @error('lena') is-invalid @enderror text-uppercase"
+                        class="form-control @error('alto') is-invalid @enderror text-uppercase"
                         id="alto"
                         name="alto"
                         step="0.1"
                         onchange="calcularCm3()">
-                @error('lena')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
+                    @error('alto')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
             </div>
             <div class="col-md-4">
                 <label for="ancho" class="form-label">Ancho subpaqueta: </label>
@@ -204,7 +204,7 @@
     </div>
     <hr>
     <button class="btn text-light rounded rounded-pill btn-primary w-100 col-sm-12 mb-4"
-                onclick="terminarOrden()">Terminar orden</button>
+                onclick="terminarOrden()">Terminar Proceso</button>
 </div>
 
 @endsection
