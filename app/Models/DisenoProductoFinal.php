@@ -66,7 +66,31 @@ class DisenoProductoFinal extends Model
     public function insumos()
     {
         return $this->belongsToMany(InsumosAlmacen::class,'diseno_insumos', 'diseno_producto_final_id', 'insumo_almacen_id')
-                    ->select(['diseno_producto_final_id', 'insumo_almacen_id', 'diseno_insumos.cantidad', 'descripcion']);
+                    ->select([
+                                'diseno_producto_final_id',
+                                'insumo_almacen_id',
+                                'diseno_insumos.cantidad',
+                                'descripcion',
+                                'insumos_almacen.cantidad as stock'
+                            ]);
+
+    }
+
+    /**
+     * relacaion diseño_producto_finales belongsToMany diseño_insumos
+     */
+
+    public function insumos_almacen()
+    {
+        return $this->belongsToMany(InsumosAlmacen::class,'diseno_insumos', 'diseno_producto_final_id', 'insumo_almacen_id')
+                    ->select([
+                                'insumos_almacen.id',
+                                'diseno_producto_final_id',
+                                'insumo_almacen_id',
+                                'diseno_insumos.cantidad as cantidad_diseno',
+                                'descripcion',
+                                'insumos_almacen.cantidad'
+                            ]);
 
     }
 

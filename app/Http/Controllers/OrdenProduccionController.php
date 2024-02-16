@@ -239,7 +239,8 @@ class OrdenProduccionController extends Controller
         $ordenProduccion->save();
         // actualizar existencias de items
         $item = Item::find($request->item_id);
-        $item->existencias = $item->existencias - (int)$request->cantidad;
+        $item->existencias -= (int)$request->cantidad;
+        $item->preprocesado += (int)$request->cantidad;
         $item->save();
         return response()->json(['success' => 'Orden de Producción creada con éxito.']);
     }

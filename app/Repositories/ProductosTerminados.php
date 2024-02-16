@@ -2,30 +2,21 @@
 
 namespace App\Repositories;
 
+use Exception;
 use App\Models\Item;
 use App\Models\Pedido;
+use App\Models\Maquina;
 use App\Models\TurnoUsuario;
 use App\Models\InsumosAlmacen;
+use App\Models\EnsambleAcabado;
 use App\Models\ProductoMaquina;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ProductosTerminados {
     public function guardar($request)
     {
         $pedido = Pedido::find($request->pedido);
-        $i = 0;
-        foreach ($pedido->diseno_producto_final->items as $item) {
-            if ($item->existencias < $pedido->items_pedido[$i]->cantidad ) {
-                return redirect()->route('trabajo-ensamble',$pedido)->with('status',
-                    "<p class='text-danger'>
-                            El item: $item->descripcion, no tiene existencias suficientes, no puede ensamblar el producto para el pedido No. $pedido->id
-                        <i class='fa-solid fa-triangle-exclamation'></i>
-                    </p>");
-                break;
-            }
-            $i++;
-        }
-
         return $this->agregarProducto($request, $pedido);
     }
 
@@ -36,77 +27,84 @@ class ProductosTerminados {
 
     public function agregarProducto($request, $pedido)
     {
-        $producidos = $pedido->pedido_producto->all();
-
-        if (count($producidos) <= 0) {
-            $cantidad = 1;
-            $created_at = now();
-        } else {
-            $cantidad = $pedido->pedido_producto->first()->cantidad_producida + 1;
-            $created_at = $pedido->pedido_producto->first()->created_at;
-        }
-
         try {
-            $this->registrarProductoMaquina(Auth::user()->id,$pedido->diseno_producto_final_id);
-        } catch (\Throwable $th) {
-            return redirect()->route('trabajo-ensamble', $pedido)->with('status',
-                "<p class='text-danger'>
-                    El producto no pudo ser agregado...
-                    <i class='fa-solid fa-triangle-exclamation'></i>
-                </p>");
-        }
+            DB::beginTransaction();
 
-        try {
-            $this->actualizaExistenciasItems($pedido);
-            $this->updateInsumosAlmacen($pedido);
-            $pedido->pedido_producto()->sync([
-                    $request->diseno => [
-                        'cantidad_producida' => $cantidad,
-                        'user_id' => Auth::user()->id,
-                        'created_at' => $created_at,
-                        'updated_at' => now(),
-                    ]
-                ]);
-            if($request->terminar == 2){
-                $this->actualizaPedido($pedido);
-                return redirect()->route('trabajo-maquina.create')->with('status',
-                    "El pedido se termino con éxito");
+            $syncProductosPedido = $this->syncPedidoProducto($pedido, $request);
+
+            if(!$syncProductosPedido){
+                throw new Exception('No se pudo sincronizar el pedido');
             }
-            return redirect()->route('trabajo-ensamble', $pedido)->with('status',
-                    "El producto se agrego con éxito");
-        } catch (\Throwable $th) {
-            return redirect()->route('trabajo-ensamble', $pedido)->with('status',
-                "<p class='text-danger'>
-                    El producto no pudo ser agregado...
-                    <i class='fa-solid fa-triangle-exclamation'></i>
-                </p>");
+
+            $saveProductoMaquina = $this->registrarProductoMaquina(Auth::id(),$pedido->diseno_producto_final_id, $request->cantidad);
+
+            if(!$saveProductoMaquina){
+                throw new Exception('No se pudo registrar el producto maquina');
+            }
+
+            $actualizarPreprocesadosItems = $this->actualizaExistenciasItems($pedido, $request->cantidad);
+
+            if(!$actualizarPreprocesadosItems){
+                throw new Exception('No se pudo actualizar las existencias de los items');
+            }
+
+            $actualizarInsumos =  $this->updateInsumosAlmacen($pedido, $request->cantidad);
+
+            if(!$actualizarInsumos){
+                throw new Exception('No se pudo actualizar los insumos del almacen');
+            }
+
+            $terminarEnsamble = $this->analizaEnsamble($pedido, $request->ensambeAcabadoId, $request->maquinaId);
+            if(!$terminarEnsamble){
+                throw new Exception('No se pudo terminar el ensamble, la cantidad ensamblada es menor a la requerida en el pedido');
+            }
+
+            DB::commit();
+
+            return $pedido;
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception("Error : ".$e->getMessage());
+
         }
+
     }
 
     /**
      * Actualiza las existencias de los items del diseno
      */
 
-    public function actualizaExistenciasItems($pedido)
+    public function actualizaExistenciasItems($pedido, $cantidad)
     {
-        foreach ($pedido->diseno_producto_final->items as $item) {
-            $item_guardar = Item::find($item->id);
-            $item_guardar->existencias -= $item->cantidad;
-            $item_guardar->save();
+        $items = $pedido->diseno_producto_final->items;
+
+        foreach ($items as $item) {
+            $success = $item->decrement('preprocesado', $item->cantidad * $cantidad);
+            if (!$success) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     /**
      * actualiza la cantidad de insumos del almacen cuando un producto ha sido creado
      * @param Pedido $pedido
      */
-    public function updateInsumosAlmacen($pedido)
+    public function updateInsumosAlmacen($pedido, $cantidad)
     {
-        foreach ($pedido->diseno_producto_final->insumos as $insumo) {
-            $insumo_guardar = InsumosAlmacen::find($insumo->id);
-            $insumo_guardar->cantidad -= $insumo->cantidad;
-            $insumo_guardar->save();
+        $insumos = $pedido->diseno_producto_final->insumos_almacen;
+
+        foreach ($insumos as $insumo) {
+            $success = $insumo->decrement('cantidad', $insumo->cantidad_diseno * $cantidad);
+            if (!$success) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     /**
@@ -115,70 +113,139 @@ class ProductosTerminados {
      * @param Pedidos $pedido
      */
 
-    public function actualizaPedido($pedido)
+    public function actualizaEstadoPedido($pedido, $estado)
     {
-        $actualiza = Pedido::find($pedido->id);
-        $producido = $pedido->pedido_producto->first();
-        if ($producido == null) {
-            return redirect()->route('trabajo-ensamble', $pedido)->with('status',
-                    "<p class='text-danger'>
-                            NO PUEDE TERMINAR EL PEDIDO, NO HAY UNIDADES PRODUCIDAS.
-                        <i class='fa-solid fa-triangle-exclamation'></i>
-                    </p>"
-                    );
-        }
-        if ($producido < $pedido->cantidad ) {
-            return redirect()->route('trabajo-ensamble', $pedido)->with('status',
-                    "<p class='text-danger'>
-                            La cantidad producida e menor a la cantidad del pedido, NO puede terminar el pedido
-                        <i class='fa-solid fa-triangle-exclamation'></i>
-                    </p>"
-                    );
-        }
-        $actualiza->estado = 'TERMINADO';
+        $pedido->update([
+            'estado' => $estado
+        ]);
+    }
 
-        try {
-            $actualiza->save();
-        } catch (\Throwable $th) {
-            return redirect()->route('trabajo-ensamble', $pedido)->with('status',
-            "<p class='text-danger'>
-                Error al actualizar el pedido
-                <i class='fa-solid fa-triangle-exclamation'></i>
-            </p>");
+    public function analizaEnsamble($pedido, $ensambleId, $maquinaId)  {
+
+        $ensamble = EnsambleAcabado::find($ensambleId);
+
+        $pedido = Pedido::find($pedido->id);
+
+        $tipoCorteMaquina = Maquina::find($maquinaId)->corte;
+
+        $cantidadEnsambles = $pedido->ensambles_acabados->filter(function ($ensamble_acabado) use($tipoCorteMaquina){
+            return $ensamble_acabado->estado == 'TERMINADO' && $ensamble_acabado->maquina->corte == $tipoCorteMaquina;
+        })->sum('cantidad') + $ensamble->cantidad;
+
+        $cantidadProducida = $pedido->pedido_producto->first()->cantidad_producida;
+
+        if ($cantidadEnsambles == $cantidadProducida) {
+            return $this->terminarEnsamble($pedido, $ensambleId);
+        }else {
+            $this->actualizarEnsamble($ensamble, 'EN ENSAMBLE');
         }
+
+        return true;
 
     }
 
-    /**
-     *
-     */
+    public function terminarPedido($pedido)  {
 
-    public function registrarProductoMaquina($usuario, $diseno)
+        $producido = $pedido->pedido_producto->first();
+        if ($producido == null) {
+            return false;
+        }
+
+        if ($producido->cantidad_producida < $pedido->cantidad ) {
+            return false;
+        }
+
+        $this->actualizaEstadoPedido($pedido, 'TERMINADO');
+
+        return true;
+    }
+
+    public function terminarEnsamble($pedido, $ensambleId)  {
+
+        $ensamble = EnsambleAcabado::find($ensambleId);
+        $pedido = Pedido::find($pedido->id);
+
+        $atualizaEstadoAcabado = $this->actualizarEnsamble($ensamble, 'TERMINADO');
+        if(!$atualizaEstadoAcabado){
+            return false;
+        }
+
+        $pedido_ensambles_acabados_pendientes = $pedido->ensambles_acabados->filter(function ($ensamble_acabado){
+            return $ensamble_acabado->estado == 'PENDIENTE' || $ensamble_acabado->estado == 'EN ENSAMBLE';
+        })->count();
+
+        if($pedido_ensambles_acabados_pendientes == 0){
+            return $this->terminarPedido($pedido);
+        }
+
+        return true;
+    }
+
+    public function actualizarEnsamble($ensamble, $estado)  {
+        $ensamble->update([
+            'fecha_inicio' => $ensamble->fecha_inicio ?? now(),
+            'fecha_fin' => now(),
+            'estado' => $estado
+        ]);
+        return true;
+    }
+
+    public function registrarProductoMaquina($usuario, $diseno, $cantidad) :?bool
     {
         $turno = TurnoUsuario::where('user_id', $usuario)
-                            ->where('fecha', now())
+                            ->whereDate('fecha', now())
                             ->first();
 
         $registros = ProductoMaquina::where('user_id', $turno->user_id)
                                 ->where('maquina_id', $turno->maquina_id)
-                                ->where('created_at','like', '%'.$turno->fecha.'%')
+                                ->whereDate('created_at', $turno->fecha)
                                 ->first();
-        if ($registros == '') {
+
+        if (!$registros) {
             $productoMaquina = new ProductoMaquina();
             $productoMaquina->user_id = $turno->user_id;
             $productoMaquina->maquina_id = $turno->maquina_id;
-            $productoMaquina->cantidad = 1;
+            $productoMaquina->cantidad = $cantidad;
             $productoMaquina->diseno_producto_final_id = $diseno;
             $productoMaquina->save();
-        }else{
-            $productoMaquina = ProductoMaquina::where('id', $registros->id)->first();
-            $productoMaquina->user_id = $turno->user_id;
-            $productoMaquina->maquina_id = $turno->maquina_id;
-            $productoMaquina->cantidad = $registros->cantidad + 1;
-            $productoMaquina->updated_at = now();
-            $productoMaquina->diseno_producto_final_id = $diseno;
-            $productoMaquina->update();
+        } else {
+            $registros->update([
+                'cantidad' => $registros->cantidad + $cantidad,
+                'updated_at' => now(),
+                'diseno_producto_final_id' => $diseno,
+            ]);
         }
+
+        return true;
+    }
+
+
+    public function syncPedidoProducto($pedido, $request) :?bool  {
+
+        $pedido_producto = $pedido->pedido_producto->first();
+
+        if($pedido_producto == null){
+            $pedido->pedido_producto()->sync([
+                $request->diseno => [
+                    'cantidad_producida' => $request->cantidad,
+                    'user_id' => Auth::id(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            ]);
+
+            return true;
+        }
+
+        $nuevaCantidad = $pedido_producto->cantidad_producida + $request->cantidad;
+
+        $pedido->pedido_producto()->updateExistingPivot($request->diseno, [
+            'cantidad_producida' => $nuevaCantidad,
+            'updated_at' => now(),
+            'user_id' => Auth::id(),
+        ]);
+
+        return true;
 
     }
 }

@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTraajoMaquinaRequest;
-use App\Models\Cubicaje;
-use App\Models\EntradaMadera;
+use App\Models\User;
 use App\Models\Estado;
-use App\Models\EstadoMaquina;
 use App\Models\Evento;
-use App\Models\EventoProceso;
-use App\Models\Maquina;
 use App\Models\Pedido;
+use App\Models\Maquina;
 use App\Models\Proceso;
+use App\Models\Cubicaje;
 use App\Models\TipoEvento;
 use App\Models\TurnoUsuario;
-use App\Models\User;
-use App\Repositories\ProductosTerminados;
-use App\Repositories\RegistroAsistencia;
 use Illuminate\Http\Request;
+use App\Models\EntradaMadera;
+use App\Models\EstadoMaquina;
+use App\Models\EventoProceso;
+use App\Models\EnsambleAcabado;
 use Illuminate\Support\Facades\Auth;
-
+use App\Repositories\RegistroAsistencia;
+use App\Repositories\ProductosTerminados;
+use App\Http\Requests\StoreTraajoMaquinaRequest;
+use App\Http\Requests\StreProductoRequest;
+use Exception;
 
 class TrabajoMaquina extends Controller
 {
@@ -77,7 +79,7 @@ class TrabajoMaquina extends Controller
                     return view('modulos.operaciones.trabajo-maquina.troza-index', compact('entradas'));
                 }
 
-                if ($turno->maquina->corte != 'ENSAMBLE') {
+                if ($turno->maquina->corte != 'ENSAMBLE' && $turno->maquina->corte != 'ACABADO_ENSAMBLE') {
                     return view(
                         'modulos.operaciones.trabajo-maquina.show',
                         compact(
@@ -105,15 +107,25 @@ class TrabajoMaquina extends Controller
      */
     public function create()
     {
-        $pedidos = Pedido::where('estado', 'PENDIENTE')->get();
-        $pedidos_ordenes = $pedidos->filter(function ($pedido) {
-            $pedido->ordenes_produccion = $pedido->ordenes_produccion->filter(function ($orden) {
-                return $orden->estado == 'EN PRODUCCION';
-            });
-        });
+       // Obtener la ID de la máquina del usuario en turno
+        $maquinaIdTurno = TurnoUsuario::where('user_id', Auth::id())
+        ->whereDate('fecha', now())
+        ->value('maquina_id');
 
+        // Obtener pedidos pendientes asociados a órdenes terminadas
+        $pedidos_trabajo_maquina = Pedido::where('estado', 'PENDIENTE')
+        ->whereHas('ordenes_produccion', function ($query) {
+            $query->where('estado', 'TERMINADO');
+        })
+        ->whereIn('id', function ($query) use ($maquinaIdTurno) {
+            $query->select('pedido_id')
+                ->from('ensambles_acabados')
+                ->where('estado', '!=','TERMINADO')
+                ->where('maquina_id', $maquinaIdTurno);
+        })
+        ->get();
 
-        return view('modulos.operaciones.trabajo-maquina.ensamble', compact('pedidos_ordenes'));
+        return view('modulos.operaciones.trabajo-maquina.ensamble', compact('pedidos_trabajo_maquina'));
     }
 
 
@@ -154,16 +166,15 @@ class TrabajoMaquina extends Controller
         $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
         $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
 
-        /*  $i = 0;
-        foreach ($pedido->diseno_producto_final->items as $item) {
-            if ($item->existencias < $pedido->items_pedido[$i]->cantidad ) {
-                return back()->with('status',
-                    "El item: $item->descripcion, no tiene existencias suficientes, no puede ensamblar el producto para el pedido No. $pedido->id");
-                break;
-            }
-            $i++;
+        $ensamble = EnsambleAcabado::where('pedido_id', $pedido->id)
+                                    ->where('estado','!=','TERMINADO')
+                                    ->where('maquina_id', $maquina)
+                                    ->first();
+
+        if (!$ensamble) {
+            return redirect()->route('trabajo-maquina.index')->with('status', 'El ensamble finalizo con éxito');
         }
-        */
+
         return view(
             'modulos.operaciones.trabajo-maquina.trabajo-ensamble',
             compact(
@@ -171,7 +182,8 @@ class TrabajoMaquina extends Controller
                 'turno_usuarios',
                 'tipos_evento',
                 'eventos',
-                'maquina'
+                'maquina',
+                'ensamble'
             )
         );
     }
@@ -182,9 +194,25 @@ class TrabajoMaquina extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTraajoMaquinaRequest $request)
+    public function store(StreProductoRequest $request)
     {
-        return $this->productosTerminados->guardar($request);
+        try {
+            $procesarPedido = $this->productosTerminados->guardar($request);
+            if ($procesarPedido) {
+                return redirect()->route('trabajo-ensamble', $procesarPedido)->with('status',
+                    "<p class='text-success'>
+                            Producto procesado con éxito.
+                        <i class='fa-solid fa-triangle-exclamation'></i>
+                    </p>");
+            }
+        } catch (Exception $e) {
+            return redirect()->route('trabajo-ensamble', $request->pedido)->with('status',
+                    "<p class='text-danger'>
+                            ".$e->getMessage()."
+                        <i class='fa-solid fa-triangle-exclamation'></i>
+                    </p>"
+                    );
+        }
     }
 
     /**

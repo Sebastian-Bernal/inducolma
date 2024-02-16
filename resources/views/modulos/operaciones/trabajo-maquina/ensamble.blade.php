@@ -26,6 +26,7 @@
                             <th>Cliente</th>
                             <th>Cantidad</th>
                             <th>Producto</th>
+
                             <th>Fecha entrega</th>
 
                             <th>Acciones</th>
@@ -33,10 +34,10 @@
                     </thead>
 
                     <tbody>
-                        @foreach ($pedidos_ordenes as $pedido)
+                        @foreach ($pedidos_trabajo_maquina as $pedido)
                         <tr>
                             <td>{{ $pedido->id }}</td>
-                            <td>{{ $pedido->cliente->nombre }}</td>
+                            <td>{{ $pedido->cliente->razon_social }}</td>
                             <td>{{ $pedido->cantidad }}</td>
                             <td>{{ $pedido->diseno_producto_final->descripcion}}</td>
                             <td>{{ $pedido->fecha_entrega }}</td>

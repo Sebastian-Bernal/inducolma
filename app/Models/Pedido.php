@@ -11,6 +11,9 @@ class Pedido extends Model
 {
     use HasFactory, CheckRelations;
 
+    protected $fillable = ['estado'];
+
+
     //relacion de pedido pertenece a un cliente
     public function cliente()
     {
