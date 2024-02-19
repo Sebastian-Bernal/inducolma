@@ -67,13 +67,13 @@ function calcularCm3() {
 }
 
 /**
- * Pregunta al usuario si esta seguro de terminar la orden
+ * Pregunta al usuario si esta seguro de terminar la proceso
  */
 function terminarOrden() {
     $('#terminar').val(3);
     Swal.fire({
-        title: 'Terminar orden',
-        text: '¿Está seguro de terminar la orden?',
+        title: 'Terminar proceso',
+        text: '¿Está seguro de terminar el proceso ?',
         icon: 'warning',
         confirmButtonColor: '#597504',
         confirmButtonText: 'Si',
