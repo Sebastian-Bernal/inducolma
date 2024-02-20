@@ -28,30 +28,41 @@ class ProductosTerminados {
     public function agregarProducto($request, $pedido)
     {
         try {
+
             DB::beginTransaction();
+            $corteMaquina = Maquina::find($request->maquinaId)->corte;
 
-            $syncProductosPedido = $this->syncPedidoProducto($pedido, $request);
+            if ($corteMaquina == 'ENSAMBLE'){
+                $syncProductosPedido = $this->syncPedidoProducto($pedido, $request);
 
-            if(!$syncProductosPedido){
-                throw new Exception('No se pudo sincronizar el pedido');
+                if(!$syncProductosPedido){
+                    throw new Exception('No se pudo sincronizar el pedido');
+                }
+
+                $actualizarPreprocesadosItems = $this->actualizaExistenciasItems($pedido, $request->cantidad);
+
+                if(!$actualizarPreprocesadosItems){
+                    throw new Exception('No se pudo actualizar las existencias de los items');
+                }
+
+                $actualizarInsumos =  $this->updateInsumosAlmacen($pedido, $request->cantidad);
+
+                if(!$actualizarInsumos){
+                    throw new Exception('No se pudo actualizar los insumos del almacen');
+                }
             }
+
+            $addEnsambleAcabado = $this->addEnsambleAcabado($request);
+
+            if(!$addEnsambleAcabado){
+                throw new Exception("No se pudo adicionar la canidad producida");
+            }
+
 
             $saveProductoMaquina = $this->registrarProductoMaquina(Auth::id(),$pedido->diseno_producto_final_id, $request->cantidad);
 
             if(!$saveProductoMaquina){
                 throw new Exception('No se pudo registrar el producto maquina');
-            }
-
-            $actualizarPreprocesadosItems = $this->actualizaExistenciasItems($pedido, $request->cantidad);
-
-            if(!$actualizarPreprocesadosItems){
-                throw new Exception('No se pudo actualizar las existencias de los items');
-            }
-
-            $actualizarInsumos =  $this->updateInsumosAlmacen($pedido, $request->cantidad);
-
-            if(!$actualizarInsumos){
-                throw new Exception('No se pudo actualizar los insumos del almacen');
             }
 
             $terminarEnsamble = $this->analizaEnsamble($pedido, $request->ensambeAcabadoId, $request->maquinaId);
@@ -124,20 +135,10 @@ class ProductosTerminados {
 
         $ensamble = EnsambleAcabado::find($ensambleId);
 
-        $pedido = Pedido::find($pedido->id);
-
-        $tipoCorteMaquina = Maquina::find($maquinaId)->corte;
-
-        $cantidadEnsambles = $pedido->ensambles_acabados->filter(function ($ensamble_acabado) use($tipoCorteMaquina){
-            return $ensamble_acabado->estado == 'TERMINADO' && $ensamble_acabado->maquina->corte == $tipoCorteMaquina;
-        })->sum('cantidad') + $ensamble->cantidad;
-
-        $cantidadProducida = $pedido->pedido_producto->first()->cantidad_producida;
-
-        if ($cantidadEnsambles == $cantidadProducida) {
+        if ($ensamble->cantidad == $ensamble->cantidad_producida) {
             return $this->terminarEnsamble($pedido, $ensambleId);
         }else {
-            $this->actualizarEnsamble($ensamble, 'EN ENSAMBLE');
+            $this->actualizarEnsamble($ensamble, 'EN ENSAMBLE O ACABADO');
         }
 
         return true;
@@ -248,4 +249,21 @@ class ProductosTerminados {
         return true;
 
     }
+
+    public function addEnsambleAcabado($request)
+    {
+        $ensamble = EnsambleAcabado::find($request->ensambeAcabadoId);
+
+        if ($ensamble) {
+            $success = $ensamble->update([
+                'cantidad_producida' => $ensamble->cantidad_producida + $request->cantidad,
+                'updated_at' => now(),
+            ]);
+
+            return $success;
+        }
+
+        return false;
+    }
+
 }

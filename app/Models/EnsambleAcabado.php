@@ -10,7 +10,17 @@ class EnsambleAcabado extends Model
     use HasFactory;
 
     protected $table = 'ensambles_acabados';
-    protected $fillable = [ 'cantidad', 'observaciones', 'fecha_inicio', 'fecha_fin', 'estado', 'pedido_id', 'maquina_id', 'maquina_id', 'user_id'];
+    protected $fillable = [ 'cantidad',
+                            'observaciones',
+                            'fecha_inicio',
+                            'fecha_fin',
+                            'estado',
+                            'pedido_id',
+                            'maquina_id',
+                            'maquina_id',
+                            'user_id',
+                            'cantidad_producida'
+                        ];
 
 
     /**

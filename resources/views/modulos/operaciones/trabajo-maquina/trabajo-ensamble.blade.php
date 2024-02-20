@@ -120,6 +120,7 @@
                         id="cantidad"
                         name="cantidad"
                         min="1"
+                        max="999"
                         value="{{ old('cantidad', 1) }}"
                         >
             </div>

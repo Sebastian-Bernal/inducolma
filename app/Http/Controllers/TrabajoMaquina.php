@@ -123,9 +123,13 @@ class TrabajoMaquina extends Controller
                 ->where('estado', '!=','TERMINADO')
                 ->where('maquina_id', $maquinaIdTurno);
         })
-        ->get();
+        ->pluck('id');
 
-        return view('modulos.operaciones.trabajo-maquina.ensamble', compact('pedidos_trabajo_maquina'));
+        $acabados_ensamble = EnsambleAcabado::whereIn('pedido_id', $pedidos_trabajo_maquina)
+                                            ->where('maquina_id', $maquinaIdTurno)
+                                            ->get();
+
+        return view('modulos.operaciones.trabajo-maquina.ensamble', compact( 'acabados_ensamble'));
     }
 
 
