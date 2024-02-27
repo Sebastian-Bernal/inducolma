@@ -50,8 +50,7 @@ class ItemController extends Controller
         $item->existencias = $request->existencias;
         $item->madera_id = $request->tipo_madera;
         $item->codigo_cg = $request->codigo_cg;
-        $item->preprocesado = $request->preprocesado;
-        $item->carretos = $request->carretos;
+
         $item->user_id = auth()->user()->id;
         $item->save();
         return redirect()->route('items.index')->with('status', "Item: $request->descripcion  creado correctamente");
@@ -100,8 +99,6 @@ class ItemController extends Controller
         $item->existencias = $request->existencias;
         $item->madera_id = $request->tipo_madera;
         $item->codigo_cg = $request->codigo_cg;
-        $item->preprocesado = $request->preprocesado;
-        $item->carretos = $request->carretos;
         $item->user_id = auth()->user()->id;
         $item->save();
         return redirect()->route('items.index')->with('status', "Item: $request->descripcion  actualizado correctamente");

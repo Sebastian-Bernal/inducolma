@@ -118,25 +118,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="row mb-3">
-                                        <label for="existencias" class="col-md-4 col-form-label text-md-end">{{ __('Existencias') }}</label>
-                                        <div class="col-md-6">
-                                            <input id="existencias"
-                                                    type="number"
-                                                    class="form-control @error('existencias') is-invalid @enderror text-uppercase"
-
-                                                    name="existencias" value="{{ old('existencias') }}"
-                                                    required autocomplete="existencias" autofocus
-                                                    onkeyup="mayusculas()">
-
-                                            @error('existencias')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div> --}}
-
                                     <div class="row mb-3">
                                         <label for="tipo_madera" class="col-md-4 col-form-label text-md-end">{{ __('Tipo de Madera') }}</label>
                                         <div class="col-md-6">
@@ -179,48 +160,27 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="row mb-3">
-                                        <label for="preprocesado" class="col-md-4 col-form-label text-md-end">{{ __('Preprocesado') }}</label>
+                                    <div class="row mb-3">
+                                        <label for="existencias" class="col-md-4 col-form-label text-md-end">{{ __('Existencias') }}</label>
                                         <div class="col-md-6">
-                                            <select id="preprocesado"
+                                            <input id="existencias"
                                                     type="number"
-                                                    class="form-control @error('preprocesado') is-invalid @enderror"
-                                                    name="preprocesado"
+                                                    class="form-control @error('existencias') is-invalid @enderror text-uppercase"
+                                                    name="existencias"
+                                                    value="{{ old('existencias', 0) }}"
+                                                    min="0"
+                                                    max="99999"
                                                     required
-                                                    >
-                                                <option selected>Seleccione una opción</option>
-                                                <option value="1">SI</option>
-                                                <option value="0">NO</option>
-                                            </select>
+                                                    autofocus
+                                                    onkeyup="mayusculas()">
 
-                                            @error('preprocesado')
+                                            @error('existencias')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
                                     </div>
-
-                                    <div class="row mb-3">
-                                        <label for="carretos" class="col-md-4 col-form-label text-md-end">{{ __('Carretos') }}</label>
-                                        <div class="col-md-6">
-                                            <input id="carretos"
-                                                    type="number"
-                                                    class="form-control @error('carretos') is-invalid @enderror text-uppercase"
-
-                                                    name="carretos" value="{{ old('carretos') }}"
-                                                    required autocomplete="carretos" autofocus
-                                                    onkeyup="mayusculas()">
-
-                                            @error('carretos')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div> --}}
-
-
                             </div>
 
 
