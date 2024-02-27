@@ -146,6 +146,8 @@
                                         @enderror
                                     </div>
                                 </div>
+
+
                                 <div class="row mb-3">
                                     <label for="rol" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
                                     <div class="col-md-6">
@@ -161,6 +163,46 @@
                                         </select>
                                     </div>
 
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="pagoMesAnterior" class="col-md-4 col-form-label text-md-end">{{ __('Pago mes anterior') }}</label>
+                                    <div class="col-md-6">
+                                        <input id="pagoMesAnterior"
+                                                type="number"
+                                                class="form-control @error('pagoMesAnterior') is-invalid @enderror" name="pagoMesAnterior"
+                                                value="{{ $usuario->pago_mes_anterior }}"
+                                                min="0"
+                                                max="10000000"
+
+                                                autocomplete="pagoMesAnterior">
+
+                                        @error('pagoMesAnterior')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="pagoEstandar" class="col-md-4 col-form-label text-md-end">{{ __('Pago estandar') }}</label>
+                                    <div class="col-md-6">
+                                        <input id="pagoEstandar"
+                                                type="number"
+                                                class="form-control @error('pagoEstandar') is-invalid @enderror" name="pagoEstandar"
+                                                value="{{ $usuario->pago_estandar }}"
+                                                min="100000"
+                                                max="10000000"
+                                                required
+                                                autocomplete="pagoEstandar">
+
+                                        @error('pagoEstandar')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
                         </div>
 

@@ -58,6 +58,8 @@ class UsuarioController extends Controller
         $usuario->email = $request->email;
         $usuario->rol_id = $request->rolUsuario;
         $usuario->password = bcrypt($request->identificacionUsuario);
+        $usuario->pago_mes_anterior = $request->pagoMesAnterior ?? 0;
+        $usuario->pago_estandar = $request->pagoEstandar;
         $usuario->save();
         return redirect()->route('usuarios.index')->with('status', "Usuario $usuario->name creado correctamente");
     }
@@ -106,6 +108,8 @@ class UsuarioController extends Controller
         $usuario->segundo_apellido = strtoupper($request->segundo_apellido);
         $usuario->email = $request->email;
         $usuario->rol_id = $request->rolUsuario;
+        $usuario->pago_mes_anterior = $request->pagoMesAnterior ?? 0;
+        $usuario->pago_estandar = $request->pagoEstandar;
         $usuario->save();
         return redirect()->route('usuarios.index')->with('status', "Usuario $usuario->name actualizado correctamente");
     }

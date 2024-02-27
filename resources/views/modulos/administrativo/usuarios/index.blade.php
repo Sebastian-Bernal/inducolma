@@ -130,11 +130,8 @@
                                     </div>
                                 </div>
 
-
-
                                 <div class="row mb-3">
                                     <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}</label>
-
                                     <div class="col-md-6">
                                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
 
@@ -147,17 +144,56 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
+                                    <label for="rolUsuario" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
                                     <div class="col-md-6">
                                         <select class="form-select" name="rolUsuario" required >
                                             @foreach ($roles as $rol)
                                                 <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>
                                             @endforeach
-
                                         </select>
                                     </div>
-
                                 </div>
+
+                                <div class="row mb-3">
+                                    <label for="pagoMesAnterior" class="col-md-4 col-form-label text-md-end">{{ __('Pago mes anterior') }}</label>
+                                    <div class="col-md-6">
+                                        <input id="pagoMesAnterior"
+                                                type="number"
+                                                class="form-control @error('pagoMesAnterior') is-invalid @enderror" name="pagoMesAnterior"
+                                                value="{{ old('pagoMesAnterior') }}"
+                                                min="0"
+                                                max="10000000"
+
+                                                autocomplete="pagoMesAnterior">
+
+                                        @error('pagoMesAnterior')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="pagoEstandar" class="col-md-4 col-form-label text-md-end">{{ __('Pago estandar') }}</label>
+                                    <div class="col-md-6">
+                                        <input id="pagoEstandar"
+                                                type="number"
+                                                class="form-control @error('pagoEstandar') is-invalid @enderror" name="pagoEstandar"
+                                                value="{{ old('pagoEstandar') }}"
+                                                min="100000"
+                                                max="10000000"
+                                                required
+                                                autocomplete="pagoEstandar">
+
+                                        @error('pagoEstandar')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
                         </div>
 
 

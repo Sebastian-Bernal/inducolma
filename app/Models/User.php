@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'pago_mes_anterior',
+        'pago_estandar'
     ];
 
     /**
@@ -67,7 +69,7 @@ class User extends Authenticatable
      */
     public function diseño_producto_finales()
     {
-        return $this->hasMany(DiseñoProductoFinal::class, 'user_id');
+        return $this->hasMany(DisenoProductoFinal::class, 'user_id');
     }
 
     /**
