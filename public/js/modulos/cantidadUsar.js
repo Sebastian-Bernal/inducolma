@@ -300,8 +300,6 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                                 _token: $('input[name="_token"]').val()
                             },
                             success: function (e) {
-
-
                                 Swal.fire({
                                     title: 'Paqueta guardada con exito',
                                     confirmButtonText: 'Aceptar',
@@ -310,6 +308,16 @@ function cantidadUso(id_entrada, paqueta, producir, cantidad_items, margen_error
                                 // console.log(e);
                                 location.reload()
                             },
+                            error : function(jqXHR, textStatus, errorThrown) {
+                                console.log(jqXHR.responseJSON);
+
+                                Swal.fire({
+                                    title: 'Error al guardar la paqueta',
+                                    confirmButtonText: 'Aceptar',
+                                    confirmButtonColor: '#ff7e00',
+                                })
+
+                            }
 
                         })
                     },

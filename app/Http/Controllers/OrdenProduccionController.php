@@ -15,7 +15,9 @@ use App\Models\Transformacion;
 use App\Repositories\DeleteOrden;
 use App\Repositories\MaderasOptimas;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrdenProduccionController extends Controller
 {
@@ -286,27 +288,18 @@ class OrdenProduccionController extends Controller
 
         $this->authorize('admin');
         $guardar = 2;
-        $orden = $this->crearOrden($request);
 
-        $seleccion = $this->maderas->seleccionaPaqueta($request, $guardar, $orden->id);
-        $error =  $seleccion[0]['error'];
-
-        // si seleccion error = false crear la orden de produccion, si es true se elimina todo lo creado en
-        // transformacione y se vuelve al estado Disponible en la tabla cubicajes
-        if ($error) {
-            Cubicaje::where('entrada_madera_id', $request->entrada_madera_id)
-                ->where('paqueta', $request->paqueta)
-                ->update(['estado' => 'DISPONIBLE']);
-            Transformacion::join('cubicajes.id', '=', 'transformaciones.cubicaje_id')
-                ->where('cubicajes.entrada_madera_id', $request->entrada_madera_id)
-                ->delete();
-
-            $orden->delete();
-            return response()->json(['error' => true, 'datos_error' => $seleccion]);
-        } else {
-
-            return response()->json(['error' => false]);
+        try {
+            DB::beginTransaction();
+            $orden = $this->crearOrden($request);
+            $this->maderas->seleccionaPaqueta($request, $guardar, $orden->id);
+            DB::commit();
+            return new Response(['error' => false], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new Response(['error' => true, 'datos_error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
     }
 
     /**

@@ -2,16 +2,18 @@
 
 namespace App\Repositories;
 
+use Exception;
+use App\Models\Pedido;
 use App\Models\Cubicaje;
 use App\Models\DisenoItem;
-use App\Models\Pedido;
-use App\Models\OrdenProduccion;
-use App\Models\Transformacion;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Transformacion;
+use App\Models\OrdenProduccion;
+use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Auth;
 use function PHPUnit\Framework\returnSelf;
+use Illuminate\Database\Eloquent\Collection;
 
 class MaderasOptimas
 {
@@ -71,7 +73,7 @@ class MaderasOptimas
 
     public function Sobrantes($item_diseno)
     {
-        $sobrantes = Transformacion::where('trnasformacion_final', 'SOBRANTE')
+        $sobrantes = Transformacion::where('trnasformacion_final', 'SOBRANTE_CORTE')
             ->where('largo', (int)$item_diseno->largo)
             ->where('ancho', '>', (int)($item_diseno->ancho + 0.5) + 0.5)
             ->where('alto', '>', (int)($item_diseno->alto + 0.5) + 0.5)
@@ -218,7 +220,7 @@ class MaderasOptimas
 
         foreach ($corteInicial as $corte) {
 
-            $nuevo_corte = (object)[];
+
             if ($corte->cantidad_largo != 0) {
                 $corte->cantidad_ancho = ((int)($corte->ancho / (($item_diseno->ancho + 0.5)))) * $corte->cantidad_largo;
 
@@ -226,40 +228,29 @@ class MaderasOptimas
 
                 // CUBICAJE ID
                 if ($restante_ancho >= 15 && $restante_ancho <= 16) {
-                    $corte->sobrante_ancho = $restante_ancho;
+
+                    $nuevoCorte = $this->crearNuevoCorte($corte, $item_diseno, $restante_ancho);
+                    $corteInicial[] = $nuevoCorte;
+                    $corte->sobrante_ancho = 0;
                     $corte->desperdicio_ancho = 0;
                 } else {
                     if ($restante_ancho > 0.7 && $corte->alto > ($item_diseno->ancho + 0.5)) {
                         $corte->cm3 = $corte->cm3 - $item_diseno->largo * $corte->alto * $restante_ancho;
-                        $nuevo_corte->tipo = 'sobrante corte';
-                        $nuevo_corte->id = $corte->id;
-                        $nuevo_corte->bloque = $corte->bloque;
-                        $nuevo_corte->paqueta = $corte->paqueta;
-                        $nuevo_corte->entrada_madera_id = $corte->entrada_madera_id;
-                        $nuevo_corte->largo = (float)$item_diseno->largo;
-                        $nuevo_corte->ancho = (float)($item_diseno->ancho + 0.5);
-                        $nuevo_corte->alto = $restante_ancho;
-                        $nuevo_corte->cm3 = $item_diseno->largo * $corte->alto * $restante_ancho;
-                        $nuevo_corte->sobrante_largo = 0;
-                        $nuevo_corte->cantidad_largo = 0;
-                        $nuevo_corte->cantidad_ancho = ((int)($corte->alto / ($item_diseno->ancho + 0.5))) * $corte->cantidad_largo;
-                        $nuevo_corte->total = $corte->total;
 
-                        $restante_ancho_sobrante = $corte->alto - ((($item_diseno->ancho + 0.5) * $nuevo_corte->cantidad_ancho) / $corte->cantidad_largo);
-                        if ($restante_ancho_sobrante >= 10) {
-                            $nuevo_corte->desperdicio_ancho = 0;
-                            $nuevo_corte->sobrante_ancho = $restante_ancho_sobrante;
-                        } else {
-                            $nuevo_corte->sobrante_ancho = 0;
-                            $nuevo_corte->desperdicio_ancho = $restante_ancho_sobrante;
-                        }
-                        $corteInicial[] = $nuevo_corte;
+                        $nuevoCorte = $this->crearNuevoCorte($corte, $item_diseno, $restante_ancho);
+
+                        $corteInicial[] = $nuevoCorte;
+
                         $corte->sobrante_ancho = 0;
                         $corte->desperdicio_ancho = 0;
                     } else {
                         if ($restante_ancho > 0.7) {
-                            $corte->sobrante_ancho = $restante_ancho;
+
+                            $nuevoCorte = $this->crearNuevoCorte($corte, $item_diseno, $restante_ancho);
+                            $corteInicial[] = $nuevoCorte;
+                            $corte->sobrante_ancho = 0;
                             $corte->desperdicio_ancho = 0;
+
                         } else if ($restante_ancho > 0 && $restante_ancho < 0.7) {
                             $corte->desperdicio_ancho = $restante_ancho;
                             $corte->sobrante_ancho = 0;
@@ -281,22 +272,26 @@ class MaderasOptimas
         // si accion == 2, guarda la tradnsformacion
 
         if ($accion == 2) {
+            foreach ($corteInicial as $guardarCorte) {
+                try {
+                    $seleccion += $this->guardarTransformacion(
+                        $item_diseno->ancho,
+                        $item_diseno->largo,
+                        $guardarCorte->alto,
+                        $guardarCorte->descripcion ?? $item_diseno->descripcion,
+                        $guardarCorte->id,
+                        Auth::user()->id,
+                        $item_diseno->madera_id,
+                        $guardarCorte->sobrante_ancho,
+                        $guardarCorte->desperdicio_ancho,
+                        $guardarCorte->cantidad_ancho,
+                        'INTERMEDIO',
+                        $orden_id,
+                    );
+                } catch (\Exception $e) {
+                    throw new Exception($e->getMessage());
 
-            foreach ($corteInicial as $guardar) {
-                $seleccion += $this->guardarTransformacion(
-                    $item_diseno->ancho,
-                    $item_diseno->largo,
-                    $guardar->alto,
-                    $item_diseno->descripcion,
-                    $guardar->id,
-                    Auth::user()->id,
-                    $item_diseno->madera_id,
-                    $guardar->sobrante_ancho,
-                    $guardar->desperdicio_ancho,
-                    $guardar->cantidad_ancho,
-                    'INTERMEDIO',
-                    $orden_id,
-                );
+                }
             }
         }
 
@@ -418,6 +413,37 @@ class MaderasOptimas
             return $mensaje = 'No se puede realizar el corte';
         }
     }
+
+    public function crearNuevoCorte($corte, $item_diseno, $restante_ancho)  {
+        $nuevo_corte = (object)[];
+        $nuevo_corte->descripcion = 'SOBRANTE_CORTE';
+        $nuevo_corte->id = $corte->id;
+        $nuevo_corte->bloque = $corte->bloque;
+        $nuevo_corte->paqueta = $corte->paqueta;
+        $nuevo_corte->entrada_madera_id = $corte->entrada_madera_id;
+        $nuevo_corte->largo = (float)$item_diseno->largo;
+        $nuevo_corte->ancho = (float)($item_diseno->ancho + 0.5);
+        $nuevo_corte->alto = $restante_ancho;
+        $nuevo_corte->cm3 = $item_diseno->largo * $corte->alto * $restante_ancho;
+        $nuevo_corte->sobrante_largo = 0;
+        $nuevo_corte->cantidad_largo = 0;
+        $nuevo_corte->cantidad_ancho = ((int)($corte->alto / ($item_diseno->ancho + 0.5))) * $corte->cantidad_largo;
+        $nuevo_corte->total = $corte->total;
+        $restante_ancho_sobrante = $corte->alto - ((($item_diseno->ancho + 0.5) * $nuevo_corte->cantidad_ancho) / $corte->cantidad_largo);
+
+        if ($restante_ancho_sobrante >= 10) {
+            $nuevo_corte->desperdicio_ancho = 0;
+            $nuevo_corte->sobrante_ancho = $restante_ancho_sobrante;
+        } else {
+            $nuevo_corte->sobrante_ancho = 0;
+            $nuevo_corte->desperdicio_ancho = $restante_ancho_sobrante;
+        }
+
+        return $nuevo_corte;
+    }
+
+
+
     /**
      * Crea el array de maderas_usar en el indice indicado cuando el id_entrada y paqueta es igual
      * @param  [array] $corteInicial[$i] [los elementos del corte en la posicion actual]
@@ -496,10 +522,10 @@ class MaderasOptimas
      */
     public function producir($request, $item_diseno, $pedido)
     {
-        $existencias_produccion = OrdenProduccion::join('items', 'items.id', '=', 'ordenes_produccion.item_id')
-            ->where('pedido_id', (int)$request->id_pedido)
+        $existencias_produccion = OrdenProduccion::where('pedido_id', (int)$request->id_pedido)
             ->where('item_id', (int)$request->id_item)
             ->get(['cantidad', 'item_id']);
+
 
         if ($existencias_produccion->isEmpty()) {
             return $item_diseno->cantidad * $pedido->cantidad;
@@ -592,8 +618,12 @@ class MaderasOptimas
         $pedido = $this->datosPedido($request);
         $item_diseno = $this->datosItemDiseno($pedido, $request);
         $maderas = $this->datosSeleccion($request, $item_diseno);
-        $seleccion = $this->corteInicial($maderas, $item_diseno, $guardar, $orden);
-        return $seleccion;
+        try {
+            $seleccion = $this->corteInicial($maderas, $item_diseno, $guardar, $orden);
+            return $seleccion;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
     }
 
     /**
@@ -652,14 +682,25 @@ class MaderasOptimas
         $tansformacion->cantidad = $cantidad;
         $tansformacion->tipo_corte = $tipo_corte;
         $tansformacion->orden_produccion_id = $orden_id;
-        if ($tansformacion->save()) {
-            $errorGuardar[] = array('error' => false);
-            Cubicaje::where('id', $tansformacion->cubicaje_id)->update(['estado' => 'NO DISPONIBLE']);
-        } else {
 
-            $cubicajes[] += array('id' => $cubicaje_id);
-            $errorGuardar[] = array('error' => true, 'cubicajes' => $cubicajes);
+        try {
+            DB::beginTransaction();
+            $tansformacion->save();
+            Cubicaje::where('id', $tansformacion->cubicaje_id)->update(['estado' => 'NO DISPONIBLE']);
+            DB::commit();
+            $guardarTransformacion[] = array('error' => false);
+            return $guardarTransformacion;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $cubicajes[] = array('id' => $cubicaje_id);
+            $errorGuardar[] = array('error' => true, 'cubicajes' => $cubicajes, "message" => $e->getMessage());
+            throw new Exception($e->getMessage());
+
+            //return $errorGuardar;
         }
-        return $errorGuardar;
+
     }
+
+
+
 }
