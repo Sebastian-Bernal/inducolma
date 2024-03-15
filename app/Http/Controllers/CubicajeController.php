@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Cubicaje;
+use Illuminate\Http\Request;
 use App\Models\EntradaMadera;
 use App\Models\EntradasMaderaMaderas;
-use Illuminate\Http\Request;
 use App\Repositories\RegistroCubicajes;
+use Illuminate\Http\Response;
 
 class CubicajeController extends Controller
 {
@@ -102,7 +104,11 @@ class CubicajeController extends Controller
         $this->authorize('cubicaje');
         $datos_actualizar = $request->cubicajesTransformacion;
 
-        return $this->registroCubicaje->actualizarTrozas($datos_actualizar);
+        try {
+            return  $this->registroCubicaje->actualizarTrozas($datos_actualizar);
+        } catch (Exception $e) {
+            return new Response(['error' => true, 'message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

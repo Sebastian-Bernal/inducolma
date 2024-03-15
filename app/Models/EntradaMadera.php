@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Traits\CheckRelations;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EntradaMadera extends Model
 {
@@ -72,4 +73,13 @@ class EntradaMadera extends Model
         return $this->hasMany(CalificacionMadera::class);
     }
 
+    /**
+     * Get all of the cubicajes for the EntradaMadera
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cubicajes(): HasMany
+    {
+        return $this->hasMany(Cubicaje::class, 'entrada_madera_id', 'id');
+    }
 }

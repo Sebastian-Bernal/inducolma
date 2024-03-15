@@ -12,7 +12,7 @@
         <div class="col-12  mx-auto ">
             <div class="col-12 text-primary">
 
-                <h1 class="text-center">Transformacion de trozas</h1>
+                <h1 class="text-center">Transformacion de material sobrante de trozas</h1>
 
             </div>
             <hr>
@@ -22,51 +22,44 @@
                     <input type="hidden" class="form-control" id="entrada" name="entrada" value="{{ $entrada->id }}">
                 </div>
             </div>
-
-            {{-- <div class="col-12 mx-auto bg-primary pb-1 pt-2 mt-3 rounded-3 text-white">
-                <h4 class="text-center">Transformación del Bloque principal</h4>
-            </div> --}}
-            <div class="col-12 col-md-12 mt-3 text-secondary">
-                <h3 class="text-center fw-bolder">
-                    Transformación de la troza No.
-                    <span id="numeroBloque"></span>
-                </h3>
-
+>
+            <div class="col-12 mx-auto bg-warning pb-1 pt-2 mt-5 rounded-3 text-white">
+                <h4 class="text-center">Transformación del material sobrante</h4>
             </div>
-            <form class=" row g-3 mt-3" id="agregarCubicaje">
 
-                <input type="hidden" id="entradaId">
-                <input type="hidden" id="bloque">
-                <input type="hidden" id="paqueta">
-                <input type="hidden" id="idCubicaje">
-
-
+            <form class=" row g-3 mt-3" id="agregarSobrante">
+                <input type="hidden" id="ingresoAnterior">
+                <input type="hidden" id="trozaId">
                 <div class="col-md-4 col-12">
-                    <label for="largo" class="form-label">Largo</label>
-                    <input type="number" class="form-control" id="largo"  step="0.1" readonly>
+                    <label for="largoSobrante" class="form-label">Largo</label>
+                    <input type="number" class="form-control" id="largoSobrante" step="0.1"  min="1">
                 </div>
                 <div class="col-md-4 col-12">
-                    <label for="alto" class="form-label">Alto</label>
-                    <input type="number" class="form-control" id="alto"  step="0.1" min="1">
+                    <label for="altoSobrante" class="form-label">Alto</label>
+                    <input type="number" class="form-control" id="altoSobrante"  step="0.1" min="1">
                 </div>
                 <div class="col-md-4 col-12">
-                    <label for="ancho" class="form-label">Ancho</label>
-                    <input type="number" class="form-control" id="ancho" step="0.1" min="1">
+                    <label for="anchoSobrante" class="form-label">Ancho</label>
+                    <input type="number" class="form-control" id="anchoSobrante" step="0.1" min="1">
                 </div>
                 <div class="col-md-4 col-12">
-                    <button type="button" class="btn btn-primary" onclick="verificarInputs()">Guardar bloque</button>
+                    <button type="button" class="btn btn-warning" onclick="verificarInputsSobrante()">Guardar sobrante</button>
                 </div>
             </form>
-
             <div class="col-12 col-md-12 mt-4 text-secondary">
                 <div class="text-center text-warning">
-                    <h2>Bloques por guardar</h2>
+                    <h2>Transformaciones por guardar</h2>
                     <br>
                 </div>
+                <p>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSobrantes" aria-expanded="false" aria-controls="collapseSobrantes">
+                        Ver bloques Sobrantes
+                    </button>
+                </p>
 
-                <div  id="collapseBloques">
+                <div class="collapse" id="collapseSobrantes">
                     <div class="card card-body">
-                        <table class="table table-striped" id="listaCubicaje">
+                        <table class="table" id="listaCubicajeSobrante">
                             <thead>
                                 <tr>
                                     <th scope="col">Paqueta</th>
@@ -78,13 +71,12 @@
                                     <th> Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="listarSobrantes">
 
                             </tbody>
                         </table>
                     </div>
                 </div>
-
 
             </div>
             <div class="mb-4">

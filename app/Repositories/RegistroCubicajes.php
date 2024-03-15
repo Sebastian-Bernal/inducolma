@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Cubicaje;
+use Exception;
 
 class RegistroCubicajes
 {
@@ -100,8 +101,8 @@ class RegistroCubicajes
                 $actualizar->estado = 'DISPONIBLE';
                 $actualizar->save();
                 $guardados ++;
-            } catch (\Throwable $th) {
-                return  ['error' => true, 'message' => 'No se encontro el cubicaje con id: ' . $bloque->id . 'contacte al administrador'];
+            } catch (Exception $e) {
+                throw new Exception("Error al actualizar los datos del cubicaje: ", $e->getMessage());
                 break;
             }
         }

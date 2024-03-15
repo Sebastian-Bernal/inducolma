@@ -75,7 +75,11 @@ class TrabajoMaquina extends Controller
                 if ($turno->maquina->corte == 'ASERRIO') {
                     $entradas = EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
                         ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
+                        ->whereHas('cubicajes', function ($query){
+                            $query->where('cubicajes.estado', 'TROZA');
+                        })
                         ->get();
+
                     return view('modulos.operaciones.trabajo-maquina.troza-index', compact('entradas'));
                 }
 
@@ -138,7 +142,8 @@ class TrabajoMaquina extends Controller
     {
         $trozas = Cubicaje::where('entrada_madera_id', $entrada->id)
             ->where('estado', 'TROZA')
-            ->orderBy('id')
+            ->orderBy('bloque', 'asc')
+            ->orderBy('id', 'asc')
             ->get([
                 'id',
                 'entrada_madera_id',

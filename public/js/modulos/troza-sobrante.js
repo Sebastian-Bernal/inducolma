@@ -55,7 +55,9 @@ function obtenerUltimoIngreso() {
  */
 function ObtenerUltimaPaqueta() {
     var copiaTrozasPaqueta = [].concat(trozasEntrada);
-    ultimaPaqueta = copiaTrozasPaqueta.pop().paqueta;
+    if (copiaTrozasPaqueta.length > 0) {
+        ultimaPaqueta = copiaTrozasPaqueta.pop();
+    }
 
 }
 

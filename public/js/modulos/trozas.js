@@ -3,6 +3,15 @@
 var trozasEntrada;
 var cubicajeBloques = []
 var cubicajeIngresado = [];
+var listaCubicajes = $("#listaCubicaje").DataTable({
+    language: {
+        url: "/DataTables/Spanish.json",
+    },
+    responsive: true,
+    pageLength: 5,
+    lengthChange: false,
+});
+
 
 $(document).ready(function () {
     $('#trozas').click();
@@ -10,61 +19,54 @@ $(document).ready(function () {
     mostrarTrozaActual();
 
 
-    $("#listaCubicaje").DataTable({
-        language: {
-            url: "/DataTables/Spanish.json",
-        },
-        responsive: true,
-        pageLength: 5,
-        //lengthChange: false,
-    });
 });
 
 
 
 
 /**
- * carga las trozas a la variable global trozas
- * @param {*} trozas
+ * Loads the given 'trozas' into the 'trozasEntrada' variable.
+ *
+ * @param {Array} trozas - The array of 'trozas' to be loaded.
+ * @returns {undefined}
  */
 function cargarTrozas(trozas) {
     trozasEntrada = trozas;
 }
 
 /**
- * muestra la troza actual para cubicar
+ * Displays the current troza (log) to be processed.
+ *
+ * If there are no trozas in the 'cubicajeIngresado' array, it calls the 'siguienteTroza' function to get the next troza from the 'trozasEntrada' array.
+ * If there are no more trozas in the 'trozasEntrada' array, it calls the 'mostrarValorTrozaActual' function without any arguments.
+ * Otherwise, it calls the 'siguienteTroza' function to get the next troza from the 'trozasEntrada' array.
+ *
+ * @returns {void}
  */
 function mostrarTrozaActual() {
-    let mostrar;
+
     if (cubicajeIngresado.length == 0) {
-        mostrar = trozasEntrada[0];
-        mostrarValorTrozaActual(mostrar);
-    } else if( cubicajeIngresado.length == trozasEntrada.length){
-        mostrarValorTrozaActual(mostrar);
+        siguienteTroza();
+    } else if( trozasEntrada.length == 0){
+        mostrarValorTrozaActual();
     }
     else {
-        var copiaIngresados = [].concat(cubicajeIngresado);
-        var copiaTrozas = [].concat(trozasEntrada);
-        var ultimo = copiaIngresados.pop();
-        for(i in copiaTrozas){
-            if ( copiaTrozas[i].id == ultimo.id+1) {
-                mostrar = copiaTrozas[i];
-                break;
-            }
-        }
-        copiaIngresados = [];
-        copiaTrozas = [];
-        mostrarValorTrozaActual(mostrar);
+        siguienteTroza();
     }
 
-
 }
+/**
+ * Displays the value of the current troza.
+ *
+ * @param {Object} mostrar - The troza object to display. Default is null.
+ * @returns {Object} - The next troza object.
+ */
+function mostrarValorTrozaActual(mostrar = null) {
 
-function mostrarValorTrozaActual(mostrar) {
-
-    if (mostrar == undefined) {
+    if (mostrar == null) {
         alertaErrorSimple('Fin de las trozas a transformar, por favor termine el proceso de transformacion de la entrada')
         $('#largo').val('');
+        $('#numeroBloque').empty();
     } else {
         $('#idCubicaje').val('').val(mostrar.id);
         $('#numeroBloque').empty().append(mostrar.bloque);
@@ -74,10 +76,15 @@ function mostrarValorTrozaActual(mostrar) {
         $('#paqueta').val(mostrar.paqueta);
     }
 }
-////////////////////////////////////////////////////////////////////////
 
 
-// funcion comprobarLocalStorage, se encarga de comprobar si hay datos en localStorage
+
+/**
+ * Checks the local storage for existing data and updates the global variables 'cubicajeBloques' and 'cubicajeIngresado' accordingly.
+ * If no data is found in the local storage, the global variables are set to empty arrays.
+ *
+ * @returns {void}
+ */
 function comprobarLocalStorage() {
     if (
         localStorage.getItem("cubicajes") == null ||
@@ -88,19 +95,28 @@ function comprobarLocalStorage() {
     } else {
         cubicajeBloques = JSON.parse(localStorage.getItem("cubicajes"));
         cubicajeIngresado = JSON.parse(localStorage.getItem("cubicajeIngresados"));
-        listarPaquetas(cubicajeBloques);
+        listarPaquetas(sortData(cubicajeBloques));
     }
 
 
 }
 
-// funcion verificarInputs, verifica que los inputs no esten vacios, si no estan agrega el dato a la tabla
-// guarda en localstorage, y asigna el id a la variable local cubicaje
+/**
+ * Verifies the inputs for adding cubicaje.
+ *
+ * @returns {boolean} - Returns true if all inputs are valid and saves the paqueta, otherwise returns false.
+ */
 function verificarInputs() {
     //console.log("entro a verificar inputs");
     var valido;
     var campos = $("#agregarCubicaje").find("input");
     $.each(campos, function (index, value) {
+
+        if (value.id == 'largo'){
+            validaLargo();
+            return false;
+        }
+
         if (value.value == "") {
             Swal.fire({
                 title: "¡Ingrese todos los datos!",
@@ -128,10 +144,17 @@ function verificarInputs() {
     }
 }
 
-// funcion validaLargo, valida que el largo este entre 70 y 600, sino muestra un mensaje de error
-// y se hace focus en el input hasta que se ingrese un valor valido
+/**
+ * Validates the length value.
+ *
+ * @returns {boolean} True if the length is invalid, false otherwise.
+ */
 function validaLargo() {
     var largo = $("#largo").val();
+    if (largo == "") {
+        mostrarTrozaActual();
+        return ;
+    }
     if (largo < 70 || largo > 600) {
         Swal.fire({
             title: "¡Ingrese un valor de largo entre 70 y 600!",
@@ -139,6 +162,7 @@ function validaLargo() {
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
         });
+
         $("#largo").focus();
         return true;
     } else {
@@ -146,8 +170,15 @@ function validaLargo() {
     }
 }
 
-// funcion validaAncho, valida que el ancho este entre 10 y 50, sino muestra un mensaje de error
-// y se hace focus en el input hasta que se ingrese un valor valido
+
+/**
+ * Validates the width value.
+ *
+ * This function checks if the width value entered by the user is within the range of 10 to 50.
+ * If the value is outside this range, it displays a warning message using Swal.fire() function.
+ *
+ * @returns {boolean} - Returns true if the width value is outside the range, otherwise returns false.
+ */
 function validaAncho() {
     var ancho = $("#ancho").val();
     if (ancho < 10 || ancho > 50) {
@@ -164,8 +195,11 @@ function validaAncho() {
     }
 }
 
-// funcion validaAlto, valida que el alto este entre 10 y 50, sino muestra un mensaje de error
-// y se hace focus en el input hasta que se ingrese un valor valido
+/**
+ * Validates the value of the 'alto' input field.
+ *
+ * @returns {boolean} True if the value is not between 10 and 50, false otherwise.
+ */
 function validaAlto() {
     var alto = $("#alto").val();
     if (alto < 10 || alto > 50) {
@@ -184,9 +218,13 @@ function validaAlto() {
 
 
 
-// funcion guardarPaqueta, guarda los datos en la tabla paquetas, guarda en memoria localstorage y asigna el id a la variable local cubicaje
-// limpia los inputs
+/**
+ * Saves the paqueta information to the cubicajeBloques array and updates the localStorage.
+ *
+ * @returns {void}
+ */
 function guardarPaqueta() {
+
     let id = $('#idCubicaje').val();
     let paqueta = $("#paqueta").val();
     let bloque = $('#bloque').val();
@@ -215,59 +253,101 @@ function guardarPaqueta() {
             user_id,
         }
     );
-    var registroIngresado;
-    trozasEntrada.forEach(function (troza) {
-        if (troza.id == parseInt(id)) {
-            registroIngresado = troza;
-        }
-    })
-    cubicajeIngresado.push(registroIngresado);
 
+    if(bloqueGuardado(siguiente)){
+        alertaErrorSimple('El bloque ya esta guardado, por favor ingrese el siguiente bloque.')
+        limpiarInputs();
+        siguienteTroza();
+        return;
+    }
+    cubicajeIngresado.push(siguiente);
     cubicajeBloques.unshift(registroPaqueta);
-    localStorage.setItem("cubicajes", JSON.stringify(cubicajeBloques));
-    localStorage.setItem("cubicajeIngresados", JSON.stringify(cubicajeIngresado));
-    //let cubicajesLocal = JSON.parse(localStorage.getItem('cubicajes'));
+    setLocalStorage(cubicajeBloques, cubicajeIngresado);
+
     listarPaquetas(cubicajeBloques);
     limpiarInputs();
+
     mostrarTrozaActual();
+
 }
-//funcion limpiarInputs, limpia los inputs
+
+
+/**
+ * Check if a given block is already saved in the cubicajeIngresado array.
+ *
+ * @param {Object} ingresado - The block to check.
+ * @param {string} ingresado.id - The ID of the block.
+ * @returns {boolean} - True if the block is already saved, false otherwise.
+ */
+function bloqueGuardado(ingresado) {
+    const contains = cubicajeIngresado.some((cubicaje) => cubicaje.id === ingresado.id);
+    return contains;
+}
+
+/**
+ * Retrieves the next troza from the trozasEntrada array and updates the UI with its values.
+ *
+ * @returns {Object} The next troza object from the trozasEntrada array.
+ */
+function siguienteTroza() {
+
+    if (cubicajeIngresado.length > 0) {
+        let idsCubicajesIngresados = cubicajeIngresado.map((cubicaje) => cubicaje.id);
+        trozasEntrada = trozasEntrada.filter((troza) => !idsCubicajesIngresados.includes(troza.id));
+    }
+    siguiente = trozasEntrada.shift();
+    mostrarValorTrozaActual(siguiente);
+    return siguiente;
+
+}
+
+
+/**
+ * Clears the input fields for length, height, width,
+ * Sets the focus on the height input field.
+ */
 function limpiarInputs() {
     // $('#largo').val('');
     $("#alto").val("");
     $("#ancho").val("");
-    $("#pulgadas_alto").val("0");
-    $("#pulgadas_ancho").val("0");
     $("#alto").focus();
 }
 
-// funcion listarPaquetas, recibe un array de objetos y los muestra en la tabla
+/**
+ * Function to list the packages in the table.
+ *
+ * @param {Array} cubicajeBloques - The array of cubicaje blocks.
+ * @returns {void}
+ */
 function listarPaquetas(cubicajeBloques) {
-    $("#listarPaquetas").html("");
-    let trid = 0;
-    //let id = 0;
+    // Eliminar todas las filas existentes en la tabla
+    listaCubicajes.clear().draw();
+
     cubicajeBloques.forEach((cubicaje) => {
-        /*  if (madera.entrada_id == null) {
-                id = madera.id;
-            }else{
-                id = madera.entrada_id;
-            }*/
-        let fila = `<tr id ="${trid}">
-                        <td>${cubicaje.paqueta}</td>
-                        <td>${cubicaje.entrada_id}</td>
-                        <td>${cubicaje.bloque}</td>
-                        <td>${cubicaje.largo}</td>
-                        <td>${cubicaje.alto}</td>
-                        <td>${cubicaje.ancho}</td>
-                        <td><button type="button" class="btn btn-danger" onclick="eliminarMadera(${trid},${cubicaje.id})"><i class="fas fa-trash-alt"></i></button></td>
-                    </tr>`;
-        $("#listarPaquetas").append(fila);
-        trid++;
+        let fila = [
+            cubicaje.paqueta,
+            cubicaje.entrada_id,
+            cubicaje.bloque,
+            cubicaje.largo,
+            cubicaje.alto,
+            cubicaje.ancho,
+            `<button type="button" class="btn btn-danger" onclick="eliminarMadera(${cubicaje.id})"><i class="fas fa-trash-alt"></i></button>`
+        ];
+
+        // Agregar la nueva fila a la tabla
+        listaCubicajes.row.add(fila).draw();
     });
+
 }
 
-// funcion eliminarMadera, recibe el id de la fila y el id de la madera, elimina la madera de la tabla y de la memoria localstorage
-function eliminarMadera(id, idCubicaje) {
+
+/**
+ * Function to delete a wood block.
+ *
+ * @param {number} idCubicaje - The ID of the cubicaje to be deleted.
+ * @returns {void}
+ */
+function eliminarMadera(idCubicaje) {
     //console.log(idCubicaje);
     Swal.fire({
         title: "¿Está seguro que desea eliminar el bloque?",
@@ -279,20 +359,50 @@ function eliminarMadera(id, idCubicaje) {
         confirmButtonText: "¡Si, eliminar!",
         cancelButtonText: "Cancelar",
     }).then((result) => {
-        //$(`#${id}`).remove();
+
         if (result.isConfirmed) {
+
+            trozasEntrada.unshift(cubicajeIngresado.find((cubicaje) => cubicaje.id == parseInt(idCubicaje)));
             cubicajeIngresado = cubicajeIngresado.filter((ingresado) => ingresado.id != parseInt(idCubicaje))
             cubicajeBloques = cubicajeBloques.filter((cubicaje) => parseInt(cubicaje.id) != idCubicaje);
-            localStorage.setItem("cubicajes", JSON.stringify(cubicajeBloques));
-            localStorage.setItem("cubicajeIngresados", JSON.stringify(cubicajeIngresado));
-            listarPaquetas(cubicajeBloques);
-            mostrarTrozaActual();
+            setLocalStorage(sortData(cubicajeBloques), cubicajeIngresado);
+            listarPaquetas(sortData(cubicajeBloques));
+
+            if (siguiente == undefined) {
+                mostrarTrozaActual();
+            }
         }
     });
 
 }
 
-// funcion terminarPaqueta, envia los datos de la variable cubicaje a la funcion guardarPaqueta
+/**
+ * Sets the cubicajeBloques and cubicajeIngresado arrays in the local storage.
+ *
+ * @param {Array} cubicajeBloques - The cubicajeBloques array to be stored in the local storage.
+ * @param {Array} cubicajeIngresado - The cubicajeIngresado array to be stored in the local storage.
+ * @returns {void}
+ */
+function setLocalStorage(cubicajeBloques, cubicajeIngresado) {
+    localStorage.setItem("cubicajes", JSON.stringify(cubicajeBloques));
+    localStorage.setItem("cubicajeIngresados", JSON.stringify(cubicajeIngresado));
+}
+
+function sortData(data) {
+    data.sort((a, b) => parseInt(a.bloque) - parseInt(b.bloque));
+    return data;
+}
+
+/**
+ * Terminates the transformation of the input by saving the package to the database.
+ *
+ * If the 'cubicajeBloques' array has elements, a confirmation dialog is displayed to the user.
+ * If the user confirms, the 'guardarPaquetaBD' function is called to save the package to the database.
+ *
+ * If the 'cubicajeBloques' array is empty, an error message is displayed to the user.
+ *
+ * @returns {void}
+ */
 function terminarPaqueta() {
     if (cubicajeBloques.length > 0) {
         //guardarPaquetaBD();
@@ -307,9 +417,6 @@ function terminarPaqueta() {
             cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
-                if (cubicajesSobrantes.length > 0) {
-                    guardarPaquetaBDSobrante();
-                }
                 guardarPaquetaBD();
             }
         });
@@ -318,7 +425,11 @@ function terminarPaqueta() {
     }
 }
 
-// funcion guardarPaquetaBD, guarda los datos en la base de datos
+/**
+ * Sends an AJAX request to save the package in the database.
+ *
+ * @returns {void}
+ */
 function guardarPaquetaBD() {
     $.ajax({
         url: "/cubicaje-transformacion",
