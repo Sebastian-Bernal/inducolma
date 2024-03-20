@@ -29,22 +29,28 @@
                     </thead>
 
                     <tbody>
-                       {{--  @foreach ($entradas as $entrada)
-                        <tr>
-                            <td>{{ $entrada->entrada_madera_id }}</td>
-                            <td>{{ $entrada->proveedor->razon_social }}</td>
-                            <td>{{ $entrada->fecha }}</td>
-                            <td>
-                                <div class="d-flex align-items-center ">
-                                    <a href="{{ route('trabajo-troza',$entrada->entrada_madera_id) }}"
-                                        class="btn btn-sm btn-primary"
-                                        title="Transformar trozas de la entrada:  {{ $entrada->entrada_madera_id }}">
-                                        <i class="fa-solid fa-person-digging"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach --}}
+
+
+                        @forelse ($entradasReaserrio as $entrada)
+                            <tr>
+                                <td>{{ $entrada->entrada_madera_id }}</td>
+                                <td>{{ $entrada->proveedor->razon_social }}</td>
+                                <td>{{ $entrada->fecha }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <a href="{{ route('trabajo-troza-reaserrio',$entrada->entrada_madera_id) }}"
+                                            class="btn btn-sm btn-primary"
+                                            title="Transformar trozas de la entrada:  {{ $entrada->entrada_madera_id }}">
+                                            <i class="fa-solid fa-person-digging"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+
+                            </tr>
+                        @endforelse
 
                     </tbody>
                 </table>

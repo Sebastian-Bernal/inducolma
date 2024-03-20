@@ -170,7 +170,7 @@ function guardarPaqueta() {
     let pulgadasAncho = $("#pulgadas_ancho").val();
     let entrada_id = $("#entradaId").val();
     let user_id = $("#userId").val();
-    let troza_id = 0;
+    let estado = 0;
 
     registroPaqueta = Object.assign(
         {},
@@ -184,7 +184,7 @@ function guardarPaqueta() {
             pulgadasAncho,
             entrada_id,
             user_id,
-            troza_id,
+            estado,
 
         }
     );

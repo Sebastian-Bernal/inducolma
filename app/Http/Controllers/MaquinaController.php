@@ -88,6 +88,7 @@ class MaquinaController extends Controller
      */
     public function update(UpdateMaquinaRequest $request, Maquina $maquina)
     {
+
         $this->authorize('admin');
         //dd($request->maquina);
         $maquina = Maquina::findOrFail($maquina->id);

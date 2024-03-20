@@ -66,6 +66,7 @@
                                         <option value="ASERRIO">ASERRIO</option>
                                         <option value="ENSAMBLE">ENSAMBLE</option>
                                         <option value="ACABADO_ENSAMBLE">ACAMBADOS DE ENSAMBLE</option>
+                                        <option value="REASERRIO">REASERRIO</option>
 
                                     </select>
                                 </div>

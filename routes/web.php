@@ -35,6 +35,7 @@ use App\Http\Controllers\Reportes\Costos\ReporteCostosController;
 use App\Http\Controllers\Reportes\Pedidos\ReportePedidosController;
 use App\Http\Controllers\Reportes\Procesos\ProcesoConstruccionController;
 use App\Http\Controllers\RutaAcabadoProductoController;
+use App\Http\Controllers\SobranteTrozasController;
 use App\Http\Controllers\SubprocesoController;
 use App\Http\Controllers\TrabajoMaquina;
 use App\Http\Controllers\TurnoController;
@@ -396,6 +397,9 @@ Route::controller(TrabajoMaquina::class)->group(function () {
     Route::get('trabajo-troza/{entrada}', 'trabajoTroza')
         ->name('trabajo-troza')
         ->middleware('auth');
+    Route::get('trabajo-troza-reaserrio/{entradaId}', 'trabajoReaserrio')
+        ->name('trabajo-troza-reaserrio')
+        ->middleware('auth');
 });
 
 Route::resource('subprocesos', SubprocesoController::class)
@@ -484,7 +488,9 @@ Route::view('reportes-costos', 'modulos.reportes.costos.index')
     ->middleware('auth');
 
 
-
+Route::resource('sobrante-troza', SobranteTrozasController::class )
+    ->names('sobrante-troza')
+    ->middleware('auth');
 
 
 Auth::routes([

@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Traits\CheckRelations;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Cubicaje extends Model
 {
@@ -28,5 +29,15 @@ class Cubicaje extends Model
     public function getCreatedAtAttribute($value)
     {
         return \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * Get the EntradaMadera that owns the Cubicaje
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function EntradaMadera(): BelongsTo
+    {
+        return $this->belongsTo(EntradaMadera::class, 'entrada_madera_id', 'id');
     }
 }

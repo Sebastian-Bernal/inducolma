@@ -32,7 +32,7 @@ class RegistroCubicajes
             $registro->estado = 'DISPONIBLE';
             $registro->entrada_madera_id = $cubicaje['entrada_id'];
             $registro->user_id = $cubicaje['user_id'];
-            $registro->troza_id = $cubicaje['troza_id'];
+            $registro->estado_troza = $cubicaje['estado'];
             $registro->save();
             $guardados++;
         }
@@ -99,6 +99,7 @@ class RegistroCubicajes
                 $actualizar->pulgadas_cuadradas = (($bloque->alto/2.54))*(($bloque->ancho/2.54));
                 $actualizar->pulgadas_cuadradas_x3_metros = ($bloque->largo/300)* (((integer)($bloque->alto/2.54)) * ((integer)($bloque->ancho/2.54)));
                 $actualizar->estado = 'DISPONIBLE';
+                $actualizar->estado_troza = 1;
                 $actualizar->save();
                 $guardados ++;
             } catch (Exception $e) {

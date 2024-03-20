@@ -22,6 +22,7 @@ use App\Repositories\ProductosTerminados;
 use App\Http\Requests\StoreTraajoMaquinaRequest;
 use App\Http\Requests\StreProductoRequest;
 use Exception;
+use Illuminate\Contracts\View\View;
 
 class TrabajoMaquina extends Controller
 {
@@ -40,68 +41,155 @@ class TrabajoMaquina extends Controller
      */
     public function index()
     {
-        $usuario = User::select(['id', 'name'])->find(Auth::user()->id);
-        $turno = TurnoUsuario::where('user_id', Auth::user()->id)
-            ->where('fecha', date('Y-m-d'))
-            ->first();
-        if (!empty($turno)) {
-            $turno_usuarios = $this->registroAsistencia->usuariosDia();
-            if (count($turno_usuarios->toArray()) > 0) {
-                $maquinas = Maquina::get(['id', 'maquina']);
-                $eventos = Evento::get(['id', 'descripcion']);
-                $usuarios = User::where('rol_id', 2)->get(['id', 'name']);
-                return view(
-                    'modulos.operaciones.trabajo-maquina.index',
-                    compact('usuario', 'turno_usuarios', 'maquinas', 'eventos', 'turno', 'usuarios')
-                );
-            } else {
-                $procesos = Proceso::where('maquina_id', $turno->maquina_id)
-                    ->where('estado', 'PENDIENTE')
-                    ->oldest()
-                    ->get();
-                $tipos_evento = TipoEvento::get(['id', 'tipo_evento']);
-                $eventos = Evento::get(['id', 'descripcion', 'tipo_evento_id']);
-                $estados = Estado::get(['id', 'descripcion']);
-                $maquina = $turno->maquina_id;
-                $estado_actual = EstadoMaquina::where('maquina_id', $turno->maquina_id)->latest('id')->first('estado_id');
-                if ($estado_actual == '') {
-                    $estado_actual = EstadoMaquina::create([
-                        'maquina_id' => $turno->maquina_id,
-                        'estado_id' => 2,
-                        'fecha' => now(),
-                    ]);
-                }
+        $usuario = Auth::user();
+        $turno = $this->obternerTurnoUsuario($usuario);
 
-                if ($turno->maquina->corte == 'ASERRIO') {
-                    $entradas = EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
-                        ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
-                        ->whereHas('cubicajes', function ($query){
-                            $query->where('cubicajes.estado', 'TROZA');
-                        })
-                        ->get();
-
-                    return view('modulos.operaciones.trabajo-maquina.troza-index', compact('entradas'));
-                }
-
-                if ($turno->maquina->corte != 'ENSAMBLE' && $turno->maquina->corte != 'ACABADO_ENSAMBLE') {
-                    return view(
-                        'modulos.operaciones.trabajo-maquina.show',
-                        compact(
-                            'procesos',
-                            'tipos_evento',
-                            'eventos',
-                            'estados',
-                            'maquina',
-                            'estado_actual'
-                        )
-                    );
-                }
-
-                return redirect()->route('trabajo-maquina.create');
-            }
-        } else {
-            return redirect()->back()->with('status', "El usuario no tiene turno asignado para la fecha: " . date('Y-m-d'));
+        if(!$turno){
+            return redirect()->back()->with('status', "El usuario no tiene turno asignado para la fecha: " . now()->toDateString());
         }
+
+        $maquina = $turno->maquina;
+
+        if ($maquina->corte == 'ASERRIO'){
+            return $this->mostrarTrozaIndex();
+        }
+
+        if ($maquina->corte == 'REASERRIO'){
+            return $this->mostrarReaserrioIndex();
+        }
+
+        if (!in_array($maquina->corte, ['ENSAMBLE', 'ACABADO_ENSAMBLE'])) {
+            return $this->mostrarTrabajoMaquina($maquina);
+        }
+
+        return redirect()->route('trabajo-maquina.create');
+
+    }
+
+    public function trabajoReaserrio( int $entradaId )
+    {
+        $trozasReaserrio = Cubicaje::where('entrada_madera_id', $entradaId)
+                            ->where('estado_troza', 1)
+                            ->orderBy('bloque', 'asc')
+                            ->orderBy('id', 'asc')
+                            ->get([
+                                'id',
+                                'entrada_madera_id',
+                                'bloque',
+                                'paqueta',
+                                'largo',
+                            ]);
+
+        return view('modulos.operaciones.trabajo-maquina.reaserrio-trabajo', compact('trozasReaserrio', 'entradaId'));
+    }
+
+    /**
+     * This is a private method that is used to display the index page for the "Reaserrio" section of the "TrabajoMaquina" class.
+     * It retrieves the "entradasReaserrio" data by calling the "obtenerTrozasReaserrio" method and passes it to the view.
+     * The view used is "modulos.operaciones.trabajo-maquina.reaserrio-index".
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    private function mostrarReaserrioIndex() : View
+    {
+        $entradasReaserrio = $this->obtenerTrozasReaserrio();
+        return view('modulos.operaciones.trabajo-maquina.reaserrio-index', compact('entradasReaserrio'));
+    }
+
+    /**
+     * This is a private method that retrieves the trozas reaserrio from the EntradaMadera model.
+     * It performs a join with the entradas_madera_maderas table and filters the results based on the condition_madera column.
+     * It also checks if the related cubicajes have a estado_troza value of 1.
+     * The method returns the retrieved trozas reaserrio.
+     */
+    private function obtenerTrozasReaserrio()
+    {
+
+        return EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
+            ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
+            ->whereHas('cubicajes', function ($query) {
+                $query->where('cubicajes.estado_troza', 1);
+            })
+            ->get();
+    }
+
+    /**
+     * This is a private method that retrieves the turnoUsuario (shift user) for a given user.
+     *
+     * @param $usuario The user for which to retrieve the turnoUsuario.
+     * @return The turnoUsuario object for the given user and current date, or null if not found.
+     */
+    private function obternerTurnoUsuario($usuario)
+    {
+        return TurnoUsuario::where('user_id', $usuario->id)
+            ->whereDate('fecha', now()->toDateString())
+            ->first();
+    }
+
+
+    /**
+     * This is a private method that retrieves the turno (shift) of a given user for the current date.
+     *
+     * @param $usuario The user object for which to retrieve the turno.
+     * @return The turno object for the user and current date, or null if no turno is found.
+     */
+    private function mostrarTrozaIndex()
+    {
+        $entradas = $this->obtenerEntradasTroza();
+        return view('modulos.operaciones.trabajo-maquina.troza-index', compact('entradas'));
+    }
+
+
+    /**
+    * This is a private method that retrieves the entries for the "TROZA" condition from the "EntradaMadera" model.
+    * It performs a join operation with the "entradas_madera_maderas" table and filters the entries based on the "condicion_madera" column value.
+    * Additionally, it checks if the entries have associated "cubicajes" with the "TROZA" state.
+    * The method returns a collection of the retrieved entries.
+    */
+    private function obtenerEntradasTroza()
+    {
+        return EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
+            ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
+            ->whereHas('cubicajes', function ($query) {
+                $query->where('cubicajes.estado', 'TROZA');
+            })
+            ->get();
+    }
+
+    /**
+     * This method is responsible for displaying the work machine.
+     *
+     * @param $maquina The machine object.
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View The view for displaying the work machine.
+     */
+    private function mostrarTrabajoMaquina($maquina)
+    {
+        $procesos = Proceso::where('maquina_id', $maquina->id)
+            ->where('estado', 'PENDIENTE')
+            ->oldest()
+            ->get();
+
+        $tipos_evento = TipoEvento::all();
+        $eventos = Evento::all();
+        $estados = Estado::all();
+        $estado_actual = EstadoMaquina::where('maquina_id', $maquina->id)->latest('id')->first('estado_id');
+
+        if (!$estado_actual) {
+            $estado_actual = EstadoMaquina::create([
+                'maquina_id' => $maquina->id,
+                'estado_id' => 2,
+                'fecha' => now(),
+            ]);
+        }
+
+        return view('modulos.operaciones.trabajo-maquina.show', compact(
+            'procesos',
+            'tipos_evento',
+            'eventos',
+            'estados',
+            'maquina',
+            'estado_actual'
+        ));
     }
 
     /**
@@ -135,8 +223,6 @@ class TrabajoMaquina extends Controller
 
         return view('modulos.operaciones.trabajo-maquina.ensamble', compact( 'acabados_ensamble'));
     }
-
-
 
     public function trabajoTroza(EntradaMadera $entrada)
     {
@@ -264,40 +350,6 @@ class TrabajoMaquina extends Controller
                 'turno_usuarios',
             )
         );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
     }
 
     /**

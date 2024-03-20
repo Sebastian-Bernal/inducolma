@@ -10,7 +10,7 @@ class Maquina extends Model
 {
     use HasFactory, CheckRelations;
 
-    protected $fillable = ['maquina','corte'];
+    protected $fillable = ['id','maquina','corte'];
     public function costos_operacion()
     {
         return $this->hasMany(CostosOperacion::class);
