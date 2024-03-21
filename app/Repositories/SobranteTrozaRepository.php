@@ -43,13 +43,13 @@ class SobranteTrozaRepository
 
     private function obtenerMaderaId($transformacionId)
     {
-        $cubicaje = Cubicaje::with('EntradaMadera.entradas_madera_maderas')->find($transformacionId);
+        $cubicaje = Cubicaje::with('EntradaMadera.entradas_madera_maderas.maderas.tipo_madera.madera')->find($transformacionId);
 
         if (!$cubicaje) {
             throw new Exception('No se encontró la madera');
         }
 
-        return $cubicaje->EntradaMadera->entradas_madera_maderas->first()->madera_id;
+        return $cubicaje->EntradaMadera->entradas_madera_maderas->first()->madera->tipo_madera_id;
     }
 
     private function actualizarCubicaje($transformacionId)

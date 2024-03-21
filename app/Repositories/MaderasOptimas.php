@@ -9,6 +9,7 @@ use App\Models\DisenoItem;
 use Illuminate\Support\Arr;
 use App\Models\Transformacion;
 use App\Models\OrdenProduccion;
+use App\Models\SobranteTrozas;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,11 @@ class MaderasOptimas
 
         $item_diseno = $this->datosItemDiseno($pedido, $request);
 
-        $sobrantes = $this->Sobrantes($item_diseno);
+        $sobrantesCorte = $this->sobrantesCorte($item_diseno);
+        $sobrantesTroza = $this->sobrantesTroza($item_diseno);
+
+        $sobrantes = $sobrantesCorte->merge($sobrantesTroza);
+
         $maderas = $this->Maderas($item_diseno);
         $producir = $this->producir($request, $item_diseno, $pedido);
 
@@ -66,20 +71,32 @@ class MaderasOptimas
             ->first(['cantidad', 'descripcion', 'existencias', 'largo', 'ancho', 'alto', 'item_id', 'madera_id']);
     }
 
-    // Funcion SObrantes(), retorna una coleccion de items que se pueden producir
-    // con los sobrantes que cumplen con largo = $item_diseno->largo, ancho > (($item_diseno->ancho + 0.5) + 0.5), alto > (($item_diseno->alto + 0.5) +0.5)
+    // Funcion sobrantesCorte(), retorna una coleccion de items que se pueden producir
+    // con los sobrantesCorte que cumplen con largo = $item_diseno->largo, ancho > (($item_diseno->ancho + 0.5) + 0.5), alto > (($item_diseno->alto + 0.5) +0.5)
     // y madera = $item_diseno->madera_id
     // que no esten en uso.
 
-    public function Sobrantes($item_diseno)
+    public function sobrantesCorte($item_diseno)
     {
-        $sobrantes = Transformacion::where('trnasformacion_final', 'SOBRANTE_CORTE')
+        $sobrantesCorte = Transformacion::where('trnasformacion_final', 'SOBRANTE_CORTE')
             ->where('largo', (int)$item_diseno->largo)
             ->where('ancho', '>', (int)($item_diseno->ancho + 0.5) + 0.5)
             ->where('alto', '>', (int)($item_diseno->alto + 0.5) + 0.5)
             ->where('madera_id', (int)$item_diseno->madera_id)
             ->get();
-        return $sobrantes;
+        return $sobrantesCorte;
+    }
+
+
+    private function sobrantesTroza($item_diseno)
+    {
+        $sobrantesTroza = SobranteTrozas::where('estado', 'DISPONIBLE')
+                        ->where('largo', (int)$item_diseno->largo)
+                        ->where('ancho', '>', (int)($item_diseno->ancho + 0.5) + 0.5)
+                        ->where('alto', '>', (int)($item_diseno->alto + 0.5) + 0.5)
+                        ->where('madera_id', (int)$item_diseno->madera_id)
+                        ->get();
+        return $sobrantesTroza;
     }
 
     /**
@@ -124,11 +141,11 @@ class MaderasOptimas
      * cantidad_items, porcentaje_uso, desperdicio
      */
 
-    public function sobrantesUsar($sobrantes, $item_diseno)
+    public function sobrantesUsar($sobrantesCorte, $item_diseno)
     {
         $sobrantes_usar = [];
 
-        foreach ($sobrantes as $sobrante) {
+        foreach ($sobrantesCorte as $sobrante) {
             $sobrante->cantidad_items = (int)(($sobrante->ancho / ($item_diseno->ancho + 0.5) + $sobrante->alto / ($item_diseno->alto + 0.5))); //* $sobrante->cantidad
             $sobrante->porcentaje_uso = (int)(($sobrante->cantidad_items * ($item_diseno->alto + 0.5) * ($item_diseno->ancho + 0.5) * $item_diseno->largo) / ($sobrante->alto * $sobrante->largo * $sobrante->ancho) * 100);
             $sobrante->desperdicio = (int)(100 - $sobrante->porcentaje_uso);
@@ -138,7 +155,7 @@ class MaderasOptimas
     }
 
     /**
-     * Funcion corte1(), agrega a cada elemto de la coleccion $sobrantes
+     * Funcion corte1(), agrega a cada elemto de la coleccion $sobrantesCorte
      * cantidad_items, porcentaje_uso, desperdicio
      */
 

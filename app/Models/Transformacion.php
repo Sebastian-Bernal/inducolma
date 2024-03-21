@@ -28,4 +28,14 @@ class Transformacion extends Model
     {
         return $this->belongsTo(cubicaje::class);
     }
+
+
+    /**
+     * returns trnasformacion_final attribute
+     * @return string
+     */
+    public function getTipoAttribute(): ?string
+    {
+        return $this->trnasformacion_final;
+    }
 }

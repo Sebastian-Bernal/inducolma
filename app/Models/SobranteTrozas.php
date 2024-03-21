@@ -18,4 +18,10 @@ class SobranteTrozas extends Model
         'cubicaje_id',
         'madera_id',
     ];
+
+
+    public function getTipoAttribute()
+    {
+        return 'SOBRANTE_TROZA';
+    }
 }
