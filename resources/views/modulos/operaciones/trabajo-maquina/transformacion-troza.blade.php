@@ -72,9 +72,9 @@
                                     <th scope="col">Paqueta</th>
                                     <th scope="col">Entrada</th>
                                     <th scope="col">Bloque No.</th>
+                                    <th scope="col">Largo</th>
                                     <th scope="col">Alto</th>
                                     <th scope="col">Ancho</th>
-                                    <th scope="col">Largo</th>
                                     <th> Acciones</th>
                                 </tr>
                             </thead>

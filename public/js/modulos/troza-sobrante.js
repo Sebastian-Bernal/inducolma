@@ -282,7 +282,7 @@ function validarSiguienteTroza(){
     if (typeof(siguiente) != undefined || siguiente != null || siguiente != '') {
 
         Swal.fire({
-            title: "¿Está seguro depasar a los sobrantes de la troza siguiente?",
+            title: "¿Está seguro de pasar a los sobrantes de la troza siguiente?",
             text: "!Esta acción no se puede revertir!",
             icon: "warning",
             showCancelButton: true,
