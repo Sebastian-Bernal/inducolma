@@ -101,5 +101,4 @@
 @section('js')
 <script src="/js/modulos/alertas-swift.js"></script>
 <script src="/js/modulos/trozas.js"></script>
-<script src="/js/modulos/troza-sobrante.js"></script>
 @endsection

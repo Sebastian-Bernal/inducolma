@@ -79,6 +79,7 @@ class MaderasOptimas
     public function sobrantesCorte($item_diseno)
     {
         $sobrantesCorte = Transformacion::where('trnasformacion_final', 'SOBRANTE_CORTE')
+            ->where('estado', 'DISPONIBLE')
             ->where('largo', (int)$item_diseno->largo)
             ->where('ancho', '>', (int)($item_diseno->ancho + 0.5) + 0.5)
             ->where('alto', '>', (int)($item_diseno->alto + 0.5) + 0.5)
