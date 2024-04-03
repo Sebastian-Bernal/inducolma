@@ -32,13 +32,16 @@
                     @forelse ($optimas['sobrantes_usar'] as $sobrante)
                         <div class="col">
                             <div class="card ">
-                            <div class="card-header bg-sucsses"><strong>Sobrante</strong> </div>
-                            <div class="card-body " >
-                                <h5 class="card-title">Cantidad items: {{ $sobrante->cantidad_items }}</h5>
-                                <p class="card-text mb-1">
-                                    Porcentaje de uso: {{ $sobrante->porcentaje_uso }} <br>
-                                    Desperdicio: {{ $sobrante->desperdicio }} <br>
+                            <div class="card-header bg-sucsses"><strong>Sobrante viaje # {{ $sobrante->viaje }}</strong> </div>
 
+                            <div class="card-body " >
+                                <h5 class="card-title">Paqueta: {{ $sobrante->paqueta }}</h5>
+
+                                <p class="card-text mb-1">
+                                    <strong>Cantidad items: {{ $sobrante->cantidad_items }}</strong> <br>
+                                    <strong>Porcentaje de uso:</strong> {{ $sobrante->porcentaje_uso }} <br>
+                                    <strong>Desperdicio:</strong> {{ $sobrante->desperdicio }} <br>
+                                    <strong>Tipo de sobrante:</strong> {{ $sobrante->tipo }}
                                 </p>
                                 <a href="#" class="btn btn-primary btn-sm">Seleccionar</a>
                             </div>

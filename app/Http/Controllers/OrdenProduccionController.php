@@ -119,6 +119,10 @@ class OrdenProduccionController extends Controller
             if ($optimas['producir'] <= 0) {
                 return redirect()->route('odenes-produccion',[$pedido, $item_id]);
             } else {
+                if( $optimas['maderas_usar'] == 'No se puede realizar el corte' ){
+                    $optimas['maderas_usar'] = [];
+                    return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas', 'pedido', 'item'));
+                }
                 if (count($optimas['maderas_usar']) > 0 || count($optimas['sobrantes_usar']) > 0) {
                     return view('modulos.administrativo.programacion.maderas-optimas', compact('optimas', 'pedido', 'item'));
                 } else {

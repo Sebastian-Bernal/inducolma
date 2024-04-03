@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SobranteTrozas extends Model
 {
@@ -23,5 +24,15 @@ class SobranteTrozas extends Model
     public function getTipoAttribute()
     {
         return 'SOBRANTE_TROZA';
+    }
+
+    /**
+     * Get the cubicaje that owns the SobranteTrozas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function cubicaje(): BelongsTo
+    {
+        return $this->belongsTo(Cubicaje::class);
     }
 }
