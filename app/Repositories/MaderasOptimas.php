@@ -156,7 +156,7 @@ class MaderasOptimas
         $sobrantePropiedades = collect([]);
 
         $sobrantePropiedades = $sobrantes->map(function ($sobrante) use ($item_diseno) {
-            $cantidadItems = (int)(($sobrante->ancho / ($item_diseno->ancho + 0.5) + $sobrante->alto / ($item_diseno->alto + 0.5)));
+            $cantidadItems = ((int)($sobrante->ancho / ($item_diseno->ancho + 0.5)) + (int)($sobrante->alto / ($item_diseno->alto + 0.5)));
             $porcentajeUso = (int)(($cantidadItems * ($item_diseno->alto + 0.5) * ($item_diseno->ancho + 0.5) * $item_diseno->largo) / ($sobrante->alto * $sobrante->largo * $sobrante->ancho) * 100);
             $desperdicio = (int)(100 - $porcentajeUso);
 
@@ -507,7 +507,13 @@ class MaderasOptimas
     {
         $grupos = [];
 
-        foreach ($datosCorte as $detalleCorte) {
+        $datosFiltrados = collect($datosCorte)->filter(function ($corte) {
+            return $corte->descripcion != 'SOBRANTE_CORTE';
+        });
+
+        ///print_r($datosFiltrados->take(20));
+
+        foreach ($datosFiltrados as $detalleCorte) {
             $repetirGrupo = false;
 
             foreach ($grupos as &$grupo) {
@@ -515,18 +521,20 @@ class MaderasOptimas
                     $grupo['entrada_madera_id'] == $detalleCorte->entrada_madera_id
                     && $grupo['paqueta'] == $detalleCorte->paqueta
                 ) {
-                    $cm3_sobrante_largo = $detalleCorte->sobrante_largo > 0 ? $detalleCorte->sobrante_largo * $detalleCorte->ancho * $detalleCorte->alto : 0;
-                    $cm3_sobrante_ancho = $detalleCorte->sobrante_ancho > 0 ? $detalleCorte->sobrante_ancho * $item_diseno->largo * $detalleCorte->alto : 0;
-                    $cm3_sobrante_item = $detalleCorte->sobrante_item > 0 ? $detalleCorte->sobrante_item * $item_diseno->ancho * $item_diseno->largo : 0;
 
-                    $cm3_items = $item_diseno->alto * $item_diseno->ancho * $item_diseno->largo * $detalleCorte->cantidad_items;
+                        $cm3_sobrante_largo = $detalleCorte->sobrante_largo > 0 ? $detalleCorte->sobrante_largo * $detalleCorte->ancho * $detalleCorte->alto : 0;
+                        $cm3_sobrante_ancho = $detalleCorte->sobrante_ancho > 0 ? $detalleCorte->sobrante_ancho * $item_diseno->largo * $detalleCorte->alto : 0;
+                        $cm3_sobrante_item = $detalleCorte->sobrante_item > 0 ? $detalleCorte->sobrante_item * $item_diseno->ancho * $item_diseno->largo : 0;
 
-                    $grupo['cantidad_items'] += $detalleCorte->cantidad_items;
-                    $grupo['cm3'] += $detalleCorte->cm3;
-                    $grupo['cm3_total'] += $cm3_items;
-                    $grupo['cm3_sobrantes'] += $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_item;
+                        $cm3_items = $item_diseno->alto * $item_diseno->ancho * $item_diseno->largo * $detalleCorte->cantidad_items;
 
-                    $repetirGrupo = true;
+                        $grupo['cantidad_items'] += $detalleCorte->cantidad_items;
+                        $grupo['cm3'] += $detalleCorte->cm3;
+                        $grupo['cm3_total'] += $cm3_items;
+                        $grupo['cm3_sobrantes'] += $cm3_sobrante_largo + $cm3_sobrante_ancho + $cm3_sobrante_item;
+
+                        $repetirGrupo = true;
+
                     break;
                 }
             }
