@@ -48,6 +48,12 @@ class TrabajoMaquina extends Controller
             return redirect()->back()->with('status', "El usuario no tiene turno asignado para la fecha: " . now()->toDateString());
         }
 
+        $asistenciaTurnosUsuarios = $this->registroAsistencia->usuariosDia();
+
+        if($asistenciaTurnosUsuarios->count() > 0){
+            return $this->mostrarIndexTurnos($asistenciaTurnosUsuarios, $turno, $usuario);
+        }
+
         $maquina = $turno->maquina;
 
         if ($maquina->corte == 'ASERRIO'){
@@ -64,6 +70,17 @@ class TrabajoMaquina extends Controller
 
         return redirect()->route('trabajo-maquina.create');
 
+    }
+
+
+    public function mostrarIndexTurnos($turno_usuarios, $turno, $usuario){
+        $maquinas = Maquina::get(['id', 'maquina']);
+        $eventos = Evento::get(['id', 'descripcion']);
+        $usuarios = User::where('rol_id', 2)->get(['id', 'name']);
+        return view(
+            'modulos.operaciones.trabajo-maquina.index',
+            compact('usuario', 'turno_usuarios', 'maquinas', 'eventos', 'turno', 'usuarios')
+        );
     }
 
     public function trabajoReaserrio( int $entradaId )
