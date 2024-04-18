@@ -83,17 +83,20 @@ class RegistroAsistencia {
      */
     public function guardaEstado($request)
     {
-        $estado = new EstadoMaquina();
-        $estado->maquina_id = $request->maquina_id;
-        $estado->estado_id = $request->estado_id;
-        $estado->user_id = Auth::user()->id;
-        $estado->fecha = now();
-        //$estado->save();
+
         try {
+            $estado = new EstadoMaquina();
+            $estado->maquina_id = $request->maquina_id;
+            $estado->estado_id = $request->estado_id;
+            $estado->user_id = Auth::user()->id;
+            $estado->fecha = now();
             $estado->save();
             return response()->json(array('error' => False, 'mensaje' => 'Esado de la maquina guardado'));
-        } catch (\Throwable $th) {
-            return response()->json(array('error' => true, 'mensaje' => 'Esado de la maquina no pudo ser guardado'));
+        } catch (\Exception $e) {
+            return response()->json(array(
+                'error' => true,
+                'mensaje' => 'Esado de la maquina no pudo ser guardado'.$e->getMessage()
+            ));
         }
     }
 

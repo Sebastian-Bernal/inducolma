@@ -22,7 +22,7 @@ function estadoDeMaquina(estado, maquina) {
         dataType: "JSON",
         data: {
             estado_id: estado.id,
-            maquina_id: maquina,
+            maquina_id: maquina.id,
             _token: $('input[name="_token"]').val()
         },
         success: function (e) {
@@ -78,7 +78,7 @@ function apagarMaquina(estado, maquina){
         dataType: "JSON",
         data: {
             estado_id: estado.id,
-            maquina_id: maquina,
+            maquina_id: maquina.id,
             _token: $('input[name="_token"]').val()
         },
         success: function (e) {

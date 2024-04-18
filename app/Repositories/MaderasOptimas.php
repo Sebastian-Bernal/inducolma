@@ -507,11 +507,14 @@ class MaderasOptimas
     {
         $grupos = [];
 
-        $datosFiltrados = collect($datosCorte)->filter(function ($corte) {
+        $datosFiltrados = collect($datosCorte)->filter(function ($corte) use($item_diseno) {
+            if(isset($corte->transformacion)){
+                return $corte->transformacion == $item_diseno->descripcion;
+            }
             return $corte->descripcion != 'SOBRANTE_CORTE';
         });
 
-        ///print_r($datosFiltrados->take(20));
+        print_r($datosFiltrados->take(1)->all());
 
         foreach ($datosFiltrados as $detalleCorte) {
             $repetirGrupo = false;
