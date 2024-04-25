@@ -181,9 +181,9 @@ function validaLargo() {
  */
 function validaAncho() {
     var ancho = $("#ancho").val();
-    if (ancho < 10 || ancho > 50) {
+    if (ancho < 6 || ancho > 50) {
         Swal.fire({
-            title: "¡Ingrese un valor de ancho entre 10 y 50!",
+            title: "¡Ingrese un valor de ancho entre 6 y 50!",
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
@@ -202,9 +202,9 @@ function validaAncho() {
  */
 function validaAlto() {
     var alto = $("#alto").val();
-    if (alto < 10 || alto > 50) {
+    if (alto < 6 || alto > 50) {
         Swal.fire({
-            title: "¡Ingrese un valor de alto entre 10 y 50!",
+            title: "¡Ingrese un valor de alto entre 6 y 50!",
             icon: "warning",
             confirmButtonColor: "#597504",
             confirmButtonText: "OK",
