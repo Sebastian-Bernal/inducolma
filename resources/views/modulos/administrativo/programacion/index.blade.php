@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-12 col-sm-10 col-lg-6 mx-auto">
 
-
+              
                 <h1 class="display-8" >Ordenes de producción </h1>
                 <hr>
                 <!-- Button trigger modal -->
@@ -55,7 +55,6 @@
                                             <tr>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Pedido</th>
-                                                <th scope="col">Producto</th>
                                                 <th scope="col">Item</th>
                                                 <th scope="col">Cantidad</th>
                                                 <th>Estado</th>
@@ -66,7 +65,6 @@
                                                 <tr>
                                                     <td>{{ $orden->id }}</td>
                                                     <td>{{ $orden->pedido->cliente->razon_social }}</td>
-                                                    <td>{{ $orden->pedido->diseno_producto_final->descripcion }}</td>
                                                     <td>{{ $orden->item->descripcion }}</td>
                                                     <td>{{ $orden->cantidad }}</td>
                                                     <td>{{ $orden->estado }}</td>

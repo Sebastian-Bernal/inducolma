@@ -11,7 +11,8 @@ class DisenoProductoFinal extends Model
 {
     use HasFactory, SoftDeletes, CheckRelations;
     protected $table = 'diseno_producto_finales';
-
+    protected $fillable = ['descrpcion'];
+    
 
     /**
      * relacion diseño_producto_finales hasOne maderas

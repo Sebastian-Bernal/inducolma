@@ -38,6 +38,7 @@
                     <tbody>
                         @foreach ($acabados_ensamble as $ensamble)
                         <tr>
+                            
                             <td>{{ $ensamble->pedido_id }}</td>
                             <td>{{ $ensamble->pedido->cliente->razon_social }}</td>
                             <td>{{ $ensamble->pedido->cantidad }}</td>

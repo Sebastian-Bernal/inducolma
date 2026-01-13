@@ -51,7 +51,7 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    
                     @forelse ($ordenes as $orden)
 
                             <tr id="">
@@ -67,7 +67,7 @@
                                                 <i class="fa fa-trash-can text-white"></i>
                                             </button>
                                             @else
-                                            <a href="{{ route('rutas-procesos',[$orden->pedido->id, $orden->item->id]) }}"
+                                            <a href="{{ route('rutas-procesos',[$orden->pedido_id, $orden->item->id, $orden->id]) }}"
                                                 class="btn btn-primary mx-1"
                                                 title="crear ruta de proceos">
                                                 <i class="fa-solid fa-route"></i>

@@ -152,12 +152,13 @@ class OrdenProduccionController extends Controller
      * muestra el formulario de creacion de procesos para la orden de produccion
      */
 
-    public function rutaProcesos($pedido, $item)
+    public function rutaProcesos($pedido, $item, $orden)
     {
         $this->authorize('admin');
         $maquinas = Maquina::get(['id', 'maquina', 'corte'])->groupBy('corte');
         $orden = OrdenProduccion::where('pedido_id', $pedido)
             ->where('item_id', $item)
+            ->where('id', $orden)
             ->first();
         $cubicaje_id = $orden->transformaciones->first()->cubicaje->id;
 

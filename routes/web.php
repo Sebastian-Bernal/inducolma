@@ -343,7 +343,7 @@ Route::controller(OrdenProduccionController::class)->group(function () {
     Route::post('seleccionar-madera', 'seleccionar')
         ->name('seleccionar')
         ->middleware('auth');
-    Route::get('rutas-procesos/{pedido}/{item}', 'rutaProcesos')
+    Route::get('rutas-procesos/{pedido}/{item}/{orden}', 'rutaProcesos')
         ->name('rutas-procesos')
         ->middleware('auth');
 });

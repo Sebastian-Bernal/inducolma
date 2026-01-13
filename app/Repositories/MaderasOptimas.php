@@ -514,7 +514,7 @@ class MaderasOptimas
             return $corte->descripcion != 'SOBRANTE_CORTE';
         });
 
-        print_r($datosFiltrados->take(1)->all());
+        //print_r($datosFiltrados->take(1)->all());
 
         foreach ($datosFiltrados as $detalleCorte) {
             $repetirGrupo = false;
