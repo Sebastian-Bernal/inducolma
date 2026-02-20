@@ -71,14 +71,16 @@ class ConsultasCubicajes {
     }
 
 
-    public function consultaCubicajeViaje($viaje)
+     public function consultaCubicajeViaje($viaje)
     {
         $cubicajes = Cubicaje::join('entradas_madera_maderas', 'cubicajes.entrada_madera_id', '=', 'entradas_madera_maderas.id')
                             ->join('entrada_maderas', 'entrada_maderas.id', '=','entradas_madera_maderas.entrada_madera_id')
                             ->join('proveedores', 'proveedores.id', '=','entrada_maderas.proveedor_id')
                             ->join('maderas', 'maderas.id', '=', 'entradas_madera_maderas.madera_id')
                             ->join('tipo_maderas', 'tipo_maderas.id' , '=', 'maderas.tipo_madera_id')
-                            ->where('entrada_maderas.id', (integer)$viaje)
+                            // filtrar por la FK que existe en la tabla cubicajes
+                            // (corresponde a la columna que usaste en tu consulta simple)
+                            ->where('cubicajes.entrada_madera_id', (integer)$viaje)
                             ->orderBy('paqueta', 'asc')
                             ->orderBy('bloque', 'asc')
                             ->get([
@@ -91,7 +93,7 @@ class ConsultasCubicajes {
                                 'cubicajes.created_at',
                                 'cubicajes.pulgadas_cuadradas',
                                 'cubicajes.cm3',
-                                'entradas_madera_maderas.entrada_madera_id',
+                                'cubicajes.entrada_madera_id',
                                 'tipo_maderas.descripcion',
 
                             ]);

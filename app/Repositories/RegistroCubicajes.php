@@ -24,7 +24,7 @@ class RegistroCubicajes
                 $registro->ancho = $cubicaje['ancho'];
             }
             $registro->cm3 = $cubicaje['largo']*$cubicaje['ancho']*$cubicaje['alto'];
-            $registro->pulgadas_cuadradas = (($cubicaje['alto']/2.54)-$cubicaje['pulgadasAlto'])*(($cubicaje['ancho']/2.54)-$cubicaje['pulgadasAncho']);
+            $registro->pulgadas_cuadradas = (floor($cubicaje['alto']/2.54))*(floor($cubicaje['ancho']/2.54));
             $registro->pulgadas_cuadradas_x3_metros = ($cubicaje['largo']/300)* (((integer)($cubicaje['alto']/2.54)) * ((integer)($cubicaje['ancho']/2.54)));
             $registro->bloque = $cubicaje['bloque'];
             $registro->pulgadas_ancho = $cubicaje['pulgadasAncho'];

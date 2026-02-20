@@ -36,8 +36,8 @@ class Cubicaje extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function EntradaMadera(): BelongsTo
+    public function entrada_madera_madera(): BelongsTo
     {
-        return $this->belongsTo(EntradaMadera::class, 'entrada_madera_id', 'id');
+        return $this->belongsTo(EntradasMaderaMaderas::class, 'entrada_madera_id', 'id');
     }
 }

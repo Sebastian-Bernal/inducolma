@@ -21,11 +21,26 @@ class StoreEventoRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    /*public function rules()
     {
         return [
             'descripcion' => 'required|string|max:255|unique:eventos,descripcion',
             'tipoEvento' => 'required|string|max:255',
+        ];
+    }
+*/
+     public function rules()
+    {
+        // Manejar unique diferente en store vs update
+        $descripcionRule = 'required|string|max:255|unique:eventos,descripcion';
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $eventoId = optional($this->route('evento'))->id;
+            $descripcionRule = 'required|string|max:255|unique:eventos,descripcion,'.$eventoId;
+        }
+
+        return [
+            'descripcion' => $descripcionRule,
+            'tipoEvento' => 'required|integer|exists:tipo_eventos,id',
         ];
     }
 

@@ -32,14 +32,15 @@
                     <tbody>
                         @foreach ($entradas as $entrada)
                         <tr>
+                            <p>{{$entrada}}</p>
                             <td>{{ $entrada->entrada_madera_id }}</td>
                             <td>{{ $entrada->proveedor->razon_social }}</td>
                             <td>{{ $entrada->fecha }}</td>
                             <td>
                                 <div class="d-flex align-items-center ">
-                                    <a href="{{ route('trabajo-troza',$entrada->entrada_madera_id) }}"
+                                    <a href="{{ route('trabajo-troza',$entrada->pivot_id) }}"
                                         class="btn btn-sm btn-primary"
-                                        title="Transformar trozas de la entrada:  {{ $entrada->entrada_madera_id }}">
+                                        title="Transformar trozas de la entrada:  {{ $entrada->pivot_id}}">
                                         <i class="fa-solid fa-person-digging"></i>
                                     </a>
                                 </div>

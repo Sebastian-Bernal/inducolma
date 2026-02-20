@@ -80,12 +80,22 @@ class EventoController extends Controller
      * @param  \App\Models\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Evento $evento)
+   /* public function update(Request $request, Evento $evento)
     {
         $evento->descripcion = $request->descripcion;
         $evento->tipo_evento_id = $request->tipo_evento;
         $evento->user_id = auth()->user()->id;
         $evento->update();
+        return redirect()->route('eventos.index')->with('status', "El evento: $request->descripcion,  se ha actualizado correctamente");
+    }
+    */
+    public function update(StoreEventoRequest $request, Evento $evento)
+    {
+        $this->authorize('admin');
+        $evento->descripcion = $request->descripcion;
+        $evento->tipo_evento_id = $request->tipoEvento;
+        $evento->user_id = auth()->user()->id;
+        $evento->save();
         return redirect()->route('eventos.index')->with('status', "El evento: $request->descripcion,  se ha actualizado correctamente");
     }
 

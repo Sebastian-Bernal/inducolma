@@ -26,7 +26,7 @@ class Transformacion extends Model
 
     public function cubicaje()
     {
-        return $this->belongsTo(cubicaje::class);
+        return $this->belongsTo(Cubicaje::class);
     }
 
 

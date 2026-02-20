@@ -135,9 +135,11 @@
                                         <form action="{{ route('reporte-cubicajes') }}" id="formReporteCubicajes"
                                             class="row gx-3 gy-2 align-items-center"
                                             name="formReporteCubicajes"
-                                            method="GET" target="_blank"
-                                            rel="noopener noreferrer"
+                                            method="GET" 
+                                          
                                             >
+                                            <!--   target="_blank" 
+                                            rel="noopener noreferrer" -->
                                             <div class="col-auto">
                                                 <div class="input-group ">
                                                     <span class="input-group-text" id="inputGroup-sizing-default">Tipo reporte: </span>

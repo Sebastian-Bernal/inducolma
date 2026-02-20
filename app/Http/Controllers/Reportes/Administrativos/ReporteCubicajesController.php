@@ -37,7 +37,7 @@ class ReporteCubicajesController extends Controller
     /**
      * muestra la vista de los datos encontrados
      */
-    public function reporteCubicajes(Request  $request)
+   /* public function reporteCubicajes(Request  $request)
     {
 
         $desde = $request->cubicajeDesde;
@@ -100,9 +100,57 @@ class ReporteCubicajesController extends Controller
                 }
 
             }else{
-                return view($datos[2],
-                compact('data', 'encabezado', 'desde', 'hasta', 'tipoReporte','especifico', 'proveedor'));
+               // return view($datos[2],
+               // compact('data', 'encabezado', 'desde', 'hasta', 'tipoReporte','especifico', 'proveedor'));
+               return redirect()->back()
+            ->with('reporte_html', view($datos[2], compact('data', 'encabezado'))->render())
+            ->with('mostrar_reporte', true);
             }
         }
+    }*/
+        public function reporteCubicajes(Request $request)
+    {
+        // Variables recibidas
+        $desde       = $request->cubicajeDesde;
+        $hasta       = $request->cubicajeHasta;
+        $proveedor   = $request->filtroCubiaje2;
+        $tipoReporte = $request->tipoReporteCubicaje; // <-- asegurarse de definirlo
+        $especifico  = $request->filtroCubiaje1;
+        $generar     = $request->generar ?? null;
+
+        // Ejecuta la consulta
+        $datos = $this->consultaCubicaje->consultaDatos($request);
+
+        if (count($datos[0]) == 0) {
+            return redirect()->back()
+                ->with('status','No se encontraron datos...');
+        }
+
+        $data = $datos[0];
+        $encabezado = $datos[1] ?? 'Reporte';
+
+        // Salidas especiales
+        if ($generar == '1') {
+            $pdf = Pdf::loadView($datos[3], compact('data', 'encabezado'));
+            $pdf->setPaper('a4');
+            return $pdf->stream($encabezado.'.pdf');
+        } elseif ($generar == '2') {
+            return Excel::download(new CubicajesExport($data),
+                "$encabezado-$desde-$hasta.xlsx");
+        } elseif ($generar == '3') {
+            return Excel::download(new CubicajesExport($data),
+                "$encabezado-$desde-$hasta.csv");
+        }
+
+        // Retornar la vista HTML con todas las variables necesarias
+        return view($datos[2], compact(
+            'data',
+            'encabezado',
+            'tipoReporte',
+            'desde',
+            'hasta',
+            'proveedor',
+            'especifico'
+        ));
     }
 }

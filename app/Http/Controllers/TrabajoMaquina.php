@@ -17,6 +17,7 @@ use App\Models\EstadoMaquina;
 use App\Models\EventoProceso;
 use App\Models\EnsambleAcabado;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\RegistroAsistencia;
 use App\Repositories\ProductosTerminados;
 use App\Http\Requests\StoreTraajoMaquinaRequest;
@@ -122,12 +123,13 @@ class TrabajoMaquina extends Controller
     private function obtenerTrozasReaserrio()
     {
 
-        return EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
+       return EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
             ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
             ->whereHas('cubicajes', function ($query) {
                 $query->where('cubicajes.estado_troza', 1);
             })
             ->get();
+       
     }
 
     /**
@@ -165,12 +167,29 @@ class TrabajoMaquina extends Controller
     */
     private function obtenerEntradasTroza()
     {
-        return EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entrada_maderas.id')
+       /* return EntradaMadera::join('entradas_madera_maderas', 'entradas_madera_maderas.entrada_madera_id', '=', 'entradas_madera_maderas.entrada_madera_id')
             ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
             ->whereHas('cubicajes', function ($query) {
                 $query->where('cubicajes.estado', 'TROZA');
             })
-            ->get();
+            ->get();*/
+        
+        return EntradaMadera::join('entradas_madera_maderas', 'entrada_maderas.id', '=', 'entradas_madera_maderas.entrada_madera_id')
+        ->where('entradas_madera_maderas.condicion_madera', 'TROZA')
+        ->whereExists(function ($query) {
+            $query->select(\DB::raw(1))
+                ->from('cubicajes')
+                ->whereColumn('cubicajes.entrada_madera_id', 'entradas_madera_maderas.id')
+                ->where('cubicajes.estado', 'TROZA');
+        })
+        ->select(
+            'entrada_maderas.*',
+            'entradas_madera_maderas.id as pivot_id' // ID de la tabla pivote
+        )
+        ->distinct()
+        ->get();
+        
+       
     }
 
     /**
@@ -237,6 +256,19 @@ class TrabajoMaquina extends Controller
         $acabados_ensamble = EnsambleAcabado::whereIn('pedido_id', $pedidos_trabajo_maquina)
                                             ->where('maquina_id', $maquinaIdTurno)
                                             ->get();
+
+        // Seleccionar vista según tipo de máquina (corte)
+        $maquina = Maquina::find($maquinaIdTurno);
+
+        if ($maquina && $maquina->corte == 'ACABADO_ENSAMBLE') {
+            return view('modulos.operaciones.trabajo-maquina.acabados-ensamble', compact('acabados_ensamble'));
+        }
+
+        if ($maquina && $maquina->corte == 'CALDERA') {
+            return view('modulos.operaciones.trabajo-maquina.caldera', compact('acabados_ensamble'));
+        }
+
+        // Por defecto: ensamble                                    
 
         return view('modulos.operaciones.trabajo-maquina.ensamble', compact( 'acabados_ensamble'));
     }

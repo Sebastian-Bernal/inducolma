@@ -12,12 +12,17 @@ class EntradasMaderaMaderas extends Model
 
     //relacion EntradasMaderaMaderas belongsTo EntradaMadera
     public function entrada_madera(){
-        return $this->belongsTo(EntradaMadera::class );
+        return $this->belongsTo(EntradaMadera::class, 'entrada_madera_id', 'id' );
     }
 
     //relacion EntradasMaderaMaderas belongsTo Madera
     public function madera(){
-        return $this->belongsTo(Madera::class);
+        return $this->belongsTo(Madera::class, 'madera_id', 'id');
+    }
+
+    public function cubicajes()
+    {
+        return $this->hasMany(Cubicaje::class, 'entrada_madera_id', 'id');
     }
 
 
