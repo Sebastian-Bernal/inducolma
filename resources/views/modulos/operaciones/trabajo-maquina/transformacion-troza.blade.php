@@ -13,7 +13,7 @@
             <div class="col-12 text-primary">
 
                 <h1 class="text-center">Transformacion de trozas</h1>
-
+                      
             </div>
             <hr>
             <div class="col-12 col-md-12 text-secondary">
@@ -29,9 +29,8 @@
             <div class="col-12 col-md-12 mt-3 text-secondary">
                 <h3 class="text-center fw-bolder">
                     Transformación de la troza No.
-                    <span id="numeroBloque"></span>
+                    <input type="number" id="bloqueNo" max>
                 </h3>
-
             </div>
             <form class=" row g-3 mt-3" id="agregarCubicaje">
 

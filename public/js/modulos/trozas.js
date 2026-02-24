@@ -31,7 +31,71 @@ $(document).ready(function () {
  * @returns {undefined}
  */
 function cargarTrozas(trozas) {
-    trozasEntrada = trozas;
+    trozasEntrada = Array.isArray(trozas) ? trozas : [];
+
+    if (trozasEntrada.length > 0) {
+        const bloquesNum = trozasEntrada
+            .map(t => {
+                const n = parseFloat(String(t.bloque || '').replace(',', '.'));
+                return isNaN(n) ? null : n;
+            })
+            .filter(n => n !== null);
+
+        if (bloquesNum.length > 0) {
+            const minBloque = Math.min(...bloquesNum);
+            const maxBloque = Math.max(...bloquesNum);
+            const step = 0.01;
+
+            $('#bloqueNo')
+                .attr({ min: minBloque, max: maxBloque, step: step })
+                .prop('disabled', false)
+                .attr('placeholder', `${minBloque} - ${maxBloque}`);
+
+            // Quitar handlers previos y agregar control para impedir valores fuera de rango
+            $('#bloqueNo').off('.cargarTrozas')
+                .on('input.cargarTrozas', function () {
+                    let val = $(this).val();
+                    if (val === '') return;
+                    val = val.toString().replace(',', '.');
+                    const num = parseFloat(val);
+                    if (isNaN(num)) {
+                        $(this).val('');
+                        return;
+                    }
+                    if (num < minBloque) $(this).val(minBloque);
+                    if (num > maxBloque) $(this).val(maxBloque);
+                })
+                .on('blur.cargarTrozas', function () {
+                    // Asegurar valor final dentro del rango al perder foco
+                    let val = $(this).val();
+                    if (val === '') return;
+                    val = val.toString().replace(',', '.');
+                    let num = parseFloat(val);
+                    if (isNaN(num)) { $(this).val(''); return; }
+                    if (num < minBloque) num = minBloque;
+                    if (num > maxBloque) num = maxBloque;
+                    // Normalizar valor con el step
+                    $(this).val(Number(num).toString());
+                });
+        } else {
+            $('#bloqueNo').removeAttr('min max step placeholder').prop('disabled', false).off('.cargarTrozas');
+        }
+    } else {
+        $('#bloqueNo').removeAttr('min max step placeholder').prop('disabled', false).off('.cargarTrozas');
+    }
+
+    return trozasEntrada;
+     /*trozasEntrada = Array.isArray(trozas) ? trozas : [];
+
+    // Establecer rango máximo en el input bloqueNo basado en el bloque mayor
+    if (trozasEntrada.length > 0) {
+        const maxBloque = Math.max(...trozasEntrada.map(t => parseInt(t.bloque || 0)));
+        $('#bloqueNo').attr('max', maxBloque).attr('min', 1);
+    } else {
+        $('#bloqueNo').removeAttr('max');
+    }
+
+    return trozasEntrada;*/
 }
 
 /**
@@ -55,6 +119,45 @@ function mostrarTrozaActual() {
     }
 
 }
+
+/* listener para escuchar el evento keyup enter del input entrada numero */
+$(document).on('keyup', '#bloqueNo', function (e) {
+    if (e.key === "Enter" || e.keyCode === 13) {
+        const raw = $(this).val().toString().trim();
+        if (!raw) return;
+
+        const valor = raw.replace(',', '.');
+
+        const encontrado = (trozasEntrada || []).find(t => {
+            const bloqueStr = String(t.bloque || '').replace(',', '.').trim();
+            const idStr = String(t.id || '').trim();
+
+            if (idStr === valor) return true;                 // id exacto
+            if (bloqueStr === valor) return true;             // bloque exacto
+            if (bloqueStr.startsWith(valor)) return true;     // like: "1" -> "1.0", "1.25"
+            const nb = parseFloat(bloqueStr);
+            const nv = parseFloat(valor);
+            if (!isNaN(nb) && !isNaN(nv) && nb === nv) return true;      // numérico igual
+            if (!isNaN(nb) && !isNaN(nv) && parseInt(nb) === parseInt(nv)) return true; // comparar enteros
+            return false;
+        });
+
+        if (encontrado) {
+            // poblar los inputs hidden y el largo (u otros campos deseados)
+            $('#idCubicaje').val(encontrado.id);
+            $('#bloque').val(encontrado.bloque);
+            $('#paqueta').val(encontrado.paqueta);
+            $('#entradaId').val(encontrado.entrada_madera_id);
+            $('#largo').val(encontrado.largo);
+
+            // opcional: mantener la "siguiente" actualizada y mostrar en UI
+            siguiente = encontrado;
+            mostrarValorTrozaActual(encontrado);
+        } else {
+            alertaErrorSimple('No se encontró la troza con ese bloque', 'warning');
+        }
+    }
+});
 /**
  * Displays the value of the current troza.
  *
