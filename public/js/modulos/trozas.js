@@ -210,41 +210,53 @@ function comprobarLocalStorage() {
  * @returns {boolean} - Returns true if all inputs are valid and saves the paqueta, otherwise returns false.
  */
 function verificarInputs() {
-    //console.log("entro a verificar inputs");
-    var valido;
-    var campos = $("#agregarCubicaje").find("input");
-    $.each(campos, function (index, value) {
+    // primero «simulamos» un enter en #bloqueNo,
+    // de modo que se ejecute el handler que rellena los hidden
+    $('#bloqueNo').trigger($.Event('keyup', { key: 'Enter', keyCode: 13 }));
 
-        if (value.id == 'largo'){
-            validaLargo();
-            return false;
-        }
+    // si el handler no encontró nada, no hay id de cubicaje
+    if (!$('#idCubicaje').val()) {
+        alertaErrorSimple('No se encontró la troza con ese bloque', 'warning');
+        return;
+    }else{
+         //console.log("entro a verificar inputs");
+        var valido;
+        var campos = $("#agregarCubicaje").find("input");
+        $.each(campos, function (index, value) {
 
-        if (value.value == "") {
-            Swal.fire({
-                title: "¡Ingrese todos los datos!",
-                icon: "warning",
-                confirmButtonColor: "#597504",
-                confirmButtonText: "OK",
-            });
-            valido = false;
-        } else {
-            if (
-                validaLargo() == false &&
-                validaAncho() == false &&
-                validaAlto() == false
-
-            ) {
-                valido = true;
-            } else {
-                valido = false;
+            if (value.id == 'largo'){
+                validaLargo();
+                return false;
             }
-        }
-    });
-    if (valido) {
 
-        guardarPaqueta();
+            if (value.value == "") {
+                Swal.fire({
+                    title: "¡Ingrese todos los datos!",
+                    icon: "warning",
+                    confirmButtonColor: "#597504",
+                    confirmButtonText: "OK",
+                });
+                valido = false;
+            } else {
+                if (
+                    validaLargo() == false &&
+                    validaAncho() == false &&
+                    validaAlto() == false
+
+                ) {
+                    valido = true;
+                } else {
+                    valido = false;
+                }
+            }
+        });
+        if (valido) {
+
+            guardarPaqueta();
+        }
     }
+
+   
 }
 
 /**

@@ -31,8 +31,9 @@
 
                     <tbody>
                         @foreach ($entradas as $entrada)
+                        
                         <tr>
-                            <td>{{ $entrada->entrada_madera_id }}</td>
+                            <td>{{ $entrada->pivot_id }}</td>
                             <td>{{ $entrada->proveedor->razon_social }}</td>
                             <td>{{ $entrada->fecha }}</td>
                             <td>
