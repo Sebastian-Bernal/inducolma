@@ -1,0 +1,816 @@
+# Esquema de la Base de Datos con Relaciones
+
+## Primera parte: Tablas creadas por las migraciones con columnas y tipos de datos
+
+A continuación, se listan todas las tablas principales 
+incluyendo sus columnas iniciales con tipos de datos. 
+se incluyen modificaciones posteriores relevantes (como adiciones de columnas).
+Los tipos de datos 
+(ej. 
+    `string` = VARCHAR, 
+    `integer` = INT, 
+    `decimal` = DECIMAL, etc.). 
+
+Las claves primarias son `id` (BIGINT AUTO_INCREMENT) a menos que se especifique 
+lo contrario. Las tablas incluyen 
+    timestamps (`created_at`, `updated_at`) 
+y soft deletes (`deleted_at`) donde se aplican.
+
+## Tablas y sus columnas:
+
+- **users**: 
+        id (BIGINT), 
+        name (VARCHAR), 
+        email (VARCHAR UNIQUE), 
+        email_verified_at (TIMESTAMP NULLABLE), 
+        password (VARCHAR), 
+        remember_token (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP). 
+        (Columnas adicionales: 
+            identificacion (VARCHAR NULLABLE), 
+            primer_nombre (VARCHAR NULLABLE), 
+            segundo_nombre (VARCHAR NULLABLE), 
+            primer_apellido (VARCHAR NULLABLE), 
+            segundo_apellido (VARCHAR NULLABLE), 
+            rol (INT NULLABLE), 
+            pago (DECIMAL NULLABLE), etc.)
+
+- **password_resets**: 
+        email (VARCHAR INDEX), 
+        token (VARCHAR), 
+        created_at (TIMESTAMP NULLABLE)
+
+- **failed_jobs**: 
+        id (BIGINT), 
+        uuid (VARCHAR UNIQUE), 
+        connection (TEXT), 
+        queue (TEXT), 
+        payload (LONGTEXT), 
+        exception (LONGTEXT), 
+        failed_at (TIMESTAMP), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP)
+
+- **personal_access_tokens**: 
+        id (BIGINT), 
+        name (VARCHAR), 
+        token (VARCHAR UNIQUE), 
+        abilities (TEXT NULLABLE), 
+        tokenable_type (VARCHAR), 
+        tokenable_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP)
+
+- **maquinas**: 
+        id (BIGINT), 
+        maquina (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columna adicional: 
+            corte (VARCHAR))
+
+- **operaciones**: 
+        id (BIGINT), 
+        operacion (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **descripciones**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        operacion_id (INT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **costos_operacion**: 
+        id (BIGINT), 
+        costo (FLOAT), 
+        maquina_id (INT UNSIGNED), 
+        descripcion_id (INT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **costos_infraestructuras**: 
+        id (BIGINT), 
+        valor_operativo (FLOAT), 
+        tipo_material (VARCHAR), 
+        tipo_madera (VARCHAR), 
+        proceso_madera (VARCHAR), 
+        promedio_piezas (FLOAT), 
+        minimo_piezas (FLOAT), 
+        maximo_piezas (FLOAT), 
+        maquina_id (INT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columnas adicionales: 
+            tipo_madera (BIGINT UNSIGNED), 
+            tipo_material (BIGINT UNSIGNED))
+
+- **proveedores**: 
+        id (BIGINT), 
+        nombre (VARCHAR), 
+        nit (INT), 
+        telefono (VARCHAR), 
+        email (VARCHAR), 
+        user_id (INT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **estados**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        user_id (INT UNSIGNED), 
+        estado (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **eventos**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        user_id (INT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columna adicional: 
+            tipo_evento_id (BIGINT UNSIGNED))
+
+- **insumos_almacen**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        cantidad (INT), 
+        precio_unitario (DECIMAL), 
+        estado (VARCHAR), 
+        user_id (INT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **items**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        cantidad (INT), 
+        precio_unitario (DECIMAL), 
+        estado (VARCHAR), 
+        user_id (INT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+            (Columnas adicionales: 
+                existencias (INT NULLABLE), 
+                preprocesado (BOOLEAN NULLABLE), 
+                carretos (INT NULLABLE), 
+                madera_id (BIGINT UNSIGNED))
+
+- **clientes**: 
+        id (BIGINT), 
+        nit (INT), 
+        nombre (VARCHAR), 
+        direccion (VARCHAR), 
+        telefono (VARCHAR), 
+        email (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE), 
+        id_usuario (INT UNSIGNED). (Columna adicional: razon_social (VARCHAR NULLABLE))
+
+- **entrada_maderas**: 
+        id (BIGINT), 
+        fecha (DATE), 
+        hora (TIME), 
+        mes (VARCHAR), 
+        ano (VARCHAR), 
+        user_id (BIGINT UNSIGNED), 
+        proveedor_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **calificacion_maderas**: 
+        id (BIGINT), 
+        longitud_madera (DECIMAL), 
+        largo_madera (DECIMAL), 
+        cantonera (DECIMAL), 
+        hongos (DECIMAL), 
+        rajadura (DECIMAL), 
+        bichos (DECIMAL), 
+        organizacion (DECIMAL), 
+        areas_transversal_max_min (DECIMAL), 
+        areas_no_conveniente (DECIMAL), 
+        total (DECIMAL), 
+        estado (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE), 
+        entrada_madera_id (BIGINT UNSIGNED), 
+        user_id (BIGINT UNSIGNED). 
+            (Columnas adicionales: 
+                paqueta (INT), 
+                aprobado (BOOLEAN))
+
+- **cubicajes**: 
+        id (BIGINT), 
+        paqueta (INT), 
+        largo (DECIMAL), 
+        ancho (DECIMAL), 
+        alto (DECIMAL), 
+        cm3 (DECIMAL), 
+        pulgadas_cuadradas (DECIMAL), 
+        pulgadas_cuadradas_x3_metros (DECIMAL), 
+        diametro (DECIMAL), 
+        bloque (DECIMAL), 
+        pulgadas_ancho (DECIMAL NULLABLE), 
+        pulgadas_alto (DECIMAL NULLABLE), 
+        estado (VARCHAR NULLABLE), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE), 
+        entrada_madera_id (BIGINT UNSIGNED), 
+        user_id (BIGINT UNSIGNED). 
+        (Columnas adicionales: 
+            diametro_menor (DECIMAL), 
+            troza_id (BIGINT UNSIGNED))
+
+- **tiepo_usuario_dias**: 
+        id (BIGINT), 
+        fecha (DATE), 
+        tiempo (DECIMAL), 
+        usuario_id (BIGINT UNSIGNED), 
+        maquina_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **diseno_producto_finales**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        tipo_madera (VARCHAR), 
+        estado (VARCHAR), 
+        user_id (BIGINT UNSIGNED), 
+        cliente_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columnas adicionales: 
+                tipo_madera_id (BIGINT UNSIGNED), 
+                madera_id (BIGINT UNSIGNED))
+
+- **pedidos**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        fecha (DATE), 
+        estado (VARCHAR), 
+        user_id (BIGINT UNSIGNED), 
+        cliente_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columna adicional: diseno_id (BIGINT UNSIGNED))
+
+- **ordenes_produccion**: 
+        id (BIGINT), 
+        cantidad (INT), 
+        estado (VARCHAR), 
+        user_id (BIGINT UNSIGNED), 
+        pedido_id (BIGINT UNSIGNED), 
+        diseno_producto_final_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columna adicional: item_id (BIGINT UNSIGNED))
+
+- **procesos**: 
+        id (BIGINT), 
+        observacion_proceso (VARCHAR), 
+        tiempo (DECIMAL), 
+        entrada (VARCHAR), 
+        salida (VARCHAR), 
+        hora_inicio (TIME), 
+        hora_fin (TIME), 
+        cantidad_entrada (INT), 
+        cantidad_salida (INT), 
+        fecha_ejecucion (DATE), 
+        sub_paqueta (INT), 
+        tarjeta_entrada (VARCHAR), 
+        tarjeta_salida (VARCHAR), 
+        sobrante (INT), 
+        lena (INT), 
+        estado (VARCHAR), 
+        items_id (BIGINT UNSIGNED), 
+        orden_produccion_id (BIGINT UNSIGNED), 
+        maquinas_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). (Columnas adicionales: item_id (BIGINT UNSIGNED), cubicaje_id (BIGINT UNSIGNED))
+
+- **transformaciones**: 
+        id (BIGINT), 
+        ancho (DECIMAL), 
+        largo (DECIMAL), 
+        alto (DECIMAL), 
+        estado (VARCHAR), 
+        trnasformacion_final (VARCHAR), 
+        cubicaje_id (BIGINT UNSIGNED), 
+        user_id (BIGINT UNSIGNED), 
+        proceso_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columnas adicionales: 
+                corte (VARCHAR), 
+                orden_id (BIGINT UNSIGNED), 
+                madera_id (BIGINT UNSIGNED))
+
+- **subprocesos**: 
+        id (BIGINT), 
+        paqueta (INT), 
+        observacion_subproceso (VARCHAR), 
+        tiempo (DECIMAL), 
+        entrada (VARCHAR), 
+        salida (VARCHAR), 
+        hora_inicio (TIME), 
+        hora_fin (TIME), 
+        cantidad_entrada (INT), 
+        cantidad_salida (INT), 
+        fecha_ejecucion (DATE), 
+        sub_paqueta (INT), 
+        tarjeta_entrada (VARCHAR), 
+        tarjeta_salida (VARCHAR), 
+        sobrante (INT), 
+        lena (INT), 
+        estado (VARCHAR), 
+        proceso_id (BIGINT UNSIGNED), 
+        user_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). (Columnas adicionales: maquina_id (BIGINT UNSIGNED), cm3_salida (DECIMAL), largo (DECIMAL), alto (DECIMAL), ancho (DECIMAL))
+
+- **proceso_users**: 
+        id (BIGINT), 
+        user_id (BIGINT UNSIGNED), 
+        proceso_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP)
+
+- **estado_maquinas**: 
+        id (BIGINT), 
+        maquina_id (BIGINT UNSIGNED), 
+        estado_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP). (Columna adicional: fecha (DATE), user_id (BIGINT UNSIGNED))
+
+- **evento_procesos**: 
+        id (BIGINT), 
+        proceso_id (BIGINT UNSIGNED), 
+        evento_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP). 
+            (Columna adicional: 
+                user_id (BIGINT UNSIGNED), observacion (TEXT))
+
+- **turnos**: 
+        id (BIGINT), 
+        turno (VARCHAR), 
+        maquina_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **turno_usuarios**: 
+        id (BIGINT), 
+        usuario_id (BIGINT UNSIGNED), 
+        turno_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP). 
+            (Columnas adicionales: 
+            fecha (DATE), 
+            asistencia (BOOLEAN), 
+            madera_id (BIGINT UNSIGNED))
+
+- **rols**: 
+        id (BIGINT), 
+        nombre (VARCHAR), 
+        descripcion (TEXT), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columna adicional: nivel (INT))
+
+- **maderas**: 
+        id (BIGINT), 
+        nombre (VARCHAR), 
+        nombre_cientifico (VARCHAR), 
+        densidad (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP). 
+        (Columna adicional: 
+            nombre_comun (VARCHAR), 
+            tipo_madera_id (BIGINT UNSIGNED))
+
+- **entradas_madera_maderas**: 
+        id (BIGINT), 
+        entrada_madera_id (BIGINT UNSIGNED), 
+        madera_id (BIGINT UNSIGNED), 
+        m3entrada (DECIMAL), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP). 
+        (Columna adicional: 
+            condicion_madera (VARCHAR), 
+            costo (DECIMAL))
+
+- **tipo_eventos**: 
+        id (BIGINT), 
+        tipo_evento (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **recepcions**: 
+        id (BIGINT), 
+        cc (INT), 
+        nombre_completo (VARCHAR), 
+        type (VARCHAR), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE). 
+        (Columnas adicionales: 
+            visitante (BOOLEAN), 
+            user_id (BIGINT UNSIGNED))
+
+- **contratistas**: 
+        id (BIGINT), 
+        nombre (VARCHAR), 
+        nit (INT), 
+        telefono (VARCHAR), 
+        email (VARCHAR), 
+        user_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **tipo_maderas**: 
+        id (BIGINT), 
+        nombre (VARCHAR), 
+        descripcion (TEXT), 
+        user_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **diseno_producto_final_cliente**: 
+        id (BIGINT), 
+        diseno_producto_final_id (BIGINT UNSIGNED), 
+        cliente_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **diseno_producto_final_item**: 
+        id (BIGINT), 
+        diseno_producto_final_id (BIGINT UNSIGNED), 
+        item_id (BIGINT UNSIGNED), 
+        cantidad (INT), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **diseno_producto_final_insumos**: 
+        id (BIGINT), 
+        diseno_producto_final_id (BIGINT UNSIGNED), 
+        insumo_almacen_id (BIGINT UNSIGNED), 
+        cantidad (INT), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **pedido_producto**: 
+        id (BIGINT), 
+        pedido_id (BIGINT UNSIGNED), 
+        producto_id (BIGINT UNSIGNED), 
+        cantidad (INT), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **productos_maquina**: 
+        id (BIGINT), 
+        nombre (VARCHAR), 
+        descripcion (TEXT), 
+        diseno_producto_final_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **ensambles_acabados**: 
+        id (BIGINT), 
+        cantidad_producida (INT), 
+        pedido_id (BIGINT UNSIGNED), 
+        maquina_id (BIGINT UNSIGNED), 
+        user_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+- **sobrante_trozas**: 
+        id (BIGINT), 
+        descripcion (VARCHAR), 
+        cantidad (INT), 
+        entrada_madera_id (BIGINT UNSIGNED), 
+        created_at (TIMESTAMP), 
+        updated_at (TIMESTAMP), 
+        deleted_at (TIMESTAMP NULLABLE)
+
+## Relaciones entre tablas basadas en claves foráneas
+
+**Las relaciones se derivan de las claves foráneas encontradas. 
+Se describen como: 
+    uno-a-muchos (1:N), 
+    muchos-a-muchos (N:M),
+    uno-a-uno (1:1), 
+según el contexto.
+
+- **users** 
+        (1:N con varias tablas): 
+            clientes.id_usuario → users.id, 
+            proveedores.user_id → users.id, 
+            estados.user_id → users.id, 
+            eventos.user_id → users.id, 
+            insumos_almacen.user_id → users.id, 
+            items.user_id → users.id, 
+            entrada_maderas.user_id → users.id, 
+            calificacion_maderas.user_id → users.id, 
+            cubicajes.user_id → users.id, 
+            tiepo_usuario_dias.usuario_id → users.id, 
+            diseno_producto_finales.user_id → users.id, 
+            pedidos.user_id → users.id, 
+            ordenes_produccion.user_id → users.id, 
+            subprocesos.user_id → users.id, 
+            turno_usuarios.usuario_id → users.id, 
+            proceso_users.user_id → users.id, 
+            transformaciones.user_id → users.id, 
+            recepcions.user_id → users.id, 
+            contratistas.user_id → users.id, 
+            tipo_maderas.user_id → users.id, 
+            ensambles_acabados.user_id → users.id, 
+            estado_maquinas.user_id → users.id, 
+            evento_procesos.user_id → users.id.
+
+- **maquinas** 
+        (1:N): 
+            costos_operacion.maquina_id → maquinas.id, 
+            costos_infraestructuras.maquina_id → maquinas.id, 
+            tiepo_usuario_dias.maquina_id → maquinas.id, 
+            procesos.maquinas_id → maquinas.id, 
+            estado_maquinas.maquina_id → maquinas.id, 
+            turnos.maquina_id → maquinas.id, 
+            ensambles_acabados.maquina_id → maquinas.id, 
+            subprocesos.maquina_id → maquinas.id.
+
+- **operaciones** 
+        (1:N): 
+            descripciones.operacion_id → operaciones.id.
+
+- **descripciones** 
+        (1:N): 
+            costos_operacion.descripcion_id → descripciones.id.
+
+- **proveedores** 
+        (1:N): 
+            entrada_maderas.proveedor_id → proveedores.id.
+
+- **estados** 
+(1:N): estado_maquinas.estado_id → estados.id.
+
+- **eventos** 
+        (1:N): 
+            evento_procesos.evento_id → eventos.id.
+
+- **clientes** 
+        (1:N): 
+            diseno_producto_finales.cliente_id → clientes.id, pedidos.cliente_id → clientes.id, diseno_producto_final_cliente.cliente_id → clientes.id.
+
+- **entrada_maderas** 
+        (1:N): 
+            calificacion_maderas.entrada_madera_id → entrada_maderas.id, 
+            cubicajes.entrada_madera_id → entrada_maderas.id, 
+            entradas_madera_maderas.entrada_madera_id → entrada_maderas.id, 
+            sobrante_trozas.entrada_madera_id → entrada_maderas.id.
+
+- **cubicajes** 
+        (1:N): 
+            transformaciones.cubicaje_id → cubicajes.id, 
+            procesos.cubicaje_id → cubicajes.id.
+
+- **diseno_producto_finales** 
+        (1:N): 
+            ordenes_produccion.diseno_producto_final_id → diseno_producto_finales.id, 
+            pedidos.diseno_id → diseno_producto_finales.id, 
+            diseno_producto_final_cliente.diseno_producto_final_id → diseno_producto_finales.id, 
+            diseno_producto_final_item.diseno_producto_final_id → diseno_producto_finales.id, 
+            diseno_producto_final_insumos.diseno_producto_final_id → diseno_producto_finales.id, 
+            productos_maquina.diseno_producto_final_id → diseno_producto_finales.id.
+
+- **pedidos** 
+        (1:N): 
+            ordenes_produccion.pedido_id → pedidos.id, 
+            pedido_producto.pedido_id → pedidos.id, 
+            ensambles_acabados.pedido_id → pedidos.id.
+
+- **ordenes_produccion** 
+        (1:N): 
+            procesos.orden_produccion_id → ordenes_produccion.id, 
+            transformaciones.orden_id → ordenes_produccion.id.
+
+- **procesos** 
+        (1:N): 
+            transformaciones.proceso_id → procesos.id, 
+            subprocesos.proceso_id → procesos.id, 
+            evento_procesos.proceso_id → procesos.id, 
+            proceso_users.proceso_id → procesos.id.
+
+- **items** 
+        (1:N): 
+            procesos.items_id → items.id, 
+            ordenes_produccion.item_id → items.id, 
+            diseno_producto_final_item.item_id → items.id.
+
+- **turnos** 
+        (1:N): 
+            turno_usuarios.turno_id → turnos.id.
+
+- **maderas** 
+        (1:N): 
+            entradas_madera_maderas.madera_id → maderas.id.
+
+- **tipo_eventos** 
+        (1:N): 
+            eventos.tipo_evento_id → tipo_eventos.id.
+
+- **tipo_maderas** 
+        (1:N): 
+            maderas.tipo_madera_id → tipo_maderas.id, 
+            diseno_producto_finales.tipo_madera_id → tipo_maderas.id, 
+            items.madera_id → tipo_maderas.id, 
+            transformaciones.madera_id → tipo_maderas.id, 
+            costos_infraestructuras.tipo_madera → tipo_maderas.id.
+
+- **productos_maquina** 
+        (1:N): 
+            pedido_producto.producto_id → productos_maquina.id.
+
+- **insumos_almacen** 
+        (1:N): 
+            diseno_producto_final_insumos.insumo_almacen_id → insumos_almacen.id.
+
+Relaciones muchos-a-muchos (a través de tablas pivote):
+- users ↔ procesos (vía proceso_users)
+- diseno_producto_finales ↔ clientes (vía diseno_producto_final_cliente)
+- diseno_producto_finales ↔ items (vía diseno_producto_final_item)
+- diseno_producto_finales ↔ insumos_almacen (vía diseno_producto_final_insumos)
+- pedidos ↔ productos_maquina (vía pedido_producto)
+- entrada_maderas ↔ maderas (vía entradas_madera_maderas)
+
+## Tercera parte: Descripción del diagrama ER (Entidad-Relación) o representación textual del esquema con relaciones
+
+El esquema de base de datos se centra en la gestión de una fábrica 
+de muebles o productos de madera, con entidades principales como usuarios, 
+máquinas, procesos de producción, inventarios y pedidos. 
+
+A continuación, una representación textual simplificada del diagrama ER, 
+mostrando entidades (tablas) y relaciones (flechas indican dirección de la clave foránea, 
+con cardinalidad implícita basada en las FK).
+
+```
+[users] --(1:N)--> 
+    [clientes, 
+    proveedores, 
+    estados, 
+    eventos, 
+    insumos_almacen, 
+    items, 
+    entrada_maderas, 
+    calificacion_maderas, 
+    cubicajes, 
+    tiepo_usuario_dias, 
+    diseno_producto_finales, 
+    pedidos, 
+    ordenes_produccion, 
+    subprocesos, 
+    turno_usuarios, 
+    proceso_users, 
+    transformaciones, 
+    recepcions, 
+    contratistas, 
+    tipo_maderas, 
+    ensambles_acabados, 
+    estado_maquinas, 
+    evento_procesos]
+
+[maquinas] --(1:N)--> 
+    [costos_operacion, 
+    costos_infraestructuras, 
+    tiepo_usuario_dias, 
+    procesos, 
+    estado_maquinas, 
+    turnos, 
+    ensambles_acabados, 
+    subprocesos]
+
+[operaciones] --(1:N)--> 
+    [descripciones]
+
+[descripciones] --(1:N)--> 
+    [costos_operacion]
+
+[proveedores] --(1:N)--> 
+    [entrada_maderas]
+
+[estados] --(1:N)--> 
+    [estado_maquinas]
+
+[eventos] --(1:N)--> 
+    [evento_procesos]
+
+[clientes] --(1:N)--> 
+    [diseno_producto_finales, 
+    pedidos]
+
+[entrada_maderas] --(1:N)--> 
+    [calificacion_maderas, 
+    cubicajes, 
+    entradas_madera_maderas, 
+    sobrante_trozas]
+
+[cubicajes] --(1:N)--> 
+[transformaciones, procesos]
+
+[diseno_producto_finales] --(1:N)--> 
+    [ordenes_produccion, 
+    pedidos]
+
+[pedidos] --(1:N)--> 
+    [ordenes_produccion, 
+    pedido_producto, 
+    ensambles_acabados]
+
+[ordenes_produccion] --(1:N)--> 
+    [procesos, 
+    transformaciones]
+
+[procesos] --(1:N)--> 
+    [transformaciones, 
+    subprocesos, 
+    evento_procesos, 
+    proceso_users]
+
+[items] --(1:N)--> 
+    [procesos, 
+    ordenes_produccion]
+
+[turnos] --(1:N)--> 
+    [turno_usuarios]
+
+[maderas] --(1:N)--> 
+    [entradas_madera_maderas]
+
+[tipo_eventos] --(1:N)--> 
+    [eventos]
+
+[tipo_maderas] --(1:N)--> 
+    [maderas, 
+    diseno_producto_finales, 
+    items, 
+    transformaciones, 
+    costos_infraestructuras]
+
+[productos_maquina] --(1:N)--> 
+    [pedido_producto]
+
+[insumos_almacen] --(1:N)--> 
+    [diseno_producto_final_insumos]
+
+-- Relaciones N:M (pivote) --
+[users] <--> [procesos] (vía proceso_users)
+[diseno_producto_finales] <--> [clientes] (vía diseno_producto_final_cliente)
+[diseno_producto_finales] <--> [items] (vía diseno_producto_final_item)
+[diseno_producto_finales] <--> [insumos_almacen] (vía diseno_producto_final_insumos)
+[pedidos] <--> [productos_maquina] (vía pedido_producto)
+[entrada_maderas] <--> [maderas] (vía entradas_madera_maderas)
+```
+
+Este esquema refleja un flujo de producción: desde entrada de madera, 
+cubicaje, procesos/transformaciones, hasta pedidos y ensambles finales, 
+con usuarios y máquinas como ejes centrales. 
+
+Las relaciones son mayoritariamente uno-a-muchos, con algunas muchos-a-muchos 
+para asignaciones complejas. 
+
+Para un diagrama visual, se recomienda usar herramientas como MySQL Workbench 
+o draw.io basándose en esta descripción.
